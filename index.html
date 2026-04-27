@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -91,6 +90,10 @@
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animate-blob { animation: blob 7s infinite; }
         .animation-delay-2000 { animation-delay: 2s; }
+
+        /* Hiệu ứng loading cho AI */
+        @keyframes pulse-dots { 0% { content: "."; } 33% { content: ".."; } 66% { content: "..."; } 100% { content: ""; } }
+        .loading-dots::after { content: "."; animation: pulse-dots 1.5s infinite linear; display: inline-block; width: 12px; text-align: left; }
         
         #invoiceRenderArea { 
             position: absolute; left: -9999px; top: -9999px; 
@@ -329,7 +332,6 @@
                         <h2 class="font-black text-slate-900 text-base uppercase tracking-tight">Chi tiết Đơn hàng</h2>
                         <span id="itemCountBadge" class="text-[10px] font-bold text-blue-700 bg-blue-100 px-2.5 py-1 rounded-md uppercase tracking-widest">0 MÓN</span>
                     </div>
-                    <!-- Container cho giỏ hàng -->
                     <div id="quoteList" class="space-y-3 pb-4"></div>
                 </div>
 
@@ -416,7 +418,7 @@
                         <p class="text-indigo-900 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
                             <span class="text-xl">✨</span> Mẫu tin nhắn Zalo gửi khách
                         </p>
-                        <button id="btnAIEnhance" class="bg-white text-indigo-600 text-[9px] font-bold px-2 py-1.5 rounded-lg border border-indigo-200 shadow-sm uppercase tracking-wider">
+                        <button id="btnAIEnhance" class="bg-white text-indigo-600 text-[9px] font-bold px-2 py-1.5 rounded-lg border border-indigo-200 shadow-sm uppercase tracking-wider min-w-[90px] text-center">
                             🤖 AI TẠO MỚI
                         </button>
                     </div>
@@ -495,7 +497,7 @@
 
     <!-- CORE JAVASCRIPT LOGIC -->
     <script>
-        // 1. Utilities (Đã Fix chuẩn giá bìa)
+        // 1. Utilities
         const Utils = {
             formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0),
             
@@ -587,9 +589,6 @@
             setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50);
         };
         
-        // ==========================================
-        // NGĂN CHẶN THOÁT TRANG LÀM MẤT DATA (UX FIX)
-        // ==========================================
         window.addEventListener('beforeunload', function (e) {
             if (State.cart.length > 0) {
                 e.preventDefault();
@@ -678,7 +677,7 @@
         DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
 
         // ==========================================
-        // EXCEL MAPPING LOGIC (FIXED)
+        // EXCEL MAPPING LOGIC
         // ==========================================
         DOM.setup.fileIn.addEventListener('change', (e) => {
             const file = e.target.files[0]; if (!file) return; 
@@ -689,7 +688,6 @@
                     const workbook = XLSX.read(evt.target.result, { type: 'binary' });
                     State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
                     
-                    // FIXED: Validate if Excel is completely empty
                     if (!State.rawExcelData || State.rawExcelData.length === 0) {
                         Utils.showToast("File Excel trống hoặc không hợp lệ!");
                         return;
@@ -724,7 +722,6 @@
         });
 
         DOM.setup.btnConfirm.addEventListener('click', () => {
-            // FIXED: Prevent confirm if no data loaded
             if (!State.rawExcelData || State.rawExcelData.length === 0) {
                 Utils.showToast("Vui lòng tải lên file Excel trước!");
                 return;
@@ -741,18 +738,12 @@
             for (let i = hIndex + 1; i < State.rawExcelData.length; i++) {
                 const row = State.rawExcelData[i]; if (!row || !row[nI]) continue;
                 
-                // FIXED: Handle undefined safe mapping
                 const code = cI > -1 ? (row[cI] || "") : ""; 
                 const name = row[nI] ? row[nI].toString().trim() : "";
-                
                 const rawPrice = pI > -1 ? row[pI] : 0;
+                
                 State.productDB.push({ 
-                    id: 'P'+i, 
-                    code: code, 
-                    name: name, 
-                    unit: uI > -1 ? row[uI] : "Cái", 
-                    price: Utils.cleanNumber(rawPrice), 
-                    searchStr: Utils.normString(`${code || ''} ${name || ''}`) // FIXED undefined concatenation
+                    id: 'P'+i, code: code, name: name, unit: uI > -1 ? row[uI] : "Cái", price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`)
                 });
             }
             switchScreen('main');
@@ -760,12 +751,10 @@
         });
 
         // ==========================================
-        // TÌM KIẾM VÀ GIỎ HÀNG (SỬ DỤNG EVENT DELEGATION)
+        // TÌM KIẾM VÀ GIỎ HÀNG
         // ==========================================
         const refreshSearchUI = () => {
-            // FIXED PERFORMANCE: Only render search list if modal is actually active
             if (!DOM.search.modal.classList.contains('active')) return;
-            
             const term = Utils.normString(DOM.search.input.value);
             const items = term ? State.productDB.filter(p => p.searchStr.includes(term)).slice(0, 80) : State.productDB.slice(0, 30);
             renderSearchList(items);
@@ -802,10 +791,9 @@
             }
             
             DOM.search.badge.textContent = State.cart.length; 
-            CartLogic.render(); // Render lại giỏ hàng chạy ngầm
+            CartLogic.render();
         });
 
-        // HÀM RENDER HTML NHANH
         function renderSearchList(items) {
             const html = items.map(p => {
                 const isAdded = State.cart.some(q => q.productId === p.id);
@@ -838,9 +826,6 @@
             DOM.search.list.innerHTML = html;
         }
 
-        // ==========================================
-        // QUẢN LÝ GIỎ HÀNG BÊN NGOÀI
-        // ==========================================
         const CartLogic = {
             recalculateItem: (item) => {
                 const basePrice = item.originalPrice * (1 - item.baseDiscount/100); 
@@ -893,7 +878,6 @@
                         <div class="grid grid-cols-4 gap-2 mb-3 items-end">
                             <div>
                                 <label class="text-[9px] font-bold text-slate-400 block mb-1.5 text-center uppercase tracking-wider">Số Lượng</label>
-                                <!-- FIXED: Added min="1" to input -->
                                 <input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-slate-50 border border-slate-200 rounded-xl py-2 text-center text-sm font-black text-slate-800 outline-none focus:ring-2 focus:ring-slate-400">
                             </div>
                             <div>
@@ -937,7 +921,6 @@
             CartLogic.render(); Utils.showToast("Đã áp dụng CK chung!"); 
         });
 
-        // EVENT DELEGATION CHO NÚT BẤM VÀ INPUT TRONG GIỎ HÀNG
         DOM.main.quoteList.addEventListener('click', (e) => {
             const btn = e.target.closest('button');
             if(!btn) return;
@@ -969,10 +952,8 @@
             const field = e.target.dataset.field;
             let val = Utils.cleanNumber(e.target.value);
 
-            // FIXED: Prevent negative or zero quantity
             if (field === 'qty' && val < 1) {
-                val = 1;
-                e.target.value = 1; // Update UI fallback immediately
+                val = 1; e.target.value = 1;
                 Utils.showToast("Số lượng phải từ 1 trở lên!");
             }
 
@@ -992,7 +973,7 @@
         });
 
         // ==========================================
-        // EXPORT LOGIC
+        // EXPORT LOGIC & AI API
         // ==========================================
         const ExportLogic = {
             generatePrintView: () => {
@@ -1048,7 +1029,6 @@
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     
                     titleCell.value = State.brand.docTitle.toUpperCase(); 
-                    
                     titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
                     worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true };
@@ -1057,11 +1037,13 @@
                     worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true };
                     worksheet.getCell('B4').value = DOM.main.senderName.value.trim();
                     worksheet.getCell('G4').value = 'SĐT: ' + DOM.main.senderPhone.value.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
+                    
                     const headerRow = worksheet.getRow(6);
                     headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
                     headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }; headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
                     headerRow.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
                     headerRow.height = 30;
+                    
                     let currentRow = 7;
                     State.cart.forEach((item, i) => {
                         const row = worksheet.getRow(currentRow); let notes = [];
@@ -1069,17 +1051,19 @@
                         if(item.extraPromo > 0) notes.push(`KM ${item.extraPromo}%`);
                         let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
                         if (incInfo) { if (incInfo.type === 'tăng') notes.push(`Tăng ${incInfo.text}`); else if (incInfo.type === 'giảm') notes.push(`Giảm ${incInfo.text}`); else if (incInfo.type === 'text') notes.push(`ĐVT: ${incInfo.text}`); }
+                        
                         row.values = [ i + 1, item.code, item.name, item.qty, item.originalPrice, item.priceAfterDiscount, item.totalFinal, notes.join(', ') ];
                         row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
                         row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
                         currentRow++;
                     });
+                    
                     const totalRow = worksheet.getRow(currentRow + 1);
                     totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
                     totalRow.getCell(7).value = Number(DOM.footer.sumFinal.textContent.replace(/[^\d]/g, '')); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 25 } ];
-                    const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     
+                    const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
                     saveAs(blob, `${shortTitle}_${DOM.main.custName.value.trim() || 'KH'}_${Date.now()}.xlsx`); 
                     Utils.showToast("Tải Excel thành công!");
@@ -1094,6 +1078,7 @@
                     const img = new Image(); await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; img.src = imgData; });
                     const imgRatio = img.height / img.width; const scaledImgHeight = pdfWidth * imgRatio;
                     let heightLeft = scaledImgHeight; let position = 0;
+                    
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
                     
@@ -1109,20 +1094,71 @@
                 iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); iframeDoc.close();
                 setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
             },
+            // Đã fix hàm AI
             enhanceMessageWithAI: async () => {
-                if(State.isAiGenerating) return; State.isAiGenerating = true;
-                const btn = DOM.export.aiBtn; btn.innerHTML = '<span class="loading-dots">ĐANG VIẾT</span>';
-                const apiKey = ""; const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-                const payload = { contents: [{ parts: [{ text: `Viết tin nhắn Zalo chốt đơn. Khách: ${DOM.main.custName.value.trim() || "Anh/chị"}. Cửa hàng: ${State.brand.name}. Tổng tiền: ${DOM.footer.sumFinal.textContent}. Các món: ${State.cart.slice(0, 3).map(i => i.name).join(", ")}.` }] }], systemInstruction: { parts: [{ text: `Nhân viên kinh doanh ${State.brand.name}. Viết 1 tin nhắn Zalo chốt đơn lịch sự, thân thiện gửi báo giá. Có emoji. Trả về plain text. KHÔNG dùng markdown.` }] } };
-                let resultText = "Lỗi kết nối AI. Vui lòng thử lại.";
+                if(State.isAiGenerating) return; 
+                State.isAiGenerating = true;
+                
+                const btn = DOM.export.aiBtn; 
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="loading-dots">ĐANG VIẾT</span>';
+                
+                // LƯU Ý: Nếu bạn chạy file này ở máy tính/host cá nhân, hãy điền API Key (từ Google AI Studio) vào giữa 2 dấu nháy kép dưới đây.
+                // Ví dụ: const apiKey = "AIzaSyBxxxx...";
+                const apiKey = ""; 
+                
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                
+                const payload = { 
+                    contents: [{ 
+                        parts: [{ 
+                            text: `Viết tin nhắn Zalo chốt đơn. Khách: ${DOM.main.custName.value.trim() || "Anh/chị"}. Cửa hàng: ${State.brand.name}. Tổng tiền: ${DOM.footer.sumFinal.textContent}. Các món: ${State.cart.slice(0, 3).map(i => i.name).join(", ")}.` 
+                        }] 
+                    }], 
+                    systemInstruction: { 
+                        parts: [{ 
+                            text: `Nhân viên kinh doanh ${State.brand.name}. Viết 1 tin nhắn Zalo chốt đơn lịch sự, thân thiện gửi báo giá. Có emoji. Trả về plain text. KHÔNG dùng markdown.` 
+                        }] 
+                    } 
+                };
+
+                let resultText = "";
+                let success = false;
+
+                // Thử lại tối đa 5 lần nếu API quá tải (Exponential Backoff)
                 for (let i = 0; i < 5; i++) {
                     try {
-                        const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-                        if (!res.ok) throw new Error(); const data = await res.json();
-                        if (data.candidates && data.candidates[0] && data.candidates[0].content) { resultText = data.candidates[0].content.parts[0].text.trim(); break; }
-                    } catch (e) { await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000)); }
+                        const res = await fetch(url, { 
+                            method: "POST", 
+                            headers: { "Content-Type": "application/json" }, 
+                            body: JSON.stringify(payload) 
+                        });
+                        
+                        if (!res.ok) throw new Error(); 
+                        
+                        const data = await res.json();
+                        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                        
+                        if (text) { 
+                            resultText = text.trim(); 
+                            success = true;
+                            break; 
+                        }
+                    } catch (e) { 
+                        // Nếu lỗi, đợi 1s, 2s, 4s, 8s... rồi thử lại
+                        if (i < 4) await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000)); 
+                    }
                 }
-                DOM.export.msgBox.value = resultText; btn.innerHTML = '🤖 AI TẠO MỚI'; State.isAiGenerating = false; Utils.showToast("AI đã viết xong!");
+
+                if (success) {
+                    DOM.export.msgBox.value = resultText; 
+                    Utils.showToast("AI đã viết xong!");
+                } else {
+                    Utils.showToast("Lỗi AI. (Cần cấu hình API Key nếu bạn đang chạy ngoài hệ thống)");
+                }
+
+                btn.innerHTML = originalText; 
+                State.isAiGenerating = false; 
             }
         };
 
@@ -1136,4 +1172,3 @@
     </script>
 </body>
 </html>
-
