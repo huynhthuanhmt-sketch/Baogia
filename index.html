@@ -130,7 +130,7 @@
         <div class="z-10 w-full max-w-md flex flex-col items-center text-center my-auto">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold tracking-widest uppercase mb-8">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                Phiên bản Pro v3.0 (Tối ưu Mobile)
+                Phiên bản Pro v3.0 (Có Lưu Dữ Liệu)
             </div>
 
             <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30 mb-6">
@@ -159,21 +159,13 @@
                     <span class="text-2xl mb-2">👥</span>
                     <span class="card-text text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center mt-1">Danh Sách<br>Khách Hàng</span>
                 </div>
-                <div class="feature-card relative bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 p-4 rounded-2xl backdrop-blur-sm flex flex-col items-center cursor-pointer" data-feature="invoice">
-                    <div class="check-icon absolute top-2 right-2 text-transparent">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <span class="text-2xl mb-2">🧾</span>
-                    <span class="card-text text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center mt-1">Xuất<br>Hóa Đơn</span>
-                </div>
-                <div class="feature-card relative bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 p-4 rounded-2xl backdrop-blur-sm flex flex-col items-center cursor-pointer" data-feature="tax">
-                    <div class="check-icon absolute top-2 right-2 text-transparent">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <span class="text-2xl mb-2">🏛️</span>
-                    <span class="card-text text-[10px] text-slate-400 font-bold uppercase tracking-widest text-center mt-1">Khai Báo<br>Thuế</span>
-                </div>
             </div>
+
+            <!-- NÚT TIẾP TỤC HIỆN KHI CÓ DATA LƯU TRỮ -->
+            <button id="btnContinueSession" class="hidden w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-sm transition-all active:scale-[0.98] shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] mb-3 flex justify-center items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                Tiếp Tục Dữ Liệu Cũ
+            </button>
 
             <button id="btnStartApp" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-sm transition-all active:scale-[0.98] shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]">
                 Bắt Đầu Ngay
@@ -269,13 +261,13 @@
                         </div>
                         <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </summary>
-                    <div class="p-4 border-t border-slate-100 flex gap-4 items-start">
+                    <div class="p-4 border-t border-slate-100 flex gap-4 items-start flex-col sm:flex-row">
                         <label class="logo-upload-wrapper w-20 h-20 shrink-0 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center cursor-pointer relative bg-slate-50 overflow-hidden group-hover:border-blue-400 transition-colors mt-1">
                             <input type="file" id="logoUploadInput" accept="image/*" class="hidden">
                             <img id="logoPreview" src="" class="w-full h-full object-contain p-1">
                             <div class="absolute inset-0 bg-slate-900/60 hidden items-center justify-center text-white text-[10px] font-bold tracking-widest backdrop-blur-sm text-center logo-overlay">ĐỔI<br>LOGO</div>
                         </label>
-                        <div class="flex-1 space-y-2.5">
+                        <div class="flex-1 space-y-2.5 w-full">
                             <input type="text" id="settingStoreName" value="THUẬN STORE" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-xl px-3 py-2 text-sm font-black text-slate-800 uppercase outline-none">
                             <input type="text" id="settingSlogan" value="MPE VIETNAM" placeholder="Khẩu hiệu..." class="w-full input-premium rounded-xl px-3 py-2 text-xs font-bold text-slate-500 uppercase outline-none">
                             <input type="text" id="settingDocTitle" value="BẢNG BÁO GIÁ" placeholder="Tiêu đề tài liệu..." class="w-full input-premium rounded-xl px-3 py-2 text-sm font-black text-blue-800 uppercase outline-none border border-blue-200 focus:border-blue-500 bg-blue-50/30">
@@ -287,6 +279,13 @@
                                 <button class="color-btn w-5 h-5 rounded-full bg-[#059669]" data-color="#059669"></button>
                                 <button class="color-btn w-5 h-5 rounded-full bg-[#0f172a]" data-color="#0f172a"></button>
                                 <input type="color" id="customColorInput" value="#0055A5" class="w-5 h-5 rounded cursor-pointer border-0 p-0 ml-1">
+                            </div>
+
+                            <!-- Cấu hình API Key cho GitHub -->
+                            <div class="pt-3 border-t border-slate-100 mt-2">
+                                <label class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Cấu hình API Key AI (Để chạy trên GitHub)</label>
+                                <input type="password" id="settingApiKey" placeholder="Nhập Gemini API Key tại đây..." class="w-full input-premium rounded-xl px-3 py-2 text-xs font-medium text-slate-700 outline-none focus:border-purple-400">
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[10px] text-blue-500 hover:underline mt-1 inline-block">Lấy API Key miễn phí &rarr;</a>
                             </div>
                         </div>
                     </div>
@@ -561,9 +560,44 @@
             hexToArgb: (hex) => { hex = hex.replace('#', ''); return hex.length === 6 ? 'FF' + hex.toUpperCase() : 'FF0055A5'; }
         };
 
-        const State = { 
-            rawExcelData: [], productDB: [], cart: [], searchTimeout: null, isAiGenerating: false,
-            brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ", color: "#0055A5", hasCustomLogo: false }
+        let State = { 
+            rawExcelData: [], productDB: [], cart: [], searchTimeout: null, isAiGenerating: false, apiKey: "",
+            brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ", color: "#0055A5", hasCustomLogo: false, logoData: "" }
+        };
+
+        // ==========================================
+        // CƠ CHẾ LƯU TRỮ LOCAL STORAGE (OFFLINE)
+        // ==========================================
+        const LocalDB = {
+            save: () => {
+                try {
+                    localStorage.setItem('thuanstore_state', JSON.stringify({
+                        productDB: State.productDB,
+                        cart: State.cart,
+                        brand: State.brand,
+                        apiKey: State.apiKey
+                    }));
+                } catch(e) { 
+                    console.warn("Lỗi lưu data", e);
+                    if (e.name === 'QuotaExceededError') {
+                        Utils.showToast("Dữ liệu quá lớn để tự động lưu. Hãy dùng file Excel nhẹ hơn hoặc logo độ phân giải thấp.");
+                    }
+                }
+            },
+            load: () => {
+                try {
+                    const data = localStorage.getItem('thuanstore_state');
+                    if (data) {
+                        const parsed = JSON.parse(data);
+                        State.productDB = parsed.productDB || [];
+                        State.cart = parsed.cart || [];
+                        State.brand = parsed.brand || State.brand;
+                        State.apiKey = parsed.apiKey || "";
+                        return true;
+                    }
+                } catch(e) { console.warn("Lỗi đọc data", e); }
+                return false;
+            }
         };
 
         const DOM = {
@@ -571,13 +605,13 @@
             brand: { 
                 logoIn: document.getElementById('logoUploadInput'), logoPre: document.getElementById('logoPreview'), 
                 nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), 
-                docTitleIn: document.getElementById('settingDocTitle'), 
+                docTitleIn: document.getElementById('settingDocTitle'), apiIn: document.getElementById('settingApiKey'),
                 hLogo: document.getElementById('headerLogo'), hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
                 pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), 
                 pDocTitle: document.getElementById('printDocTitle'), 
                 colorBtns: document.querySelectorAll('.color-btn'), customColorIn: document.getElementById('customColorInput') 
             },
-            setup: { btnStart: document.getElementById('btnStartApp'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup') },
+            setup: { btnContinue: document.getElementById('btnContinueSession'), btnStart: document.getElementById('btnStartApp'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup') },
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), globalDisc: document.getElementById('globalDiscountInput'), btnApplyGlobal: document.getElementById('btnApplyGlobal'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge') },
             search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu') },
@@ -590,10 +624,42 @@
         };
         
         window.addEventListener('beforeunload', function (e) {
-            if (State.cart.length > 0) {
-                e.preventDefault();
-                e.returnValue = '';
+            // Lưu lần cuối trước khi tắt
+            LocalDB.save();
+        });
+
+        // ==========================================
+        // KHỞI TẠO APP VÀ KIỂM TRA DỮ LIỆU CŨ
+        // ==========================================
+        const initApp = () => {
+            LocalDB.load();
+            if (State.productDB && State.productDB.length > 0) {
+                DOM.setup.btnContinue.classList.remove('hidden');
+                DOM.setup.btnStart.textContent = "Nạp File Excel Mới (Xóa cũ)";
             }
+
+            // Phục hồi UI phần Thương Hiệu
+            DOM.brand.nameIn.value = State.brand.name;
+            DOM.brand.sloganIn.value = State.brand.slogan;
+            DOM.brand.docTitleIn.value = State.brand.docTitle;
+            if(State.apiKey) DOM.brand.apiIn.value = State.apiKey;
+
+            updateBrandTheme(State.brand.color);
+
+            if (State.brand.hasCustomLogo && State.brand.logoData) {
+                DOM.brand.logoPre.src = State.brand.logoData;
+                DOM.brand.hLogo.src = State.brand.logoData;
+                DOM.brand.pLogo.src = State.brand.logoData;
+                DOM.brand.pLogo.parentElement.classList.remove('print-bg-brand'); 
+                DOM.brand.pLogo.parentElement.style.background = 'transparent'; 
+            }
+            updateBrandText();
+        };
+
+        DOM.setup.btnContinue.addEventListener('click', () => {
+            switchScreen('main');
+            CartLogic.render();
+            Utils.showToast("Đã khôi phục phiên làm việc trước!");
         });
 
         // ==========================================
@@ -627,7 +693,7 @@
         DOM.setup.btnEdit.addEventListener('click', () => { switchScreen('setup'); DOM.setup.mapping.classList.remove('hidden', 'opacity-0'); });
 
         // ==========================================
-        // CẤU HÌNH THƯƠNG HIỆU
+        // CẤU HÌNH THƯƠNG HIỆU & API KEY
         // ==========================================
         const defaultLogoSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M14 19a3 3 0 0 0-3-3H6.5A1.5 1.5 0 0 0 5 17.5V22M14 19h4a1 1 0 0 0 1-1v-4.5M10.82 8.35l2.24-2.8a2 2 0 0 1 3.12 0l1.1 1.38a2 2 0 0 0 1.25.75l2.15.36a1 1 0 0 1 .82 1.14l-.45 3.17M4 14l1.25-1.25a2 2 0 0 1 2.83 0l1.1 1.1a2 2 0 0 0 1.25.56h.17M12.5 13a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z'/></svg>`;
         
@@ -643,9 +709,9 @@
                 DOM.brand.logoPre.src = svgWithBg; DOM.brand.hLogo.src = svgWithBg;
                 DOM.brand.pLogo.src = defaultLogoSVG; DOM.brand.pLogo.parentElement.classList.add('print-bg-brand');
             }
+            LocalDB.save();
         };
 
-        updateBrandTheme(State.brand.color);
         DOM.brand.colorBtns.forEach(btn => btn.addEventListener('click', () => updateBrandTheme(btn.dataset.color)));
         DOM.brand.customColorIn.addEventListener('input', (e) => updateBrandTheme(e.target.value));
 
@@ -653,9 +719,12 @@
             const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader();
             reader.onload = (evt) => {
-                State.brand.hasCustomLogo = true; const b64 = evt.target.result;
+                State.brand.hasCustomLogo = true; 
+                const b64 = evt.target.result;
+                State.brand.logoData = b64;
                 DOM.brand.logoPre.src = b64; DOM.brand.hLogo.src = b64; DOM.brand.pLogo.src = b64;
                 DOM.brand.pLogo.parentElement.classList.remove('print-bg-brand'); DOM.brand.pLogo.parentElement.style.background = 'transparent'; 
+                LocalDB.save();
             }; reader.readAsDataURL(file);
         });
 
@@ -663,6 +732,7 @@
             State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; 
             State.brand.slogan = DOM.brand.sloganIn.value;
             State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
+            State.apiKey = DOM.brand.apiIn.value.trim();
             
             DOM.brand.hName.textContent = State.brand.name; 
             DOM.brand.hSlogan.textContent = State.brand.slogan;
@@ -670,11 +740,13 @@
             DOM.brand.pSlogan.textContent = State.brand.slogan;
             DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
             DOM.main.senderName.value = State.brand.name;
+            LocalDB.save();
         };
         
         DOM.brand.nameIn.addEventListener('input', updateBrandText); 
         DOM.brand.sloganIn.addEventListener('input', updateBrandText);
         DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
+        DOM.brand.apiIn.addEventListener('input', updateBrandText);
 
         // ==========================================
         // EXCEL MAPPING LOGIC
@@ -731,6 +803,9 @@
             if(!nameCol || !priceCol) { Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!"); return; }
 
             State.productDB = [];
+            // Reset Giỏ hàng khi nạp file mới
+            State.cart = [];
+            
             let hIndex = State.rawExcelData.findIndex(row => row.includes(nameCol)); if(hIndex === -1) hIndex = 0;
             const headers = State.rawExcelData[hIndex];
             const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
@@ -746,6 +821,10 @@
                     id: 'P'+i, code: code, name: name, unit: uI > -1 ? row[uI] : "Cái", price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`)
                 });
             }
+            
+            LocalDB.save();
+            CartLogic.render();
+            
             switchScreen('main');
             Utils.showToast(`Nạp thành công ${State.productDB.length} sản phẩm!`);
         });
@@ -792,6 +871,7 @@
             
             DOM.search.badge.textContent = State.cart.length; 
             CartLogic.render();
+            LocalDB.save(); // Lưu ngay khi thêm món
         });
 
         function renderSearchList(items) {
@@ -919,6 +999,7 @@
             const val = Utils.cleanNumber(DOM.main.globalDisc.value); 
             State.cart.forEach(i => i.baseDiscount = val); 
             CartLogic.render(); Utils.showToast("Đã áp dụng CK chung!"); 
+            LocalDB.save();
         });
 
         DOM.main.quoteList.addEventListener('click', (e) => {
@@ -932,6 +1013,7 @@
                 State.cart = State.cart.filter(i => i.id !== id); 
                 CartLogic.render();
                 refreshSearchUI(); 
+                LocalDB.save();
             } else if (action === 'sync') {
                 const field = btn.dataset.field;
                 const sourceItem = State.cart.find(i => i.id === id);
@@ -941,6 +1023,7 @@
                     CartLogic.render();
                     let fName = field === 'baseDiscount' ? 'Chiết khấu' : 'Khuyến mãi';
                     Utils.showToast(`Đã đồng bộ ${fName} (${val}%)!`);
+                    LocalDB.save();
                 }
             }
         });
@@ -966,6 +1049,7 @@
             card.querySelector('.price-display').textContent = Utils.formatMoney(item.priceAfterDiscount); 
             card.querySelector('.linetotal-display').textContent = Utils.formatMoney(item.totalFinal);
             CartLogic.updateSummary();
+            LocalDB.save(); // Lưu khi thay đổi thông số giỏ hàng
         });
 
         DOM.main.quoteList.addEventListener('focusin', (e) => {
@@ -1094,18 +1178,20 @@
                 iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); iframeDoc.close();
                 setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
             },
-            // Đã fix hàm AI
             enhanceMessageWithAI: async () => {
                 if(State.isAiGenerating) return; 
-                State.isAiGenerating = true;
                 
+                // KIỂM TRA API KEY DO NGƯỜI DÙNG NHẬP
+                const apiKey = State.apiKey || ""; 
+                if (!apiKey) {
+                    Utils.showToast("Lỗi: Vui lòng nhập Gemini API Key trong phần Cấu Hình Thương Hiệu để dùng AI trên GitHub!");
+                    return;
+                }
+
+                State.isAiGenerating = true;
                 const btn = DOM.export.aiBtn; 
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<span class="loading-dots">ĐANG VIẾT</span>';
-                
-                // LƯU Ý: Nếu bạn chạy file này ở máy tính/host cá nhân, hãy điền API Key (từ Google AI Studio) vào giữa 2 dấu nháy kép dưới đây.
-                // Ví dụ: const apiKey = "AIzaSyBxxxx...";
-                const apiKey = ""; 
                 
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
                 
@@ -1125,7 +1211,6 @@
                 let resultText = "";
                 let success = false;
 
-                // Thử lại tối đa 5 lần nếu API quá tải (Exponential Backoff)
                 for (let i = 0; i < 5; i++) {
                     try {
                         const res = await fetch(url, { 
@@ -1145,7 +1230,6 @@
                             break; 
                         }
                     } catch (e) { 
-                        // Nếu lỗi, đợi 1s, 2s, 4s, 8s... rồi thử lại
                         if (i < 4) await new Promise(r => setTimeout(r, Math.pow(2, i) * 1000)); 
                     }
                 }
@@ -1154,7 +1238,7 @@
                     DOM.export.msgBox.value = resultText; 
                     Utils.showToast("AI đã viết xong!");
                 } else {
-                    Utils.showToast("Lỗi AI. (Cần cấu hình API Key nếu bạn đang chạy ngoài hệ thống)");
+                    Utils.showToast("Lỗi kết nối AI hoặc API Key không chính xác!");
                 }
 
                 btn.innerHTML = originalText; 
@@ -1169,6 +1253,10 @@
         DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
         DOM.export.aiBtn.addEventListener('click', ExportLogic.enhanceMessageWithAI);
         DOM.export.btnCopyMsg.addEventListener('click', () => { DOM.export.msgBox.select(); document.execCommand('copy'); window.getSelection().removeAllRanges(); Utils.showToast("Đã sao chép!"); });
+
+        // KHỞI CHẠY APP
+        initApp();
+
     </script>
 </body>
 </html>
