@@ -106,11 +106,6 @@
             background-size: 40px 40px; mask-image: radial-gradient(circle at center, black 40%, transparent 90%); z-index: 0;
         }
 
-        #invoiceRenderArea { 
-            position: absolute; left: -9999px; top: -9999px; 
-            width: 1600px; background: white; padding: 80px; 
-            z-index: -1000; color: #0f172a;
-        }
         .print-text-brand { color: var(--brand-color) !important; }
         .print-bg-brand { background-color: var(--brand-color) !important; color: white !important; }
         .print-border-brand { border-color: var(--brand-color) !important; }
@@ -125,6 +120,32 @@
         /* Ẩn mũi tên mặc định của thẻ details */
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
+
+        /* Khắc phục triệt để lỗi phóng to (auto-zoom) trên iPhone/iOS Safari khi chạm vào ô nhập liệu */
+        @media screen and (max-width: 768px) {
+            input[type="text"],
+            input[type="number"],
+            textarea,
+            select {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Hiệu ứng báo hiệu vùng có thể sửa trên bản in */
+        [contenteditable="true"] {
+            transition: all 0.2s;
+            border-radius: 6px;
+            outline: none;
+        }
+        [contenteditable="true"]:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            cursor: text;
+        }
+        [contenteditable="true"]:focus {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
+        }
     </style>
 </head>
 <body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -226,7 +247,7 @@
                 </div>
 
                 <div id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
-                    <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div><h2 class="font-bold text-slate-800">Ghép Cột Dữ Liên</h2></div>
+                    <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div><h2 class="font-bold text-slate-800">Ghép Cột Dữ Liệu</h2></div>
                     <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 flex gap-2 mb-5"><span class="text-blue-500">💡</span><p class="text-[11px] text-blue-800 font-medium leading-relaxed">Hãy chọn chính xác cột để hệ thống nhận diện sản phẩm.</p></div>
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm font-semibold outline-none"></select></div>
@@ -370,9 +391,9 @@
                 <div class="glass-card p-3.5 border-l-4 border-l-emerald-500 bg-emerald-50/30">
                     <label class="block text-[10px] font-bold text-emerald-800 mb-1.5 uppercase flex items-center gap-1 tracking-wider">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        Ghi chú bản in (Tùy chọn)
+                        Ghi chú chung bản in
                     </label>
-                    <textarea id="promoNoteInput" rows="2" placeholder="VD: Giao hàng miễn phí nội thành..." class="w-full input-premium bg-white rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 outline-none resize-none"></textarea>
+                    <textarea id="promoNoteInput" rows="2" placeholder="VD: Báo giá có giá trị trong 7 ngày..." class="w-full input-premium bg-white rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 outline-none resize-none"></textarea>
                 </div>
 
             </div>
@@ -422,31 +443,105 @@
             <span class="font-black text-slate-900 uppercase tracking-widest text-sm">CÔNG CỤ XUẤT</span>
             <div class="w-20"></div>
         </div>
-        <div class="flex-grow overflow-y-auto p-5 bg-slate-50 flex flex-col items-center pb-32">
-            <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32">
+        
+        <div class="flex-grow overflow-y-auto p-4 bg-slate-50 pb-32 relative">
+            
+            <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm transition-opacity">
                 <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-                <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang thiết kế bản in HD...</div>
+                <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang nạp Bản In (Tương tác)...</div>
             </div>
             
-            <div id="exportGuide" class="hidden w-full max-w-lg text-center mb-6">
-                <div class="grid grid-cols-3 gap-3 mb-6">
-                    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 p-3 rounded-2xl font-bold flex flex-col items-center gap-1.5 shadow-sm active:scale-95">
-                        <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        <span class="text-[10px] uppercase tracking-widest">In Trực Tiếp</span>
+            <div id="exportGuide" class="w-full max-w-2xl mx-auto flex flex-col">
+                
+                <!-- BẢN XEM TRƯỚC SỐNG (LIVE DOM) -->
+                <div class="print-bg-brand text-white text-[10px] font-bold py-2.5 px-4 rounded-t-xl uppercase tracking-widest flex justify-between items-center shadow-md">
+                    <span class="flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Bản Xem Trước (Chạm vào chữ để sửa)</span>
+                </div>
+                
+                <div id="previewContainer" class="w-full bg-slate-300 overflow-hidden relative rounded-b-xl border border-t-0 border-slate-200 shadow-lg mb-5 transition-all">
+                    <!-- Nơi tiêm hóa đơn HTML 1600px vào -->
+                    <div id="invoiceRenderArea" style="width: 1600px; background: white; padding: 80px; transform-origin: top left; color: #0f172a;">
+                        <div class="print-border-brand" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; border-bottom-width: 5px; border-bottom-style: solid; padding-bottom: 40px;">
+                            <div style="display: flex; align-items: center; gap: 25px;">
+                                <div id="printLogoContainer" class="print-bg-brand" style="width: 120px; height: 120px; border-radius: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
+                                    <img id="printLogo" src="" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo Print">
+                                </div>
+                                <div>
+                                    <div id="printStoreName" contenteditable="true" class="print-text-brand" style="font-size: 65px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">THUẬN STORE</div>
+                                    <div id="printSlogan" contenteditable="true" style="font-size: 26px; color: #64748b; font-weight: 700; letter-spacing: 4px; margin-top: 8px; text-transform: uppercase;">MPE VIETNAM</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right; background: #f8fafc; padding: 25px 35px; border-radius: 16px; border: 2px solid #e2e8f0;">
+                                <div id="pSenderDisplay" contenteditable="true" style="font-weight: 900; font-size: 32px; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;"></div>
+                                <div id="pPhoneDisplay" contenteditable="true" class="print-text-brand" style="font-size: 28px; font-weight: 700;"></div>
+                            </div>
+                        </div>
+                        
+                        <h2 id="printDocTitle" contenteditable="true" style="text-align: center; font-size: 85px; font-weight: 900; color: #0f172a; margin-bottom: 60px; letter-spacing: 4px; text-transform: uppercase;">BẢNG BÁO GIÁ</h2>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
+                            <div style="font-size: 36px; color: #475569;">
+                                Kính gửi khách hàng: <strong id="pCustomerPrint" contenteditable="true" style="color: #0f172a; font-size: 42px; display: inline-block; margin-top: 10px;"></strong>
+                            </div>
+                            <div contenteditable="true" style="text-align: right; font-size: 32px; color: #64748b; font-style: italic;" id="pDateDisplay"></div>
+                        </div>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 60px; font-size: 32px;">
+                            <thead class="print-bg-brand" style="text-transform: uppercase; font-weight: 800; font-size: 30px;">
+                                <tr>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: center; width: 5%;">STT</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: left; width: 12%;">Mã SP</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: left; width: 23%;">Tên Sản Phẩm</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: center; width: 6%;">SL</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: right; width: 14%;">Giá Bìa</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: right; width: 13%;">Đơn Giá</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: right; width: 14%;">Thành Tiền</th>
+                                    <th style="padding: 20px 15px; border: 2px solid white; text-align: left; width: 13%;">Ghi Chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="printTbody" style="color: #1e293b;"></tbody>
+                        </table>
+                        
+                        <div style="display: flex; justify-content: flex-end; margin-bottom: 60px;">
+                            <div class="print-border-l-brand" style="background: #f8fafc; border-radius: 16px; padding: 40px 70px; display: flex; align-items: center; gap: 70px; border-top: 3px solid #cbd5e1; border-right: 3px solid #cbd5e1; border-bottom: 3px solid #cbd5e1; border-left-width: 15px; border-left-style: solid; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);">
+                                <span style="font-weight: 800; text-transform: uppercase; font-size: 36px; color: #475569;">Tổng thanh toán:</span>
+                                <span id="pTotalPrint" contenteditable="true" class="print-text-brand" style="font-size: 64px; font-weight: 900; min-width: 200px; text-align: right; display: inline-block;"></span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 50px;">
+                            <div id="pFinalNote" contenteditable="true" style="flex: 2; font-style: italic; color: #64748b; font-size: 32px; line-height: 1.6; white-space: pre-wrap; padding: 40px; border-radius: 16px; background: #f8fafc; border: 2px solid #e2e8f0; min-height: 150px;"></div>
+                            <div style="flex: 1; text-align: center; padding-top: 20px;">
+                                <div style="font-weight: 700; color: #0f172a; font-size: 32px; margin-bottom: 100px;">Đại diện bán hàng</div>
+                                <div id="pSignName" contenteditable="true" class="print-text-brand" style="font-weight: 900; font-size: 36px; text-transform: uppercase; min-width: 200px; display: inline-block;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BỘ NÚT ĐIỀU KHIỂN XUẤT -->
+                <div class="grid grid-cols-4 gap-2 mb-6">
+                    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-3 rounded-xl font-bold flex flex-col items-center gap-1 shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        <span class="text-[9px] uppercase tracking-wider">Máy In</span>
                     </button>
-                    <button id="btnActionPDF" class="bg-red-50 border border-red-100 text-red-700 p-3 rounded-2xl font-bold flex flex-col items-center gap-1.5 shadow-sm active:scale-95">
-                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] uppercase tracking-widest">Lưu PDF</span>
+                    <button id="btnActionPDF" class="bg-red-50 border border-red-100 text-red-700 py-3 rounded-xl font-bold flex flex-col items-center gap-1 shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span class="text-[9px] uppercase tracking-wider">Lưu PDF</span>
                     </button>
-                    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 p-3 rounded-2xl font-bold flex flex-col items-center gap-1.5 shadow-sm active:scale-95">
-                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] uppercase tracking-widest">Xuất Excel</span>
+                    <button id="btnActionImage" class="bg-blue-50 border border-blue-100 text-blue-700 py-3 rounded-xl font-bold flex flex-col items-center gap-1 shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="text-[9px] uppercase tracking-wider">Lưu Ảnh</span>
+                    </button>
+                    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 py-3 rounded-xl font-bold flex flex-col items-center gap-1 shadow-sm active:scale-95">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <span class="text-[9px] uppercase tracking-wider">Xuất Excel</span>
                     </button>
                 </div>
 
                 <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 mb-6 text-left relative overflow-hidden">
                     <p class="text-indigo-900 text-[10px] font-black uppercase tracking-widest flex items-center gap-1 mb-3">
-                        <span class="text-xl">📋</span> Mẫu tin nhắn sao chép
+                        <span class="text-xl">📋</span> Mẫu tin nhắn gửi khách hàng
                     </p>
                     <textarea id="smartMsgText" class="w-full bg-white text-slate-800 text-sm font-medium rounded-xl p-3 h-28 outline-none border border-slate-200 shadow-inner resize-none focus:border-indigo-400"></textarea>
                     <button id="btnCopySmartMsg" class="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-3 rounded-xl uppercase tracking-widest active:scale-95 text-[11px] flex justify-center items-center gap-2">
@@ -455,68 +550,6 @@
                     </button>
                 </div>
 
-                <div class="print-bg-brand text-white text-[10px] font-bold py-2 px-4 rounded-t-xl uppercase tracking-widest">
-                    Bản Xem Trước (Chạm giữ ảnh để lưu vào ĐT)
-                </div>
-                <img id="finalImage" class="w-full shadow-2xl rounded-b-xl border border-t-0 border-slate-200 bg-white" style="image-rendering: high-quality; object-fit: contain;" alt="Hóa đơn">
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- HIDDEN RENDER AREA FOR PRINTING            -->
-    <!-- ========================================== -->
-    <div id="invoiceRenderArea">
-        <div class="print-border-brand" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; border-bottom-width: 5px; border-bottom-style: solid; padding-bottom: 40px;">
-            <div style="display: flex; align-items: center; gap: 25px;">
-                <div id="printLogoContainer" class="print-bg-brand" style="width: 120px; height: 120px; border-radius: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
-                    <img id="printLogo" src="" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo Print">
-                </div>
-                <div>
-                    <div id="printStoreName" class="print-text-brand" style="font-size: 65px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">THUẬN STORE</div>
-                    <div id="printSlogan" style="font-size: 26px; color: #64748b; font-weight: 700; letter-spacing: 4px; margin-top: 8px; text-transform: uppercase;">MPE VIETNAM</div>
-                </div>
-            </div>
-            <div style="text-align: right; background: #f8fafc; padding: 25px 35px; border-radius: 16px; border: 2px solid #e2e8f0;">
-                <div id="pSenderDisplay" style="font-weight: 900; font-size: 32px; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;"></div>
-                <div id="pPhoneDisplay" class="print-text-brand" style="font-size: 28px; font-weight: 700;"></div>
-            </div>
-        </div>
-        
-        <h2 id="printDocTitle" style="text-align: center; font-size: 85px; font-weight: 900; color: #0f172a; margin-bottom: 60px; letter-spacing: 4px; text-transform: uppercase;">BẢNG BÁO GIÁ</h2>
-        
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
-            <div style="font-size: 36px; color: #475569;">
-                Kính gửi khách hàng: <strong id="pCustomerPrint" style="color: #0f172a; font-size: 42px; display: block; margin-top: 10px;"></strong>
-            </div>
-            <div style="text-align: right; font-size: 32px; color: #64748b; font-style: italic;" id="pDateDisplay"></div>
-        </div>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 60px; font-size: 32px;">
-            <thead class="print-bg-brand" style="text-transform: uppercase; font-weight: 800; font-size: 30px;">
-                <tr>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: center; width: 5%;">STT</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: left; width: 15%;">Mã SP</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: left; width: auto;">Tên Sản Phẩm</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: center; width: 6%;">SL</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: right; width: 15%;">Giá Bìa</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: right; width: 13%;">Đơn Giá</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: right; width: 16%;">Thành Tiền</th>
-                    <th style="padding: 30px 10px; border: 2px solid white; text-align: center; width: 13%;">Ghi Chú</th>
-                </tr>
-            </thead>
-            <tbody id="printTbody" style="color: #1e293b;"></tbody>
-        </table>
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 60px;">
-            <div class="print-border-l-brand" style="background: #f8fafc; border-radius: 16px; padding: 40px 70px; display: flex; align-items: center; gap: 70px; border-top: 3px solid #cbd5e1; border-right: 3px solid #cbd5e1; border-bottom: 3px solid #cbd5e1; border-left-width: 15px; border-left-style: solid; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);">
-                <span style="font-weight: 800; text-transform: uppercase; font-size: 36px; color: #475569;">Tổng thanh toán:</span>
-                <span id="pTotalPrint" class="print-text-brand" style="font-size: 64px; font-weight: 900;"></span>
-            </div>
-        </div>
-        <div style="display: flex; gap: 50px;">
-            <div id="pFinalNote" style="flex: 2; font-style: italic; color: #64748b; font-size: 32px; line-height: 1.6; white-space: pre-wrap; padding: 40px; border-radius: 16px; background: #f8fafc; border: 2px solid #e2e8f0;"></div>
-            <div style="flex: 1; text-align: center; padding-top: 20px;">
-                <div style="font-weight: 700; color: #0f172a; font-size: 32px; margin-bottom: 100px;">Đại diện bán hàng</div>
-                <div id="pSignName" class="print-text-brand" style="font-weight: 900; font-size: 36px; text-transform: uppercase;"></div>
             </div>
         </div>
     </div>
@@ -525,7 +558,7 @@
     <script>
         // 1. Utilities
         const Utils = {
-            formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0),
+            formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0).replace(/\s+/g, '\u00A0'),
             
             cleanNumber: (v) => { 
                 if (!v) return 0;
@@ -650,7 +683,7 @@
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), globalDisc: document.getElementById('globalDiscountInput'), btnApplyGlobal: document.getElementById('btnApplyGlobal'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome') },
             search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu') },
-            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), img: document.getElementById('finalImage'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg') }
+            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg') }
         };
 
         const switchScreen = (screenId) => {
@@ -978,7 +1011,6 @@
                 const kmTien = Number(item.kmTien) || 0;
 
                 // Tính chiết khấu kép (Tuần tự Giá Bìa -> CK -> KM1 -> KM2)
-                // Đã fix dứt điểm: KHÔNG nhân % tăng của ĐVT vào giá gốc nữa.
                 const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
                 const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
                 const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
@@ -1013,13 +1045,10 @@
 
                 if (currentAutoStr !== item.lastAutoStr) {
                     if (item.note === item.lastAutoStr) {
-                        // Nếu chưa sửa gì, thay bằng chuỗi mới hoàn toàn
                         item.note = currentAutoStr;
                     } else if (item.lastAutoStr !== "" && item.note.includes(item.lastAutoStr)) {
-                        // Nếu đã gõ chữ thêm, chỉ thay thế đúng phần % cũ
                         item.note = item.note.replace(item.lastAutoStr, currentAutoStr);
                     } else {
-                        // Nếu bị xóa mất, tự động thêm lại vào đầu ghi chú
                         if (currentAutoStr !== "") {
                             item.note = item.note ? currentAutoStr + ", " + item.note : currentAutoStr;
                         }
@@ -1213,7 +1242,7 @@
         });
 
         // ==========================================
-        // EXPORT LOGIC
+        // EXPORT LOGIC & LIVE PREVIEW
         // ==========================================
         const ExportLogic = {
             generatePrintView: () => {
@@ -1228,60 +1257,121 @@
                         else if (incInfo.type === 'text') increaseHtml = `<br><span style="font-size: 20px; color: #3b82f6; font-weight: 800; margin-top: 6px; display: inline-block; background: #eff6ff; padding: 2px 10px; border-radius: 8px;">(${incInfo.text})</span>`;
                     }
                     
-                    // Lấy chính xác những gì đang hiển thị trong ô Ghi chú để in
                     const noteHtml = item.note ? item.note : '';
                     
-                    tbody.innerHTML += `<tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};"><td style="padding: 30px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td><td style="padding: 30px 15px; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td><td style="padding: 30px 15px; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td><td class="print-text-brand" style="padding: 30px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td><td style="padding: 30px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td><td style="padding: 30px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle;">${Utils.formatMoney(item.priceAfterDiscount)}</td><td style="padding: 30px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle;">${Utils.formatMoney(item.totalFinal)}</td><td style="padding: 30px 15px; text-align: center; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${noteHtml}</td></tr>`;
+                    // Render với contenteditable="true"
+                    tbody.innerHTML += `
+                    <tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};">
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td>
+                        <td contenteditable="true" class="print-text-brand" style="padding: 20px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.priceAfterDiscount)}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.totalFinal)}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${noteHtml}</td>
+                    </tr>`;
                 });
 
-                document.getElementById('pCustomerPrint').textContent = DOM.main.custName.value.trim() || "Quý khách hàng";
-                document.getElementById('pSenderDisplay').textContent = DOM.main.senderName.value.trim();
-                document.getElementById('pSignName').textContent = DOM.main.senderName.value.trim();
-                document.getElementById('pPhoneDisplay').textContent = DOM.main.senderPhone.value.trim();
-                document.getElementById('pTotalPrint').textContent = Utils.formatMoney(sumFinal);
+                document.getElementById('pCustomerPrint').innerHTML = DOM.main.custName.value.trim() || "Quý khách hàng";
+                document.getElementById('pSenderDisplay').innerHTML = DOM.main.senderName.value.trim();
+                document.getElementById('pSignName').innerHTML = DOM.main.senderName.value.trim();
+                document.getElementById('pPhoneDisplay').innerHTML = DOM.main.senderPhone.value.trim();
+                document.getElementById('pTotalPrint').innerHTML = Utils.formatMoney(sumFinal);
                 
                 const note = DOM.main.promoNote.value.trim();
                 document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${State.brand.name}!`;
                 
-                const now = new Date(); document.getElementById('pDateDisplay').textContent = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
+                const now = new Date(); document.getElementById('pDateDisplay').innerHTML = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
                 return sumFinal;
             },
-            processImage: async () => {
+            
+            // Xử lý mở Màn hình xuất (Tạo bản Live Preview có thể sửa được)
+            prepareExport: () => {
                 if(State.cart.length === 0) return; 
-                DOM.export.modal.classList.add('active'); DOM.export.loading.classList.remove('hidden'); DOM.export.guide.classList.add('hidden');
+                DOM.export.modal.classList.add('active'); 
+                DOM.export.loading.classList.remove('hidden');
                 
                 const total = ExportLogic.generatePrintView();
                 DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${State.brand.docTitle.toLowerCase()}.\n👉 Tổng cộng: ${Utils.formatMoney(total)}\n\nAnh/chị xem file đính kèm nhé!`;
 
-                try {
-                    const printArea = document.getElementById('invoiceRenderArea'); 
-                    await new Promise(r => setTimeout(r, 600)); 
-                    const canvas = await html2canvas(printArea, { scale: 2, backgroundColor: "#ffffff", useCORS: true, logging: false });
+                setTimeout(() => {
+                    const wrapper = document.getElementById('previewContainer');
+                    const invoice = document.getElementById('invoiceRenderArea');
                     
-                    if (DOM.export.img.src && DOM.export.img.src.startsWith('blob:')) {
-                        URL.revokeObjectURL(DOM.export.img.src);
-                    }
+                    // Scale khối 1600px xuống vừa với màn hình điện thoại
+                    const scale = wrapper.clientWidth / 1600;
+                    invoice.style.transform = `scale(${scale})`;
+                    wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`;
                     
-                    DOM.export.img.src = canvas.toDataURL("image/jpeg", 0.90); 
-                    DOM.export.loading.classList.add('hidden'); DOM.export.guide.classList.remove('hidden');
-                } catch (err) { Utils.showToast("Lỗi tạo ảnh. Thử giảm bớt Sản phẩm."); }
+                    DOM.export.loading.classList.add('hidden');
+                }, 100); // Đợi DOM render xong mới tính kích thước
             },
+
+            // Hàm dùng chung: Bắt dính (capture) DOM đã chỉnh sửa thành Canvas
+            captureCanvas: async () => {
+                DOM.export.loading.classList.remove('hidden');
+                DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
+                
+                // Hủy focus (để ẩn viền nhấp nháy của vùng đang chỉnh sửa)
+                if (document.activeElement) document.activeElement.blur();
+
+                const wrapper = document.getElementById('previewContainer');
+                const invoice = document.getElementById('invoiceRenderArea');
+                
+                // Tạm thời tháo scale ra để render full HD
+                const oldScale = invoice.style.transform;
+                const oldHeight = wrapper.style.height;
+                invoice.style.transform = 'none';
+                wrapper.style.height = 'auto';
+                wrapper.style.overflow = 'visible';
+                
+                await new Promise(r => setTimeout(r, 100)); // Đợi trình duyệt reflow
+                
+                try {
+                    const canvas = await html2canvas(invoice, { 
+                        scale: 2, // Chất lượng 2x nét căng
+                        backgroundColor: "#ffffff", 
+                        useCORS: true, 
+                        logging: false,
+                        windowWidth: 1600 
+                    });
+                    
+                    // Phục hồi lại trạng thái scale ban đầu cho màn hình xem
+                    invoice.style.transform = oldScale;
+                    wrapper.style.height = oldHeight;
+                    wrapper.style.overflow = 'hidden';
+                    DOM.export.loading.classList.add('hidden');
+                    return canvas;
+                } catch (e) {
+                    invoice.style.transform = oldScale;
+                    wrapper.style.height = oldHeight;
+                    wrapper.style.overflow = 'hidden';
+                    DOM.export.loading.classList.add('hidden');
+                    Utils.showToast("Lỗi tạo bản in!");
+                    return null;
+                }
+            },
+
             exportExcelPro: async () => {
-                Utils.showToast("Đang tạo Excel...");
+                Utils.showToast("Đang thu thập dữ liệu từ Bản in...");
                 try {
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia');
                     const argbColor = Utils.hexToArgb(State.brand.color);
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     
-                    titleCell.value = State.brand.docTitle.toUpperCase(); 
+                    // Lấy chính xác chữ hiển thị trên Live Preview
+                    titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); 
                     titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
+                    
                     worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true };
-                    worksheet.getCell('B3').value = DOM.main.custName.value.trim() || "KhachHang"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
-                    worksheet.getCell('G3').value = document.getElementById('pDateDisplay').textContent; worksheet.getCell('G3').alignment = { horizontal: 'right' };
+                    worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').innerText.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
+                    worksheet.getCell('G3').value = document.getElementById('pDateDisplay').innerText.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
+                    
                     worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true };
-                    worksheet.getCell('B4').value = DOM.main.senderName.value.trim();
-                    worksheet.getCell('G4').value = 'SĐT: ' + DOM.main.senderPhone.value.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
+                    worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').innerText.trim();
+                    worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').innerText.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
                     
                     const headerRow = worksheet.getRow(6);
                     headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
@@ -1290,52 +1380,83 @@
                     headerRow.height = 30;
                     
                     let currentRow = 7;
-                    State.cart.forEach((item, i) => {
-                        const row = worksheet.getRow(currentRow); let notes = [];
-                        
-                        // Lấy nguyên văn ô ghi chú của người dùng để xuất Excel
-                        if(item.note) notes.push(item.note);
-
-                        let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                        if (incInfo && incInfo.value !== 0) { if (incInfo.type === 'tăng') notes.push(`Tăng ${incInfo.text}`); else if (incInfo.type === 'giảm') notes.push(`Giảm ${incInfo.text}`); else if (incInfo.type === 'text') notes.push(`${incInfo.text}`); }
-                        
-                        row.values = [ i + 1, item.code, item.name, item.qty, item.originalPrice, item.priceAfterDiscount, item.totalFinal, notes.join(' - ') ];
-                        row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
-                        row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
-                        currentRow++;
+                    // DUYỆT TỪ DOM LIVE - Bảo đảm xuất ra đúng những gì người dùng vừa sửa tay
+                    const domRows = document.querySelectorAll('#printTbody tr');
+                    
+                    domRows.forEach((tr) => {
+                        const tds = tr.querySelectorAll('td');
+                        if (tds.length >= 8) {
+                            const row = worksheet.getRow(currentRow);
+                            
+                            // Lọc con số từ HTML DOM
+                            const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; // Tách bỏ thẻ <br> của ĐVT
+                            
+                            row.values = [ 
+                                tds[0].innerText.trim(), 
+                                tds[1].innerText.trim(), 
+                                tds[2].innerText.trim(), 
+                                Utils.cleanNumber(tds[3].innerText), 
+                                Utils.cleanNumber(rawPriceStr), 
+                                Utils.cleanNumber(tds[5].innerText), 
+                                Utils.cleanNumber(tds[6].innerText), 
+                                tds[7].innerText.trim().replace(/\n/g, ', ') 
+                            ];
+                            row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
+                            row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
+                            currentRow++;
+                        }
                     });
                     
                     const totalRow = worksheet.getRow(currentRow + 1);
                     totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
-                    totalRow.getCell(7).value = Number(DOM.footer.sumFinal.textContent.replace(/[^\d]/g, '')); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
+                    totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').innerText.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 25 } ];
                     
                     const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
                     saveAs(blob, `${shortTitle}_${DOM.main.custName.value.trim() || 'KH'}_${Date.now()}.xlsx`); 
                     Utils.showToast("Tải Excel thành công!");
-                } catch (error) { Utils.showToast("Lỗi khi xuất Excel!"); }
+                } catch (error) { Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); }
             },
+
             exportPDF: async () => {
-                const imgData = DOM.export.img.src; if(!imgData || !imgData.startsWith('data:image')) return Utils.showToast("Vui lòng đợi ảnh xử lý xong!");
-                Utils.showToast("Đang tạo tệp PDF...");
+                const canvas = await ExportLogic.captureCanvas();
+                if(!canvas) return;
+                Utils.showToast("Đang lưu tệp PDF...");
                 try {
+                    const imgData = canvas.toDataURL("image/jpeg", 0.90);
                     const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
                     const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
-                    const img = new Image(); await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; img.src = imgData; });
-                    const imgRatio = img.height / img.width; const scaledImgHeight = pdfWidth * imgRatio;
+                    const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
                     let heightLeft = scaledImgHeight; let position = 0;
                     
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
                     
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                    pdf.save(`${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`); Utils.showToast("Lưu PDF thành công!");
+                    pdf.save(`${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`); 
+                    Utils.showToast("Lưu PDF thành công!");
                 } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
             },
-            printInvoiceMobile: () => {
-                const imgData = DOM.export.img.src; if(!imgData || !imgData.startsWith('data:image')) return Utils.showToast("Vui lòng đợi ảnh hiển thị!");
+
+            exportImage: async () => {
+                const canvas = await ExportLogic.captureCanvas();
+                if(!canvas) return;
+                Utils.showToast("Đang lưu Ảnh vào thiết bị...");
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+                const a = document.createElement('a');
+                a.href = dataUrl;
+                const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
+                a.download = `${shortTitle}_${Date.now()}.jpg`;
+                a.click();
+                Utils.showToast("Đã tải ảnh thành công!");
+            },
+
+            printInvoiceMobile: async () => {
+                const canvas = await ExportLogic.captureCanvas();
+                if(!canvas) return;
                 Utils.showToast("Đang kết nối máy in...");
+                const imgData = canvas.toDataURL("image/jpeg", 0.95);
                 const iframe = document.createElement('iframe'); iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; document.body.appendChild(iframe);
                 const iframeDoc = iframe.contentWindow.document; iframeDoc.open();
                 iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); iframeDoc.close();
@@ -1343,10 +1464,12 @@
             }
         };
 
-        DOM.footer.btnExport.addEventListener('click', ExportLogic.processImage);
+        // Gắn lại sự kiện cho các nút Menu
+        DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport);
         DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active'));
         DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro);
         DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF);
+        DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage);
         DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
         
         DOM.export.btnCopyMsg.addEventListener('click', () => { 
@@ -1354,6 +1477,17 @@
             document.execCommand('copy'); 
             window.getSelection().removeAllRanges(); 
             Utils.showToast("Đã sao chép!"); 
+        });
+
+        // Tự động scale lại bản in nếu màn hình bị xoay (quay ngang điện thoại)
+        window.addEventListener('resize', () => {
+            if(DOM.export.modal.classList.contains('active')) {
+                const wrapper = document.getElementById('previewContainer');
+                const invoice = document.getElementById('invoiceRenderArea');
+                const scale = wrapper.clientWidth / 1600;
+                invoice.style.transform = `scale(${scale})`;
+                wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`;
+            }
         });
 
         // KHỞI CHẠY APP
