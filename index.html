@@ -962,13 +962,6 @@
             recalculateItem: (item) => {
                 const qty = Number(item.qty) || 0;
                 const origPrice = Number(item.originalPrice) || 0;
-                
-                // Lấy % điều chỉnh từ đơn vị tính (nếu có)
-                const unitInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                const unitAdj = unitInfo ? (unitInfo.value || 0) : 0;
-                
-                // Giá sau khi điều chỉnh theo bảng giá gốc
-                const adjustedPrice = origPrice * (1 + unitAdj / 100);
 
                 const baseDisc = Number(item.baseDiscount) || 0; // CK
                 const km1 = item.km1 !== undefined ? Number(item.km1) : (Number(item.extraPromo) || 0);
@@ -976,7 +969,8 @@
                 const kmTien = Number(item.kmTien) || 0;
 
                 // Tính chiết khấu kép (Tuần tự Giá Bìa -> CK -> KM1 -> KM2)
-                const priceAfterBaseDisc = adjustedPrice * (1 - baseDisc / 100); 
+                // Đã loại bỏ logic tự động nhân % tăng của cột ĐVT vào giá bìa
+                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
                 const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
                 const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
                 
