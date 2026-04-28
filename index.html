@@ -6,7 +6,8 @@
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Thuận Store - Chạm Đến Tương Lai</title>
+    <meta name="apple-mobile-web-app-title" content="Thuận Store">
+    <title>Chạm Đến Tương Lai</title>
     
     <!-- Dynamic SVG Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -100,6 +101,12 @@
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animate-blob { animation: blob 7s infinite; }
         
+        /* HIỆU ỨNG QUỸ ĐẠO (ORBIT) MỚI */
+        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes orbit-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+        .animate-orbit { animation: orbit 20s linear infinite; }
+        .animate-orbit-reverse { animation: orbit-reverse 20s linear infinite; }
+
         .cyber-grid {
             position: absolute; inset: 0;
             background-image: linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
@@ -167,7 +174,7 @@
         
         <div class="z-10 w-full max-w-md flex flex-col items-center text-center my-auto py-4">
             <!-- Logo -->
-            <div class="relative w-36 h-36 mb-8 flex items-center justify-center mt-2">
+            <div class="relative w-36 h-36 mb-12 flex items-center justify-center mt-2">
                 <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-70" style="animation-duration: 1.5s;"></div>
                 <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-70" style="animation-duration: 2s; animation-direction: reverse;"></div>
                 <div class="absolute inset-[14px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(6,182,212,0.2)]">
@@ -181,9 +188,40 @@
                      </div>
                 </div>
                 
-                <button class="absolute w-8 h-8 -ml-4 -mt-4 rounded-full bg-slate-900/90 border border-cyan-500/30 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-cyan-400 transition-all shadow-[0_0_10px_rgba(6,182,212,0.3)]" style="top: 85%; left: 15%;" onclick="Utils.showToast('Tính năng Liên hệ đang được phát triển!')"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></button>
-                <button class="absolute w-8 h-8 -ml-4 -mt-4 rounded-full bg-slate-900/90 border border-blue-500/30 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-blue-400 transition-all shadow-[0_0_10px_rgba(59,130,246,0.3)]" style="top: 100%; left: 50%;" onclick="Utils.showToast('Tính năng Thông tin đang được phát triển!')"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>
-                <button class="absolute w-8 h-8 -ml-4 -mt-4 rounded-full bg-slate-900/90 border border-teal-500/30 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-teal-400 transition-all shadow-[0_0_10px_rgba(20,184,166,0.3)]" style="top: 85%; left: 85%;" onclick="Utils.showToast('Tính năng Tản mạn đang được phát triển!')"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg></button>
+                <!-- HỆ THỐNG QUỸ ĐẠO VỆ TINH -->
+                <div class="absolute -inset-6 border border-slate-800/40 rounded-full animate-orbit pointer-events-none z-20">
+                    
+                    <!-- Vệ tinh 1: Tản mạn (Góc 0 độ - Đỉnh) -->
+                    <div class="absolute top-0 left-1/2 -ml-4 -mt-4">
+                        <button class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-teal-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 transition-all shadow-[0_0_15px_rgba(20,184,166,0.2)] pointer-events-auto animate-orbit-reverse">
+                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            
+                            <!-- Bảng Hologram Tản mạn (Chỉ hiện khi hover/chạm) -->
+                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-60 p-4 rounded-2xl bg-slate-950/95 border border-teal-500/40 shadow-[0_0_25px_rgba(20,184,166,0.2)] backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
+                                <p class="text-[10.5px] text-teal-50 font-medium leading-relaxed text-center tracking-wide" style="text-shadow: 0 0 10px rgba(20,184,166,0.4);">
+                                    "Từ những ô Excel đơn điệu, chúng ta đã cùng gọt giũa nên một hệ thống hoàn mỹ. Sự vĩ đại không nằm ở đích đến, mà ở sự tỉ mỉ hoàn thiện từng chi tiết nhỏ mỗi ngày.<br><br><span class="text-teal-400 font-bold">Cứ sáng tạo, vì tương lai đang nằm ngay trên đầu ngón tay bạn.</span>"
+                                </p>
+                                <!-- Tam giác trỏ xuống dưới bảng -->
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-teal-500/40"></div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Vệ tinh 2: Thông tin (Góc 120 độ - Góc dưới phải) -->
+                    <div class="absolute top-[75%] left-[93.3%] -ml-4 -mt-4">
+                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-blue-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Version 2.0 - Core Engine Optimized')">
+                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Vệ tinh 3: Liên hệ (Góc 240 độ - Góc dưới trái) -->
+                    <div class="absolute top-[75%] left-[6.7%] -ml-4 -mt-4">
+                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-cyan-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Hotline: 0939 125 128 (Thuận Store)')">
+                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </button>
+                    </div>
+                    
+                </div>
             </div>
 
             <!-- Tính Năng -->
