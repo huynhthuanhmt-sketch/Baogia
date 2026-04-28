@@ -437,6 +437,7 @@
         <div id="searchList" class="flex-grow overflow-y-auto bg-white divide-y divide-slate-100 pb-32 relative z-0"></div>
     </div>
 
+    <!-- MODAL XUẤT FILE -->
     <div id="exportModal" class="fullscreen-modal" style="z-index: 500;">
         <div class="bg-white p-4 pt-12 border-b border-slate-200 flex justify-between items-center shadow-sm shrink-0 relative z-20">
             <button id="btnCloseExport" class="font-bold text-slate-500 bg-slate-100 px-4 py-2 rounded-xl uppercase text-xs">TRỞ LẠI</button>
@@ -448,7 +449,7 @@
             
             <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm transition-opacity">
                 <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-                <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang nạp Bản In (Tương tác)...</div>
+                <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang xử lý dữ liệu...</div>
             </div>
             
             <div id="exportGuide" class="w-full max-w-2xl mx-auto flex flex-col">
@@ -551,6 +552,22 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL HIỂN THỊ KẾT QUẢ ẢNH CHO MOBILE (CHỐNG VĂNG APP) -->
+    <div id="imageResultModal" class="fixed inset-0 bg-slate-950 z-[1000] hidden flex-col transition-opacity duration-300">
+        <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex justify-between items-center shadow-lg shrink-0">
+            <button id="btnCloseImageResult" class="text-slate-400 bg-slate-800 font-bold px-4 py-2 rounded-xl text-xs uppercase active:scale-95 transition-colors hover:text-white">ĐÓNG</button>
+            <span class="font-black text-cyan-400 uppercase tracking-widest text-sm text-center">BẢN IN HOÀN CHỈNH</span>
+            <div class="w-16"></div>
+        </div>
+        <div class="flex-grow overflow-y-auto p-4 flex flex-col items-center pb-20">
+            <div class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-4 py-3 rounded-xl text-[11px] font-bold w-full max-w-md text-center mb-5 flex gap-2 items-center justify-center animate-pulse shrink-0">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                CHẠM VÀ GIỮ ẢNH BÊN DƯỚI ĐỂ LƯU VÀO ĐIỆN THOẠI
+            </div>
+            <img id="finalGeneratedImage" class="w-full max-w-2xl rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-slate-700 bg-white" alt="Hóa đơn hoàn chỉnh" />
         </div>
     </div>
 
@@ -683,7 +700,7 @@
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), globalDisc: document.getElementById('globalDiscountInput'), btnApplyGlobal: document.getElementById('btnApplyGlobal'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome') },
             search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu') },
-            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg') }
+            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage') }
         };
 
         const switchScreen = (screenId) => {
@@ -1316,39 +1333,29 @@
                 // Hủy focus (để ẩn viền nhấp nháy của vùng đang chỉnh sửa)
                 if (document.activeElement) document.activeElement.blur();
 
-                const wrapper = document.getElementById('previewContainer');
                 const invoice = document.getElementById('invoiceRenderArea');
                 
-                // Tạm thời tháo scale ra để render full HD
-                const oldScale = invoice.style.transform;
-                const oldHeight = wrapper.style.height;
-                invoice.style.transform = 'none';
-                wrapper.style.height = 'auto';
-                wrapper.style.overflow = 'visible';
-                
-                await new Promise(r => setTimeout(r, 100)); // Đợi trình duyệt reflow
+                await new Promise(r => setTimeout(r, 100)); // Đợi trình duyệt xử lý
                 
                 try {
                     const canvas = await html2canvas(invoice, { 
-                        scale: 2, // Chất lượng 2x nét căng
+                        scale: 1.2, // Tối ưu RAM cho thiết bị di động để tránh văng app (OOM)
                         backgroundColor: "#ffffff", 
                         useCORS: true, 
                         logging: false,
-                        windowWidth: 1600 
+                        onclone: (clonedDoc) => {
+                            // Trong bản clone, gỡ bỏ transform để html2canvas capture đủ kích thước 1600px
+                            const el = clonedDoc.getElementById('invoiceRenderArea');
+                            el.style.transform = 'none';
+                        }
                     });
                     
-                    // Phục hồi lại trạng thái scale ban đầu cho màn hình xem
-                    invoice.style.transform = oldScale;
-                    wrapper.style.height = oldHeight;
-                    wrapper.style.overflow = 'hidden';
                     DOM.export.loading.classList.add('hidden');
                     return canvas;
                 } catch (e) {
-                    invoice.style.transform = oldScale;
-                    wrapper.style.height = oldHeight;
-                    wrapper.style.overflow = 'hidden';
+                    console.error(e);
                     DOM.export.loading.classList.add('hidden');
-                    Utils.showToast("Lỗi tạo bản in!");
+                    Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy giảm số lượng Sản phẩm!");
                     return null;
                 }
             },
@@ -1424,7 +1431,7 @@
                 if(!canvas) return;
                 Utils.showToast("Đang lưu tệp PDF...");
                 try {
-                    const imgData = canvas.toDataURL("image/jpeg", 0.90);
+                    const imgData = canvas.toDataURL("image/jpeg", 0.85); // Giảm chất lượng 1 xíu để tối ưu RAM
                     const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
                     const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
                     const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
@@ -1442,14 +1449,24 @@
             exportImage: async () => {
                 const canvas = await ExportLogic.captureCanvas();
                 if(!canvas) return;
-                Utils.showToast("Đang lưu Ảnh vào thiết bị...");
-                const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
-                const a = document.createElement('a');
-                a.href = dataUrl;
-                const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                a.download = `${shortTitle}_${Date.now()}.jpg`;
-                a.click();
-                Utils.showToast("Đã tải ảnh thành công!");
+                Utils.showToast("Đang tạo ảnh...");
+                
+                canvas.toBlob((blob) => {
+                    if(!blob) return Utils.showToast("Lỗi tạo ảnh");
+                    
+                    // Dọn dẹp object URL cũ nếu có để giải phóng RAM
+                    if (DOM.export.finalImg.src && DOM.export.finalImg.src.startsWith('blob:')) {
+                        URL.revokeObjectURL(DOM.export.finalImg.src);
+                    }
+                    
+                    const url = URL.createObjectURL(blob);
+                    DOM.export.finalImg.src = url;
+                    
+                    // Hiện Modal hình ảnh
+                    DOM.export.imageModal.classList.remove('hidden');
+                    DOM.export.imageModal.classList.add('flex');
+                    Utils.showToast("Hoàn tất!");
+                }, "image/jpeg", 0.9);
             },
 
             printInvoiceMobile: async () => {
@@ -1457,9 +1474,12 @@
                 if(!canvas) return;
                 Utils.showToast("Đang kết nối máy in...");
                 const imgData = canvas.toDataURL("image/jpeg", 0.95);
-                const iframe = document.createElement('iframe'); iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; document.body.appendChild(iframe);
+                const iframe = document.createElement('iframe'); 
+                iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; 
+                document.body.appendChild(iframe);
                 const iframeDoc = iframe.contentWindow.document; iframeDoc.open();
-                iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); iframeDoc.close();
+                iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); 
+                iframeDoc.close();
                 setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
             }
         };
@@ -1477,6 +1497,12 @@
             document.execCommand('copy'); 
             window.getSelection().removeAllRanges(); 
             Utils.showToast("Đã sao chép!"); 
+        });
+
+        // Nút đóng của modal hình ảnh
+        DOM.export.btnCloseImage.addEventListener('click', () => {
+            DOM.export.imageModal.classList.add('hidden');
+            DOM.export.imageModal.classList.remove('flex');
         });
 
         // Tự động scale lại bản in nếu màn hình bị xoay (quay ngang điện thoại)
