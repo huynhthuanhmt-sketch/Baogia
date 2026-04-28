@@ -916,7 +916,7 @@
                 btn.className = "btn-toggle-search print-bg-brand text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm";
                 btn.textContent = "THÊM";
             } else {
-                State.cart.unshift({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item' });
+                State.cart.unshift({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '' });
                 btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100";
                 btn.textContent = "XÓA";
             }
@@ -932,13 +932,16 @@
                 let btnClass = isAdded ? "text-red-500 bg-red-50 border-red-100" : "print-bg-brand text-white shadow-sm";
                 let btnText = isAdded ? "XÓA" : "THÊM";
                 
-                let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); let textUnit = '';
+                let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); 
+                let unitBadge = '';
                 if (incInfo && incInfo.value !== 0) {
-                    if (incInfo.type === 'tăng') textUnit = `<span class="text-red-600 font-bold bg-red-50 px-1.5 rounded">Tăng ${incInfo.text}</span>`;
-                    else if (incInfo.type === 'giảm') textUnit = `<span class="text-green-600 font-bold bg-green-50 px-1.5 rounded">Giảm ${incInfo.text}</span>`;
-                    else textUnit = `<span class="text-blue-500 font-bold bg-blue-50 px-1.5 rounded">${incInfo.text}</span>`;
-                } else {
-                    textUnit = `<span class="text-slate-400 font-medium">/ ${p.unit || 'Cái'}</span>`;
+                    let innerText = '';
+                    if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`;
+                    else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`;
+                    else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`;
+                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
+                } else if (p.unit && p.unit.toLowerCase().trim() !== 'cái' && p.unit.toLowerCase().trim() !== '') {
+                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`;
                 }
                 
                 return `
@@ -948,7 +951,10 @@
                             ${p.code ? `<span class="text-[9px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded border border-slate-200 mr-1.5">${p.code}</span>` : ''}
                             <span class="font-bold text-slate-800 text-sm">${p.name}</span>
                         </div>
-                        <div class="print-text-brand text-xs font-black">${Utils.formatMoney(p.price)} ${textUnit}</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="print-text-brand text-xs font-black">${Utils.formatMoney(p.price)}</span>
+                            ${unitBadge}
+                        </div>
                     </div>
                     <button data-pid="${p.id}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold active:scale-95 transition-transform">
                         ${btnText}
@@ -969,7 +975,6 @@
                 const kmTien = Number(item.kmTien) || 0;
 
                 // Tính chiết khấu kép (Tuần tự Giá Bìa -> CK -> KM1 -> KM2)
-                // Đã loại bỏ logic tự động nhân % tăng của cột ĐVT vào giá bìa
                 const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
                 const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
                 const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
@@ -989,6 +994,37 @@
                 item.priceAfterDiscount = qty > 0 ? Math.round(lineTotal / qty) : Math.round(priceAfterKm2); 
                 item.totalFinal = Math.round(lineTotal); 
                 item.totalOriginal = Math.round(origPrice * qty);
+
+                // --- LOGIC TỰ ĐỘNG ĐIỀN GHI CHÚ THÔNG MINH ---
+                let dNotes = [];
+                if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`);
+                if (km1 > 0) dNotes.push(`KM1: ${km1}%`);
+                if (km2 > 0) dNotes.push(`KM2: ${km2}%`);
+                if (kmTien > 0) dNotes.push(`Giảm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
+                
+                let currentAutoStr = dNotes.join(', ');
+                
+                if (item.note === undefined) item.note = "";
+                if (item.lastAutoStr === undefined) item.lastAutoStr = "";
+
+                if (currentAutoStr !== item.lastAutoStr) {
+                    if (item.note === item.lastAutoStr) {
+                        // Nếu chưa sửa gì, thay bằng chuỗi mới hoàn toàn
+                        item.note = currentAutoStr;
+                    } else if (item.lastAutoStr !== "" && item.note.includes(item.lastAutoStr)) {
+                        // Nếu đã gõ chữ thêm, chỉ thay thế đúng phần % cũ
+                        item.note = item.note.replace(item.lastAutoStr, currentAutoStr);
+                    } else {
+                        // Nếu bị xóa mất, tự động thêm lại vào đầu ghi chú
+                        if (currentAutoStr !== "") {
+                            item.note = item.note ? currentAutoStr + ", " + item.note : currentAutoStr;
+                        }
+                    }
+                    item.lastAutoStr = currentAutoStr;
+                }
+                
+                // Dọn dẹp dấu phẩy thừa
+                item.note = item.note.replace(/^[,\s]+|[,\s]+$/g, '').replace(/,\s*,/g, ',');
             },
             
             updateSummary: () => {
@@ -1010,20 +1046,26 @@
                 const html = State.cart.map((item, index) => {
                     CartLogic.recalculateItem(item);
 
-                    let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); let unitDisp = item.unit || 'Cái';
+                    let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); 
+                    let unitBadge = '';
                     if (incInfo && incInfo.value !== 0) {
-                        if (incInfo.type === 'tăng') unitDisp = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`;
-                        else if (incInfo.type === 'giảm') unitDisp = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`;
-                        else unitDisp = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`;
+                        let innerText = '';
+                        if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`;
+                        else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`;
+                        else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`;
+                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
+                    } else if (item.unit && item.unit.toLowerCase().trim() !== 'cái' && item.unit.toLowerCase().trim() !== '') {
+                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`;
                     }
 
                     return `
                     <div class="glass-card p-4 relative" data-id="${item.id}">
                         <div class="pr-8 mb-4">
                             <h4 class="text-sm font-bold text-slate-900 leading-snug"><span class="print-text-brand mr-1.5 font-black">#${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}</h4>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>
-                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">ĐVT: ${unitDisp}</span>
+                            <div class="flex flex-wrap gap-2 mt-2 items-center">
+                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>
+                                ${unitBadge}
+                                <input type="text" data-field="note" value="${item.note || ''}" placeholder="📝 Thêm ghi chú SP..." class="cart-input-text flex-1 min-w-[120px] bg-amber-50/50 border border-amber-100 focus:bg-white rounded-md px-2 py-1 text-[10px] font-semibold text-slate-700 outline-none focus:border-amber-400 transition-colors">
                             </div>
                         </div>
                         <button data-action="remove" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors">
@@ -1124,10 +1166,21 @@
         });
 
         DOM.main.quoteList.addEventListener('input', (e) => {
-            if(!e.target.classList.contains('cart-input')) return;
+            if(!e.target.classList.contains('cart-input') && !e.target.classList.contains('cart-input-text')) return;
             const card = e.target.closest('.glass-card');
             const id = card.dataset.id;
             const field = e.target.dataset.field;
+            
+            const item = State.cart.find(i => i.id === id); 
+            if(!item) return; 
+
+            // Xử lý riêng cho ô text (Ghi chú) để không bị nhầm vào logic tính toán
+            if (e.target.classList.contains('cart-input-text')) {
+                item[field] = e.target.value;
+                LocalDB.save();
+                return;
+            }
+
             let val = Utils.cleanNumber(e.target.value);
 
             if (field === 'qty' && val < 1) {
@@ -1135,14 +1188,18 @@
                 Utils.showToast("Số lượng phải từ 1 trở lên!");
             }
 
-            const item = State.cart.find(i => i.id === id); 
-            if(!item) return; 
-            
             item[field] = val; 
             CartLogic.recalculateItem(item); 
             
             card.querySelector('.price-display').textContent = Utils.formatMoney(item.priceAfterDiscount); 
             card.querySelector('.linetotal-display').textContent = Utils.formatMoney(item.totalFinal);
+            
+            // Tự động cập nhật lại ô chữ Ghi chú nếu nội dung bên trong thay đổi
+            const noteInput = card.querySelector('.cart-input-text');
+            if (noteInput && noteInput.value !== item.note) {
+                noteInput.value = item.note;
+            }
+
             CartLogic.updateSummary();
             LocalDB.save();
         });
@@ -1158,14 +1215,6 @@
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
                 State.cart.forEach((item, i) => {
-                    let nText = [];
-                    const k1 = item.km1 !== undefined ? item.km1 : (item.extraPromo || 0);
-                    if(item.baseDiscount > 0) nText.push(`CK: ${item.baseDiscount}%`);
-                    if(k1 > 0) nText.push(`KM1: ${k1}%`);
-                    if(item.km2 > 0) nText.push(`KM2: ${item.km2}%`);
-                    if(item.kmTien > 0) {
-                        nText.push(`Giảm: ${Utils.formatMoney(item.kmTien)}${item.kmTienType === 'total' ? ' (Tổng)' : '/SP'}`);
-                    }
                     sumFinal += item.totalFinal;
                     
                     let increaseHtml = ''; let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
@@ -1175,7 +1224,10 @@
                         else if (incInfo.type === 'text') increaseHtml = `<br><span style="font-size: 20px; color: #3b82f6; font-weight: 800; margin-top: 6px; display: inline-block; background: #eff6ff; padding: 2px 10px; border-radius: 8px;">(${incInfo.text})</span>`;
                     }
                     
-                    tbody.innerHTML += `<tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};"><td style="padding: 30px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td><td style="padding: 30px 15px; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td><td style="padding: 30px 15px; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td><td class="print-text-brand" style="padding: 30px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td><td style="padding: 30px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td><td style="padding: 30px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle;">${Utils.formatMoney(item.priceAfterDiscount)}</td><td style="padding: 30px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle;">${Utils.formatMoney(item.totalFinal)}</td><td style="padding: 30px 15px; text-align: center; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${nText.join('<br>')}</td></tr>`;
+                    // Lấy chính xác những gì đang hiển thị trong ô Ghi chú để in
+                    const noteHtml = item.note ? item.note : '';
+                    
+                    tbody.innerHTML += `<tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};"><td style="padding: 30px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td><td style="padding: 30px 15px; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td><td style="padding: 30px 15px; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td><td class="print-text-brand" style="padding: 30px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td><td style="padding: 30px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td><td style="padding: 30px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle;">${Utils.formatMoney(item.priceAfterDiscount)}</td><td style="padding: 30px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle;">${Utils.formatMoney(item.totalFinal)}</td><td style="padding: 30px 15px; text-align: center; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${noteHtml}</td></tr>`;
                 });
 
                 document.getElementById('pCustomerPrint').textContent = DOM.main.custName.value.trim() || "Quý khách hàng";
@@ -1236,17 +1288,14 @@
                     let currentRow = 7;
                     State.cart.forEach((item, i) => {
                         const row = worksheet.getRow(currentRow); let notes = [];
-                        const k1 = item.km1 !== undefined ? item.km1 : (item.extraPromo || 0);
-                        if(item.baseDiscount > 0) notes.push(`CK: ${item.baseDiscount}%`);
-                        if(k1 > 0) notes.push(`KM1: ${k1}%`);
-                        if(item.km2 > 0) notes.push(`KM2: ${item.km2}%`);
-                        if(item.kmTien > 0) {
-                            notes.push(`Giảm: ${Utils.formatMoney(item.kmTien)}${item.kmTienType === 'total' ? ' (Tổng)' : '/SP'}`);
-                        }
-                        let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                        if (incInfo && incInfo.value !== 0) { if (incInfo.type === 'tăng') notes.push(`Tăng ${incInfo.text}`); else if (incInfo.type === 'giảm') notes.push(`Giảm ${incInfo.text}`); else if (incInfo.type === 'text') notes.push(`ĐVT: ${incInfo.text}`); }
                         
-                        row.values = [ i + 1, item.code, item.name, item.qty, item.originalPrice, item.priceAfterDiscount, item.totalFinal, notes.join(', ') ];
+                        // Lấy nguyên văn ô ghi chú của người dùng để xuất Excel
+                        if(item.note) notes.push(item.note);
+
+                        let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                        if (incInfo && incInfo.value !== 0) { if (incInfo.type === 'tăng') notes.push(`Tăng ${incInfo.text}`); else if (incInfo.type === 'giảm') notes.push(`Giảm ${incInfo.text}`); else if (incInfo.type === 'text') notes.push(`${incInfo.text}`); }
+                        
+                        row.values = [ i + 1, item.code, item.name, item.qty, item.originalPrice, item.priceAfterDiscount, item.totalFinal, notes.join(' - ') ];
                         row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
                         row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
                         currentRow++;
