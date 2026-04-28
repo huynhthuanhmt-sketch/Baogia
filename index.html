@@ -226,7 +226,7 @@
                 </div>
 
                 <div id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
-                    <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div><h2 class="font-bold text-slate-800">Ghép Cột Dữ Liệu</h2></div>
+                    <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div><h2 class="font-bold text-slate-800">Ghép Cột Dữ Liên</h2></div>
                     <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-100 flex gap-2 mb-5"><span class="text-blue-500">💡</span><p class="text-[11px] text-blue-800 font-medium leading-relaxed">Hãy chọn chính xác cột để hệ thống nhận diện sản phẩm.</p></div>
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm font-semibold outline-none"></select></div>
@@ -335,23 +335,26 @@
                 </details>
 
                 <!-- Thanh công cụ Chọn hàng & Chiết khấu chung -->
-                <div class="flex gap-3 items-stretch">
-                    <div class="flex-[1.2] bg-amber-50 border border-amber-200 rounded-xl flex flex-col justify-center p-2.5 shadow-sm relative overflow-hidden">
-                        <div class="absolute left-0 top-0 bottom-0 w-1 bg-amber-400"></div>
-                        <div class="flex justify-between items-center mb-1 pl-1">
-                            <label class="text-[9px] font-black text-amber-700 uppercase tracking-wide">Chiết Khấu Chung</label>
-                        </div>
-                        <div class="flex gap-2 pl-1">
-                            <div class="flex-1 flex items-center bg-white border border-amber-100 rounded-md px-1.5">
-                                <input type="number" id="globalDiscountInput" value="0" class="w-full py-1 text-center font-black text-amber-800 outline-none text-sm">
-                                <span class="text-amber-500 font-bold text-[10px]">%</span>
+                <div class="flex gap-3 items-stretch h-[50px]">
+                    <!-- Khối Chiết Khấu Chung Tinh Tế -->
+                    <div class="w-[130px] bg-white border border-slate-200 rounded-xl flex items-center p-1.5 shadow-sm relative overflow-hidden focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all shrink-0">
+                        <div class="flex flex-col justify-center pl-2 flex-1">
+                            <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">CK CHUNG</label>
+                            <div class="flex items-center gap-0.5">
+                                <input type="number" id="globalDiscountInput" value="0" class="w-full bg-transparent text-slate-800 font-black text-sm outline-none p-0">
+                                <span class="text-slate-400 font-bold text-[10px] mr-1">%</span>
                             </div>
-                            <button id="btnApplyGlobal" class="bg-amber-500 text-white px-2.5 text-[10px] font-bold rounded-md active:scale-95 uppercase">Áp</button>
                         </div>
+                        <button id="btnApplyGlobal" class="bg-blue-50 hover:bg-blue-100 text-blue-600 w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-colors shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
                     </div>
-                    <button id="btnOpenSearch" class="flex-[1.5] text-white font-black rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-md print-bg-brand">
-                        <svg class="w-5 h-5 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="tracking-widest uppercase text-xs">CHỌN HÀNG</span>
+
+                    <!-- Nút Chọn Hàng Nổi Bật -->
+                    <button id="btnOpenSearch" class="flex-1 print-bg-brand text-white font-black rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-[0_8px_20px_-6px_rgba(0,85,165,0.5)] relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+                        <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        <span class="tracking-[0.15em] uppercase text-xs relative z-10 drop-shadow-sm">CHỌN HÀNG</span>
                     </button>
                 </div>
 
@@ -916,7 +919,7 @@
                 btn.className = "btn-toggle-search print-bg-brand text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm";
                 btn.textContent = "THÊM";
             } else {
-                State.cart.unshift({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '' });
+                State.cart.push({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '' });
                 btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100";
                 btn.textContent = "XÓA";
             }
@@ -975,6 +978,7 @@
                 const kmTien = Number(item.kmTien) || 0;
 
                 // Tính chiết khấu kép (Tuần tự Giá Bìa -> CK -> KM1 -> KM2)
+                // Đã fix dứt điểm: KHÔNG nhân % tăng của ĐVT vào giá gốc nữa.
                 const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
                 const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
                 const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
@@ -1061,7 +1065,7 @@
                     return `
                     <div class="glass-card p-4 relative" data-id="${item.id}">
                         <div class="pr-8 mb-4">
-                            <h4 class="text-sm font-bold text-slate-900 leading-snug"><span class="print-text-brand mr-1.5 font-black">#${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}</h4>
+                            <h4 class="text-sm font-bold text-slate-900 leading-snug"><span class="print-text-brand mr-1.5 font-black">${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}</h4>
                             <div class="flex flex-wrap gap-2 mt-2 items-center">
                                 <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>
                                 ${unitBadge}
