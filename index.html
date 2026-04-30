@@ -906,7 +906,8 @@
             rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [],
             searchTimeout: null, currentOrderPromoEffect: null,
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
-            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,    
+            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,
+            currentHeaderIndex: 0 // <--- Lưu trữ index của dòng tiêu đề khi nạp Excel
         };
         const ITEMS_PER_PAGE = 50; 
 
@@ -1231,8 +1232,37 @@
                 try {
                     const workbook = XLSX.read(evt.target.result, { type: 'binary' }); State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
                     if (!State.rawExcelData || State.rawExcelData.length === 0) return Utils.showToast("File Excel trống hoặc không hợp lệ!");
-                    let hIndex = 0; for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) { if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 2){ hIndex = i; break; } }
-                    const headers = []; (State.rawExcelData[hIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
+                    
+                    // --- SMART HEADER DETECTION ---
+                    let bestHIndex = 0;
+                    let maxScore = 0;
+                    const keywords = ['mã', 'code', 'tên', 'name', 'sản phẩm', 'giá', 'price', 'bìa', 'đơn giá', 'đvt', 'đơn vị', 'unit', 'stt'];
+
+                    for (let i = 0; i < Math.min(25, State.rawExcelData.length); i++) {
+                        const row = State.rawExcelData[i];
+                        if (!row || row.length === 0) continue;
+                        let score = 0;
+                        row.forEach(cell => {
+                            if (cell && typeof cell === 'string') {
+                                const lower = cell.toLowerCase();
+                                if (keywords.some(kw => lower.includes(kw))) score++;
+                            }
+                        });
+                        if (score > maxScore) { maxScore = score; bestHIndex = i; }
+                    }
+
+                    // Fallback if scoring fails
+                    if (maxScore < 2) {
+                        for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) {
+                            if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 3){ bestHIndex = i; break; }
+                        }
+                    }
+
+                    State.currentHeaderIndex = bestHIndex;
+                    const headers = [];
+                    (State.rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
+                    // -----------------------------
+                    
                     const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
                     [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
                     
@@ -1240,11 +1270,13 @@
                     let priceColSet = false;
                     headers.forEach(h => {
                         let lower = h.toLowerCase();
-                        if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h; if(lower.includes('tên') || lower.includes('name')) DOM.setup.mapName.value = h; if(lower.includes('đvt') || lower.includes('đơn vị')) DOM.setup.mapUnit.value = h;
+                        if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h;
+                        if(lower.includes('tên') || lower.includes('name') || lower.includes('sản phẩm')) DOM.setup.mapName.value = h;
+                        if(lower.includes('đvt') || lower.includes('đơn vị') || lower.includes('unit')) DOM.setup.mapUnit.value = h;
                         if(!priceColSet && (lower.includes('giá') || lower.includes('price') || lower.includes('bìa'))) { DOM.setup.mapPrice.value = h; priceColSet = true; }
                     });
                     let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
-                } catch (err) { Utils.showToast("Lỗi đọc file Excel."); }
+                } catch (err) { Utils.showToast("Lỗi đọc file Excel."); console.error(err); }
             }; reader.readAsBinaryString(file);
         });
 
@@ -1253,14 +1285,27 @@
             const nameCol = DOM.setup.mapName.value; const priceCol = DOM.setup.mapPrice.value; const wName = DOM.setup.warehouseNameInput.value.trim();
             if(!wName) { Utils.showToast("Vui lòng đặt Tên Kho / Tên Hãng!"); DOM.setup.warehouseNameInput.focus(); return; }
             if(!nameCol || !priceCol) return Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!");
-            let hIndex = State.rawExcelData.findIndex(row => row.includes(nameCol)); if(hIndex === -1) hIndex = 0;
+            
+            let hIndex = State.currentHeaderIndex !== undefined ? State.currentHeaderIndex : 0;
             const headers = State.rawExcelData[hIndex];
+            
             const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
             
             let newItemsCount = 0;
             for (let i = hIndex + 1; i < State.rawExcelData.length; i++) {
-                const row = State.rawExcelData[i]; if (!row || !row[nI]) continue;
-                const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
+                const row = State.rawExcelData[i]; 
+                if (!row || row.length === 0) continue;
+
+                // Stop condition for footers (like exported quote)
+                const rowStr = row.join(' ').toLowerCase();
+                if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
+
+                if (!row[nI]) continue;
+
+                const code = cI > -1 ? (row[cI] || "") : ""; 
+                const name = row[nI] ? row[nI].toString().trim() : ""; 
+                const rawPrice = pI > -1 ? row[pI] : 0;
+                
                 State.productDB.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: uI > -1 ? row[uI] : "Cái", price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`) });
                 newItemsCount++;
             }
