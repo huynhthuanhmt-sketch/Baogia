@@ -213,7 +213,7 @@
                     <p class="text-pink-100 drop-shadow-md">"Anh không biết đó có phải là em không, nhưng nếu em đã chạm vào đây thì anh muốn em hãy luôn mạnh mẽ lên."</p>
                     <p class="text-pink-200 drop-shadow-md">8 năm thanh xuân trôi qua, bão giông hay bình yên...</p>
                 </div>
-                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest flex items-center justify-center gap-2">
+                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-50 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     CHẠM ĐẾN TƯƠNG LAI
                 </button>
@@ -1648,8 +1648,9 @@
         // XỬ LÝ TRẢI NGHIỆM GÕ PHÍM (UX) CHO MOBILE
         DOM.main.quoteList.addEventListener('focusin', (e) => { 
             if(e.target.classList.contains('cart-input')) {
-                // Nếu giá trị đang là 0, tự động xóa rỗng để người dùng nhập liền không bị vướng
-                if (e.target.value === '0') {
+                const field = e.target.dataset.field;
+                // Nếu giá trị đang là 0 (hoặc 1 đối với ô Số lượng), tự động xóa rỗng để người dùng nhập liền không bị vướng
+                if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) {
                     e.target.value = '';
                 } else {
                     e.target.select(); 
