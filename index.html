@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -122,41 +123,33 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* Ẩn scrollbar cho thanh lọc Kho ngang */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         .feature-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        /* Ẩn mũi tên mặc định của thẻ details */
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
 
-        /* Khắc phục triệt để lỗi phóng to (auto-zoom) trên iPhone/iOS Safari khi chạm vào ô nhập liệu */
         @media screen and (max-width: 768px) {
-            input[type="text"],
-            input[type="number"],
-            textarea,
-            select {
-                font-size: 16px !important;
-            }
+            input[type="text"], input[type="number"], textarea, select { font-size: 16px !important; }
         }
 
-        /* Hiệu ứng báo hiệu vùng có thể sửa trên bản in */
-        [contenteditable="true"] {
-            transition: all 0.2s;
-            border-radius: 6px;
-            outline: none;
-        }
-        [contenteditable="true"]:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-            cursor: text;
-        }
-        [contenteditable="true"]:focus {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
-        }
+        [contenteditable="true"] { transition: all 0.2s; border-radius: 6px; outline: none; }
+        [contenteditable="true"]:hover { background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); cursor: text; }
+        [contenteditable="true"]:focus { background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); }
+
+        /* --- GAME CSS --- */
+        .tarot-card { width: 80px; height: 120px; perspective: 1000px; cursor: pointer; }
+        .tarot-inner { width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; position: relative; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .tarot-card.flipped .tarot-inner { transform: rotateY(180deg); }
+        .tarot-front, .tarot-back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4px; }
+        .tarot-front { background: linear-gradient(135deg, #2a0845 0%, #6441A5 100%); border: 2px solid #a855f7; font-size: 28px; }
+        .tarot-back { background: #fff; transform: rotateY(180deg); border: 2px solid #a855f7; }
+        .tarot-back span { font-size: 30px; }
+        .tarot-back h4 { font-size: 10px; font-weight: 800; color: #6441A5; margin-top: 5px;}
+        .tarot-back .pos { font-size: 9px; font-weight: bold; color: #a855f7; position: absolute; top: 4px; }
+
+        canvas { touch-action: none; outline: none; }
     </style>
 </head>
 <body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -174,66 +167,51 @@
             <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-[50px] pointer-events-none"></div>
 
             <div class="relative z-10">
-                
-                <!-- BỨC ẢNH CHỨA THÔNG ĐIỆP ẨN -->
                 <div id="secretImageTrigger" class="relative w-28 h-28 mx-auto mb-6 cursor-pointer hover:scale-105 transition-transform duration-500 group">
                     <!-- Hiệu ứng xoay vòng -->
                     <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] group-hover:bg-[conic-gradient(from_0deg,transparent_0_300deg,#ec4899_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 1.5s;"></div>
                     <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] group-hover:bg-[conic-gradient(from_180deg,transparent_0_300deg,#a855f7_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 2s; animation-direction: reverse;"></div>
-                    
-                    <!-- Lõi Logo Thuận Store thay thế chữ E -->
+                    <!-- Lõi Logo -->
                     <div class="absolute inset-[10px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 group-hover:border-pink-500/30 flex items-center justify-center overflow-hidden transition-colors duration-500 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)] group-hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.3)]">
                          <div class="flex flex-col items-center justify-center">
                              <span class="text-[17px] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 group-hover:to-pink-400 tracking-tight transition-colors duration-500" style="line-height: 1.1; text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">THUAN</span>
                          </div>
                     </div>
-
-                    <!-- Ảnh thật đè lên trên cùng, nếu chưa có ảnh (lỗi) thì sẽ tự ẩn đi để hiện Logo xoay bên dưới -->
                     <img src="./image.png" onerror="this.style.display='none'" alt="Secret" class="w-full h-full object-cover rounded-full relative z-10 border-2 border-transparent group-hover:border-pink-400/50 transition-all duration-500">
                 </div>
 
                 <h3 class="text-lg md:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 mb-4 tracking-wide text-center">Hành Trình "Chạm Đến Tương Lai"</h3>
-                
                 <div class="space-y-3 text-[13px] md:text-sm text-slate-300 font-medium leading-relaxed text-justify hide-scrollbar" style="max-height: 50vh; overflow-y: auto;">
                     <p>Ngày trước, mỗi lần làm báo giá là một cuộc chiến với những file Excel khô khan, những con số lặp đi lặp lại. Khách hàng hối thúc, mình thì mỏi mắt dò từng dòng đơn giá, tỉ lệ sai sót luôn rình rập.</p>
                     <p>Tôi tự hỏi: <span class="text-cyan-400 italic">"Tại sao không biến công việc nhàm chán này thành một trải nghiệm nghệ thuật? Chỉ với vài cú chạm trên điện thoại, mọi thứ phải được tính toán và xuất bản hoàn hảo nhất."</span></p>
                     <p>Và thế là ứng dụng này ra đời. Từ những ý tưởng sơ khai trong đêm khuya, tôi đã đập đi xây lại không biết bao nhiêu lần, tối ưu từng pixel chỉ để đổi lấy 0.1 giây mượt mà khi bạn vuốt chạm. Nó không chỉ là công cụ tính toán, mà là tâm huyết tôi dành cho sự hoàn mỹ.</p>
                     <p class="font-bold text-slate-100 mt-2 text-center">Cảm ơn bạn đã ở đây, cùng Thuận Store chạm đến tương lai!</p>
                 </div>
-
-                <button id="btnCloseStory" class="mt-6 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:scale-95 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] uppercase tracking-widest">
-                    Khám Phá Ngay
-                </button>
+                <button id="btnCloseStory" class="mt-6 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:scale-95 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] uppercase tracking-widest">Khám Phá Ngay</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL THÔNG ĐIỆP ẨN CHO NGƯỜI THƯƠNG (HIDDEN SECRET) -->
+    <!-- MODAL THÔNG ĐIỆP ẨN -->
     <div id="secretModal" class="fixed inset-0 bg-slate-950/90 z-[4000] hidden items-center justify-center backdrop-blur-xl transition-opacity duration-700 opacity-0 px-4">
         <div class="bg-slate-900 border border-pink-500/30 rounded-3xl p-8 w-full max-w-sm shadow-[0_0_60px_rgba(236,72,153,0.15)] transform scale-95 transition-transform duration-700 relative overflow-hidden text-center">
-            <!-- Hiệu ứng Glow Hồng/Tím -->
             <div class="absolute top-[-50px] left-1/2 -translate-x-1/2 w-48 h-48 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none"></div>
-
             <div class="relative z-10">
                 <div class="space-y-6 text-[14px] md:text-[15px] text-pink-50 font-medium leading-relaxed italic pt-2">
                     <p class="text-pink-100 drop-shadow-md">"Anh không biết đó có phải là em không, nhưng nếu em đã chạm vào đây thì anh muốn em hãy luôn mạnh mẽ lên."</p>
                     <p class="text-pink-200 drop-shadow-md">8 năm thanh xuân trôi qua, bão giông hay bình yên...</p>
                 </div>
-
                 <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    CHẠM ĐẾN TƯƠNG LAI
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> CHẠM ĐẾN TƯƠNG LAI
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL XÁC NHẬN XÓA (CUSTOM UI) -->
+    <!-- MODAL XÁC NHẬN XÓA -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300">
-            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
-                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            </div>
+            <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto"><svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
             <h3 class="text-lg font-black text-slate-900 mb-2 text-center uppercase tracking-wide">Cảnh báo xóa dữ liệu</h3>
             <p class="text-xs text-slate-500 mb-6 font-medium text-center leading-relaxed">Bạn có chắc chắn muốn xóa toàn bộ sản phẩm trong các Kho và Giỏ hàng hiện tại? Hành động này không thể hoàn tác.</p>
             <div class="flex gap-3">
@@ -242,6 +220,59 @@
             </div>
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- MODALS: 3 GAME VỆ TINH                     -->
+    <!-- ========================================== -->
+    
+    <!-- Modal Bói Bài Tarot -->
+    <div id="tarotModal" class="fixed inset-0 bg-slate-950/95 z-[5000] hidden flex-col items-center justify-center backdrop-blur-xl transition-opacity duration-300 opacity-0 px-4">
+        <button onclick="GameSys.closeAll()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/20 transition-colors z-50 text-xl font-bold">&times;</button>
+        <div class="w-full max-w-sm flex flex-col items-center text-center">
+            <h2 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2 uppercase tracking-widest drop-shadow-lg">Bói Bài Tarot</h2>
+            <p class="text-xs text-purple-200/70 mb-8">(Chạm vào bài để lật Quá khứ - Hiện tại - Tương lai)</p>
+            
+            <div id="tarotBoard" class="flex gap-4 justify-center mb-8 w-full"></div>
+            
+            <div class="bg-purple-900/30 border border-purple-500/30 rounded-2xl p-4 w-full min-h-[100px] flex items-center justify-center shadow-[inset_0_0_20px_rgba(168,85,247,0.1)]">
+                <p id="tarotReadingText" class="text-sm font-medium text-purple-100 leading-relaxed italic drop-shadow-md">Vận mệnh đang chờ được hé lộ...</p>
+            </div>
+            
+            <button onclick="GameSys.initTarot()" class="mt-6 px-8 py-3 rounded-xl text-xs font-black text-white bg-gradient-to-r from-purple-600 to-pink-600 active:scale-95 transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] uppercase tracking-widest">Trộn lại bài</button>
+        </div>
+    </div>
+
+    <!-- Modal Đua Xe Bắn Súng -->
+    <div id="shooterModal" class="fixed inset-0 bg-slate-950/95 z-[5000] hidden flex-col items-center justify-center backdrop-blur-xl transition-opacity duration-300 opacity-0">
+        <button onclick="GameSys.closeAll()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/20 transition-colors z-50 text-xl font-bold">&times;</button>
+        <div class="relative w-[320px] h-[500px]">
+            <div class="absolute top-3 left-4 text-pink-400 font-black text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.8)] z-10 pointer-events-none">SCORE: <span id="shooterScore">0</span></div>
+            <canvas id="shooterCanvas" width="320" height="500" class="rounded-2xl shadow-[0_0_40px_rgba(236,72,153,0.3)] border border-pink-500/20 bg-[#0b0c10] block w-full h-full"></canvas>
+            <div id="shooterGameOver" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center rounded-2xl hidden z-20">
+                <h3 class="text-3xl font-black text-red-500 mb-2 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">Hệ thống hỏng</h3>
+                <button onclick="GameSys.initShooter()" class="mt-4 px-6 py-2.5 rounded-xl text-xs font-black text-white bg-pink-600 active:scale-95 transition-all uppercase tracking-widest shadow-[0_0_15px_rgba(236,72,153,0.5)]">Khởi Động Lại</button>
+            </div>
+            <p class="absolute -bottom-8 left-0 right-0 text-center text-xs text-pink-300/50 font-bold tracking-widest uppercase">Chạm & kéo phi thuyền</p>
+        </div>
+    </div>
+
+    <!-- Modal Giải Mã Mê Cung -->
+    <div id="mazeModal" class="fixed inset-0 bg-slate-950/95 z-[5000] hidden flex-col items-center justify-center backdrop-blur-xl transition-opacity duration-300 opacity-0">
+        <button onclick="GameSys.closeAll()" class="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/20 transition-colors z-50 text-xl font-bold">&times;</button>
+        <div class="w-full max-w-[320px] flex flex-col items-center">
+            <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 mb-1 uppercase tracking-widest drop-shadow-lg">Thoát Khỏi Mê Cung</h2>
+            <p class="text-[11px] text-emerald-200/50 mb-5 font-bold uppercase tracking-widest">Vuốt (Swipe) màn hình để di chuyển</p>
+            
+            <div class="relative w-[300px] h-[300px]">
+                <canvas id="mazeCanvas" width="300" height="300" class="rounded-xl shadow-[0_0_40px_rgba(16,185,129,0.3)] border border-emerald-500/30 bg-[#000] block w-full h-full"></canvas>
+                <div id="mazeGameOver" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center rounded-xl hidden z-20 backdrop-blur-sm">
+                    <h3 class="text-2xl font-black text-emerald-400 mb-2 uppercase tracking-widest drop-shadow-[0_0_10px_rgba(16,185,129,0.8)]">THOÁT THÀNH CÔNG</h3>
+                    <button onclick="GameSys.initMaze()" class="mt-4 px-6 py-2.5 rounded-xl text-xs font-black text-slate-900 bg-emerald-400 active:scale-95 transition-all uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.5)]">Tạo Mê Cung Mới</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- ========================================== -->
     <!-- SCREEN 0: LANDING PAGE                     -->
@@ -254,12 +285,11 @@
         </div>
         
         <div class="z-10 w-full max-w-md md:max-w-2xl flex flex-col items-center text-center my-auto py-4">
-            <!-- Logo -->
+            <!-- Logo & Orbit -->
             <div class="relative w-36 h-36 mb-8 flex items-center justify-center mt-2">
                 <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-70" style="animation-duration: 1.5s;"></div>
                 <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-70" style="animation-duration: 2s; animation-direction: reverse;"></div>
                 <div class="absolute inset-[14px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(6,182,212,0.2)]">
-                     <!-- GẮN ID landingMainLogo ĐỂ BẮT SỰ KIỆN CLICK VÀO CHỮ THUẬN -->
                      <div id="landingMainLogo" class="relative z-10 flex flex-col items-center justify-center transition-transform duration-500 hover:scale-105 cursor-pointer">
                          <span class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 tracking-tight" style="line-height: 1.1; text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);">THUAN</span>
                          <div class="flex items-center gap-1.5 mt-0.5">
@@ -270,32 +300,26 @@
                      </div>
                 </div>
                 
-                <!-- HỆ THỐNG QUỸ ĐẠO VỆ TINH -->
+                <!-- HỆ THỐNG QUỸ ĐẠO VỆ TINH (GAME) -->
                 <div class="absolute -inset-6 border border-slate-800/40 rounded-full animate-orbit pointer-events-none z-20">
-                    <!-- Vệ tinh 1: Tản mạn -->
+                    <!-- Vệ tinh 1: Tarot -->
                     <div class="absolute top-0 left-1/2 -ml-4 -mt-4">
-                        <button class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-teal-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 transition-all shadow-[0_0_15px_rgba(20,184,166,0.2)] pointer-events-auto animate-orbit-reverse">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                            <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-60 p-4 rounded-2xl bg-slate-950/95 border border-teal-500/40 shadow-[0_0_25px_rgba(20,184,166,0.2)] backdrop-blur-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 pointer-events-none transform translate-y-2 group-hover:translate-y-0">
-                                <p class="text-[10.5px] text-teal-50 font-medium leading-relaxed text-center tracking-wide" style="text-shadow: 0 0 10px rgba(20,184,166,0.4);">
-                                    "Từ những ô Excel đơn điệu, chúng ta đã cùng gọt giũa nên một hệ thống hoàn mỹ. Sự vĩ đại không nằm ở đích đến, mà ở sự tỉ mỉ hoàn thiện từng chi tiết nhỏ mỗi ngày.<br><br><span class="text-teal-400 font-bold">Cứ sáng tạo, vì tương lai đang nằm ngay trên đầu ngón tay bạn.</span>"
-                                </p>
-                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-[6px] border-transparent border-t-teal-500/40"></div>
-                            </div>
+                        <button onclick="GameSys.openTarot()" class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-purple-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-purple-400 hover:bg-purple-500/20 transition-all shadow-[0_0_15px_rgba(168,85,247,0.3)] pointer-events-auto animate-orbit-reverse">
+                            <span class="text-sm pointer-events-none">🔮</span>
                         </button>
                     </div>
 
-                    <!-- Vệ tinh 2: Thông tin -->
+                    <!-- Vệ tinh 2: Shooter -->
                     <div class="absolute top-[75%] left-[93.3%] -ml-4 -mt-4">
-                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-blue-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Version 2.0 - Core Engine Optimized')">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <button onclick="GameSys.openShooter()" class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-pink-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-pink-400 hover:bg-pink-500/20 transition-all shadow-[0_0_15px_rgba(236,72,153,0.3)] pointer-events-auto animate-orbit-reverse">
+                            <span class="text-sm pointer-events-none">🚀</span>
                         </button>
                     </div>
 
-                    <!-- Vệ tinh 3: Liên hệ -->
+                    <!-- Vệ tinh 3: Maze -->
                     <div class="absolute top-[75%] left-[6.7%] -ml-4 -mt-4">
-                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-cyan-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Hotline: 0939 125 128 (Thuận Store)')">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <button onclick="GameSys.openMaze()" class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-emerald-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/20 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] pointer-events-auto animate-orbit-reverse">
+                            <span class="text-sm pointer-events-none">🧩</span>
                         </button>
                     </div>
                 </div>
@@ -316,28 +340,17 @@
                 <div class="feature-card selected relative overflow-hidden bg-slate-900/40 border border-slate-800/80 p-4 rounded-3xl cursor-pointer group hover:bg-slate-900/60 transition-all duration-300" data-feature="excel">
                     <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-500"></div>
                     <div class="absolute inset-0 border-2 border-transparent group-[.selected]:border-cyan-500/30 rounded-3xl pointer-events-none transition-colors duration-500"></div>
-                    
                     <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-800/80 shadow-inner flex items-center justify-center text-slate-500 group-[.selected]:bg-gradient-to-br group-[.selected]:from-cyan-500/20 group-[.selected]:to-blue-500/20 group-[.selected]:text-cyan-400 group-[.selected]:shadow-[inset_0_0_15px_rgba(6,182,212,0.4)] border border-slate-700/50 group-[.selected]:border-cyan-500/40 mb-3 transition-all duration-300">
-                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.27 6.96L12 12.01l8.73-5.05"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22.08V12"></path>
-                            <circle cx="12" cy="12" r="2" class="fill-cyan-400 stroke-none opacity-0 group-[.selected]:opacity-100 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,1)] transition-opacity duration-300"></circle>
-                        </svg>
+                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.27 6.96L12 12.01l8.73-5.05"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22.08V12"></path><circle cx="12" cy="12" r="2" class="fill-cyan-400 stroke-none opacity-0 group-[.selected]:opacity-100 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,1)] transition-opacity duration-300"></circle></svg>
                     </div>
                     <h3 class="text-[11px] font-black text-slate-500 group-[.selected]:text-white uppercase tracking-[0.15em] transition-colors">Báo Giá</h3>
                 </div>
-                
                 <!-- Card 2: Khách Hàng -->
                 <div class="feature-card relative overflow-hidden bg-slate-900/40 border border-slate-800/80 p-4 rounded-3xl cursor-pointer group hover:bg-slate-900/60 transition-all duration-300" data-feature="customer">
                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-600/5 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-500"></div>
                     <div class="absolute inset-0 border-2 border-transparent group-[.selected]:border-indigo-500/30 rounded-3xl pointer-events-none transition-colors duration-500"></div>
-                    
                     <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-800/80 shadow-inner flex items-center justify-center text-slate-500 group-[.selected]:bg-gradient-to-br group-[.selected]:from-indigo-500/20 group-[.selected]:to-purple-500/20 group-[.selected]:text-indigo-400 group-[.selected]:shadow-[inset_0_0_15px_rgba(99,102,241,0.4)] border border-slate-700/50 group-[.selected]:border-indigo-500/40 mb-3 transition-all duration-300">
-                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="text-indigo-400 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-300 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,1)]" d="M6 8V6a2 2 0 0 1 2-2h2M14 4h2a2 2 0 0 1 2 2v2M6 16v2a2 2 0 0 0 2 2h2M14 20h2a2 2 0 0 0 2-2v-2"></path>
-                        </svg>
+                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="text-indigo-400 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-300 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,1)]" d="M6 8V6a2 2 0 0 1 2-2h2M14 4h2a2 2 0 0 1 2 2v2M6 16v2a2 2 0 0 0 2 2h2M14 20h2a2 2 0 0 0 2-2v-2"></path></svg>
                     </div>
                     <h3 class="text-[11px] font-black text-slate-500 group-[.selected]:text-white uppercase tracking-[0.15em] transition-colors">Khách Hàng</h3>
                 </div>
@@ -351,7 +364,6 @@
                         <span class="text-emerald-400 font-bold text-[11px] uppercase tracking-[0.15em]">Tiếp Tục Bản Cũ</span>
                     </div>
                 </button>
-
                 <button id="btnStartApp" class="w-full group relative overflow-hidden rounded-full border border-cyan-500/40 bg-gradient-to-r from-cyan-600/10 to-blue-600/10 hover:from-cyan-600/20 hover:to-blue-600/20 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(6,182,212,0.15)] py-3 backdrop-blur-sm">
                     <div class="flex items-center justify-center gap-2">
                         <span id="btnStartText" class="text-cyan-50 font-black text-[11px] uppercase tracking-[0.2em]">Bắt Đầu Mới</span>
@@ -359,7 +371,6 @@
                     </div>
                 </button>
             </div>
-            
             <p class="text-slate-600 text-[9px] font-bold tracking-widest uppercase text-center mt-6">© 2026 Thuận Store Inc.</p>
         </div>
     </div>
@@ -380,8 +391,6 @@
 
         <div class="flex-grow overflow-y-auto p-5 pb-32">
             <div class="w-full max-w-4xl lg:max-w-5xl mx-auto space-y-6 pt-2">
-                
-                <!-- Hiển thị các kho hiện có -->
                 <div id="warehouseListSection" class="glass-card p-6 hidden border-l-4 border-l-indigo-500">
                     <div class="flex justify-between items-center mb-3">
                         <h2 class="font-bold text-slate-800 flex items-center gap-2">
@@ -390,18 +399,10 @@
                         </h2>
                         <span id="totalProductCount" class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-md">0 SP</span>
                     </div>
-                    <div id="warehouseBadges" class="flex flex-wrap gap-2 mb-4">
-                        <!-- Badges sẽ được tạo bằng JS -->
-                    </div>
+                    <div id="warehouseBadges" class="flex flex-wrap gap-2 mb-4"></div>
                     <div class="flex flex-col md:flex-row gap-2.5">
-                        <button id="btnStartFromSetup" class="flex-1 text-sm text-white font-black bg-indigo-600 hover:bg-indigo-700 px-3 py-3.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(79,70,229,0.5)] transition-transform active:scale-95 uppercase tracking-widest flex justify-center items-center gap-2">
-                            Bắt Đầu Làm Việc 
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </button>
-                        <button id="btnClearAllData" class="flex-1 text-xs text-red-500 font-bold bg-red-50 hover:bg-red-100 px-3 py-2.5 rounded-xl border border-red-100 transition-colors uppercase tracking-widest flex justify-center items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
-                            Xóa & Làm Mới Toàn Bộ Kho
-                        </button>
+                        <button id="btnStartFromSetup" class="flex-1 text-sm text-white font-black bg-indigo-600 hover:bg-indigo-700 px-3 py-3.5 rounded-xl shadow-[0_8px_20px_-6px_rgba(79,70,229,0.5)] transition-transform active:scale-95 uppercase tracking-widest flex justify-center items-center gap-2">Bắt Đầu Làm Việc <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
+                        <button id="btnClearAllData" class="flex-1 text-xs text-red-500 font-bold bg-red-50 hover:bg-red-100 px-3 py-2.5 rounded-xl border border-red-100 transition-colors uppercase tracking-widest flex justify-center items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>Xóa & Làm Mới Toàn Bộ Kho</button>
                     </div>
                 </div>
 
@@ -416,13 +417,10 @@
 
                 <div id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
                     <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">2</div><h2 class="font-bold text-slate-800">Cấu Hình Dữ Liệu</h2></div>
-                    
-                    <!-- Nhập tên hãng -->
                     <div class="mb-5 bg-blue-50/50 p-3 rounded-xl border border-blue-100">
                         <label class="text-[10px] font-bold text-blue-600 uppercase block mb-1">Tên Hãng / Tên Kho (Bắt buộc)</label>
                         <input type="text" id="warehouseNameInput" placeholder="VD: Rạng Đông, MPE, Sino..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold outline-none border-blue-200 focus:border-blue-500">
                     </div>
-
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div><label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm font-semibold outline-none"></select></div>
                         <div><label class="text-[10px] font-bold text-blue-600 uppercase block mb-1">Tên SP *</label><select id="mapName" class="w-full input-premium rounded-xl p-3 text-sm font-semibold outline-none border-blue-200"></select></div>
@@ -457,14 +455,10 @@
 
         <main class="flex-grow overflow-y-auto p-4 pb-48" id="mainScroll">
             <div class="w-full max-w-5xl mx-auto space-y-4">
-                
-                <!-- Cấu hình thương hiệu & Khách Hàng -->
                 <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
                     <summary class="flex items-center justify-between p-3.5 cursor-pointer bg-slate-50/50 hover:bg-slate-100 transition-colors">
                         <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 transition-colors">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            </div>
+                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 transition-colors"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div>
                             <span class="font-bold text-slate-800 text-xs uppercase tracking-wider">Cài Đặt Cấu Hình</span>
                         </div>
                         <div class="flex items-center gap-2">
@@ -473,10 +467,8 @@
                             <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                         </div>
                     </summary>
-                    
                     <div class="p-4 border-t border-slate-100 bg-white space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Thông tin khách hàng & Báo giá -->
                             <div>
                                 <label class="block text-[10px] font-bold text-blue-600 mb-1.5 uppercase tracking-wider">Thông tin đơn hàng</label>
                                 <div class="space-y-3">
@@ -493,8 +485,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Thiết lập thương hiệu & giao diện -->
                             <div>
                                 <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Nhận diện thương hiệu</label>
                                 <div class="flex gap-4 items-start flex-col sm:flex-row">
@@ -504,10 +494,8 @@
                                             <img id="logoPreview" src="" class="w-full h-full object-contain p-1">
                                             <div class="absolute inset-0 bg-slate-900/60 hidden group-hover:flex items-center justify-center text-white text-[8px] font-bold tracking-widest backdrop-blur-sm text-center">ĐỔI LOGO</div>
                                         </label>
-                                        <!-- Nút xóa logo -->
                                         <button id="btnRemoveLogo" class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] hidden shadow-sm transition-transform active:scale-90 font-black">&times;</button>
                                     </div>
-                                    
                                     <div class="flex-1 space-y-2 w-full">
                                         <div class="grid grid-cols-2 gap-2">
                                             <input type="text" id="settingStoreName" value="THUẬN STORE" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2 text-xs font-black text-slate-800 uppercase outline-none">
@@ -529,9 +517,7 @@
                     </div>
                 </details>
 
-                <!-- Thanh công cụ Chọn hàng & Chiết khấu chung -->
                 <div class="flex gap-3 items-stretch h-[50px]">
-                    <!-- Khối Chiết Khấu Chung Tinh Tế -->
                     <div class="w-[130px] bg-white border border-slate-200 rounded-xl flex items-center p-1.5 shadow-sm relative overflow-hidden focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-100 transition-all shrink-0">
                         <div class="flex flex-col justify-center pl-2 flex-1">
                             <label class="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">CK CHUNG</label>
@@ -544,8 +530,6 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                         </button>
                     </div>
-
-                    <!-- Nút Chọn Hàng Nổi Bật -->
                     <button id="btnOpenSearch" class="flex-1 print-bg-brand text-white font-black rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-[0_8px_20px_-6px_rgba(0,85,165,0.5)] relative overflow-hidden group">
                         <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
                         <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
@@ -553,7 +537,6 @@
                     </button>
                 </div>
 
-                <!-- DANH SÁCH GIỎ HÀNG -->
                 <div>
                     <div class="flex justify-between items-end mb-3 px-1 mt-4">
                         <h2 class="font-black text-slate-900 text-sm uppercase tracking-tight">Chi tiết Đơn hàng</h2>
@@ -569,7 +552,6 @@
                     </label>
                     <textarea id="promoNoteInput" rows="2" placeholder="VD: Báo giá có giá trị trong 7 ngày..." class="w-full input-premium bg-white rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 outline-none resize-none"></textarea>
                 </div>
-
             </div>
         </main>
 
@@ -594,7 +576,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODALS                                     -->
+    <!-- MODALS KHÁC CỦA CORE                       -->
     <!-- ========================================== -->
     <div id="searchModal" class="fullscreen-modal">
         <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
@@ -610,14 +592,9 @@
                 </div>
             </div>
         </div>
-        
-        <!-- BỘ LỌC ĐA KHO HÀNG -->
         <div class="bg-slate-50 border-b border-slate-200 shrink-0">
-            <div id="warehouseFilters" class="w-full max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar">
-                <!-- Filter buttons injected here -->
-            </div>
+            <div id="warehouseFilters" class="w-full max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar"></div>
         </div>
-
         <div class="flex-grow overflow-y-auto bg-white pb-32 relative z-0">
             <div id="searchList" class="w-full max-w-5xl mx-auto divide-y divide-slate-100"></div>
         </div>
@@ -632,17 +609,13 @@
                 <div class="w-20"></div>
             </div>
         </div>
-        
         <div class="flex-grow overflow-y-auto p-4 bg-slate-50 pb-32 relative">
-            
             <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm transition-opacity">
                 <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
                 <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang xử lý dữ liệu...</div>
             </div>
             
             <div id="exportGuide" class="w-full max-w-5xl mx-auto flex flex-col">
-                
-                <!-- BẢN XEM TRƯỚC SỐNG (LIVE DOM) -->
                 <div class="print-bg-brand text-white text-[10px] md:text-sm font-bold py-2.5 px-4 rounded-t-xl uppercase tracking-widest flex justify-between items-center shadow-md">
                     <span class="flex items-center gap-1.5"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Bản Xem Trước (Chạm vào chữ để sửa)</span>
                 </div>
@@ -710,22 +683,10 @@
 
                 <!-- BỘ NÚT ĐIỀU KHIỂN XUẤT -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all">
-                        <svg class="w-6 h-6 md:w-7 md:h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        <span class="text-[10px] md:text-xs uppercase tracking-wider">Máy In</span>
-                    </button>
-                    <button id="btnActionPDF" class="bg-red-50 border border-red-100 text-red-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-red-100 hover:border-red-200 active:scale-95 transition-all">
-                        <svg class="w-6 h-6 md:w-7 md:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] md:text-xs uppercase tracking-wider">Lưu PDF</span>
-                    </button>
-                    <button id="btnActionImage" class="bg-blue-50 border border-blue-100 text-blue-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-blue-100 hover:border-blue-200 active:scale-95 transition-all">
-                        <svg class="w-6 h-6 md:w-7 md:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] md:text-xs uppercase tracking-wider">Lưu Ảnh</span>
-                    </button>
-                    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-emerald-100 hover:border-emerald-200 active:scale-95 transition-all">
-                        <svg class="w-6 h-6 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] md:text-xs uppercase tracking-wider">Xuất Excel</span>
-                    </button>
+                    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all"><svg class="w-6 h-6 md:w-7 md:h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg><span class="text-[10px] md:text-xs uppercase tracking-wider">Máy In</span></button>
+                    <button id="btnActionPDF" class="bg-red-50 border border-red-100 text-red-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-red-100 hover:border-red-200 active:scale-95 transition-all"><svg class="w-6 h-6 md:w-7 md:h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-[10px] md:text-xs uppercase tracking-wider">Lưu PDF</span></button>
+                    <button id="btnActionImage" class="bg-blue-50 border border-blue-100 text-blue-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-blue-100 hover:border-blue-200 active:scale-95 transition-all"><svg class="w-6 h-6 md:w-7 md:h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-[10px] md:text-xs uppercase tracking-wider">Lưu Ảnh</span></button>
+                    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-emerald-100 hover:border-emerald-200 active:scale-95 transition-all"><svg class="w-6 h-6 md:w-7 md:h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg><span class="text-[10px] md:text-xs uppercase tracking-wider">Xuất Excel</span></button>
                 </div>
 
                 <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 mb-6 text-left relative overflow-hidden">
@@ -738,12 +699,10 @@
                         Copy Tin Nhắn
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- MODAL HIỂN THỊ KẾT QUẢ ẢNH CHO MOBILE (CHỐNG VĂNG APP) -->
     <div id="imageResultModal" class="fixed inset-0 bg-slate-950 z-[1000] hidden flex-col transition-opacity duration-300">
         <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center shadow-lg shrink-0">
             <div class="w-full max-w-5xl mx-auto flex justify-between items-center">
@@ -763,120 +722,242 @@
 
     <!-- CORE JAVASCRIPT LOGIC -->
     <script>
-        // 1. Utilities
+        // -----------------------------------------------------------
+        // 1. GAME SYSTEM (VỆ TINH LOGIC) - ĐỘC LẬP KHÔNG ẢNH HƯỞNG CORE
+        // -----------------------------------------------------------
+        const GameSys = {
+            activeGame: null,
+            openModal: (id) => {
+                const modal = document.getElementById(id);
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+            },
+            closeAll: () => {
+                ['tarotModal', 'shooterModal', 'mazeModal'].forEach(id => {
+                    const modal = document.getElementById(id);
+                    modal.classList.add('opacity-0');
+                    setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+                });
+                if(GameSys.activeGame === 'shooter') GameSys.shooter.stop();
+                GameSys.activeGame = null;
+            },
+
+            // --- GAME 1: BÓI BÀI TAROT ---
+            openTarot: () => { GameSys.activeGame = 'tarot'; GameSys.openModal('tarotModal'); GameSys.initTarot(); },
+            tarot: {
+                deck: [
+                    { name: "The Fool", img: "🃏", past: "Khởi đầu ngây thơ, mạo hiểm không tính toán.", present: "Sẵn sàng nhảy vào điều mới mẻ, tin vào trực giác.", future: "Cơ hội bất ngờ, cần sự liều lĩnh tích cực." },
+                    { name: "The Magician", img: "🪄", past: "Kỹ năng đã được rèn luyện, sử dụng tài nguyên tốt.", present: "Bạn đang có đủ công cụ để đạt mục đích.", future: "Hành động quyết đoán sẽ mang lại kết quả." },
+                    { name: "The High Priestess", img: "🌙", past: "Bí mật bị che giấu, trực giác mách bảo.", present: "Hãy lắng nghe tiếng nói bên trong, khoan hành động.", future: "Sự thật sẽ được hé lộ từ tâm linh." },
+                    { name: "The Empress", img: "👑", past: "Sự nuôi dưỡng, phát triển phong phú.", present: "Sự sáng tạo và dồi dào đang bao quanh bạn.", future: "Sự sinh sôi, thành quả sẽ đơm hoa kết trái." },
+                    { name: "The Emperor", img: "⚔️", past: "Kỷ luật nghiêm ngặt, cấu trúc vững chắc.", present: "Cần sự lãnh đạo và lý trí để giải quyết.", future: "Thành công nhờ sự kiên định và quy tắc." },
+                    { name: "Wheel of Fortune", img: "🎡", past: "Biến cố định mệnh đã thay đổi hướng đi.", present: "Thời vận đang xoay vần, thuận theo tự nhiên.", future: "May mắn sắp mỉm cười, chu kỳ mới bắt đầu." },
+                    { name: "Death", img: "💀", past: "Một sự kết thúc cần thiết đã xảy ra.", present: "Đang trong quá trình chuyển giao khó khăn.", future: "Sự tái sinh, từ bỏ cái cũ để đón cái mới." },
+                    { name: "The Sun", img: "☀️", past: "Niềm vui trọn vẹn, thành tựu rực rỡ.", present: "Sự rõ ràng, năng lượng tích cực lan tỏa.", future: "Thành công rực rỡ, hạnh phúc viên mãn." }
+                ],
+                positions: ["Quá Khứ", "Hiện Tại", "Tương Lai"],
+                currentSpread: [], flippedCount: 0
+            },
+            initTarot: () => {
+                GameSys.tarot.flippedCount = 0;
+                GameSys.tarot.currentSpread = [...GameSys.tarot.deck].sort(() => 0.5 - Math.random()).slice(0, 3);
+                const board = document.getElementById('tarotBoard');
+                board.innerHTML = '';
+                document.getElementById('tarotReadingText').innerHTML = 'Nhắm mắt, tĩnh tâm và chạm vào các lá bài...';
+
+                GameSys.tarot.currentSpread.forEach((card, index) => {
+                    let cardEl = document.createElement('div');
+                    cardEl.className = 'tarot-card';
+                    cardEl.innerHTML = `<div class="tarot-inner"><div class="tarot-front">🔮</div><div class="tarot-back"><div class="pos">${GameSys.tarot.positions[index]}</div><span>${card.img}</span><h4>${card.name}</h4></div></div>`;
+                    cardEl.onclick = () => {
+                        if (cardEl.classList.contains('flipped')) return;
+                        cardEl.classList.add('flipped');
+                        GameSys.tarot.flippedCount++;
+                        let txt = index === 0 ? card.past : (index === 1 ? card.present : card.future);
+                        document.getElementById('tarotReadingText').innerHTML = `<b>${GameSys.tarot.positions[index]} (${card.name}):</b> ${txt}`;
+                        if (GameSys.tarot.flippedCount === 3) setTimeout(() => { document.getElementById('tarotReadingText').innerHTML += `<br><br><span class="text-pink-300">Tụ bài đã hoàn tất.</span>`; }, 1000);
+                    };
+                    board.appendChild(cardEl);
+                });
+            },
+
+            // --- GAME 2: SHOOTER ---
+            openShooter: () => { GameSys.activeGame = 'shooter'; GameSys.openModal('shooterModal'); GameSys.initShooter(); },
+            shooter: { animId: null, isPlaying: false, score: 0, frames: 0, player: { x: 140, y: 430, w: 40, h: 40 }, bullets: [], enemies: [], particles: [], touchX: null },
+            initShooter: () => {
+                const canvas = document.getElementById('shooterCanvas'); const ctx = canvas.getContext('2d');
+                document.getElementById('shooterGameOver').classList.add('hidden');
+                
+                GameSys.shooter.isPlaying = true; GameSys.shooter.score = 0; GameSys.shooter.frames = 0;
+                GameSys.shooter.bullets = []; GameSys.shooter.enemies = []; GameSys.shooter.particles = [];
+                GameSys.shooter.player.x = canvas.width / 2 - 20; GameSys.shooter.player.y = canvas.height - 60;
+                document.getElementById('shooterScore').innerText = '0';
+                
+                canvas.ontouchstart = (e) => { e.preventDefault(); GameSys.shooter.touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left; };
+                canvas.ontouchmove = (e) => { e.preventDefault(); GameSys.shooter.touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left; };
+                
+                const loop = () => {
+                    if(!GameSys.shooter.isPlaying) return;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); GameSys.shooter.frames++;
+                    
+                    // Lưới nền
+                    ctx.strokeStyle = 'rgba(236, 72, 153, 0.1)';
+                    for(let i = 0; i < canvas.height; i += 40) { ctx.beginPath(); ctx.moveTo(0, i + (GameSys.shooter.frames%40)); ctx.lineTo(canvas.width, i + (GameSys.shooter.frames%40)); ctx.stroke(); }
+
+                    // Player move
+                    if(GameSys.shooter.touchX !== null) GameSys.shooter.player.x += (GameSys.shooter.touchX - (GameSys.shooter.player.x + 20)) * 0.2;
+                    if(GameSys.shooter.player.x < 0) GameSys.shooter.player.x = 0;
+                    if(GameSys.shooter.player.x + 40 > canvas.width) GameSys.shooter.player.x = canvas.width - 40;
+
+                    // Shoot
+                    if(GameSys.shooter.frames % 12 === 0) GameSys.shooter.bullets.push({ x: GameSys.shooter.player.x + 18, y: GameSys.shooter.player.y, w: 4, h: 15 });
+                    
+                    // Spawn Enemy
+                    if(GameSys.shooter.frames % 50 === 0) GameSys.shooter.enemies.push({ x: Math.random()*(canvas.width - 30), y: -40, w: 30, h: 30, hp: 2 });
+
+                    // Bullets
+                    ctx.fillStyle = '#06b6d4';
+                    for(let i = GameSys.shooter.bullets.length - 1; i >= 0; i--) {
+                        let b = GameSys.shooter.bullets[i]; b.y -= 8; ctx.fillRect(b.x, b.y, b.w, b.h);
+                        if(b.y < 0) GameSys.shooter.bullets.splice(i, 1);
+                    }
+
+                    // Enemies & Collision
+                    for(let i = GameSys.shooter.enemies.length - 1; i >= 0; i--) {
+                        let e = GameSys.shooter.enemies[i]; e.y += 3;
+                        ctx.fillStyle = '#a855f7'; ctx.fillRect(e.x, e.y, e.w, e.h);
+
+                        for(let j = GameSys.shooter.bullets.length - 1; j >= 0; j--) {
+                            let b = GameSys.shooter.bullets[j];
+                            if(b.x < e.x+e.w && b.x+b.w > e.x && b.y < e.y+e.h && b.y+b.h > e.y) {
+                                e.hp--; GameSys.shooter.bullets.splice(j, 1);
+                                if(e.hp <= 0) {
+                                    GameSys.shooter.score += 10; document.getElementById('shooterScore').innerText = GameSys.shooter.score;
+                                    GameSys.shooter.enemies.splice(i, 1);
+                                    for(let k=0; k<8; k++) GameSys.shooter.particles.push({x: e.x+15, y: e.y+15, vx: (Math.random()-0.5)*8, vy: (Math.random()-0.5)*8, life: 1});
+                                    break;
+                                }
+                            }
+                        }
+                        if(e && GameSys.shooter.player.x < e.x+e.w && GameSys.shooter.player.x+40 > e.x && GameSys.shooter.player.y < e.y+e.h && GameSys.shooter.player.y+40 > e.y) {
+                            GameSys.shooter.isPlaying = false; document.getElementById('shooterGameOver').classList.remove('hidden');
+                        }
+                        if(e && e.y > canvas.height) GameSys.shooter.enemies.splice(i, 1);
+                    }
+
+                    // Particles
+                    for(let i = GameSys.shooter.particles.length - 1; i >= 0; i--) {
+                        let p = GameSys.shooter.particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.05;
+                        ctx.fillStyle = `rgba(236,72,153,${p.life})`; ctx.fillRect(p.x, p.y, 4, 4);
+                        if(p.life <= 0) GameSys.shooter.particles.splice(i, 1);
+                    }
+
+                    // Draw Player
+                    ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.moveTo(GameSys.shooter.player.x + 20, GameSys.shooter.player.y); ctx.lineTo(GameSys.shooter.player.x + 40, GameSys.shooter.player.y + 40); ctx.lineTo(GameSys.shooter.player.x, GameSys.shooter.player.y + 40); ctx.fill();
+
+                    if(GameSys.shooter.isPlaying) GameSys.shooter.animId = requestAnimationFrame(loop);
+                };
+                GameSys.shooter.stop = () => { GameSys.shooter.isPlaying = false; cancelAnimationFrame(GameSys.shooter.animId); };
+                loop();
+            },
+
+            // --- GAME 3: MAZE ---
+            openMaze: () => { GameSys.activeGame = 'maze'; GameSys.openModal('mazeModal'); GameSys.initMaze(); },
+            maze: { grid: [], p: {c:1, r:1}, end: {c:13, r:13}, isWon: false },
+            initMaze: () => {
+                const canvas = document.getElementById('mazeCanvas'); const ctx = canvas.getContext('2d');
+                document.getElementById('mazeGameOver').classList.add('hidden');
+                GameSys.maze.isWon = false; GameSys.maze.p = {c:1, r:1};
+                let cols = 15, rows = 15, cellSize = 20;
+
+                // Tạo map DFS
+                for(let r=0; r<rows; r++) { GameSys.maze.grid[r] = []; for(let c=0; c<cols; c++) GameSys.maze.grid[r][c] = 1; }
+                let stack = []; let cr=1, cc=1; GameSys.maze.grid[cr][cc] = 0; const dirs = [[0,-2],[0,2],[-2,0],[2,0]];
+                const carve = () => {
+                    let unv = [];
+                    for(let i=0; i<4; i++) { let nc=cc+dirs[i][0], nr=cr+dirs[i][1]; if(nc>0&&nc<cols-1&&nr>0&&nr<rows-1&&GameSys.maze.grid[nr][nc]===1) unv.push({c:nc, r:nr, dc:dirs[i][0]/2, dr:dirs[i][1]/2}); }
+                    if(unv.length > 0) { let n = unv[Math.floor(Math.random()*unv.length)]; stack.push({c:cc, r:cr}); GameSys.maze.grid[cr+n.dr][cc+n.dc]=0; GameSys.maze.grid[n.r][n.c]=0; cc=n.c; cr=n.r; } 
+                    else if(stack.length>0) { let cell = stack.pop(); cc=cell.c; cr=cell.r; }
+                };
+                while(stack.length > 0 || (cc===1 && cr===1 && GameSys.maze.grid[1][1]===0 && GameSys.maze.grid[1][2]===1 && GameSys.maze.grid[2][1]===1)) carve();
+                GameSys.maze.grid[rows-2][cols-2] = 0;
+
+                const draw = () => {
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    for(let r=0; r<rows; r++) { for(let c=0; c<cols; c++) { if(GameSys.maze.grid[r][c]===1) { ctx.fillStyle='#111827'; ctx.fillRect(c*cellSize, r*cellSize, cellSize, cellSize); } } }
+                    ctx.fillStyle='#f43f5e'; ctx.fillRect(GameSys.maze.end.c*cellSize, GameSys.maze.end.r*cellSize, cellSize, cellSize);
+                    ctx.fillStyle='#10b981'; ctx.beginPath(); ctx.arc(GameSys.maze.p.c*cellSize+10, GameSys.maze.p.r*cellSize+10, 6, 0, Math.PI*2); ctx.fill();
+                }; draw();
+
+                let sx = 0, sy = 0;
+                canvas.ontouchstart = (e) => { e.preventDefault(); sx = e.touches[0].clientX; sy = e.touches[0].clientY; };
+                canvas.ontouchend = (e) => {
+                    if(GameSys.maze.isWon) return; e.preventDefault();
+                    let dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+                    let move = {c:0, r:0};
+                    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx)>20) move.c = dx>0 ? 1 : -1;
+                    else if(Math.abs(dy)>20) move.r = dy>0 ? 1 : -1;
+                    
+                    if(move.c!==0 || move.r!==0) {
+                        let nc = GameSys.maze.p.c + move.c, nr = GameSys.maze.p.r + move.r;
+                        if(GameSys.maze.grid[nr] && GameSys.maze.grid[nr][nc] === 0) {
+                            GameSys.maze.p.c = nc; GameSys.maze.p.r = nr; draw();
+                            if(nc === GameSys.maze.end.c && nr === GameSys.maze.end.r) { GameSys.maze.isWon = true; document.getElementById('mazeGameOver').classList.remove('hidden'); }
+                        }
+                    }
+                };
+            }
+        };
+
+        // -----------------------------------------------------------
+        // 2. CORE UTILS & STATE
+        // -----------------------------------------------------------
         const Utils = {
             formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0).replace(/\s+/g, '\u00A0'),
-            
             cleanNumber: (v) => { 
-                if (!v) return 0;
-                if (typeof v === 'number') return v;
-                let str = String(v).replace(/[^0-9.,-]/g, "");
-                if (str.includes('.') && str.includes(',')) {
-                    let lastDot = str.lastIndexOf('.');
-                    let lastComma = str.lastIndexOf(',');
-                    if (lastComma > lastDot) str = str.replace(/\./g, "").replace(",", ".");
-                    else str = str.replace(/,/g, "");
-                } else if (str.includes(',')) {
-                    let parts = str.split(',');
-                    if (parts[parts.length-1].length === 3) str = str.replace(/,/g, "");
-                    else str = str.replace(",", ".");
-                } else if (str.includes('.')) {
-                    let parts = str.split('.');
-                    if (parts[parts.length-1].length === 3) str = str.replace(/\./g, "");
-                }
+                if (!v) return 0; if (typeof v === 'number') return v; let str = String(v).replace(/[^0-9.,-]/g, "");
+                if (str.includes('.') && str.includes(',')) { let lastDot = str.lastIndexOf('.'); let lastComma = str.lastIndexOf(','); if (lastComma > lastDot) str = str.replace(/\./g, "").replace(",", "."); else str = str.replace(/,/g, ""); } else if (str.includes(',')) { let parts = str.split(','); if (parts[parts.length-1].length === 3) str = str.replace(/,/g, ""); else str = str.replace(",", "."); } else if (str.includes('.')) { let parts = str.split('.'); if (parts[parts.length-1].length === 3) str = str.replace(/\./g, ""); }
                 return parseFloat(str) || 0;
             },
-
             normString: (str) => { return str ? str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ""; },
-            
             getIncreaseDecreaseInfo: (u) => {
-                if (u === null || u === undefined || u === "") return null;
-                let str = String(u).trim();
-                if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai") return null;
-                
+                if (u === null || u === undefined || u === "") return null; let str = String(u).trim(); if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai") return null;
                 let match = str.match(/([+-]?\d+[\.,]?\d*)%/);
-                if (match) {
-                    let val = parseFloat(match[1].replace(',', '.'));
-                    return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val };
-                }
-
-                let isDecrease = str.includes('-') || str.includes('−') || str.toLowerCase().includes('giảm');
-                let cleanForCheck = str.toLowerCase().replace(/tăng|giảm|\s+|\+|-|−|%/g, '').replace(',', '.');
+                if (match) { let val = parseFloat(match[1].replace(',', '.')); return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val }; }
+                let isDecrease = str.includes('-') || str.includes('−') || str.toLowerCase().includes('giảm'); let cleanForCheck = str.toLowerCase().replace(/tăng|giảm|\s+|\+|-|−|%/g, '').replace(',', '.');
                 if (!str.includes('%') && isNaN(Number(cleanForCheck))) return { text: str, type: 'text', value: 0 };
-                
-                let normalizedStr = str.replace(/,/g, '.');
-                let matchOld = normalizedStr.match(/\d+(\.\d+)?/);
-                if (!matchOld) return { text: str, type: 'text', value: 0 };
-                
-                let n = parseFloat(matchOld[0]);
-                if (!str.includes('%') && n > 0 && n < 10 && normalizedStr.includes('.')) n = n * 100;
-                if (n === 0) return { text: '0%', type: 'text', value: 0 };
-                if (typeof u === 'number' && u < 0) isDecrease = true;
-                
+                let normalizedStr = str.replace(/,/g, '.'); let matchOld = normalizedStr.match(/\d+(\.\d+)?/); if (!matchOld) return { text: str, type: 'text', value: 0 };
+                let n = parseFloat(matchOld[0]); if (!str.includes('%') && n > 0 && n < 10 && normalizedStr.includes('.')) n = n * 100;
+                if (n === 0) return { text: '0%', type: 'text', value: 0 }; if (typeof u === 'number' && u < 0) isDecrease = true;
                 return { text: n.toFixed(2).replace(/\.?0+$/, '') + '%', type: isDecrease ? 'giảm' : 'tăng', value: isDecrease ? -n : n };
             },
-            
             showToast: (msg) => {
-                const toast = document.getElementById('customToast');
-                document.getElementById('toastMsg').textContent = msg;
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
+                const toast = document.getElementById('customToast'); document.getElementById('toastMsg').textContent = msg;
+                toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
             },
             generateId: () => Math.random().toString(36).substr(2, 9),
             hexToArgb: (hex) => { hex = hex.replace('#', ''); return hex.length === 6 ? 'FF' + hex.toUpperCase() : 'FF0055A5'; }
         };
 
         let State = { 
-            rawExcelData: [], 
-            productDB: [], 
-            warehouses: [], 
-            cart: [], 
-            searchTimeout: null,
+            rawExcelData: [], productDB: [], warehouses: [], cart: [], searchTimeout: null,
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ", color: "#0055A5", hasCustomLogo: false, logoData: "" },
-            currentFilterWarehouse: 'All',
-            filteredProducts: [], 
-            displayCount: 50,     
+            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,     
         };
         const ITEMS_PER_PAGE = 50; 
 
-        // ==========================================
-        // CƠ CHẾ LƯU TRỮ LOCAL STORAGE (OFFLINE)
-        // ==========================================
         const LocalDB = {
-            save: () => {
-                try {
-                    localStorage.setItem('thuanstore_state', JSON.stringify({
-                        productDB: State.productDB,
-                        warehouses: State.warehouses,
-                        cart: State.cart,
-                        brand: State.brand
-                    }));
-                } catch(e) { 
-                    console.warn("Lỗi lưu data", e);
-                    if (e.name === 'QuotaExceededError') {
-                        Utils.showToast("Dữ liệu quá lớn để lưu. Hãy dùng file Excel nhẹ hơn hoặc logo độ phân giải thấp.");
-                    }
-                }
-            },
+            save: () => { try { localStorage.setItem('thuanstore_state', JSON.stringify({ productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand })); } catch(e) { console.warn("Lỗi lưu data", e); } },
             load: () => {
                 try {
                     const data = localStorage.getItem('thuanstore_state');
                     if (data) {
-                        const parsed = JSON.parse(data);
-                        State.productDB = parsed.productDB || [];
-                        State.warehouses = parsed.warehouses || [];
-                        State.cart = parsed.cart || [];
-                        State.brand = parsed.brand || State.brand;
-                        
-                        if (State.productDB.length > 0 && State.warehouses.length === 0) {
-                            State.warehouses = ['Kho Mặc Định'];
-                            State.productDB.forEach(p => p.warehouse = 'Kho Mặc Định');
-                            LocalDB.save();
-                        }
+                        const parsed = JSON.parse(data); State.productDB = parsed.productDB || []; State.warehouses = parsed.warehouses || []; State.cart = parsed.cart || []; State.brand = parsed.brand || State.brand;
+                        if (State.productDB.length > 0 && State.warehouses.length === 0) { State.warehouses = ['Kho Mặc Định']; State.productDB.forEach(p => p.warehouse = 'Kho Mặc Định'); LocalDB.save(); }
                         return true;
                     }
-                } catch(e) { console.warn("Lỗi đọc data", e); }
-                return false;
+                } catch(e) { console.warn("Lỗi đọc data", e); } return false;
             }
         };
 
@@ -884,150 +965,58 @@
             screens: { landing: document.getElementById('screenLanding'), setup: document.getElementById('screenSetup'), main: document.getElementById('screenMain') },
             brand: { 
                 logoIn: document.getElementById('logoUploadInput'), logoPre: document.getElementById('logoPreview'), btnRemoveLogo: document.getElementById('btnRemoveLogo'),
-                nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), 
-                docTitleIn: document.getElementById('settingDocTitle'), 
+                nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), 
                 hLogo: document.getElementById('headerLogo'), hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
-                pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), 
-                pDocTitle: document.getElementById('printDocTitle'), printLogoContainer: document.getElementById('printLogoContainer'),
+                pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle'), printLogoContainer: document.getElementById('printLogoContainer'),
                 colorBtns: document.querySelectorAll('.color-btn'), customColorIn: document.getElementById('customColorInput') 
             },
             setup: { 
-                btnContinue: document.getElementById('btnContinueSession'), btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup'),
-                warehouseListSection: document.getElementById('warehouseListSection'),
-                warehouseBadges: document.getElementById('warehouseBadges'),
-                btnClearAllData: document.getElementById('btnClearAllData'),
-                totalProductCount: document.getElementById('totalProductCount'),
-                warehouseNameInput: document.getElementById('warehouseNameInput'),
-                btnStartFromSetup: document.getElementById('btnStartFromSetup')
+                btnContinue: document.getElementById('btnContinueSession'), btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup'), warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup')
             },
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), globalDisc: document.getElementById('globalDiscountInput'), btnApplyGlobal: document.getElementById('btnApplyGlobal'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome') },
-            search: { 
-                btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'),
-                warehouseFilters: document.getElementById('warehouseFilters')
-            },
+            search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage') },
-            // DOM cho Modal Xóa
-            confirmDelete: {
-                modal: document.getElementById('confirmDeleteModal'),
-                btnCancel: document.getElementById('btnCancelDelete'),
-                btnConfirm: document.getElementById('btnConfirmDeleteAction')
-            }
+            confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') }
         };
 
-        const switchScreen = (screenId) => {
-            Object.values(DOM.screens).forEach(s => s.classList.remove('active'));
-            setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50);
-        };
-        
-        window.addEventListener('beforeunload', function (e) {
-            LocalDB.save();
-        });
+        const switchScreen = (screenId) => { Object.values(DOM.screens).forEach(s => s.classList.remove('active')); setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50); };
+        window.addEventListener('beforeunload', function (e) { LocalDB.save(); });
 
-        // ==========================================
-        // CẬP NHẬT GIAO DIỆN TRANG CHỦ ĐỒNG BỘ
-        // ==========================================
         const updateLandingUI = () => {
-            if (State.productDB && State.productDB.length > 0) {
-                DOM.setup.btnContinue.classList.remove('hidden');
-                if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bản Báo Giá Mới";
-            } else {
-                 DOM.setup.btnContinue.classList.add('hidden');
-                 if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bắt Đầu Mới";
-            }
+            if (State.productDB && State.productDB.length > 0) { DOM.setup.btnContinue.classList.remove('hidden'); if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bản Báo Giá Mới"; } 
+            else { DOM.setup.btnContinue.classList.add('hidden'); if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bắt Đầu Mới"; }
         };
 
-        // ==========================================
-        // KHỞI TẠO APP VÀ KIỂM TRA DỮ LIỆU CŨ
-        // ==========================================
         const initApp = () => {
-            LocalDB.load();
-            updateLandingUI();
-
-            DOM.brand.nameIn.value = State.brand.name;
-            DOM.brand.sloganIn.value = State.brand.slogan;
-            DOM.brand.docTitleIn.value = State.brand.docTitle;
-
-            updateBrandTheme(State.brand.color);
-            updateBrandText();
-            renderSetupWarehouseList();
+            LocalDB.load(); updateLandingUI();
+            DOM.brand.nameIn.value = State.brand.name; DOM.brand.sloganIn.value = State.brand.slogan; DOM.brand.docTitleIn.value = State.brand.docTitle;
+            updateBrandTheme(State.brand.color); updateBrandText(); renderSetupWarehouseList();
         };
 
-        DOM.setup.btnContinue.addEventListener('click', () => {
-            switchScreen('main');
-            CartLogic.render();
-            Utils.showToast("Đã khôi phục phiên làm việc trước!");
-        });
-        
-        DOM.main.btnBackToHome.addEventListener('click', () => {
-            updateLandingUI();
-            switchScreen('landing');
-        });
+        DOM.setup.btnContinue.addEventListener('click', () => { switchScreen('main'); CartLogic.render(); Utils.showToast("Đã khôi phục phiên làm việc trước!"); });
+        DOM.main.btnBackToHome.addEventListener('click', () => { updateLandingUI(); switchScreen('landing'); });
 
-        // ==========================================
-        // MENU CHÍNH (LANDING PAGE) CYBER UI
-        // ==========================================
-        let selectedMenuFeature = 'excel'; 
-        const menuCards = document.querySelectorAll('.feature-card');
+        let selectedMenuFeature = 'excel'; const menuCards = document.querySelectorAll('.feature-card');
+        menuCards.forEach(card => { card.addEventListener('click', () => { menuCards.forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedMenuFeature = card.dataset.feature; }); });
 
-        menuCards.forEach(card => {
-            card.addEventListener('click', () => {
-                menuCards.forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedMenuFeature = card.dataset.feature;
-            });
-        });
+        DOM.setup.btnStart.addEventListener('click', () => { if (selectedMenuFeature === 'excel') { switchScreen('setup'); renderSetupWarehouseList(); } else Utils.showToast("Tính năng này đang được phát triển. Vui lòng quay lại sau!"); });
+        DOM.setup.btnBackToLanding.addEventListener('click', () => { updateLandingUI(); switchScreen('landing'); });
+        DOM.setup.btnEdit.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
 
-        DOM.setup.btnStart.addEventListener('click', () => {
-            if (selectedMenuFeature === 'excel') {
-                switchScreen('setup');
-                renderSetupWarehouseList();
-            } else Utils.showToast("Tính năng này đang được phát triển. Vui lòng quay lại sau!");
-        });
-
-        DOM.setup.btnBackToLanding.addEventListener('click', () => {
-            updateLandingUI();
-            switchScreen('landing');
-        });
-        
-        DOM.setup.btnEdit.addEventListener('click', () => { 
-            switchScreen('setup'); 
-            renderSetupWarehouseList();
-        });
-
-        // ==========================================
-        // CẤU HÌNH THƯƠNG HIỆU THÔNG MINH
-        // ==========================================
         const defaultLogoSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='transparent'/><text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='900' font-size='46'>THUẬN</text><text x='50%' y='72%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='700' font-size='20' letter-spacing='4'>STORE</text></svg>`;
         
         const updateBrandTheme = (hexColor) => {
-            State.brand.color = hexColor;
-            document.documentElement.style.setProperty('--brand-color', hexColor);
-            DOM.brand.colorBtns.forEach(btn => { btn.classList.toggle('active', btn.dataset.color === hexColor); });
-            DOM.brand.customColorIn.value = hexColor;
-
+            State.brand.color = hexColor; document.documentElement.style.setProperty('--brand-color', hexColor);
+            DOM.brand.colorBtns.forEach(btn => { btn.classList.toggle('active', btn.dataset.color === hexColor); }); DOM.brand.customColorIn.value = hexColor;
             if(!State.brand.hasCustomLogo) {
-                const hexStr = hexColor.replace('#','');
-                const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
-                
-                DOM.brand.logoPre.src = svgWithBg; 
-                DOM.brand.hLogo.src = svgWithBg;
-                DOM.brand.pLogo.src = defaultLogoSVG; 
-                DOM.brand.pLogo.parentElement.classList.add('print-bg-brand');
-                
-                DOM.brand.hLogo.style.display = 'none';
-                if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'none';
-                if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.add('hidden');
+                const hexStr = hexColor.replace('#',''); const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
+                DOM.brand.logoPre.src = svgWithBg; DOM.brand.hLogo.src = svgWithBg; DOM.brand.pLogo.src = defaultLogoSVG; DOM.brand.pLogo.parentElement.classList.add('print-bg-brand');
+                DOM.brand.hLogo.style.display = 'none'; if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'none'; if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.add('hidden');
             } else {
-                DOM.brand.logoPre.src = State.brand.logoData;
-                DOM.brand.hLogo.src = State.brand.logoData;
-                DOM.brand.pLogo.src = State.brand.logoData;
-                DOM.brand.pLogo.parentElement.classList.remove('print-bg-brand'); 
-                DOM.brand.pLogo.parentElement.style.background = 'transparent';
-                
-                DOM.brand.hLogo.style.display = 'block';
-                if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'flex';
-                if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.remove('hidden');
+                DOM.brand.logoPre.src = State.brand.logoData; DOM.brand.hLogo.src = State.brand.logoData; DOM.brand.pLogo.src = State.brand.logoData;
+                DOM.brand.pLogo.parentElement.classList.remove('print-bg-brand'); DOM.brand.pLogo.parentElement.style.background = 'transparent';
+                DOM.brand.hLogo.style.display = 'block'; if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'flex'; if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.remove('hidden');
             }
             LocalDB.save();
         };
@@ -1037,940 +1026,257 @@
 
         DOM.brand.logoIn.addEventListener('change', (e) => {
             const file = e.target.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                State.brand.hasCustomLogo = true; 
-                State.brand.logoData = evt.target.result;
-                updateBrandTheme(State.brand.color);
-            }; reader.readAsDataURL(file);
+            const reader = new FileReader(); reader.onload = (evt) => { State.brand.hasCustomLogo = true; State.brand.logoData = evt.target.result; updateBrandTheme(State.brand.color); }; reader.readAsDataURL(file);
         });
 
-        if (DOM.brand.btnRemoveLogo) {
-            DOM.brand.btnRemoveLogo.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation();
-                State.brand.hasCustomLogo = false;
-                State.brand.logoData = "";
-                updateBrandTheme(State.brand.color);
-                Utils.showToast("Đã khôi phục thiết lập mặc định!");
-            });
-        }
+        if (DOM.brand.btnRemoveLogo) { DOM.brand.btnRemoveLogo.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); State.brand.hasCustomLogo = false; State.brand.logoData = ""; updateBrandTheme(State.brand.color); Utils.showToast("Đã khôi phục thiết lập mặc định!"); }); }
 
         const updateBrandText = () => {
-            State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; 
-            State.brand.slogan = DOM.brand.sloganIn.value;
-            State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
-            
-            DOM.brand.hName.textContent = State.brand.name; 
-            DOM.brand.hSlogan.textContent = State.brand.slogan;
-            DOM.brand.pName.textContent = State.brand.name; 
-            DOM.brand.pSlogan.textContent = State.brand.slogan;
-            DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
-            DOM.main.senderName.value = State.brand.name;
-            LocalDB.save();
+            State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; State.brand.slogan = DOM.brand.sloganIn.value; State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
+            DOM.brand.hName.textContent = State.brand.name; DOM.brand.hSlogan.textContent = State.brand.slogan; DOM.brand.pName.textContent = State.brand.name; DOM.brand.pSlogan.textContent = State.brand.slogan; DOM.brand.pDocTitle.textContent = State.brand.docTitle; DOM.main.senderName.value = State.brand.name; LocalDB.save();
         };
         
-        DOM.brand.nameIn.addEventListener('input', updateBrandText); 
-        DOM.brand.sloganIn.addEventListener('input', updateBrandText);
-        DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
+        DOM.brand.nameIn.addEventListener('input', updateBrandText); DOM.brand.sloganIn.addEventListener('input', updateBrandText); DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
 
-        // ==========================================
-        // EXCEL MAPPING & MULTI-WAREHOUSE LOGIC
-        // ==========================================
-        
         function renderSetupWarehouseList() {
-            if (State.warehouses.length === 0) {
-                DOM.setup.warehouseListSection.classList.add('hidden');
-            } else {
-                DOM.setup.warehouseListSection.classList.remove('hidden');
-                DOM.setup.totalProductCount.textContent = `${State.productDB.length} SP`;
-                
-                const badgesHtml = State.warehouses.map(w => 
-                    `<span class="bg-indigo-100 text-indigo-700 font-black text-[10px] px-3 py-1.5 rounded-lg border border-indigo-200">${w}</span>`
-                ).join('');
-                DOM.setup.warehouseBadges.innerHTML = badgesHtml;
+            if (State.warehouses.length === 0) { DOM.setup.warehouseListSection.classList.add('hidden'); } 
+            else {
+                DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${State.productDB.length} SP`;
+                DOM.setup.warehouseBadges.innerHTML = State.warehouses.map(w => `<span class="bg-indigo-100 text-indigo-700 font-black text-[10px] px-3 py-1.5 rounded-lg border border-indigo-200">${w}</span>`).join('');
             }
         }
 
-        // XỬ LÝ NÚT XÓA KHO BẰNG MODAL CUSTOM
-        const openConfirmDeleteModal = () => {
-            DOM.confirmDelete.modal.classList.remove('hidden');
-            DOM.confirmDelete.modal.classList.add('flex');
-            // Timeout để hiệu ứng CSS scale kích hoạt mượt mà
-            setTimeout(() => {
-                DOM.confirmDelete.modal.classList.remove('opacity-0');
-                DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-95');
-                DOM.confirmDelete.modal.firstElementChild.classList.add('scale-100');
-            }, 10);
-        };
+        const openConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.remove('hidden'); DOM.confirmDelete.modal.classList.add('flex'); setTimeout(() => { DOM.confirmDelete.modal.classList.remove('opacity-0'); DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-100'); }, 10); };
+        const closeConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.add('opacity-0'); DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-100'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.confirmDelete.modal.classList.add('hidden'); DOM.confirmDelete.modal.classList.remove('flex'); }, 300); };
 
-        const closeConfirmDeleteModal = () => {
-            DOM.confirmDelete.modal.classList.add('opacity-0');
-            DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-100');
-            DOM.confirmDelete.modal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => {
-                DOM.confirmDelete.modal.classList.add('hidden');
-                DOM.confirmDelete.modal.classList.remove('flex');
-            }, 300);
-        };
-
-        DOM.setup.btnClearAllData.addEventListener('click', openConfirmDeleteModal);
-        DOM.confirmDelete.btnCancel.addEventListener('click', closeConfirmDeleteModal);
+        DOM.setup.btnClearAllData.addEventListener('click', openConfirmDeleteModal); DOM.confirmDelete.btnCancel.addEventListener('click', closeConfirmDeleteModal);
 
         DOM.confirmDelete.btnConfirm.addEventListener('click', () => {
-            State.productDB = [];
-            State.warehouses = [];
-            State.cart = [];
-            State.currentFilterWarehouse = 'All';
-            State.filteredProducts = [];
-            LocalDB.save();
-            
-            renderSetupWarehouseList();
-            DOM.setup.mapping.classList.add('hidden', 'opacity-0');
-            DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)";
-            DOM.setup.fileIn.value = '';
-            
-            updateLandingUI(); 
-            CartLogic.render(); 
-            
-            closeConfirmDeleteModal();
-            Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
+            State.productDB = []; State.warehouses = []; State.cart = []; State.currentFilterWarehouse = 'All'; State.filteredProducts = []; LocalDB.save();
+            renderSetupWarehouseList(); DOM.setup.mapping.classList.add('hidden', 'opacity-0'); DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)"; DOM.setup.fileIn.value = ''; updateLandingUI(); CartLogic.render(); closeConfirmDeleteModal(); Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
         });
 
         DOM.setup.fileIn.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return; 
-            DOM.setup.fileName.textContent = file.name;
-            const reader = new FileReader(); 
-            reader.onload = (evt) => {
+            const file = e.target.files[0]; if (!file) return; DOM.setup.fileName.textContent = file.name;
+            const reader = new FileReader(); reader.onload = (evt) => {
                 try {
-                    const workbook = XLSX.read(evt.target.result, { type: 'binary' });
-                    State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
-                    
-                    if (!State.rawExcelData || State.rawExcelData.length === 0) {
-                        Utils.showToast("File Excel trống hoặc không hợp lệ!");
-                        return;
-                    }
-
-                    let hIndex = 0; 
-                    for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) { if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 2){ hIndex = i; break; } }
+                    const workbook = XLSX.read(evt.target.result, { type: 'binary' }); State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
+                    if (!State.rawExcelData || State.rawExcelData.length === 0) { Utils.showToast("File Excel trống hoặc không hợp lệ!"); return; }
+                    let hIndex = 0; for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) { if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 2){ hIndex = i; break; } }
                     const headers = []; (State.rawExcelData[hIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
-                    
                     const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
                     [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
-                    
-                    DOM.setup.mapping.classList.remove('hidden');
-                    setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
-                    
+                    DOM.setup.mapping.classList.remove('hidden'); setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
                     let priceColSet = false;
-                    headers.forEach(h => {
-                        let lower = h.toLowerCase();
-                        if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h;
-                        if(lower.includes('tên') || lower.includes('name')) DOM.setup.mapName.value = h;
-                        if(lower.includes('đvt') || lower.includes('đơn vị')) DOM.setup.mapUnit.value = h;
-                        
-                        if(!priceColSet && (lower.includes('giá') || lower.includes('price'))) {
-                            DOM.setup.mapPrice.value = h; priceColSet = true;
-                        }
-                        if(lower.includes('bìa')) {
-                            DOM.setup.mapPrice.value = h; priceColSet = true;
-                        }
-                    });
-                    
-                    let suggestedName = file.name.split('.')[0].substring(0, 15);
-                    DOM.setup.warehouseNameInput.value = suggestedName;
-                    
+                    headers.forEach(h => { let lower = h.toLowerCase(); if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h; if(lower.includes('tên') || lower.includes('name')) DOM.setup.mapName.value = h; if(lower.includes('đvt') || lower.includes('đơn vị')) DOM.setup.mapUnit.value = h; if(!priceColSet && (lower.includes('giá') || lower.includes('price') || lower.includes('bìa'))) { DOM.setup.mapPrice.value = h; priceColSet = true; } });
+                    let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
                 } catch (err) { Utils.showToast("Lỗi đọc file Excel."); }
             }; reader.readAsBinaryString(file);
         });
 
         DOM.setup.btnConfirm.addEventListener('click', () => {
-            if (!State.rawExcelData || State.rawExcelData.length === 0) {
-                Utils.showToast("Vui lòng tải lên file Excel trước!");
-                return;
-            }
-
-            const nameCol = DOM.setup.mapName.value; 
-            const priceCol = DOM.setup.mapPrice.value;
-            const wName = DOM.setup.warehouseNameInput.value.trim();
-
+            if (!State.rawExcelData || State.rawExcelData.length === 0) return Utils.showToast("Vui lòng tải lên file Excel trước!");
+            const nameCol = DOM.setup.mapName.value; const priceCol = DOM.setup.mapPrice.value; const wName = DOM.setup.warehouseNameInput.value.trim();
             if(!wName) { Utils.showToast("Vui lòng đặt Tên Kho / Tên Hãng!"); DOM.setup.warehouseNameInput.focus(); return; }
             if(!nameCol || !priceCol) { Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!"); return; }
 
-            let hIndex = State.rawExcelData.findIndex(row => row.includes(nameCol)); if(hIndex === -1) hIndex = 0;
-            const headers = State.rawExcelData[hIndex];
+            let hIndex = State.rawExcelData.findIndex(row => row.includes(nameCol)); if(hIndex === -1) hIndex = 0; const headers = State.rawExcelData[hIndex];
             const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
             
             let newItemsCount = 0;
             for (let i = hIndex + 1; i < State.rawExcelData.length; i++) {
                 const row = State.rawExcelData[i]; if (!row || !row[nI]) continue;
-                
-                const code = cI > -1 ? (row[cI] || "") : ""; 
-                const name = row[nI] ? row[nI].toString().trim() : "";
-                const rawPrice = pI > -1 ? row[pI] : 0;
-                
-                State.productDB.push({ 
-                    id: 'P' + Date.now() + '_' + i, 
-                    warehouse: wName,
-                    code: code, 
-                    name: name, 
-                    unit: uI > -1 ? row[uI] : "Cái", 
-                    price: Utils.cleanNumber(rawPrice), 
-                    searchStr: Utils.normString(`${code || ''} ${name || ''}`)
-                });
+                const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
+                State.productDB.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: uI > -1 ? row[uI] : "Cái", price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`) });
                 newItemsCount++;
             }
-            
-            if(!State.warehouses.includes(wName)) {
-                State.warehouses.push(wName);
-            }
-            
+            if(!State.warehouses.includes(wName)) State.warehouses.push(wName);
             LocalDB.save();
-            
-            // Xử lý UI sau khi lưu xong
-            DOM.setup.mapping.classList.add('opacity-0');
-            setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
-            DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)";
-            DOM.setup.fileIn.value = '';
-            
-            renderSetupWarehouseList();
-            updateLandingUI(); // Cập nhật luôn màn hình chính
-            
-            Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+            DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500); DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)"; DOM.setup.fileIn.value = '';
+            renderSetupWarehouseList(); updateLandingUI(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
         });
 
-        // Event listener cho nút Bắt đầu làm việc
-        if (DOM.setup.btnStartFromSetup) {
-            DOM.setup.btnStartFromSetup.addEventListener('click', () => {
-                CartLogic.render();
-                switchScreen('main');
-            });
-        }
+        if (DOM.setup.btnStartFromSetup) { DOM.setup.btnStartFromSetup.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); }); }
 
-        // ==========================================
-        // TÌM KIẾM VÀ GIỎ HÀNG ĐA KHO (TỐI ƯU HÓA)
-        // ==========================================
-        
         function renderWarehouseFilters() {
-            if(State.warehouses.length <= 1) {
-                DOM.search.warehouseFilters.classList.add('hidden');
-                return;
-            }
+            if(State.warehouses.length <= 1) { DOM.search.warehouseFilters.classList.add('hidden'); return; }
             DOM.search.warehouseFilters.classList.remove('hidden');
-            
             let html = `<button data-w="All" class="filter-w-btn px-4 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase transition-colors shrink-0 ${State.currentFilterWarehouse === 'All' ? 'bg-slate-800 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200'}">TẤT CẢ</button>`;
-            
-            State.warehouses.forEach(w => {
-                const isActive = State.currentFilterWarehouse === w;
-                html += `<button data-w="${w}" class="filter-w-btn px-4 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase transition-colors shrink-0 ${isActive ? 'bg-blue-600 text-white shadow-md border border-blue-600' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-100'}">${w}</button>`;
-            });
-            
+            State.warehouses.forEach(w => { const isActive = State.currentFilterWarehouse === w; html += `<button data-w="${w}" class="filter-w-btn px-4 py-1.5 rounded-full text-[11px] font-black tracking-widest uppercase transition-colors shrink-0 ${isActive ? 'bg-blue-600 text-white shadow-md border border-blue-600' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-100'}">${w}</button>`; });
             DOM.search.warehouseFilters.innerHTML = html;
         }
 
-        DOM.search.warehouseFilters.addEventListener('click', (e) => {
-            const btn = e.target.closest('.filter-w-btn');
-            if(!btn) return;
-            State.currentFilterWarehouse = btn.dataset.w;
-            renderWarehouseFilters(); 
-            applyFiltersAndSearch(); 
-        });
+        DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; State.currentFilterWarehouse = btn.dataset.w; renderWarehouseFilters(); applyFiltersAndSearch(); });
 
-        // HÀM TÌM KIẾM ĐA ĐIỂM VÀ LỌC (TOKENIZED SEARCH)
         const applyFiltersAndSearch = () => {
             if (!DOM.search.modal.classList.contains('active')) return;
-            
-            const rawTerm = DOM.search.input.value.trim();
-            const terms = Utils.normString(rawTerm).split(/\s+/).filter(t => t.length > 0);
-            
+            const rawTerm = DOM.search.input.value.trim(); const terms = Utils.normString(rawTerm).split(/\s+/).filter(t => t.length > 0);
             let filtered = State.productDB;
-            
-            // 1. Lọc theo kho
-            if (State.currentFilterWarehouse !== 'All') {
-                filtered = filtered.filter(p => p.warehouse === State.currentFilterWarehouse);
-            }
-            
-            // 2. Lọc theo từ khóa (Mọi từ khóa đều phải xuất hiện trong tên/mã SP)
-            if (terms.length > 0) {
-                filtered = filtered.filter(p => {
-                    return terms.every(term => p.searchStr.includes(term));
-                });
-            }
-            
-            State.filteredProducts = filtered;
-            State.displayCount = ITEMS_PER_PAGE; // Reset về trang đầu tiên
-            
-            renderSearchList();
+            if (State.currentFilterWarehouse !== 'All') filtered = filtered.filter(p => p.warehouse === State.currentFilterWarehouse);
+            if (terms.length > 0) filtered = filtered.filter(p => { return terms.every(term => p.searchStr.includes(term)); });
+            State.filteredProducts = filtered; State.displayCount = ITEMS_PER_PAGE; renderSearchList();
         };
 
-        const openSearch = () => { 
-            DOM.search.modal.classList.add('active'); 
-            DOM.search.input.value = ''; 
-            State.currentFilterWarehouse = 'All'; 
-            renderWarehouseFilters();
-            applyFiltersAndSearch(); 
-        };
+        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; State.currentFilterWarehouse = 'All'; renderWarehouseFilters(); applyFiltersAndSearch(); };
         const closeSearch = () => DOM.search.modal.classList.remove('active');
-        
-        DOM.search.btnOpen.addEventListener('click', openSearch); 
-        DOM.search.btnClose.addEventListener('click', closeSearch); 
-        DOM.search.btnFinish.addEventListener('click', closeSearch);
-
-        DOM.search.input.addEventListener('input', (e) => {
-            clearTimeout(State.searchTimeout);
-            State.searchTimeout = setTimeout(applyFiltersAndSearch, 250);
-        });
+        DOM.search.btnOpen.addEventListener('click', openSearch); DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
+        DOM.search.input.addEventListener('input', (e) => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
 
         DOM.search.list.addEventListener('click', (e) => {
-            // Xử lý nút Load More
-            const btnLoadMore = e.target.closest('#btnLoadMore');
-            if (btnLoadMore) {
-                State.displayCount += ITEMS_PER_PAGE;
-                renderSearchList();
-                return;
-            }
-
-            // Xử lý nút THÊM/XÓA
-            const btn = e.target.closest('.btn-toggle-search');
-            if (!btn) return;
-            
-            const productId = btn.dataset.pid;
-            const p = State.productDB.find(x => x.id === productId);
-            if(!p) return;
-
+            const btnLoadMore = e.target.closest('#btnLoadMore'); if (btnLoadMore) { State.displayCount += ITEMS_PER_PAGE; renderSearchList(); return; }
+            const btn = e.target.closest('.btn-toggle-search'); if (!btn) return;
+            const productId = btn.dataset.pid; const p = State.productDB.find(x => x.id === productId); if(!p) return;
             const isAdded = State.cart.some(q => q.productId === p.id);
-            if(isAdded) {
-                State.cart = State.cart.filter(q => q.productId !== p.id); 
-                btn.className = "btn-toggle-search print-bg-brand text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm";
-                btn.textContent = "THÊM";
-            } else {
-                State.cart.push({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '', warehouse: p.warehouse });
-                btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100";
-                btn.textContent = "XÓA";
-            }
-            
-            DOM.search.badge.textContent = State.cart.length; 
-            CartLogic.render();
-            LocalDB.save(); 
+            if(isAdded) { State.cart = State.cart.filter(q => q.productId !== p.id); btn.className = "btn-toggle-search print-bg-brand text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm"; btn.textContent = "THÊM"; } 
+            else { State.cart.push({ id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '', warehouse: p.warehouse }); btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100"; btn.textContent = "XÓA"; }
+            DOM.search.badge.textContent = State.cart.length; CartLogic.render(); LocalDB.save(); 
         });
 
         function renderSearchList() {
             const itemsToRender = State.filteredProducts.slice(0, State.displayCount);
-            
             let html = itemsToRender.map(p => {
-                const isAdded = State.cart.some(q => q.productId === p.id);
-                let btnClass = isAdded ? "text-red-500 bg-red-50 border-red-100" : "print-bg-brand text-white shadow-sm";
-                let btnText = isAdded ? "XÓA" : "THÊM";
-                
-                let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); 
-                let unitBadge = '';
-                if (incInfo && incInfo.value !== 0) {
-                    let innerText = '';
-                    if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`;
-                    else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`;
-                    else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`;
-                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
-                } else if (p.unit && p.unit.toLowerCase().trim() !== 'cái' && p.unit.toLowerCase().trim() !== '') {
-                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`;
-                }
-                
-                return `
-                <div class="w-full max-w-5xl mx-auto p-4 flex justify-between items-center bg-white border-b border-slate-50">
-                    <div class="pr-2 flex-1">
-                        <div class="mb-1.5 leading-snug">
-                            ${p.code ? `<span class="text-[9px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded border border-slate-200 mr-1.5">${p.code}</span>` : ''}
-                            <span class="font-bold text-slate-800 text-sm">${p.name}</span>
-                        </div>
-                        <div class="flex items-center gap-2 mt-1">
-                            <span class="print-text-brand text-xs font-black">${Utils.formatMoney(p.price)}</span>
-                            ${unitBadge}
-                            ${p.warehouse ? `<span class="text-[8px] bg-indigo-50 border border-indigo-100 text-indigo-500 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">${p.warehouse}</span>` : ''}
-                        </div>
-                    </div>
-                    <button data-pid="${p.id}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold active:scale-95 transition-transform">
-                        ${btnText}
-                    </button>
-                </div>`;
+                const isAdded = State.cart.some(q => q.productId === p.id); let btnClass = isAdded ? "text-red-500 bg-red-50 border-red-100" : "print-bg-brand text-white shadow-sm"; let btnText = isAdded ? "XÓA" : "THÊM";
+                let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); let unitBadge = '';
+                if (incInfo && incInfo.value !== 0) { let innerText = ''; if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`; else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`; else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`; unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`; } 
+                else if (p.unit && p.unit.toLowerCase().trim() !== 'cái' && p.unit.toLowerCase().trim() !== '') { unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`; }
+                return `<div class="w-full max-w-5xl mx-auto p-4 flex justify-between items-center bg-white border-b border-slate-50"><div class="pr-2 flex-1"><div class="mb-1.5 leading-snug">${p.code ? `<span class="text-[9px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded border border-slate-200 mr-1.5">${p.code}</span>` : ''}<span class="font-bold text-slate-800 text-sm">${p.name}</span></div><div class="flex items-center gap-2 mt-1"><span class="print-text-brand text-xs font-black">${Utils.formatMoney(p.price)}</span>${unitBadge}${p.warehouse ? `<span class="text-[8px] bg-indigo-50 border border-indigo-100 text-indigo-500 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">${p.warehouse}</span>` : ''}</div></div><button data-pid="${p.id}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold active:scale-95 transition-transform">${btnText}</button></div>`;
             }).join('');
-            
-            // Xây dựng nút Load More nếu vẫn còn sản phẩm
             let loadMoreHtml = '';
-            if (State.displayCount < State.filteredProducts.length) {
-                loadMoreHtml = `
-                    <div class="w-full max-w-5xl mx-auto p-4 flex justify-center bg-slate-50/50 pb-8">
-                        <button id="btnLoadMore" class="px-6 py-2.5 bg-blue-100 text-blue-700 font-black rounded-full text-xs uppercase tracking-widest hover:bg-blue-200 active:scale-95 transition-all shadow-sm flex items-center gap-2">
-                            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                            Hiển thị thêm (${State.displayCount} / ${State.filteredProducts.length})
-                        </button>
-                    </div>
-                `;
-            }
-
+            if (State.displayCount < State.filteredProducts.length) { loadMoreHtml = `<div class="w-full max-w-5xl mx-auto p-4 flex justify-center bg-slate-50/50 pb-8"><button id="btnLoadMore" class="px-6 py-2.5 bg-blue-100 text-blue-700 font-black rounded-full text-xs uppercase tracking-widest hover:bg-blue-200 active:scale-95 transition-all shadow-sm flex items-center gap-2"><svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>Hiển thị thêm (${State.displayCount} / ${State.filteredProducts.length})</button></div>`; }
             DOM.search.list.innerHTML = html + loadMoreHtml;
         }
 
         const CartLogic = {
             recalculateItem: (item) => {
-                const qty = Number(item.qty) || 0;
-                const origPrice = Number(item.originalPrice) || 0;
-
-                const baseDisc = Number(item.baseDiscount) || 0; 
-                const km1 = item.km1 !== undefined ? Number(item.km1) : (Number(item.extraPromo) || 0);
-                const km2 = Number(item.km2) || 0;
-                const kmTien = Number(item.kmTien) || 0;
-
-                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
-                const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
-                const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
-                
+                const qty = Number(item.qty) || 0; const origPrice = Number(item.originalPrice) || 0;
+                const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : (Number(item.extraPromo) || 0); const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
+                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
                 let lineTotal = priceAfterKm2 * qty;
-                
-                if (item.kmTienType === 'total') {
-                    lineTotal -= kmTien; 
-                } else {
-                    lineTotal -= (kmTien * qty); 
-                }
-
+                if (item.kmTienType === 'total') lineTotal -= kmTien; else lineTotal -= (kmTien * qty); 
                 if(lineTotal < 0) lineTotal = 0;
-                
-                item.priceAfterDiscount = qty > 0 ? Math.round(lineTotal / qty) : Math.round(priceAfterKm2); 
-                item.totalFinal = Math.round(lineTotal); 
-                item.totalOriginal = Math.round(origPrice * qty);
-
+                item.priceAfterDiscount = qty > 0 ? Math.round(lineTotal / qty) : Math.round(priceAfterKm2); item.totalFinal = Math.round(lineTotal); item.totalOriginal = Math.round(origPrice * qty);
                 let dNotes = [];
-                if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`);
-                if (km1 > 0) dNotes.push(`KM1: ${km1}%`);
-                if (km2 > 0) dNotes.push(`KM2: ${km2}%`);
-                if (kmTien > 0) dNotes.push(`Giảm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
-                
+                if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`); if (km1 > 0) dNotes.push(`KM1: ${km1}%`); if (km2 > 0) dNotes.push(`KM2: ${km2}%`); if (kmTien > 0) dNotes.push(`Giảm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
                 let currentAutoStr = dNotes.join(', ');
-                
-                if (item.note === undefined) item.note = "";
-                if (item.lastAutoStr === undefined) item.lastAutoStr = "";
-
-                if (currentAutoStr !== item.lastAutoStr) {
-                    if (item.note === item.lastAutoStr) {
-                        item.note = currentAutoStr;
-                    } else if (item.lastAutoStr !== "" && item.note.includes(item.lastAutoStr)) {
-                        item.note = item.note.replace(item.lastAutoStr, currentAutoStr);
-                    } else {
-                        if (currentAutoStr !== "") {
-                            item.note = item.note ? currentAutoStr + ", " + item.note : currentAutoStr;
-                        }
-                    }
-                    item.lastAutoStr = currentAutoStr;
-                }
-                
+                if (item.note === undefined) item.note = ""; if (item.lastAutoStr === undefined) item.lastAutoStr = "";
+                if (currentAutoStr !== item.lastAutoStr) { if (item.note === item.lastAutoStr) { item.note = currentAutoStr; } else if (item.lastAutoStr !== "" && item.note.includes(item.lastAutoStr)) { item.note = item.note.replace(item.lastAutoStr, currentAutoStr); } else { if (currentAutoStr !== "") { item.note = item.note ? currentAutoStr + ", " + item.note : currentAutoStr; } } item.lastAutoStr = currentAutoStr; }
                 item.note = item.note.replace(/^[,\s]+|[,\s]+$/g, '').replace(/,\s*,/g, ',');
             },
-            
-            updateSummary: () => {
-                let sO = 0, sF = 0; State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; });
-                DOM.footer.sumOrig.textContent = Utils.formatMoney(sO); DOM.footer.sumDisc.textContent = Utils.formatMoney(sO - sF); DOM.footer.sumFinal.textContent = Utils.formatMoney(sF);
-            },
+            updateSummary: () => { let sO = 0, sF = 0; State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; }); DOM.footer.sumOrig.textContent = Utils.formatMoney(sO); DOM.footer.sumDisc.textContent = Utils.formatMoney(sO - sF); DOM.footer.sumFinal.textContent = Utils.formatMoney(sF); },
             render: () => {
-                if (State.cart.length === 0) { 
-                    DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-2xl p-10 text-center border-2 border-dashed border-slate-200 text-slate-400 font-bold uppercase text-xs">Vui lòng chọn sản phẩm</div>'; 
-                    DOM.footer.bar.classList.add('translate-y-full'); 
-                    DOM.main.itemCount.textContent = `0 MÓN`; DOM.search.badge.textContent = `0`;
-                    return; 
-                }
-                
-                DOM.footer.bar.classList.remove('translate-y-full'); 
-                DOM.main.itemCount.textContent = `${State.cart.length} MÓN`; 
-                DOM.search.badge.textContent = State.cart.length;
-
+                if (State.cart.length === 0) { DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-2xl p-10 text-center border-2 border-dashed border-slate-200 text-slate-400 font-bold uppercase text-xs">Vui lòng chọn sản phẩm</div>'; DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0 MÓN`; DOM.search.badge.textContent = `0`; return; }
+                DOM.footer.bar.classList.remove('translate-y-full'); DOM.main.itemCount.textContent = `${State.cart.length} MÓN`; DOM.search.badge.textContent = State.cart.length;
                 const html = State.cart.map((item, index) => {
                     CartLogic.recalculateItem(item);
-
-                    let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); 
-                    let unitBadge = '';
-                    if (incInfo && incInfo.value !== 0) {
-                        let innerText = '';
-                        if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`;
-                        else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`;
-                        else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`;
-                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
-                    } else if (item.unit && item.unit.toLowerCase().trim() !== 'cái' && item.unit.toLowerCase().trim() !== '') {
-                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`;
-                    }
-
-                    return `
-                    <div class="glass-card p-4 relative" data-id="${item.id}">
-                        <div class="pr-8 mb-4">
-                            <h4 class="text-sm font-bold text-slate-900 leading-snug"><span class="print-text-brand mr-1.5 font-black">${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}</h4>
-                            <div class="flex flex-wrap gap-2 mt-2 items-center">
-                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>
-                                ${unitBadge}
-                                ${item.warehouse ? `<span class="text-[8px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-1 rounded whitespace-nowrap uppercase tracking-widest border border-indigo-100">${item.warehouse}</span>` : ''}
-                                <input type="text" data-field="note" value="${item.note || ''}" placeholder="📝 Thêm ghi chú SP..." class="cart-input-text flex-1 min-w-[120px] bg-amber-50/50 border border-amber-100 focus:bg-white rounded-md px-2 py-1 text-[10px] font-semibold text-slate-700 outline-none focus:border-amber-400 transition-colors">
-                            </div>
-                        </div>
-                        <button data-action="remove" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors">
-                            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
-                        </button>
-                        
-                        <div class="grid grid-cols-5 gap-1 mb-3 items-end">
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 block mb-1.5 text-center uppercase tracking-wider">SL</label>
-                                <input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-slate-50 border border-slate-200 rounded-lg py-2 text-center text-xs font-black text-slate-800 outline-none focus:ring-2 focus:ring-slate-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-amber-500 uppercase tracking-wider">CK%</label>
-                                    <button data-action="sync" data-field="baseDiscount" class="text-white bg-amber-400 hover:bg-amber-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm" title="Áp dụng mức CK này cho tất cả SP">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                </div>
-                                <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-amber-50 border border-amber-100 rounded-lg py-2 text-center text-xs font-black text-amber-800 outline-none focus:ring-2 focus:ring-amber-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-blue-500 uppercase tracking-wider">KM1</label>
-                                    <button data-action="sync" data-field="km1" class="text-white bg-blue-400 hover:bg-blue-500 rounded px-0.5 py-0.5 active:scale-scale-95 shadow-sm" title="Áp dụng mức KM1 này cho tất cả SP">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                </div>
-                                <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : (item.extraPromo || 0)}" class="cart-input w-full bg-blue-50 border border-blue-100 rounded-lg py-2 text-center text-xs font-black text-blue-700 outline-none focus:ring-2 focus:ring-blue-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider">KM2</label>
-                                    <button data-action="sync" data-field="km2" class="text-white bg-emerald-400 hover:bg-emerald-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm" title="Áp dụng mức KM2 này cho tất cả SP">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                </div>
-                                <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-emerald-50 border border-emerald-100 rounded-lg py-2 text-center text-xs font-black text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center mb-1.5">
-                                    <button data-action="toggleKmType" class="text-[8px] sm:text-[9px] font-bold ${item.kmTienType === 'total' ? 'text-red-600 bg-red-100 hover:bg-red-200' : 'text-purple-600 bg-purple-100 hover:bg-purple-200'} rounded px-1 py-0.5 active:scale-95 shadow-sm uppercase tracking-wider transition-colors" title="Chạm để đổi kiểu trừ tiền (Tổng hoặc /SP)">
-                                        ${item.kmTienType === 'total' ? '-TỔNG(Đ)' : '-TIỀN/SP'}
-                                    </button>
-                                </div>
-                                <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full ${item.kmTienType === 'total' ? 'bg-red-50 border border-red-100 text-red-700 focus:ring-red-400' : 'bg-purple-50 border border-purple-100 text-purple-700 focus:ring-purple-400'} rounded-lg py-2 text-center text-xs font-black outline-none focus:ring-2 px-0 transition-colors">
-                            </div>
-                        </div>
-                        <div class="border-t border-slate-100 pt-3 mt-1 flex justify-between items-center">
-                            <div class="text-[11px] font-medium text-slate-500">Đơn Giá: <span class="price-display text-slate-900 ml-1 font-black">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
-                            <div class="text-right"><div class="linetotal-display text-lg font-black print-text-brand leading-none">${Utils.formatMoney(item.totalFinal)}</div></div>
-                        </div>
-                    </div>`;
+                    let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); let unitBadge = '';
+                    if (incInfo && incInfo.value !== 0) { let innerText = ''; if (incInfo.type === 'tăng') innerText = `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>`; else if (incInfo.type === 'giảm') innerText = `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>`; else innerText = `<span class="text-blue-600 font-bold">${incInfo.text}</span>`; unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`; } 
+                    else if (item.unit && item.unit.toLowerCase().trim() !== 'cái' && item.unit.toLowerCase().trim() !== '') { unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`; }
+                    return `<div class="glass-card p-4 relative" data-id="${item.id}"><div class="pr-8 mb-4"><h4 class="text-sm font-bold text-slate-900 leading-snug"><span class="print-text-brand mr-1.5 font-black">${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}</h4><div class="flex flex-wrap gap-2 mt-2 items-center"><span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>${unitBadge}${item.warehouse ? `<span class="text-[8px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-1 rounded whitespace-nowrap uppercase tracking-widest border border-indigo-100">${item.warehouse}</span>` : ''}<input type="text" data-field="note" value="${item.note || ''}" placeholder="📝 Thêm ghi chú SP..." class="cart-input-text flex-1 min-w-[120px] bg-amber-50/50 border border-amber-100 focus:bg-white rounded-md px-2 py-1 text-[10px] font-semibold text-slate-700 outline-none focus:border-amber-400 transition-colors"></div></div><button data-action="remove" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button><div class="grid grid-cols-5 gap-1 mb-3 items-end"><div><label class="text-[9px] font-bold text-slate-400 block mb-1.5 text-center uppercase tracking-wider">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-slate-50 border border-slate-200 rounded-lg py-2 text-center text-xs font-black text-slate-800 outline-none focus:ring-2 focus:ring-slate-400 px-0"></div><div><div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[8px] sm:text-[9px] font-bold text-amber-500 uppercase tracking-wider">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-white bg-amber-400 hover:bg-amber-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm"><svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button></div><input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-amber-50 border border-amber-100 rounded-lg py-2 text-center text-xs font-black text-amber-800 outline-none focus:ring-2 focus:ring-amber-400 px-0"></div><div><div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[8px] sm:text-[9px] font-bold text-blue-500 uppercase tracking-wider">KM1</label><button data-action="sync" data-field="km1" class="text-white bg-blue-400 hover:bg-blue-500 rounded px-0.5 py-0.5 active:scale-scale-95 shadow-sm"><svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button></div><input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : (item.extraPromo || 0)}" class="cart-input w-full bg-blue-50 border border-blue-100 rounded-lg py-2 text-center text-xs font-black text-blue-700 outline-none focus:ring-2 focus:ring-blue-400 px-0"></div><div><div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[8px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider">KM2</label><button data-action="sync" data-field="km2" class="text-white bg-emerald-400 hover:bg-emerald-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm"><svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></button></div><input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-emerald-50 border border-emerald-100 rounded-lg py-2 text-center text-xs font-black text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-400 px-0"></div><div><div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[8px] sm:text-[9px] font-bold ${item.kmTienType === 'total' ? 'text-red-600 bg-red-100 hover:bg-red-200' : 'text-purple-600 bg-purple-100 hover:bg-purple-200'} rounded px-1 py-0.5 active:scale-95 shadow-sm uppercase tracking-wider transition-colors">${item.kmTienType === 'total' ? '-TỔNG(Đ)' : '-TIỀN/SP'}</button></div><input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full ${item.kmTienType === 'total' ? 'bg-red-50 border border-red-100 text-red-700 focus:ring-red-400' : 'bg-purple-50 border border-purple-100 text-purple-700 focus:ring-purple-400'} rounded-lg py-2 text-center text-xs font-black outline-none focus:ring-2 px-0 transition-colors"></div></div><div class="border-t border-slate-100 pt-3 mt-1 flex justify-between items-center"><div class="text-[11px] font-medium text-slate-500">Đơn Giá: <span class="price-display text-slate-900 ml-1 font-black">${Utils.formatMoney(item.priceAfterDiscount)}</span></div><div class="text-right"><div class="linetotal-display text-lg font-black print-text-brand leading-none">${Utils.formatMoney(item.totalFinal)}</div></div></div></div>`;
                 }).join('');
-                
-                DOM.main.quoteList.innerHTML = html;
-                CartLogic.updateSummary();
+                DOM.main.quoteList.innerHTML = html; CartLogic.updateSummary();
             }
         };
 
-        DOM.main.btnApplyGlobal.addEventListener('click', () => { 
-            const val = Utils.cleanNumber(DOM.main.globalDisc.value); 
-            State.cart.forEach(i => i.baseDiscount = val); 
-            CartLogic.render(); Utils.showToast("Đã áp dụng CK chung!"); 
-            LocalDB.save();
-        });
+        DOM.main.btnApplyGlobal.addEventListener('click', () => { const val = Utils.cleanNumber(DOM.main.globalDisc.value); State.cart.forEach(i => i.baseDiscount = val); CartLogic.render(); Utils.showToast("Đã áp dụng CK chung!"); LocalDB.save(); });
 
         DOM.main.quoteList.addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if(!btn) return;
-            const card = btn.closest('.glass-card');
-            const id = card.dataset.id;
-            const action = btn.dataset.action;
-
-            if(action === 'remove') {
-                State.cart = State.cart.filter(i => i.id !== id); 
-                CartLogic.render();
-                applyFiltersAndSearch(); 
-                LocalDB.save();
-            } else if (action === 'sync') {
-                const field = btn.dataset.field;
-                const sourceItem = State.cart.find(i => i.id === id);
-                if(sourceItem) {
-                    const val = sourceItem[field];
-                    State.cart.forEach(item => { item[field] = val; });
-                    CartLogic.render();
-                    let fName = field === 'baseDiscount' ? 'Chiết khấu' : 'Khuyến mãi';
-                    Utils.showToast(`Đã đồng bộ ${fName} (${val}%)!`);
-                    LocalDB.save();
-                }
-            } else if (action === 'toggleKmType') {
-                const item = State.cart.find(i => i.id === id);
-                if(item) {
-                    item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total';
-                    CartLogic.render();
-                    LocalDB.save();
-                }
-            }
+            const btn = e.target.closest('button'); if(!btn) return; const card = btn.closest('.glass-card'); const id = card.dataset.id; const action = btn.dataset.action;
+            if(action === 'remove') { State.cart = State.cart.filter(i => i.id !== id); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); } 
+            else if (action === 'sync') { const field = btn.dataset.field; const sourceItem = State.cart.find(i => i.id === id); if(sourceItem) { const val = sourceItem[field]; State.cart.forEach(item => { item[field] = val; }); CartLogic.render(); let fName = field === 'baseDiscount' ? 'Chiết khấu' : 'Khuyến mãi'; Utils.showToast(`Đã đồng bộ ${fName} (${val}%)!`); LocalDB.save(); } } 
+            else if (action === 'toggleKmType') { const item = State.cart.find(i => i.id === id); if(item) { item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; CartLogic.render(); LocalDB.save(); } }
         });
 
         DOM.main.quoteList.addEventListener('input', (e) => {
             if(!e.target.classList.contains('cart-input') && !e.target.classList.contains('cart-input-text')) return;
-            const card = e.target.closest('.glass-card');
-            const id = card.dataset.id;
-            const field = e.target.dataset.field;
-            
-            const item = State.cart.find(i => i.id === id); 
-            if(!item) return; 
-
-            if (e.target.classList.contains('cart-input-text')) {
-                item[field] = e.target.value;
-                LocalDB.save();
-                return;
-            }
-
-            let val = Utils.cleanNumber(e.target.value);
-
-            if (field === 'qty' && val < 1) {
-                val = 1; e.target.value = 1;
-                Utils.showToast("Số lượng phải từ 1 trở lên!");
-            }
-
-            item[field] = val; 
-            CartLogic.recalculateItem(item); 
-            
-            card.querySelector('.price-display').textContent = Utils.formatMoney(item.priceAfterDiscount); 
-            card.querySelector('.linetotal-display').textContent = Utils.formatMoney(item.totalFinal);
-            
-            const noteInput = card.querySelector('.cart-input-text');
-            if (noteInput && noteInput.value !== item.note) {
-                noteInput.value = item.note;
-            }
-
-            CartLogic.updateSummary();
-            LocalDB.save();
+            const card = e.target.closest('.glass-card'); const id = card.dataset.id; const field = e.target.dataset.field; const item = State.cart.find(i => i.id === id); if(!item) return; 
+            if (e.target.classList.contains('cart-input-text')) { item[field] = e.target.value; LocalDB.save(); return; }
+            let val = Utils.cleanNumber(e.target.value); if (field === 'qty' && val < 1) { val = 1; e.target.value = 1; Utils.showToast("Số lượng phải từ 1 trở lên!"); }
+            item[field] = val; CartLogic.recalculateItem(item); 
+            card.querySelector('.price-display').textContent = Utils.formatMoney(item.priceAfterDiscount); card.querySelector('.linetotal-display').textContent = Utils.formatMoney(item.totalFinal);
+            const noteInput = card.querySelector('.cart-input-text'); if (noteInput && noteInput.value !== item.note) { noteInput.value = item.note; }
+            CartLogic.updateSummary(); LocalDB.save();
         });
 
-        DOM.main.quoteList.addEventListener('focusin', (e) => {
-            if(e.target.classList.contains('cart-input')) e.target.select();
-        });
+        DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) e.target.select(); });
 
-        // ==========================================
-        // EXPORT LOGIC & LIVE PREVIEW
-        // ==========================================
         const ExportLogic = {
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
                 State.cart.forEach((item, i) => {
                     sumFinal += item.totalFinal;
-                    
                     let increaseHtml = ''; let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                    if (incInfo && incInfo.value !== 0) {
-                        if (incInfo.type === 'tăng') increaseHtml = `<br><span style="font-size: 20px; color: #dc2626; font-weight: 800; margin-top: 6px; display: inline-block; background: #fef2f2; padding: 2px 10px; border-radius: 8px;">(Tăng ${incInfo.text})</span>`;
-                        else if (incInfo.type === 'giảm') increaseHtml = `<br><span style="font-size: 20px; color: #059669; font-weight: 800; margin-top: 6px; display: inline-block; background: #ecfdf5; padding: 2px 10px; border-radius: 8px;">(Giảm ${incInfo.text})</span>`;
-                        else if (incInfo.type === 'text') increaseHtml = `<br><span style="font-size: 20px; color: #3b82f6; font-weight: 800; margin-top: 6px; display: inline-block; background: #eff6ff; padding: 2px 10px; border-radius: 8px;">(${incInfo.text})</span>`;
-                    }
-                    
+                    if (incInfo && incInfo.value !== 0) { if (incInfo.type === 'tăng') increaseHtml = `<br><span style="font-size: 20px; color: #dc2626; font-weight: 800; margin-top: 6px; display: inline-block; background: #fef2f2; padding: 2px 10px; border-radius: 8px;">(Tăng ${incInfo.text})</span>`; else if (incInfo.type === 'giảm') increaseHtml = `<br><span style="font-size: 20px; color: #059669; font-weight: 800; margin-top: 6px; display: inline-block; background: #ecfdf5; padding: 2px 10px; border-radius: 8px;">(Giảm ${incInfo.text})</span>`; else if (incInfo.type === 'text') increaseHtml = `<br><span style="font-size: 20px; color: #3b82f6; font-weight: 800; margin-top: 6px; display: inline-block; background: #eff6ff; padding: 2px 10px; border-radius: 8px;">(${incInfo.text})</span>`; }
                     const noteHtml = item.note ? item.note : '';
-                    
-                    tbody.innerHTML += `
-                    <tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};">
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td>
-                        <td contenteditable="true" class="print-text-brand" style="padding: 20px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.priceAfterDiscount)}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.totalFinal)}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${noteHtml}</td>
-                    </tr>`;
+                    tbody.innerHTML += `<tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};"><td contenteditable="true" style="padding: 20px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td><td contenteditable="true" style="padding: 20px 15px; text-align: left; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td><td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td><td contenteditable="true" class="print-text-brand" style="padding: 20px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td><td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.originalPrice)}${increaseHtml}</td><td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.priceAfterDiscount)}</td><td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.totalFinal)}</td><td contenteditable="true" style="padding: 20px 15px; text-align: left; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${noteHtml}</td></tr>`;
                 });
-
-                document.getElementById('pCustomerPrint').innerHTML = DOM.main.custName.value.trim() || "Quý khách hàng";
-                document.getElementById('pSenderDisplay').innerHTML = DOM.main.senderName.value.trim();
-                document.getElementById('pSignName').innerHTML = DOM.main.senderName.value.trim();
-                document.getElementById('pPhoneDisplay').innerHTML = DOM.main.senderPhone.value.trim();
-                document.getElementById('pTotalPrint').innerHTML = Utils.formatMoney(sumFinal);
-                
-                const note = DOM.main.promoNote.value.trim();
-                document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${State.brand.name}!`;
-                
+                document.getElementById('pCustomerPrint').innerHTML = DOM.main.custName.value.trim() || "Quý khách hàng"; document.getElementById('pSenderDisplay').innerHTML = DOM.main.senderName.value.trim(); document.getElementById('pSignName').innerHTML = DOM.main.senderName.value.trim(); document.getElementById('pPhoneDisplay').innerHTML = DOM.main.senderPhone.value.trim(); document.getElementById('pTotalPrint').innerHTML = Utils.formatMoney(sumFinal);
+                const note = DOM.main.promoNote.value.trim(); document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${State.brand.name}!`;
                 const now = new Date(); document.getElementById('pDateDisplay').innerHTML = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
                 return sumFinal;
             },
-            
             prepareExport: () => {
-                if(State.cart.length === 0) return; 
-                DOM.export.modal.classList.add('active'); 
-                DOM.export.loading.classList.remove('hidden');
-                
+                if(State.cart.length === 0) return; DOM.export.modal.classList.add('active'); DOM.export.loading.classList.remove('hidden');
                 const total = ExportLogic.generatePrintView();
                 DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${State.brand.docTitle.toLowerCase()}.\n👉 Tổng cộng: ${Utils.formatMoney(total)}\n\nAnh/chị xem file đính kèm nhé!`;
-
-                setTimeout(() => {
-                    const wrapper = document.getElementById('previewContainer');
-                    const invoice = document.getElementById('invoiceRenderArea');
-                    
-                    const scale = wrapper.clientWidth / 1600;
-                    invoice.style.transform = `scale(${scale})`;
-                    wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`;
-                    
-                    DOM.export.loading.classList.add('hidden');
-                }, 100); 
+                setTimeout(() => { const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea'); const scale = wrapper.clientWidth / 1600; invoice.style.transform = `scale(${scale})`; wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`; DOM.export.loading.classList.add('hidden'); }, 100); 
             },
-
             captureCanvas: async () => {
-                DOM.export.loading.classList.remove('hidden');
-                DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
-                
-                if (document.activeElement) document.activeElement.blur();
-
-                const invoice = document.getElementById('invoiceRenderArea');
-                
-                await new Promise(r => setTimeout(r, 100)); 
-                
-                try {
-                    const canvas = await html2canvas(invoice, { 
-                        scale: 1.2, 
-                        backgroundColor: "#ffffff", 
-                        useCORS: true, 
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            const el = clonedDoc.getElementById('invoiceRenderArea');
-                            el.style.transform = 'none';
-                        }
-                    });
-                    
-                    DOM.export.loading.classList.add('hidden');
-                    return canvas;
-                } catch (e) {
-                    console.error(e);
-                    DOM.export.loading.classList.add('hidden');
-                    Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy giảm số lượng Sản phẩm!");
-                    return null;
-                }
+                DOM.export.loading.classList.remove('hidden'); DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
+                if (document.activeElement) document.activeElement.blur(); const invoice = document.getElementById('invoiceRenderArea'); await new Promise(r => setTimeout(r, 100)); 
+                try { const canvas = await html2canvas(invoice, { scale: 1.2, backgroundColor: "#ffffff", useCORS: true, logging: false, onclone: (clonedDoc) => { const el = clonedDoc.getElementById('invoiceRenderArea'); el.style.transform = 'none'; } }); DOM.export.loading.classList.add('hidden'); return canvas; } 
+                catch (e) { console.error(e); DOM.export.loading.classList.add('hidden'); Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy giảm số lượng Sản phẩm!"); return null; }
             },
-
             exportExcelPro: async () => {
                 Utils.showToast("Đang thu thập dữ liệu từ Bản in...");
                 try {
-                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia');
-                    const argbColor = Utils.hexToArgb(State.brand.color);
-                    worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
-                    
-                    titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); 
-                    titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
-                    titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
-                    
-                    worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true };
-                    worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').innerText.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
-                    worksheet.getCell('G3').value = document.getElementById('pDateDisplay').innerText.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
-                    
-                    worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true };
-                    worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').innerText.trim();
-                    worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').innerText.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
-                    
-                    const headerRow = worksheet.getRow(6);
-                    headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
-                    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }; headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-                    headerRow.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
-                    headerRow.height = 30;
-                    
-                    let currentRow = 7;
-                    const domRows = document.querySelectorAll('#printTbody tr');
-                    
-                    domRows.forEach((tr) => {
-                        const tds = tr.querySelectorAll('td');
-                        if (tds.length >= 8) {
-                            const row = worksheet.getRow(currentRow);
-                            
-                            const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; 
-                            
-                            row.values = [ 
-                                tds[0].innerText.trim(), 
-                                tds[1].innerText.trim(), 
-                                tds[2].innerText.trim(), 
-                                Utils.cleanNumber(tds[3].innerText), 
-                                Utils.cleanNumber(rawPriceStr), 
-                                Utils.cleanNumber(tds[5].innerText), 
-                                Utils.cleanNumber(tds[6].innerText), 
-                                tds[7].innerText.trim().replace(/\n/g, ', ') 
-                            ];
-                            row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
-                            row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
-                            currentRow++;
-                        }
-                    });
-                    
-                    const totalRow = worksheet.getRow(currentRow + 1);
-                    totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
-                    totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').innerText.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
-                    worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 25 } ];
-                    
-                    const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                    saveAs(blob, `${shortTitle}_${DOM.main.custName.value.trim() || 'KH'}_${Date.now()}.xlsx`); 
-                    Utils.showToast("Tải Excel thành công!");
+                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); const argbColor = Utils.hexToArgb(State.brand.color);
+                    worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1'); titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } }; titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
+                    worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true }; worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').innerText.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } }; worksheet.getCell('G3').value = document.getElementById('pDateDisplay').innerText.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
+                    worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true }; worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').innerText.trim(); worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').innerText.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
+                    const headerRow = worksheet.getRow(6); headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú']; headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }; headerRow.alignment = { vertical: 'middle', horizontal: 'center' }; headerRow.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; }); headerRow.height = 30;
+                    let currentRow = 7; const domRows = document.querySelectorAll('#printTbody tr');
+                    domRows.forEach((tr) => { const tds = tr.querySelectorAll('td'); if (tds.length >= 8) { const row = worksheet.getRow(currentRow); const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; row.values = [ tds[0].innerText.trim(), tds[1].innerText.trim(), tds[2].innerText.trim(), Utils.cleanNumber(tds[3].innerText), Utils.cleanNumber(rawPriceStr), Utils.cleanNumber(tds[5].innerText), Utils.cleanNumber(tds[6].innerText), tds[7].innerText.trim().replace(/\n/g, ', ') ]; row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0'; row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; }); currentRow++; } });
+                    const totalRow = worksheet.getRow(currentRow + 1); totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' }; totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').innerText.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' }; worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 25 } ];
+                    const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_'); saveAs(blob, `${shortTitle}_${DOM.main.custName.value.trim() || 'KH'}_${Date.now()}.xlsx`); Utils.showToast("Tải Excel thành công!");
                 } catch (error) { Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); }
             },
-
             exportPDF: async () => {
-                const canvas = await ExportLogic.captureCanvas();
-                if(!canvas) return;
-                Utils.showToast("Đang lưu tệp PDF...");
-                try {
-                    const imgData = canvas.toDataURL("image/jpeg", 0.85); 
-                    const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
-                    const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
-                    const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
-                    let heightLeft = scaledImgHeight; let position = 0;
-                    
-                    pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
-                    while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
-                    
-                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                    pdf.save(`${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`); 
-                    Utils.showToast("Lưu PDF thành công!");
-                } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
+                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang lưu tệp PDF...");
+                try { const imgData = canvas.toDataURL("image/jpeg", 0.85); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight(); const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio; let heightLeft = scaledImgHeight; let position = 0; pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; } const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_'); pdf.save(`${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`); Utils.showToast("Lưu PDF thành công!"); } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
             },
-
             exportImage: async () => {
-                const canvas = await ExportLogic.captureCanvas();
-                if(!canvas) return;
-                Utils.showToast("Đang tạo ảnh...");
-                
-                canvas.toBlob((blob) => {
-                    if(!blob) return Utils.showToast("Lỗi tạo ảnh");
-                    
-                    if (DOM.export.finalImg.src && DOM.export.finalImg.src.startsWith('blob:')) {
-                        URL.revokeObjectURL(DOM.export.finalImg.src);
-                    }
-                    
-                    const url = URL.createObjectURL(blob);
-                    DOM.export.finalImg.src = url;
-                    
-                    DOM.export.imageModal.classList.remove('hidden');
-                    DOM.export.imageModal.classList.add('flex');
-                    Utils.showToast("Hoàn tất!");
-                }, "image/jpeg", 0.9);
+                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang tạo ảnh...");
+                canvas.toBlob((blob) => { if(!blob) return Utils.showToast("Lỗi tạo ảnh"); if (DOM.export.finalImg.src && DOM.export.finalImg.src.startsWith('blob:')) { URL.revokeObjectURL(DOM.export.finalImg.src); } const url = URL.createObjectURL(blob); DOM.export.finalImg.src = url; DOM.export.imageModal.classList.remove('hidden'); DOM.export.imageModal.classList.add('flex'); Utils.showToast("Hoàn tất!"); }, "image/jpeg", 0.9);
             },
-
             printInvoiceMobile: async () => {
-                const canvas = await ExportLogic.captureCanvas();
-                if(!canvas) return;
-                Utils.showToast("Đang kết nối máy in...");
-                const imgData = canvas.toDataURL("image/jpeg", 0.95);
-                const iframe = document.createElement('iframe'); 
-                iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; 
-                document.body.appendChild(iframe);
-                const iframeDoc = iframe.contentWindow.document; iframeDoc.open();
-                iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); 
-                iframeDoc.close();
-                setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
+                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang kết nối máy in..."); const imgData = canvas.toDataURL("image/jpeg", 0.95); const iframe = document.createElement('iframe'); iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; document.body.appendChild(iframe); const iframeDoc = iframe.contentWindow.document; iframeDoc.open(); iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); iframeDoc.close(); setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
             }
         };
 
-        DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport);
-        DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active'));
-        DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro);
-        DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF);
-        DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage);
-        DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
-        
-        DOM.export.btnCopyMsg.addEventListener('click', () => { 
-            DOM.export.msgBox.select(); 
-            document.execCommand('copy'); 
-            window.getSelection().removeAllRanges(); 
-            Utils.showToast("Đã sao chép!"); 
-        });
+        DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport); DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active')); DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro); DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF); DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage); DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
+        DOM.export.btnCopyMsg.addEventListener('click', () => { DOM.export.msgBox.select(); document.execCommand('copy'); window.getSelection().removeAllRanges(); Utils.showToast("Đã sao chép!"); });
+        DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
 
-        DOM.export.btnCloseImage.addEventListener('click', () => {
-            DOM.export.imageModal.classList.add('hidden');
-            DOM.export.imageModal.classList.remove('flex');
-        });
-
-        window.addEventListener('resize', () => {
-            if(DOM.export.modal.classList.contains('active')) {
-                const wrapper = document.getElementById('previewContainer');
-                const invoice = document.getElementById('invoiceRenderArea');
-                const scale = wrapper.clientWidth / 1600;
-                invoice.style.transform = `scale(${scale})`;
-                wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`;
-            }
-        });
+        window.addEventListener('resize', () => { if(DOM.export.modal.classList.contains('active')) { const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea'); const scale = wrapper.clientWidth / 1600; invoice.style.transform = `scale(${scale})`; wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`; } });
 
         initApp();
 
-        // ==========================================
-        // LOGIC HIỂN THỊ STORY CỦA THUẬN STORE
-        // ==========================================
-        const storyModal = document.getElementById('storyModal');
-        const landingMainLogo = document.getElementById('landingMainLogo');
-        const btnCloseStory = document.getElementById('btnCloseStory');
-
-        // LOGIC HIỂN THỊ THÔNG ĐIỆP ẨN (SECRET MODAL)
-        const secretImageTrigger = document.getElementById('secretImageTrigger');
-        const secretModal = document.getElementById('secretModal');
-        const btnCloseSecret = document.getElementById('btnCloseSecret');
-
+        // CÂU CHUYỆN THUẬN STORE
+        const storyModal = document.getElementById('storyModal'); const landingMainLogo = document.getElementById('landingMainLogo'); const btnCloseStory = document.getElementById('btnCloseStory');
+        const secretImageTrigger = document.getElementById('secretImageTrigger'); const secretModal = document.getElementById('secretModal'); const btnCloseSecret = document.getElementById('btnCloseSecret');
         if (landingMainLogo && storyModal && btnCloseStory) {
-            landingMainLogo.addEventListener('click', () => {
-                storyModal.classList.remove('hidden');
-                storyModal.classList.add('flex');
-                
-                // Khắc phục lỗi Safari (iOS) bị đơ animation CSS khi hiển thị lại khối bị ẩn (display: none)
-                const spinners = storyModal.querySelectorAll('.animate-spin, .animate-pulse');
-                spinners.forEach(el => {
-                    el.style.animation = 'none';
-                    void el.offsetHeight; // Ép trình duyệt tính toán lại (Reflow)
-                    el.style.animation = '';
-                });
-
-                // Timeout để CSS transition có hiệu lực
-                setTimeout(() => {
-                    storyModal.classList.remove('opacity-0');
-                    storyModal.firstElementChild.classList.remove('scale-95');
-                    storyModal.firstElementChild.classList.add('scale-100');
-                }, 10);
-            });
-
-            const closeStoryFunc = () => {
-                storyModal.classList.add('opacity-0');
-                storyModal.firstElementChild.classList.remove('scale-100');
-                storyModal.firstElementChild.classList.add('scale-95');
-                setTimeout(() => {
-                    storyModal.classList.add('hidden');
-                    storyModal.classList.remove('flex');
-                }, 500);
-            };
-
-            btnCloseStory.addEventListener('click', closeStoryFunc);
-            // Bấm ra ngoài vùng tối để đóng Story
-            storyModal.addEventListener('click', (e) => {
-                if (e.target === storyModal) closeStoryFunc();
-            });
-
-            // Nếu chạm vào Ảnh Cô Gái -> Tắt Story Modal -> Bật Secret Modal
+            landingMainLogo.addEventListener('click', () => { storyModal.classList.remove('hidden'); storyModal.classList.add('flex'); const spinners = storyModal.querySelectorAll('.animate-spin, .animate-pulse'); spinners.forEach(el => { el.style.animation = 'none'; void el.offsetHeight; el.style.animation = ''; }); setTimeout(() => { storyModal.classList.remove('opacity-0'); storyModal.firstElementChild.classList.remove('scale-95'); storyModal.firstElementChild.classList.add('scale-100'); }, 10); });
+            const closeStoryFunc = () => { storyModal.classList.add('opacity-0'); storyModal.firstElementChild.classList.remove('scale-100'); storyModal.firstElementChild.classList.add('scale-95'); setTimeout(() => { storyModal.classList.add('hidden'); storyModal.classList.remove('flex'); }, 500); };
+            btnCloseStory.addEventListener('click', closeStoryFunc); storyModal.addEventListener('click', (e) => { if (e.target === storyModal) closeStoryFunc(); });
             if (secretImageTrigger && secretModal && btnCloseSecret) {
-                secretImageTrigger.addEventListener('click', () => {
-                    closeStoryFunc(); // Tắt bảng Story hiện tại
-                    
-                    // Delay 1 chút để bảng kia tắt hẳn rồi mới bật bảng mới lên
-                    setTimeout(() => {
-                        secretModal.classList.remove('hidden');
-                        secretModal.classList.add('flex');
-                        setTimeout(() => {
-                            secretModal.classList.remove('opacity-0');
-                            secretModal.firstElementChild.classList.remove('scale-95');
-                            secretModal.firstElementChild.classList.add('scale-100');
-                        }, 10);
-                    }, 400);
-                });
-
-                const closeSecretFunc = () => {
-                    secretModal.classList.add('opacity-0');
-                    secretModal.firstElementChild.classList.remove('scale-100');
-                    secretModal.firstElementChild.classList.add('scale-95');
-                    setTimeout(() => {
-                        secretModal.classList.add('hidden');
-                        secretModal.classList.remove('flex');
-                    }, 500);
-                };
-
-                btnCloseSecret.addEventListener('click', closeSecretFunc);
-                secretModal.addEventListener('click', (e) => {
-                    if (e.target === secretModal) closeSecretFunc();
-                });
+                secretImageTrigger.addEventListener('click', () => { closeStoryFunc(); setTimeout(() => { secretModal.classList.remove('hidden'); secretModal.classList.add('flex'); setTimeout(() => { secretModal.classList.remove('opacity-0'); secretModal.firstElementChild.classList.remove('scale-95'); secretModal.firstElementChild.classList.add('scale-100'); }, 10); }, 400); });
+                const closeSecretFunc = () => { secretModal.classList.add('opacity-0'); secretModal.firstElementChild.classList.remove('scale-100'); secretModal.firstElementChild.classList.add('scale-95'); setTimeout(() => { secretModal.classList.add('hidden'); secretModal.classList.remove('flex'); }, 500); };
+                btnCloseSecret.addEventListener('click', closeSecretFunc); secretModal.addEventListener('click', (e) => { if (e.target === secretModal) closeSecretFunc(); });
             }
         }
-
     </script>
 </body>
 </html>
+
+
+```
