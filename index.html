@@ -31,7 +31,7 @@
             --primary: #0f172a;
             --accent: #2563eb; 
             --background: #f8fafc; 
-            --brand-color: #0055A5; 
+            --brand-color: #0055A5; /* Cố định màu thương hiệu */
         }
 
         body { 
@@ -405,7 +405,6 @@
             </div>
         </header>
 
-        <!-- Đã tăng padding-bottom (pb-[260px]) để khi Order Promo Alert xuất hiện không đè lên phần Ghi chú chung -->
         <main class="flex-grow overflow-y-auto p-4 pb-[260px]" id="mainScroll">
             <section class="w-full max-w-5xl mx-auto space-y-4">
                 
@@ -445,37 +444,15 @@
                                 </div>
                             </div>
 
-                            <!-- Thiết lập thương hiệu & giao diện -->
+                            <!-- Thiết lập thương hiệu -->
                             <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Nhận diện thương hiệu</label>
-                                <div class="flex gap-4 items-start flex-col sm:flex-row">
-                                    <div class="relative shrink-0">
-                                        <label class="group w-16 h-16 rounded-xl border-2 border-dashed border-slate-300 flex items-center justify-center cursor-pointer relative bg-slate-50 overflow-hidden hover:border-blue-400 transition-colors">
-                                            <input type="file" id="logoUploadInput" accept="image/*" class="hidden">
-                                            <img id="logoPreview" src="" class="w-full h-full object-contain p-1">
-                                            <div class="absolute inset-0 bg-slate-900/60 hidden group-hover:flex items-center justify-center text-white text-[8px] font-bold tracking-widest backdrop-blur-sm text-center">ĐỔI LOGO</div>
-                                        </label>
-                                        <button id="btnRemoveLogo" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-[10px] hidden shadow-sm transition-transform active:scale-90 font-black z-10">&times;</button>
+                                <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Thông tin cửa hàng</label>
+                                <div class="space-y-2 w-full">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <input type="text" id="settingStoreName" value="THUẬN STORE" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-slate-800 uppercase outline-none">
+                                        <input type="text" id="settingSlogan" value="MPE VIETNAM" placeholder="Khẩu hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-[10px] font-bold text-slate-500 uppercase outline-none">
                                     </div>
-                                    
-                                    <div class="flex-1 space-y-2 w-full">
-                                        <div class="grid grid-cols-2 gap-2">
-                                            <input type="text" id="settingStoreName" value="THUẬN STORE" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-slate-800 uppercase outline-none">
-                                            <input type="text" id="settingSlogan" value="MPE VIETNAM" placeholder="Khẩu hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-[10px] font-bold text-slate-500 uppercase outline-none">
-                                        </div>
-                                        <div class="flex gap-2 items-center justify-between">
-                                            <input type="text" id="settingDocTitle" value="BẢNG BÁO GIÁ" placeholder="Tiêu đề tài liệu..." class="flex-1 input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-blue-800 uppercase outline-none border border-blue-100 bg-blue-50/50">
-                                            <!-- FIX COLOR PICKER CHO IOS/MOBILE -->
-                                            <div class="flex gap-1.5 items-center shrink-0 ml-2 bg-slate-100 p-1.5 rounded-lg">
-                                                <button class="color-btn active w-5 h-5 rounded-md bg-[#0055A5] shadow-sm" data-color="#0055A5"></button>
-                                                <button class="color-btn w-5 h-5 rounded-md bg-[#dc2626] shadow-sm" data-color="#dc2626"></button>
-                                                <button class="color-btn w-5 h-5 rounded-md bg-[#059669] shadow-sm" data-color="#059669"></button>
-                                                <div class="relative w-5 h-5 rounded-md overflow-hidden shadow-sm border border-slate-300">
-                                                    <input type="color" id="customColorInput" value="#0055A5" class="absolute -top-2 -left-2 w-10 h-10 cursor-pointer border-0 p-0 bg-transparent" style="-webkit-appearance: none;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <input type="text" id="settingDocTitle" value="BẢNG BÁO GIÁ" placeholder="Tiêu đề tài liệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-blue-800 uppercase outline-none border border-blue-100 bg-blue-50/50">
                                 </div>
                             </div>
                             
@@ -908,15 +885,17 @@
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 3000);
             },
-            generateId: () => Math.random().toString(36).substr(2, 9),
-            hexToArgb: (hex) => { hex = hex.replace('#', ''); return hex.length === 6 ? 'FF' + hex.toUpperCase() : 'FF0055A5'; }
+            generateId: () => Math.random().toString(36).substr(2, 9)
         };
+
+        const BRAND_COLOR = "#0055A5";
+        const defaultLogoSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='transparent'/><text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='900' font-size='46'>THUẬN</text><text x='50%' y='72%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='700' font-size='20' letter-spacing='4'>STORE</text></svg>`;
 
         let State = { 
             rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [],
             searchTimeout: null, currentOrderPromoEffect: null,
-            brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ", color: "#0055A5", hasCustomLogo: false, logoData: "" },
-            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,     
+            brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
+            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,    
         };
         const ITEMS_PER_PAGE = 50; 
 
@@ -956,12 +935,10 @@
         const DOM = {
             screens: { landing: document.getElementById('screenLanding'), setup: document.getElementById('screenSetup'), main: document.getElementById('screenMain') },
             brand: { 
-                logoIn: document.getElementById('logoUploadInput'), logoPre: document.getElementById('logoPreview'), btnRemoveLogo: document.getElementById('btnRemoveLogo'),
                 nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), 
                 hLogo: document.getElementById('headerLogo'), hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
                 pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), 
-                pDocTitle: document.getElementById('printDocTitle'), printLogoContainer: document.getElementById('printLogoContainer'),
-                colorBtns: document.querySelectorAll('.color-btn'), customColorIn: document.getElementById('customColorInput') 
+                pDocTitle: document.getElementById('printDocTitle'), printLogoContainer: document.getElementById('printLogoContainer')
             },
             setup: { 
                 btnContinue: document.getElementById('btnContinueSession'), btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup'),
@@ -999,11 +976,44 @@
             }
         };
 
+        const setupFixedBrandIdentity = () => {
+            document.documentElement.style.setProperty('--brand-color', BRAND_COLOR);
+            const hexStr = BRAND_COLOR.replace('#','');
+            const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
+
+            DOM.brand.hLogo.src = svgWithBg;
+            DOM.brand.pLogo.src = defaultLogoSVG;
+            DOM.brand.pLogo.parentElement.classList.add('print-bg-brand');
+            DOM.brand.hLogo.style.display = 'block';
+        };
+
+        const updateBrandText = () => {
+            State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; 
+            State.brand.slogan = DOM.brand.sloganIn.value; 
+            State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
+            DOM.brand.hName.textContent = State.brand.name; 
+            DOM.brand.hSlogan.textContent = State.brand.slogan; 
+            DOM.brand.pName.textContent = State.brand.name; 
+            DOM.brand.pSlogan.textContent = State.brand.slogan; 
+            DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
+            DOM.main.senderName.value = State.brand.name; 
+            LocalDB.save();
+        };
+
         const initApp = () => {
             LocalDB.load(); updateLandingUI();
-            DOM.brand.nameIn.value = State.brand.name; DOM.brand.sloganIn.value = State.brand.slogan; DOM.brand.docTitleIn.value = State.brand.docTitle;
-            updateBrandTheme(State.brand.color); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderPreview(); 
+            DOM.brand.nameIn.value = State.brand.name; 
+            DOM.brand.sloganIn.value = State.brand.slogan; 
+            DOM.brand.docTitleIn.value = State.brand.docTitle;
+            setupFixedBrandIdentity(); 
+            updateBrandText(); 
+            renderSetupWarehouseList(); 
+            PromoLogic.renderPreview(); 
         };
+
+        DOM.brand.nameIn.addEventListener('input', updateBrandText); 
+        DOM.brand.sloganIn.addEventListener('input', updateBrandText); 
+        DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
 
         DOM.setup.btnContinue.addEventListener('click', () => { switchScreen('main'); CartLogic.render(); Utils.showToast("Đã khôi phục phiên làm việc trước!"); });
         DOM.main.btnBackToHome.addEventListener('click', () => { updateLandingUI(); switchScreen('landing'); });
@@ -1175,53 +1185,6 @@
         DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
         DOM.promo.orderType.addEventListener('change', PromoLogic.updateOrderLabel);
 
-        // ==========================================
-        // CẤU HÌNH THƯƠNG HIỆU (FIX COLOR PICKER)
-        // ==========================================
-        const defaultLogoSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='transparent'/><text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='900' font-size='46'>THUẬN</text><text x='50%' y='72%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='700' font-size='20' letter-spacing='4'>STORE</text></svg>`;
-        
-        const updateBrandTheme = (hexColor) => {
-            State.brand.color = hexColor; document.documentElement.style.setProperty('--brand-color', hexColor);
-            DOM.brand.colorBtns.forEach(btn => { btn.classList.toggle('active', btn.dataset.color.toUpperCase() === hexColor.toUpperCase()); });
-            DOM.brand.customColorIn.value = hexColor;
-
-            if(!State.brand.hasCustomLogo) {
-                const hexStr = hexColor.replace('#',''); const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
-                DOM.brand.logoPre.src = svgWithBg; DOM.brand.hLogo.src = svgWithBg; DOM.brand.pLogo.src = defaultLogoSVG; 
-                DOM.brand.pLogo.parentElement.classList.add('print-bg-brand'); DOM.brand.hLogo.style.display = 'none';
-                if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'none';
-                if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.add('hidden');
-            } else {
-                DOM.brand.logoPre.src = State.brand.logoData; DOM.brand.hLogo.src = State.brand.logoData; DOM.brand.pLogo.src = State.brand.logoData;
-                DOM.brand.pLogo.parentElement.classList.remove('print-bg-brand'); DOM.brand.pLogo.parentElement.style.background = 'transparent';
-                DOM.brand.hLogo.style.display = 'block';
-                if(DOM.brand.printLogoContainer) DOM.brand.printLogoContainer.style.display = 'flex';
-                if(DOM.brand.btnRemoveLogo) DOM.brand.btnRemoveLogo.classList.remove('hidden');
-            }
-            LocalDB.save();
-        };
-
-        DOM.brand.colorBtns.forEach(btn => btn.addEventListener('click', () => updateBrandTheme(btn.dataset.color)));
-        DOM.brand.customColorIn.addEventListener('input', (e) => updateBrandTheme(e.target.value));
-        DOM.brand.customColorIn.addEventListener('change', (e) => updateBrandTheme(e.target.value));
-
-        DOM.brand.logoIn.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if(!file) return; const reader = new FileReader();
-            reader.onload = (evt) => { State.brand.hasCustomLogo = true; State.brand.logoData = evt.target.result; updateBrandTheme(State.brand.color); }; reader.readAsDataURL(file);
-        });
-
-        if (DOM.brand.btnRemoveLogo) {
-            DOM.brand.btnRemoveLogo.addEventListener('click', (e) => {
-                e.preventDefault(); e.stopPropagation(); State.brand.hasCustomLogo = false; State.brand.logoData = ""; updateBrandTheme(State.brand.color); Utils.showToast("Đã khôi phục thiết lập mặc định!");
-            });
-        }
-
-        const updateBrandText = () => {
-            State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; State.brand.slogan = DOM.brand.sloganIn.value; State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
-            DOM.brand.hName.textContent = State.brand.name; DOM.brand.hSlogan.textContent = State.brand.slogan; DOM.brand.pName.textContent = State.brand.name; DOM.brand.pSlogan.textContent = State.brand.slogan; DOM.brand.pDocTitle.textContent = State.brand.docTitle; DOM.main.senderName.value = State.brand.name; LocalDB.save();
-        };
-        
-        DOM.brand.nameIn.addEventListener('input', updateBrandText); DOM.brand.sloganIn.addEventListener('input', updateBrandText); DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
 
         // ==========================================
         // MENU & DATA WAREHOUSE MAPPING
@@ -1724,7 +1687,8 @@
             exportExcelPro: async () => {
                 Utils.showToast("Đang thu thập dữ liệu từ Bản in...");
                 try {
-                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); const argbColor = Utils.hexToArgb(State.brand.color);
+                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
+                    const argbColor = 'FF0055A5'; // Hardcoded Theme Color for Excel
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
