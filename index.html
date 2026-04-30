@@ -504,12 +504,12 @@
                     <div id="quoteList" class="space-y-3 pb-4"></div>
                 </div>
 
-                <div class="glass-card p-3 border-l-4 border-l-emerald-500 bg-emerald-50/30">
-                    <label class="block text-[10px] font-bold text-emerald-800 mb-1.5 uppercase flex items-center gap-1 tracking-wider">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase flex items-center gap-1 tracking-wider">
+                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         Ghi chú chung bản in
                     </label>
-                    <textarea id="promoNoteInput" rows="1" placeholder="VD: Báo giá có giá trị trong 7 ngày..." class="w-full input-premium bg-white rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 outline-none resize-none"></textarea>
+                    <textarea id="promoNoteInput" rows="1" placeholder="VD: Báo giá có giá trị trong 7 ngày..." class="w-full bg-slate-50 focus:bg-white rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 border border-slate-200 focus:border-blue-400 outline-none resize-none transition-colors placeholder:text-slate-400"></textarea>
                 </div>
 
             </section>
@@ -1329,10 +1329,15 @@
                 let btnClass = isAdded ? "text-red-500 bg-red-50 border-red-100" : "print-bg-brand text-white shadow-sm"; let btnText = isAdded ? "XÓA" : "THÊM";
                 let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); let unitBadge = '';
                 if (incInfo && incInfo.value !== 0) {
-                    let innerText = incInfo.type === 'tăng' ? `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>` : (incInfo.type === 'giảm' ? `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>` : `<span class="text-blue-600 font-bold">${incInfo.text}</span>`);
-                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
+                    if(incInfo.type === 'tăng') {
+                        unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
+                    } else if (incInfo.type === 'giảm') {
+                        unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
+                    } else {
+                        unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
+                    }
                 } else if (p.unit && p.unit.toLowerCase().trim() !== 'cái' && p.unit.toLowerCase().trim() !== '') {
-                    unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`;
+                    unitBadge = `<span class="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`;
                 }
                 return `
                 <article class="w-full max-w-5xl mx-auto p-4 flex justify-between items-center bg-white border-b border-slate-50">
@@ -1474,83 +1479,104 @@
                     CartLogic.recalculateItem(item);
                     let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); let unitBadge = '';
                     if (incInfo && incInfo.value !== 0) {
-                        let innerText = incInfo.type === 'tăng' ? `<span class="text-red-600 font-bold">Tăng ${incInfo.text}</span>` : (incInfo.type === 'giảm' ? `<span class="text-green-600 font-bold">Giảm ${incInfo.text}</span>` : `<span class="text-blue-600 font-bold">${incInfo.text}</span>`);
-                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${innerText}</span>`;
+                        if(incInfo.type === 'tăng') {
+                            unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
+                        } else if (incInfo.type === 'giảm') {
+                            unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
+                        } else {
+                            unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
+                        }
                     } else if (item.unit && item.unit.toLowerCase().trim() !== 'cái' && item.unit.toLowerCase().trim() !== '') {
-                        unitBadge = `<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`;
+                        unitBadge = `<span class="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`;
                     }
 
-                    let borderClass = item.appliedPromoId ? 'border-2 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.15)]' : 'border border-transparent';
+                    // Tối ưu UI cho thẻ sản phẩm (SaaS Card Style)
+                    let borderClass = item.appliedPromoId ? 'ring-2 ring-purple-400/50 border-purple-300' : 'border-slate-200';
 
                     return `
-                    <article class="glass-card p-3.5 relative ${borderClass}" data-id="${item.id}">
-                        <div class="pr-8 mb-3">
-                            <h4 class="text-sm font-bold text-slate-900 leading-snug break-words">
-                                ${item.appliedPromoId ? '<span class="inline-block mr-1" title="Đang áp dụng Auto KM">🎁</span>' : ''}
-                                <span class="print-text-brand mr-1.5 font-black">${index+1}</span>${item.code ? '<span class="text-slate-400 font-normal">['+item.code+']</span> ' : ''}${item.name}
-                            </h4>
-                            <div class="flex flex-wrap gap-2 mt-2 items-center">
-                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-md whitespace-nowrap">Bìa: <strong class="text-slate-800">${Utils.formatMoney(item.originalPrice)}</strong></span>
-                                ${unitBadge}
-                                ${item.warehouse ? `<span class="text-[8px] bg-indigo-50 text-indigo-600 font-bold px-1.5 py-1 rounded whitespace-nowrap uppercase tracking-widest border border-indigo-100">${item.warehouse}</span>` : ''}
-                                <input type="text" data-field="note" value="${item.note || ''}" placeholder="📝 Thêm ghi chú SP..." class="cart-input-text flex-1 min-w-[120px] bg-amber-50/50 border border-amber-100 focus:bg-white rounded-md px-2 py-1 text-[10px] font-semibold text-slate-700 outline-none focus:border-amber-400 transition-colors">
-                            </div>
-                        </div>
-                        <button data-action="remove" class="absolute top-4 right-4 w-8 h-8 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors shrink-0">
-                            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
-                        </button>
+                    <article class="bg-white rounded-2xl p-4 shadow-sm border relative transition-shadow hover:shadow-md ${borderClass}" data-id="${item.id}">
+                        ${item.appliedPromoId ? `<div class="absolute -top-2.5 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> AUTO KM</div>` : ''}
                         
-                        <div class="grid grid-cols-5 gap-1 mb-3 items-end">
-                            <div>
-                                <label class="text-[9px] font-bold text-slate-400 block mb-1.5 text-center uppercase tracking-wider">SL</label>
-                                <input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-slate-50 border border-slate-200 rounded-lg py-2 text-center text-xs font-black text-slate-800 outline-none focus:ring-2 focus:ring-slate-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-amber-500 uppercase tracking-wider">CK%</label>
-                                    <button data-action="sync" data-field="baseDiscount" class="text-white bg-amber-400 hover:bg-amber-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
+                        <div class="flex justify-between items-start gap-3 mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="bg-slate-800 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-md shrink-0">${index+1}</span>
+                                    ${item.code ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${item.code}</span>` : ''}
                                 </div>
-                                <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-amber-50 border border-amber-100 rounded-lg py-2 text-center text-xs font-black text-amber-800 outline-none focus:ring-2 focus:ring-amber-400 px-0">
+                                <h4 class="text-sm md:text-[15px] font-bold text-slate-900 leading-tight">
+                                    ${item.name}
+                                </h4>
                             </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-blue-500 uppercase tracking-wider">KM1</label>
-                                    <button data-action="sync" data-field="km1" class="text-white bg-blue-400 hover:bg-blue-500 rounded px-0.5 py-0.5 active:scale-scale-95 shadow-sm">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                </div>
-                                <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : (item.extraPromo || 0)}" class="cart-input w-full bg-blue-50 border border-blue-100 rounded-lg py-2 text-center text-xs font-black text-blue-700 outline-none focus:ring-2 focus:ring-blue-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center gap-0.5 mb-1.5">
-                                    <label class="text-[8px] sm:text-[9px] font-bold text-emerald-600 uppercase tracking-wider">KM2</label>
-                                    <button data-action="sync" data-field="km2" class="text-white bg-emerald-400 hover:bg-emerald-500 rounded px-0.5 py-0.5 active:scale-95 shadow-sm">
-                                        <svg class="w-2.5 h-2.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                                    </button>
-                                </div>
-                                <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-emerald-50 border border-emerald-100 rounded-lg py-2 text-center text-xs font-black text-emerald-700 outline-none focus:ring-2 focus:ring-emerald-400 px-0">
-                            </div>
-                            <div>
-                                <div class="flex items-center justify-center mb-1.5">
-                                    <button data-action="toggleKmType" class="text-[8px] sm:text-[9px] font-bold ${item.kmTienType === 'total' ? 'text-red-600 bg-red-100 hover:bg-red-200' : 'text-purple-600 bg-purple-100 hover:bg-purple-200'} rounded px-1 py-0.5 active:scale-95 shadow-sm uppercase tracking-wider transition-colors">
-                                        ${item.kmTienType === 'total' ? '-TỔNG(Đ)' : '-TIỀN/SP'}
-                                    </button>
-                                </div>
-                                <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full ${item.kmTienType === 'total' ? 'bg-red-50 border border-red-100 text-red-700 focus:ring-red-400' : 'bg-purple-50 border border-purple-100 text-purple-700 focus:ring-purple-400'} rounded-lg py-2 text-center text-xs font-black outline-none focus:ring-2 px-0 transition-colors">
+                            <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0">
+                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 items-center mb-4">
+                            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">Bìa: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
+                            ${unitBadge}
+                            ${item.warehouse ? `<span class="text-[9px] bg-indigo-50/80 text-indigo-600 font-bold px-2 py-1 rounded-md uppercase tracking-widest border border-indigo-100/50">${item.warehouse}</span>` : ''}
+                            
+                            <div class="flex-1 min-w-[150px] relative">
+                                <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                <input type="text" data-field="note" value="${item.note || ''}" placeholder="Thêm ghi chú riêng..." class="cart-input-text w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-400 rounded-lg pl-8 pr-3 py-1.5 text-[11px] font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400">
                             </div>
                         </div>
 
-                        <!-- CẬP NHẬT GIAO DIỆN HIỂN THỊ GIÁ -->
-                        <div class="border-t border-slate-100 pt-3 mt-1 flex justify-between items-center bg-slate-50/30 p-2 rounded-xl border border-slate-50">
+                        <!-- Tối ưu Control Inputs Bar -->
+                        <div class="bg-slate-50/80 rounded-xl p-3 border border-slate-100 mb-3">
+                            <div class="grid grid-cols-5 gap-2">
+                                <div class="flex flex-col">
+                                    <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 text-center">SL</label>
+                                    <input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border border-slate-200 rounded-lg py-2 text-center text-[13px] font-black text-slate-800 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all px-0 appearance-none">
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center justify-center gap-1 mb-1.5">
+                                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">CK%</label>
+                                        <button data-action="sync" data-field="baseDiscount" class="text-slate-400 hover:text-amber-500 transition-colors">
+                                            <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                        </button>
+                                    </div>
+                                    <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border border-slate-200 rounded-lg py-2 text-center text-[13px] font-black text-amber-600 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition-all px-0">
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center justify-center gap-1 mb-1.5">
+                                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">KM1</label>
+                                        <button data-action="sync" data-field="km1" class="text-slate-400 hover:text-blue-500 transition-colors">
+                                            <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                        </button>
+                                    </div>
+                                    <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : (item.extraPromo || 0)}" class="cart-input w-full bg-white border border-slate-200 rounded-lg py-2 text-center text-[13px] font-black text-blue-600 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all px-0">
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center justify-center gap-1 mb-1.5">
+                                        <label class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">KM2</label>
+                                        <button data-action="sync" data-field="km2" class="text-slate-400 hover:text-emerald-500 transition-colors">
+                                            <svg class="w-3 h-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                                        </button>
+                                    </div>
+                                    <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border border-slate-200 rounded-lg py-2 text-center text-[13px] font-black text-emerald-600 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 transition-all px-0">
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="flex items-center justify-center mb-1.5">
+                                        <button data-action="toggleKmType" class="text-[8px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider transition-colors border ${item.kmTienType === 'total' ? 'border-red-200 bg-red-50 text-red-600 hover:bg-red-100' : 'border-purple-200 bg-purple-50 text-purple-600 hover:bg-purple-100'}">
+                                            ${item.kmTienType === 'total' ? 'Trừ Tổng' : 'Trừ / SP'}
+                                        </button>
+                                    </div>
+                                    <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border border-slate-200 rounded-lg py-2 text-center text-[13px] font-black ${item.kmTienType === 'total' ? 'text-red-600 focus:border-red-400 focus:ring-red-100' : 'text-purple-600 focus:border-purple-400 focus:ring-purple-100'} outline-none focus:ring-2 transition-all px-0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer Summary trong mỗi Card -->
+                        <div class="flex justify-between items-end px-1 mt-1">
                             <div class="flex flex-col">
-                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Đơn Giá / 1 SP</span>
-                                <span class="price-display text-blue-600 text-[15px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Ck</span>
+                                <span class="price-display text-blue-600 text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span>
                             </div>
                             <div class="flex flex-col items-end">
-                                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Thành Tiền</span>
-                                <span class="linetotal-display text-[17px] font-black print-text-brand leading-none">${Utils.formatMoney(item.totalFinal)}</span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span>
+                                <span class="linetotal-display text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span>
                             </div>
                         </div>
 
@@ -1568,7 +1594,7 @@
 
         DOM.main.quoteList.addEventListener('click', (e) => {
             const btn = e.target.closest('button'); if(!btn) return;
-            const card = btn.closest('.glass-card'); const id = card.dataset.id; const action = btn.dataset.action;
+            const card = btn.closest('article'); const id = card.dataset.id; const action = btn.dataset.action;
 
             if(action === 'remove') {
                 State.cart = State.cart.filter(i => i.id !== id); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save();
@@ -1586,7 +1612,7 @@
 
         DOM.main.quoteList.addEventListener('input', (e) => {
             if(!e.target.classList.contains('cart-input') && !e.target.classList.contains('cart-input-text')) return;
-            const card = e.target.closest('.glass-card'); const id = card.dataset.id; const field = e.target.dataset.field;
+            const card = e.target.closest('article'); const id = card.dataset.id; const field = e.target.dataset.field;
             const item = State.cart.find(i => i.id === id); if(!item) return; 
 
             if (e.target.classList.contains('cart-input-text')) { item[field] = e.target.value; LocalDB.save(); return; }
@@ -1601,7 +1627,7 @@
             } else {
                 if ((field === 'km1' || field === 'km2' || field === 'kmTien') && item.appliedPromoId) {
                     item.appliedPromoId = null;
-                    card.classList.remove('border-2', 'border-purple-400', 'shadow-[0_0_15px_rgba(168,85,247,0.15)]'); card.classList.add('border', 'border-transparent');
+                    card.classList.remove('ring-2', 'ring-purple-400/50', 'border-purple-300'); card.classList.add('border-slate-200');
                 }
             }
 
