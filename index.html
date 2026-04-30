@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thuận Store">
-    <title>Phần Mềm Báo Giá - 0939.125.128</title>
+    <title>Chạm Đến Tương Lai</title>
     
     <!-- Dynamic SVG Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -166,6 +166,70 @@
         <span id="toastMsg">Thông báo</span>
     </div>
 
+    <!-- MODAL CÂU CHUYỆN THUẬN STORE -->
+    <div id="storyModal" class="fixed inset-0 bg-slate-950/80 z-[3000] hidden items-center justify-center backdrop-blur-md transition-opacity duration-500 opacity-0 px-4">
+        <div class="bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 md:p-8 w-full max-w-md shadow-[0_0_50px_rgba(6,182,212,0.15)] transform scale-95 transition-transform duration-500 relative overflow-hidden">
+            <!-- Background effects -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-[50px] pointer-events-none"></div>
+
+            <div class="relative z-10">
+                
+                <!-- BỨC ẢNH CHỨA THÔNG ĐIỆP ẨN -->
+                <div id="secretImageTrigger" class="relative w-28 h-28 mx-auto mb-6 cursor-pointer hover:scale-105 transition-transform duration-500 group">
+                    <!-- Hiệu ứng xoay vòng -->
+                    <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] group-hover:bg-[conic-gradient(from_0deg,transparent_0_300deg,#ec4899_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 1.5s;"></div>
+                    <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] group-hover:bg-[conic-gradient(from_180deg,transparent_0_300deg,#a855f7_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 2s; animation-direction: reverse;"></div>
+                    
+                    <!-- Lõi Logo Thuận Store thay thế chữ E -->
+                    <div class="absolute inset-[10px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 group-hover:border-pink-500/30 flex items-center justify-center overflow-hidden transition-colors duration-500 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)] group-hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.3)]">
+                         <div class="flex flex-col items-center justify-center">
+                             <span class="text-[17px] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 group-hover:to-pink-400 tracking-tight transition-colors duration-500" style="line-height: 1.1; text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">THUAN</span>
+                         </div>
+                    </div>
+
+                    <!-- Ảnh thật đè lên trên cùng, nếu chưa có ảnh (lỗi) thì sẽ tự ẩn đi để hiện Logo xoay bên dưới -->
+                    <img src="./image.png" onerror="this.style.display='none'" alt="Secret" class="w-full h-full object-cover rounded-full relative z-10 border-2 border-transparent group-hover:border-pink-400/50 transition-all duration-500">
+                </div>
+
+                <h3 class="text-lg md:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 mb-4 tracking-wide text-center">Hành Trình "Chạm Đến Tương Lai"</h3>
+                
+                <div class="space-y-3 text-[13px] md:text-sm text-slate-300 font-medium leading-relaxed text-justify hide-scrollbar" style="max-height: 50vh; overflow-y: auto;">
+                    <p>Ngày trước, mỗi lần làm báo giá là một cuộc chiến với những file Excel khô khan, những con số lặp đi lặp lại. Khách hàng hối thúc, mình thì mỏi mắt dò từng dòng đơn giá, tỉ lệ sai sót luôn rình rập.</p>
+                    <p>Tôi tự hỏi: <span class="text-cyan-400 italic">"Tại sao không biến công việc nhàm chán này thành một trải nghiệm nghệ thuật? Chỉ với vài cú chạm trên điện thoại, mọi thứ phải được tính toán và xuất bản hoàn hảo nhất."</span></p>
+                    <p>Và thế là ứng dụng này ra đời. Từ những ý tưởng sơ khai trong đêm khuya, tôi đã đập đi xây lại không biết bao nhiêu lần, tối ưu từng pixel chỉ để đổi lấy 0.1 giây mượt mà khi bạn vuốt chạm. Nó không chỉ là công cụ tính toán, mà là tâm huyết tôi dành cho sự hoàn mỹ.</p>
+                    <p class="font-bold text-slate-100 mt-2 text-center">Cảm ơn bạn đã ở đây, cùng Thuận Store chạm đến tương lai!</p>
+                </div>
+
+                <button id="btnCloseStory" class="mt-6 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:scale-95 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] uppercase tracking-widest">
+                    Khám Phá Ngay
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL THÔNG ĐIỆP ẨN CHO NGƯỜI THƯƠNG (HIDDEN SECRET) -->
+    <div id="secretModal" class="fixed inset-0 bg-slate-950/90 z-[4000] hidden items-center justify-center backdrop-blur-xl transition-opacity duration-700 opacity-0 px-4">
+        <div class="bg-slate-900 border border-pink-500/30 rounded-3xl p-8 w-full max-w-sm shadow-[0_0_60px_rgba(236,72,153,0.15)] transform scale-95 transition-transform duration-700 relative overflow-hidden text-center">
+            <!-- Hiệu ứng Glow Hồng/Tím -->
+            <div class="absolute top-[-50px] left-1/2 -translate-x-1/2 w-48 h-48 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none"></div>
+
+            <div class="relative z-10">
+                <h3 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-400 mb-6 tracking-widest uppercase" style="text-shadow: 0 0 15px rgba(236,72,153,0.3);">Gửi Em...</h3>
+                
+                <div class="space-y-6 text-[14px] md:text-[15px] text-pink-50 font-medium leading-relaxed italic">
+                    <p class="text-pink-100 drop-shadow-md">"Anh không biết đó có phải là em không, nhưng nếu em đã chạm vào đây thì anh muốn em hãy luôn mạnh mẽ lên."</p>
+                    <p class="text-pink-200 drop-shadow-md">8 năm thanh xuân trôi qua, bão giông hay bình yên...</p>
+                    <p class="text-pink-400 font-black text-xl not-italic mt-4 tracking-wide" style="text-shadow: 0 0 10px rgba(236,72,153,0.5);">Anh vẫn ở đây.</p>
+                </div>
+
+                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest">
+                    Khép Lại & Trở Về
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL XÁC NHẬN XÓA (CUSTOM UI) -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300">
@@ -193,11 +257,12 @@
         
         <div class="z-10 w-full max-w-md md:max-w-2xl flex flex-col items-center text-center my-auto py-4">
             <!-- Logo -->
-            <div class="relative w-36 h-36 mb-12 flex items-center justify-center mt-2">
+            <div class="relative w-36 h-36 mb-8 flex items-center justify-center mt-2">
                 <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-70" style="animation-duration: 1.5s;"></div>
                 <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-70" style="animation-duration: 2s; animation-direction: reverse;"></div>
                 <div class="absolute inset-[14px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(6,182,212,0.2)]">
-                     <div class="relative z-10 flex flex-col items-center justify-center transition-transform duration-500 hover:scale-105">
+                     <!-- GẮN ID landingMainLogo ĐỂ BẮT SỰ KIỆN CLICK VÀO CHỮ THUẬN -->
+                     <div id="landingMainLogo" class="relative z-10 flex flex-col items-center justify-center transition-transform duration-500 hover:scale-105 cursor-pointer">
                          <span class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 tracking-tight" style="line-height: 1.1; text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);">THUAN</span>
                          <div class="flex items-center gap-1.5 mt-0.5">
                              <span class="h-[1px] w-2 bg-cyan-500/50"></span>
@@ -236,6 +301,15 @@
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <!-- SLOGAN CHẠM ĐẾN TƯƠNG LAI -->
+            <div class="flex items-center justify-center gap-3 w-full mb-8 opacity-90 animate-pulse" style="animation-duration: 3s;">
+                <div class="h-[1px] w-8 md:w-16 bg-gradient-to-r from-transparent to-cyan-500/80"></div>
+                <span class="text-[10px] md:text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-300 tracking-[0.25em] uppercase" style="text-shadow: 0 0 15px rgba(6,182,212,0.4);">
+                    Chạm Đến Tương Lai
+                </span>
+                <div class="h-[1px] w-8 md:w-16 bg-gradient-to-l from-transparent to-cyan-500/80"></div>
             </div>
 
             <!-- Tính Năng -->
@@ -1815,6 +1889,80 @@
         });
 
         initApp();
+
+        // ==========================================
+        // LOGIC HIỂN THỊ STORY CỦA THUẬN STORE
+        // ==========================================
+        const storyModal = document.getElementById('storyModal');
+        const landingMainLogo = document.getElementById('landingMainLogo');
+        const btnCloseStory = document.getElementById('btnCloseStory');
+
+        // LOGIC HIỂN THỊ THÔNG ĐIỆP ẨN (SECRET MODAL)
+        const secretImageTrigger = document.getElementById('secretImageTrigger');
+        const secretModal = document.getElementById('secretModal');
+        const btnCloseSecret = document.getElementById('btnCloseSecret');
+
+        if (landingMainLogo && storyModal && btnCloseStory) {
+            landingMainLogo.addEventListener('click', () => {
+                storyModal.classList.remove('hidden');
+                storyModal.classList.add('flex');
+                // Timeout để CSS transition có hiệu lực
+                setTimeout(() => {
+                    storyModal.classList.remove('opacity-0');
+                    storyModal.firstElementChild.classList.remove('scale-95');
+                    storyModal.firstElementChild.classList.add('scale-100');
+                }, 10);
+            });
+
+            const closeStoryFunc = () => {
+                storyModal.classList.add('opacity-0');
+                storyModal.firstElementChild.classList.remove('scale-100');
+                storyModal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    storyModal.classList.add('hidden');
+                    storyModal.classList.remove('flex');
+                }, 500);
+            };
+
+            btnCloseStory.addEventListener('click', closeStoryFunc);
+            // Bấm ra ngoài vùng tối để đóng Story
+            storyModal.addEventListener('click', (e) => {
+                if (e.target === storyModal) closeStoryFunc();
+            });
+
+            // Nếu chạm vào Ảnh Cô Gái -> Tắt Story Modal -> Bật Secret Modal
+            if (secretImageTrigger && secretModal && btnCloseSecret) {
+                secretImageTrigger.addEventListener('click', () => {
+                    closeStoryFunc(); // Tắt bảng Story hiện tại
+                    
+                    // Delay 1 chút để bảng kia tắt hẳn rồi mới bật bảng mới lên
+                    setTimeout(() => {
+                        secretModal.classList.remove('hidden');
+                        secretModal.classList.add('flex');
+                        setTimeout(() => {
+                            secretModal.classList.remove('opacity-0');
+                            secretModal.firstElementChild.classList.remove('scale-95');
+                            secretModal.firstElementChild.classList.add('scale-100');
+                        }, 10);
+                    }, 400);
+                });
+
+                const closeSecretFunc = () => {
+                    secretModal.classList.add('opacity-0');
+                    secretModal.firstElementChild.classList.remove('scale-100');
+                    secretModal.firstElementChild.classList.add('scale-95');
+                    setTimeout(() => {
+                        secretModal.classList.add('hidden');
+                        secretModal.classList.remove('flex');
+                    }, 500);
+                };
+
+                btnCloseSecret.addEventListener('click', closeSecretFunc);
+                secretModal.addEventListener('click', (e) => {
+                    if (e.target === secretModal) closeSecretFunc();
+                });
+            }
+        }
 
     </script>
 </body>
