@@ -215,16 +215,14 @@
             <div class="absolute top-[-50px] left-1/2 -translate-x-1/2 w-48 h-48 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none"></div>
 
             <div class="relative z-10">
-                <h3 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-400 mb-6 tracking-widest uppercase" style="text-shadow: 0 0 15px rgba(236,72,153,0.3);">Gửi Em...</h3>
-                
-                <div class="space-y-6 text-[14px] md:text-[15px] text-pink-50 font-medium leading-relaxed italic">
+                <div class="space-y-6 text-[14px] md:text-[15px] text-pink-50 font-medium leading-relaxed italic pt-2">
                     <p class="text-pink-100 drop-shadow-md">"Anh không biết đó có phải là em không, nhưng nếu em đã chạm vào đây thì anh muốn em hãy luôn mạnh mẽ lên."</p>
                     <p class="text-pink-200 drop-shadow-md">8 năm thanh xuân trôi qua, bão giông hay bình yên...</p>
-                    <p class="text-pink-400 font-black text-xl not-italic mt-4 tracking-wide" style="text-shadow: 0 0 10px rgba(236,72,153,0.5);">Anh vẫn ở đây.</p>
                 </div>
 
-                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest">
-                    Khép Lại & Trở Về
+                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    CHẠM ĐẾN TƯƠNG LAI
                 </button>
             </div>
         </div>
@@ -1135,7 +1133,7 @@
             CartLogic.render(); 
             
             closeConfirmDeleteModal();
-            Utils.showToast("Đã dọn dẹp sạch sẽ Kho dữ liệu!");
+            Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
         });
 
         DOM.setup.fileIn.addEventListener('change', (e) => {
@@ -1906,6 +1904,15 @@
             landingMainLogo.addEventListener('click', () => {
                 storyModal.classList.remove('hidden');
                 storyModal.classList.add('flex');
+                
+                // Khắc phục lỗi Safari (iOS) bị đơ animation CSS khi hiển thị lại khối bị ẩn (display: none)
+                const spinners = storyModal.querySelectorAll('.animate-spin, .animate-pulse');
+                spinners.forEach(el => {
+                    el.style.animation = 'none';
+                    void el.offsetHeight; // Ép trình duyệt tính toán lại (Reflow)
+                    el.style.animation = '';
+                });
+
                 // Timeout để CSS transition có hiệu lực
                 setTimeout(() => {
                     storyModal.classList.remove('opacity-0');
