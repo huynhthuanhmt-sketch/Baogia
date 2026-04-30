@@ -1645,7 +1645,41 @@
             CartLogic.updateSummary(); LocalDB.save();
         });
 
-        DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) e.target.select(); });
+        // XỬ LÝ TRẢI NGHIỆM GÕ PHÍM (UX) CHO MOBILE
+        DOM.main.quoteList.addEventListener('focusin', (e) => { 
+            if(e.target.classList.contains('cart-input')) {
+                // Nếu giá trị đang là 0, tự động xóa rỗng để người dùng nhập liền không bị vướng
+                if (e.target.value === '0') {
+                    e.target.value = '';
+                } else {
+                    e.target.select(); 
+                }
+            } 
+        });
+
+        DOM.main.quoteList.addEventListener('focusout', (e) => {
+            if(e.target.classList.contains('cart-input')) {
+                // Nếu người dùng bỏ trống và click ra ngoài, khôi phục lại giá trị mặc định để tránh lỗi tính toán
+                if (e.target.value === '') {
+                    const field = e.target.dataset.field;
+                    e.target.value = field === 'qty' ? '1' : '0';
+                    // Ép hệ thống tính toán lại
+                    e.target.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            }
+        });
+
+        // Áp dụng UX tương tự cho ô CK Chung
+        const globalDiscInput = document.getElementById('globalDiscountInput');
+        if (globalDiscInput) {
+            globalDiscInput.addEventListener('focusin', (e) => {
+                if (e.target.value === '0') e.target.value = '';
+                else e.target.select();
+            });
+            globalDiscInput.addEventListener('focusout', (e) => {
+                if (e.target.value === '') e.target.value = '0';
+            });
+        }
 
         // ==========================================
         // EXPORT LOGIC & LIVE PREVIEW
