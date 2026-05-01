@@ -425,58 +425,57 @@
     <!-- SCREEN 2: MAIN WORKSPACE                   -->
     <!-- ========================================== -->
     <div id="screenMain" class="app-screen flex-col bg-slate-50">
-        <header class="bg-white/90 backdrop-blur-xl border-b border-slate-200 shrink-0 h-16 flex items-center px-5 z-40 relative">
-            <div class="w-full max-w-5xl mx-auto flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div>
-                        <h1 id="headerStoreName" class="text-sm font-black text-slate-900 tracking-wider uppercase leading-none mt-0.5">THUẬN STORE</h1>
-                        <p id="headerSlogan" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">MPE VIETNAM</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="btnOpenSetupManager" class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 hover:bg-blue-100 transition-colors shadow-sm" title="Quản lý kho dữ liệu">
-                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                    </button>
-                    <button id="btnOpenPromoManager" class="w-9 h-9 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 hover:bg-purple-100 transition-colors shadow-sm" title="Quản lý khuyến mãi">
-                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
-                    </button>
-                    <button id="btnOpenDiscountManager" class="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 hover:bg-amber-100 transition-colors shadow-sm" title="Mặc định chiết khấu">
-                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l6-6m-4 8h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </button>
-                    <button id="btnOpenBrandManager" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 hover:bg-slate-200 transition-colors shadow-sm" title="Cấu hình báo giá">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    </button>
-                    <button id="btnBackToHome" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 hover:bg-slate-200 transition-colors shadow-sm" title="Về trang chủ">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-grow overflow-y-auto relative bg-slate-50/50" id="mainScroll">
-            <!-- STICKY TOP CONTROL -->
-            <div class="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
-                <div class="w-full max-w-5xl mx-auto px-4 py-3 flex flex-col gap-3">
-                    <div id="quickPromoButtons" class="flex gap-2 overflow-x-auto hide-scrollbar shrink-0 empty:hidden">
-                        <!-- JS render nút add KM nhanh -->
-                    </div>
-
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="font-black text-slate-900 text-sm md:text-base uppercase tracking-tight">Giỏ Hàng</h2>
-                            <span id="itemCountBadge" class="text-[10px] font-bold text-slate-500">0 sản phẩm</span>
-                        </div>
-                        
-                        <div class="flex items-center gap-3">
-                            <button id="btnResetQuote" class="text-slate-400 hover:text-orange-500 transition-colors bg-slate-50 hover:bg-orange-50 p-2.5 rounded-xl" title="Làm mới báo giá">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                            </button>
-                            <button id="btnOpenSearch" class="bg-blue-600 text-white font-black text-[11px] uppercase tracking-widest px-5 py-2.5 rounded-xl shadow-[0_4px_15px_-3px_rgba(37,99,235,0.4)] hover:bg-blue-700 hover:shadow-[0_6px_20px_-3px_rgba(37,99,235,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                                THÊM SP
-                            </button>
+        <main class="flex-grow overflow-y-auto relative" id="mainScroll">
+            
+            <!-- STICKY HEADER (Tối ưu cực độ - Gọn gàng & Sang trọng) -->
+            <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm pb-3">
+                
+                <!-- Dòng 1: Tiêu đề Giỏ hàng & Các nút Cấu hình -->
+                <div class="w-full max-w-5xl mx-auto px-3 py-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <button id="btnBackToHome" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-800 transition-colors" title="Về trang chủ">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <div class="flex flex-col ml-1">
+                            <div class="flex items-center gap-1.5 mb-0.5">
+                                <svg class="w-4 h-4 text-slate-800 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                <h1 class="text-[15px] font-black text-slate-900 uppercase tracking-tight leading-none mt-0.5">Giỏ Hàng</h1>
+                            </div>
+                            <span id="itemCountBadge" class="text-[10px] font-bold text-blue-600 pl-6">0 sản phẩm</span>
                         </div>
                     </div>
+                    
+                    <div class="flex items-center gap-1.5">
+                        <button id="btnOpenSetupManager" class="w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center transition-colors" title="Dữ liệu Kho">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                        </button>
+                        <button id="btnOpenPromoManager" class="w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-purple-50 hover:text-purple-600 flex items-center justify-center transition-colors" title="Khuyến mãi">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                        </button>
+                        <button id="btnOpenDiscountManager" class="w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-amber-50 hover:text-amber-600 flex items-center justify-center transition-colors" title="C.Khấu mặc định">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l6-6m-4 8h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </button>
+                        <button id="btnOpenBrandManager" class="w-8 h-8 rounded-full bg-slate-50 text-slate-500 hover:bg-slate-200 hover:text-slate-800 flex items-center justify-center transition-colors" title="Cấu hình báo giá">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dòng 2: Nút Hành Động (Tìm thêm sản phẩm & Làm mới) -->
+                <div class="w-full max-w-5xl mx-auto px-4 flex items-center gap-2.5">
+                    <button id="btnOpenSearch" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-[0_4px_15px_-3px_rgba(37,99,235,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+                        THÊM SẢN PHẨM
+                    </button>
+                    <button id="btnResetQuote" class="shrink-0 bg-orange-50 text-orange-600 font-bold text-[11px] uppercase tracking-widest px-4 py-3 rounded-xl border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        LÀM MỚI
+                    </button>
+                </div>
+
+                <!-- Dòng 3: Khuyến Mãi Nhanh (Sẽ ẩn nếu không có) -->
+                <div id="quickPromoButtons" class="w-full max-w-5xl mx-auto px-4 flex gap-2 overflow-x-auto hide-scrollbar pt-3 empty:hidden">
+                    <!-- JS render nút add KM nhanh -->
                 </div>
             </div>
 
@@ -1020,7 +1019,6 @@
             brand: { 
                 modal: document.getElementById('brandManagerModal'), btnOpen: document.getElementById('btnOpenBrandManager'), btnClose: document.getElementById('btnCloseBrandManager'), btnSave: document.getElementById('btnSaveBrandConfig'),
                 nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), 
-                hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
                 pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle')
             },
             discount: {
@@ -1052,7 +1050,6 @@
         };
 
         const updateBrandText = () => {
-            DOM.brand.hName.textContent = State.brand.name; DOM.brand.hSlogan.textContent = State.brand.slogan; 
             DOM.brand.pName.textContent = State.brand.name; DOM.brand.pSlogan.textContent = State.brand.slogan; DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
             DOM.main.senderName.value = DOM.main.senderName.value || State.brand.name; 
         };
