@@ -514,6 +514,28 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <p class="text-xs text-slate-500 font-medium mb-4 italic">Khi thiết lập các chỉ số ở đây, mọi sản phẩm được thêm vào giỏ hàng sẽ tự động nhận các mức giảm giá này.</p>
                     <div class="space-y-4">
+                        
+                        <!-- CÔNG THỨC TÍNH CHIẾT KHẤU -->
+                        <div class="border-b border-slate-100 pb-4 mb-4">
+                            <label class="text-[10px] font-black text-indigo-800 bg-indigo-200 px-2 py-0.5 rounded uppercase tracking-widest mb-2 inline-block shadow-sm">CÔNG THỨC TÍNH CHIẾT KHẤU %</label>
+                            <div class="grid grid-cols-1 gap-3 mt-1">
+                                <label class="flex items-start gap-3 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
+                                    <input type="radio" name="discountFormula" value="sequential" class="mt-1 w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-700">Lũy tiến (Nối tiếp) - Khuyên dùng</div>
+                                        <div class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">Giá giảm theo từng lớp. VD: 100k giảm 10% (còn 90k), sau đó giảm tiếp 10% KM1 trên giá 90k (còn 81k).</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-start gap-3 p-3 border-2 border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
+                                    <input type="radio" name="discountFormula" value="additive" class="mt-1 w-4 h-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                    <div>
+                                        <div class="font-bold text-sm text-slate-800 group-hover:text-indigo-700">Cộng dồn (Cộng tổng %)</div>
+                                        <div class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">Cộng tất cả các lớp % giảm trên giá gốc. VD: 100k giảm (10% + 10%) = 20% (còn 80k).</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="text-[10px] font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded uppercase tracking-widest mb-1.5 inline-block shadow-sm">CK CHUNG (%)</label>
                             <input type="number" id="defBaseDiscount" placeholder="VD: 10" class="w-full input-premium rounded-xl p-3 text-lg font-black text-slate-900 outline-none border-slate-200 focus:border-amber-500">
@@ -952,7 +974,7 @@
             rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [],
             searchTimeout: null, currentOrderPromoEffect: null,
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
-            defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item' },
+            defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', discountFormula: 'sequential' },
             currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0,
             isCompactView: false,
             previousScreenId: 'landing',
@@ -1048,6 +1070,11 @@
             DOM.discount.baseIn.value = State.defaults.baseDiscount || ''; DOM.discount.km1In.value = State.defaults.km1 || ''; DOM.discount.km2In.value = State.defaults.km2 || '';
             DOM.discount.kmTienIn.value = State.defaults.kmTien || ''; DOM.discount.kmTienTypeIn.value = State.defaults.kmTienType || 'per_item';
             
+            // Set giá trị cho Công thức tính
+            const formula = State.defaults.discountFormula || 'sequential';
+            const formulaRadio = document.querySelector(`input[name="discountFormula"][value="${formula}"]`);
+            if(formulaRadio) formulaRadio.checked = true;
+            
             updateToggleViewUI();
             setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
         };
@@ -1095,6 +1122,10 @@
         DOM.discount.btnSave.addEventListener('click', () => {
             State.defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); State.defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
             State.defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); State.defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); State.defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
+            
+            // Lưu giá trị công thức tính
+            const checkedFormula = document.querySelector('input[name="discountFormula"]:checked');
+            State.defaults.discountFormula = checkedFormula ? checkedFormula.value : 'sequential';
             
             State.cart.forEach(item => {
                 item.baseDiscount = State.defaults.baseDiscount; 
@@ -1473,11 +1504,23 @@
                 const qty = Number(item.qty) || 0; const origPrice = Number(item.originalPrice) || 0;
                 const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : 0; const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
                 
-                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
-                const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
-                const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
-                let lineTotal = priceAfterKm2 * qty;
+                let lineTotal = 0;
+
+                // ÁP DỤNG CÔNG THỨC CHIẾT KHẤU
+                if (State.defaults.discountFormula === 'additive') {
+                    // Công thức Cộng dồn (Tổng %)
+                    const totalPercent = (baseDisc + km1 + km2) / 100;
+                    const multiplier = Math.max(0, 1 - totalPercent); // Không để giảm quá 100% gây âm tiền
+                    lineTotal = origPrice * multiplier * qty;
+                } else {
+                    // Công thức Lũy tiến (Nối tiếp) - Mặc định
+                    const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
+                    const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
+                    const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
+                    lineTotal = priceAfterKm2 * qty;
+                }
                 
+                // Trừ tiền sau khi đã trừ %
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
                 
                 let promoNotes = "";
