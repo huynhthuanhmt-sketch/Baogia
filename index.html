@@ -417,7 +417,6 @@
         <header class="bg-white/90 backdrop-blur-xl border-b border-slate-200 shrink-0 h-16 flex items-center px-5 z-40 relative">
             <div class="w-full max-w-5xl mx-auto flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <img id="headerLogo" src="" class="w-10 h-10 object-contain rounded-xl shadow-sm border border-slate-100 bg-white p-0.5">
                     <div>
                         <h1 id="headerStoreName" class="text-sm font-black text-slate-900 tracking-wider uppercase leading-none mt-0.5">THUẬN STORE</h1>
                         <p id="headerSlogan" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">MPE VIETNAM</p>
@@ -811,9 +810,6 @@
                     <div id="invoiceRenderArea" style="width: 1600px; background: white; padding: 80px; transform-origin: top left; color: #0f172a; position: relative;">
                         <div class="print-border-brand" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; border-bottom-width: 5px; border-bottom-style: solid; padding-bottom: 40px;">
                             <div style="display: flex; align-items: center; gap: 25px;">
-                                <div id="printLogoContainer" class="print-bg-brand" style="width: 120px; height: 120px; border-radius: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
-                                    <img id="printLogo" src="" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo Print">
-                                </div>
                                 <div>
                                     <div id="printStoreName" style="font-size: 65px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;" class="print-text-brand"></div>
                                     <div id="printSlogan" style="font-size: 26px; color: #64748b; font-weight: 700; letter-spacing: 4px; margin-top: 8px; text-transform: uppercase;"></div>
@@ -971,7 +967,6 @@
         };
 
         const BRAND_COLOR = "#0055A5";
-        const defaultLogoSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><rect width='200' height='200' fill='transparent'/><text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='900' font-size='46'>THUẬN</text><text x='50%' y='72%' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-weight='700' font-size='20' letter-spacing='4'>STORE</text></svg>`;
 
         let State = { 
             rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [],
@@ -1008,8 +1003,8 @@
             brand: { 
                 modal: document.getElementById('brandManagerModal'), btnOpen: document.getElementById('btnOpenBrandManager'), btnClose: document.getElementById('btnCloseBrandManager'), btnSave: document.getElementById('btnSaveBrandConfig'),
                 nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), 
-                hLogo: document.getElementById('headerLogo'), hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
-                pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle')
+                hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
+                pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle')
             },
             discount: {
                 modal: document.getElementById('discountManagerModal'), btnOpen: document.getElementById('btnOpenDiscountManager'), btnClose: document.getElementById('btnCloseDiscountManager'), btnSave: document.getElementById('btnSaveDefaults'),
@@ -1037,8 +1032,6 @@
 
         const setupFixedBrandIdentity = () => {
             document.documentElement.style.setProperty('--brand-color', BRAND_COLOR);
-            const hexStr = BRAND_COLOR.replace('#',''); const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
-            DOM.brand.hLogo.src = svgWithBg; DOM.brand.pLogo.src = defaultLogoSVG; DOM.brand.pLogo.parentElement.classList.add('print-bg-brand'); DOM.brand.hLogo.style.display = 'block';
         };
 
         const updateBrandText = () => {
