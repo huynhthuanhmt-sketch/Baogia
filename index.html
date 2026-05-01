@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -54,7 +54,7 @@
             overscroll-behavior: none; 
             color: #0f172a;
             margin: 0; padding: 0;
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; /* Chống bôi đen text */
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         }
         /* Ngoại lệ cho phép nhập liệu */
         input, textarea, [contenteditable="true"] {
@@ -87,7 +87,7 @@
         .app-screen { 
             position: fixed; 
             inset: 0; 
-            width: 100%; /* Đổi 100vw thành 100% để tránh lọt khung thanh cuộn ngang */
+            width: 100%;
             height: 100%; 
             height: 100dvh; 
             display: flex; 
@@ -116,7 +116,6 @@
             will-change: transform, opacity;
         }
         .fullscreen-modal.active { transform: translateY(0); opacity: 1; visibility: visible; }
-        /* ------------------------------------------------------------- */
         
         #customToast {
             position: fixed; top: 20px; left: 50%; transform: translate(-50%, -150%);
@@ -1664,22 +1663,22 @@
 
                             <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
                                 <div class="grid grid-cols-5 gap-2">
-                                    <div class="flex flex-col"><label class="text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
+                                    <div class="flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
                                     <div class="flex flex-col">
-                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-teal-600 hover:text-teal-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-teal-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm" title="Chiết khấu cơ bản">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-[8px] font-black text-white bg-teal-500 hover:bg-teal-600 transition-colors rounded px-1 py-0.5 shadow-sm" title="Áp dụng mức này cho TOÀN BỘ giỏ hàng">ALL</button></div>
                                         <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-200 transition-all px-0">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM1</label><button data-action="sync" data-field="km1" class="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-blue-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm" title="Khuyến mãi lớp 1">KM1</label><button data-action="sync" data-field="km1" class="text-[8px] font-black text-white bg-blue-500 hover:bg-blue-600 transition-colors rounded px-1 py-0.5 shadow-sm" title="Áp dụng mức này cho TOÀN BỘ giỏ hàng">ALL</button></div>
                                         <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM2</label><button data-action="sync" data-field="km2" class="text-emerald-600 hover:text-emerald-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-emerald-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <div class="flex items-center justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm" title="Khuyến mãi lớp 2">KM2</label><button data-action="sync" data-field="km2" class="text-[8px] font-black text-white bg-emerald-500 hover:bg-emerald-600 transition-colors rounded px-1 py-0.5 shadow-sm" title="Áp dụng mức này cho TOÀN BỘ giỏ hàng">ALL</button></div>
                                         <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all px-0">
                                     </div>
                                     <div class="flex flex-col">
-                                        <div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border-2 ${item.kmTienType === 'total' ? 'border-red-300 bg-red-100 text-red-800 hover:bg-red-200' : 'border-cyan-300 bg-cyan-100 text-cyan-800 hover:bg-cyan-200'}">${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ/SP'}</button></div>
-                                        <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 ${item.kmTienType === 'total' ? 'border-red-300 text-red-700 focus:border-red-500 focus:ring-red-200' : 'border-cyan-300 text-cyan-700 focus:border-cyan-500 focus:ring-cyan-200'} rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:ring-2 transition-all px-0">
+                                        <div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[9px] md:text-[10px] font-black px-1 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border ${item.kmTienType === 'total' ? 'border-rose-400 bg-rose-100 text-rose-800 hover:bg-rose-200' : 'border-indigo-400 bg-indigo-100 text-indigo-800 hover:bg-indigo-200'}" title="Nhấn để đổi cách trừ: Theo từng SP hay Trừ vào Tổng">${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ / SP'}</button></div>
+                                        <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 ${item.kmTienType === 'total' ? 'border-rose-300 text-rose-700 focus:border-rose-500 focus:ring-rose-200' : 'border-indigo-300 text-indigo-700 focus:border-indigo-500 focus:ring-indigo-200'} rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:ring-2 transition-all px-0">
                                     </div>
                                 </div>
                             </div>
@@ -1705,10 +1704,18 @@
                 const field = btn.dataset.field; const sourceItem = State.cart.find(i => i.id === id);
                 if(sourceItem) {
                     const val = sourceItem[field]; State.cart.forEach(item => { item[field] = val; });
-                    CartLogic.render(); Utils.showToast(`Đã đồng bộ giá trị (${val})!`); LocalDB.save();
+                    CartLogic.render(); 
+                    let fieldName = field === 'baseDiscount' ? 'Chiết khấu' : (field === 'km1' ? 'KM1' : 'KM2');
+                    Utils.showToast(`Đã áp dụng ${fieldName} (${val}%) cho TOÀN BỘ giỏ hàng!`); 
+                    LocalDB.save();
                 }
             } else if (action === 'toggleKmType') {
-                const item = State.cart.find(i => i.id === id); if(item) { item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; CartLogic.render(); LocalDB.save(); }
+                const item = State.cart.find(i => i.id === id); 
+                if(item) { 
+                    item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; 
+                    CartLogic.render(); LocalDB.save(); 
+                    Utils.showToast(item.kmTienType === 'total' ? 'Đổi thành: Trừ tiền trên Tổng dòng' : 'Đổi thành: Trừ tiền trên Từng sản phẩm');
+                }
             }
         });
 
@@ -1934,4 +1941,4 @@
 </html>
 
 
-
+```
