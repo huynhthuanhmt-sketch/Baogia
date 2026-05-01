@@ -31,7 +31,7 @@
             --primary: #0f172a;
             --accent: #2563eb; 
             --background: #f8fafc; 
-            --brand-color: #0055A5; /* Cố định màu thương hiệu */
+            --brand-color: #0055A5;
         }
 
         body { 
@@ -85,6 +85,7 @@
             transform: translateY(100%); 
             opacity: 0;
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; 
+            height: 100dvh;
         }
         .fullscreen-modal.active { transform: translateY(0); opacity: 1; }
         
@@ -102,12 +103,6 @@
         @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
         .animate-blob { animation: blob 7s infinite; }
         
-        @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes orbit-reverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-        .animate-orbit { animation: orbit 20s linear infinite; }
-        .animate-orbit-reverse { animation: orbit-reverse 20s linear infinite; }
-        
-        /* Hiệu ứng Alert Khuyến Mãi */
         @keyframes pulsePromo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(0.98); } }
         .animate-promo-alert { animation: pulsePromo 2s infinite; }
 
@@ -116,6 +111,114 @@
             background-image: linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
             background-size: 40px 40px; mask-image: radial-gradient(circle at center, black 40%, transparent 90%); z-index: 0;
         }
+
+        /* --- MƯỢT MÀ: SATELLITE ORBIT ANIMATIONS --- */
+        @keyframes orbitOrbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes orbitCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        .orbit-track {
+            position: absolute;
+            inset: -55px;
+            border-radius: 50%;
+            border: 1.5px dashed rgba(6, 182, 212, 0.25);
+            animation: orbitOrbit 40s linear infinite; 
+            pointer-events: none;
+            z-index: 20;
+        }
+        
+        @media (min-width: 768px) {
+            .orbit-track { inset: -75px; }
+        }
+
+        /* Vùng tàng hình bắt sự kiện, hình nhẫn (ring) để không chặn nút ở giữa */
+        .orbit-track::before {
+            content: '';
+            position: absolute;
+            inset: -20px; 
+            border: 40px solid transparent; 
+            border-radius: 50%;
+            pointer-events: auto; 
+            z-index: -1;
+        }
+
+        /* TÁCH LỚP CHỐNG GIẬT: Wrapper chỉ xoay, Node chỉ scale */
+        .sat-wrapper {
+            position: absolute;
+            width: 60px; height: 60px;
+            margin-top: -30px; margin-left: -30px;
+            animation: orbitCounter 40s linear infinite;
+            pointer-events: none; /* Xuyên qua để bấm trúng node bên trong */
+            z-index: 30;
+        }
+
+        /* Hover track làm dừng toàn bộ hệ thống xoay */
+        .orbit-track:hover,
+        .orbit-track:hover .sat-wrapper {
+            animation-play-state: paused !important;
+            border-color: rgba(6, 182, 212, 0.5);
+        }
+
+        /* Vị trí 4 vệ tinh */
+        .sat-1-pos { top: 0; left: 50%; }
+        .sat-2-pos { top: 50%; left: 100%; }
+        .sat-3-pos { top: 100%; left: 50%; }
+        .sat-4-pos { top: 50%; left: 0%; }
+
+        .orbit-node {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            pointer-events: auto; /* Bắt click tại đây */
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255,255,255,0.05);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        
+        .orbit-node:hover {
+            transform: scale(1.15);
+            background: rgba(30, 41, 59, 1);
+            border-color: currentColor;
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        /* --- TOOLTIP TỐI ƯU --- */
+        .sat-tooltip {
+            position: absolute;
+            whitespace: nowrap;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 8px 12px;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 50;
+        }
+
+        .group:hover .sat-tooltip { opacity: 1; }
+
+        .tooltip-top { top: 70px; left: 50%; transform: translateX(-50%) translateY(-5px); }
+        .group:hover .tooltip-top { transform: translateX(-50%) translateY(0); }
+
+        .tooltip-right { right: 70px; top: 50%; transform: translateY(-50%) translateX(5px); }
+        .group:hover .tooltip-right { transform: translateY(-50%) translateX(0); }
+
+        .tooltip-bottom { bottom: 70px; left: 50%; transform: translateX(-50%) translateY(5px); }
+        .group:hover .tooltip-bottom { transform: translateX(-50%) translateY(0); }
+
+        .tooltip-left { left: 70px; top: 50%; transform: translateY(-50%) translateX(-5px); }
+        .group:hover .tooltip-left { transform: translateY(-50%) translateX(0); }
+        /* ----------------------- */
 
         .print-text-brand { color: var(--brand-color) !important; }
         .print-bg-brand { background-color: var(--brand-color) !important; color: white !important; }
@@ -129,42 +232,16 @@
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .feature-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
-
         @media screen and (max-width: 768px) {
-            input[type="text"],
-            input[type="number"],
-            textarea,
-            select {
-                font-size: 16px !important;
-            }
+            input[type="text"], input[type="number"], textarea, select { font-size: 16px !important; }
         }
 
-        [contenteditable="true"] {
-            transition: all 0.2s;
-            border-radius: 6px;
-            outline: none;
-        }
-        [contenteditable="true"]:hover {
-            background-color: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-            cursor: text;
-        }
-        [contenteditable="true"]:focus {
-            background-color: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
-        }
+        [contenteditable="true"] { transition: all 0.2s; border-radius: 6px; outline: none; }
+        [contenteditable="true"]:hover { background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); cursor: text; }
+        [contenteditable="true"]:focus { background-color: rgba(255, 255, 255, 0.9); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4); }
         
-        .custom-checkbox input:checked + div {
-            background-color: var(--accent);
-            border-color: var(--accent);
-        }
-        .custom-checkbox input:checked + div svg {
-            display: block;
-        }
+        .custom-checkbox input:checked + div { background-color: var(--accent); border-color: var(--accent); }
+        .custom-checkbox input:checked + div svg { display: block; }
     </style>
 </head>
 <body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -172,53 +249,6 @@
     <div id="customToast">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <span id="toastMsg">Thông báo</span>
-    </div>
-
-    <!-- MODAL CÂU CHUYỆN THUẬN STORE -->
-    <div id="storyModal" class="fixed inset-0 bg-slate-950/80 z-[3000] hidden items-center justify-center backdrop-blur-md transition-opacity duration-500 opacity-0 px-4">
-        <div class="bg-slate-900 border border-cyan-500/30 rounded-3xl p-6 md:p-8 w-full max-w-md shadow-[0_0_50px_rgba(6,182,212,0.15)] transform scale-95 transition-transform duration-500 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-[50px] pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-[50px] pointer-events-none"></div>
-            <div class="relative z-10">
-                <div id="secretImageTrigger" class="relative w-28 h-28 mx-auto mb-6 cursor-pointer hover:scale-105 transition-transform duration-500 group">
-                    <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] group-hover:bg-[conic-gradient(from_0deg,transparent_0_300deg,#ec4899_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 1.5s;"></div>
-                    <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] group-hover:bg-[conic-gradient(from_180deg,transparent_0_300deg,#a855f7_360deg)] animate-spin opacity-70 transition-colors duration-500" style="animation-duration: 2s; animation-direction: reverse;"></div>
-                    <div class="absolute inset-[10px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 group-hover:border-pink-500/30 flex items-center justify-center overflow-hidden transition-colors duration-500 shadow-[inset_0_0_15px_rgba(6,182,212,0.2)] group-hover:shadow-[inset_0_0_15px_rgba(236,72,153,0.3)]">
-                         <div class="flex flex-col items-center justify-center">
-                             <span class="text-[17px] font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 group-hover:to-pink-400 tracking-tight transition-colors duration-500" style="line-height: 1.1; text-shadow: 0 0 10px rgba(6, 182, 212, 0.4);">THUAN</span>
-                         </div>
-                    </div>
-                    <img src="./image.png" onerror="this.style.display='none'" alt="Secret" class="w-full h-full object-cover rounded-full relative z-10 border-2 border-transparent group-hover:border-pink-400/50 transition-all duration-500">
-                </div>
-                <h3 class="text-lg md:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-400 mb-4 tracking-wide text-center">Hành Trình "Chạm Đến Tương Lai"</h3>
-                <div class="space-y-3 text-[13px] md:text-sm text-slate-300 font-medium leading-relaxed text-justify hide-scrollbar" style="max-height: 50vh; overflow-y: auto;">
-                    <p>Ngày trước, mỗi lần làm báo giá là một cuộc chiến với những file Excel khô khan, những con số lặp đi lặp lại. Khách hàng hối thúc, mình thì mỏi mắt dò từng dòng đơn giá, tỉ lệ sai sót luôn rình rập.</p>
-                    <p>Tôi tự hỏi: <span class="text-cyan-400 italic">"Tại sao không biến công việc nhàm chán này thành một trải nghiệm nghệ thuật? Chỉ với vài cú chạm trên điện thoại, mọi thứ phải được tính toán và xuất bản hoàn hảo nhất."</span></p>
-                    <p>Và thế là ứng dụng này ra đời. Từ những ý tưởng sơ khai trong đêm khuya, tôi đã đập đi xây lại không biết bao nhiêu lần, tối ưu từng pixel chỉ để đổi lấy 0.1 giây mượt mà khi bạn vuốt chạm. Nó không chỉ là công cụ tính toán, mà là tâm huyết tôi dành cho sự hoàn mỹ.</p>
-                    <p class="font-bold text-slate-100 mt-2 text-center">Cảm ơn bạn đã ở đây, cùng Thuận Store chạm đến tương lai!</p>
-                </div>
-                <button id="btnCloseStory" class="mt-6 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:scale-95 transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] uppercase tracking-widest">
-                    Khám Phá Ngay
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL THÔNG ĐIỆP ẨN CHO NGƯỜI THƯƠNG -->
-    <div id="secretModal" class="fixed inset-0 bg-slate-950/90 z-[4000] hidden items-center justify-center backdrop-blur-xl transition-opacity duration-700 opacity-0 px-4">
-        <div class="bg-slate-900 border border-pink-500/30 rounded-3xl p-8 w-full max-w-sm shadow-[0_0_60px_rgba(236,72,153,0.15)] transform scale-95 transition-transform duration-700 relative overflow-hidden text-center">
-            <div class="absolute top-[-50px] left-1/2 -translate-x-1/2 w-48 h-48 bg-pink-500/20 rounded-full blur-[60px] pointer-events-none"></div>
-            <div class="relative z-10">
-                <div class="space-y-6 text-[14px] md:text-[15px] text-pink-50 font-medium leading-relaxed italic pt-2">
-                    <p class="text-pink-100 drop-shadow-md">"Anh không biết đó có phải là em không, nhưng nếu em đã chạm vào đây thì anh muốn em hãy luôn mạnh mẽ lên."</p>
-                    <p class="text-pink-200 drop-shadow-md">8 năm thanh xuân trôi qua, bão giông hay bình yên...</p>
-                </div>
-                <button id="btnCloseSecret" class="mt-8 w-full py-3.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-50 hover:to-purple-500 active:scale-95 transition-all shadow-[0_0_25px_rgba(236,72,153,0.4)] uppercase tracking-widest flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    CHẠM ĐẾN TƯƠNG LAI
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- MODAL XÁC NHẬN XÓA -->
@@ -239,85 +269,65 @@
     <!-- ========================================== -->
     <!-- SCREEN 0: LANDING PAGE                     -->
     <!-- ========================================== -->
-    <main id="screenLanding" class="app-screen active flex-col items-center justify-center bg-slate-950 overflow-y-auto px-6 py-10">
+    <main id="screenLanding" class="app-screen active flex-col items-center justify-center bg-slate-950 overflow-hidden">
         <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
             <div class="cyber-grid"></div>
             <div class="absolute top-[20%] left-[-10%] w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] animate-blob"></div>
             <div class="absolute bottom-[20%] right-[-10%] w-96 h-96 bg-cyan-600/10 rounded-full blur-[100px] animate-blob" style="animation-delay: 2s;"></div>
         </div>
-        <div class="z-10 w-full max-w-md md:max-w-2xl flex flex-col items-center text-center my-auto py-4">
-            <div class="relative w-36 h-36 mb-8 flex items-center justify-center mt-2">
-                <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-70" style="animation-duration: 1.5s;"></div>
-                <div class="absolute inset-1.5 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-70" style="animation-duration: 2s; animation-direction: reverse;"></div>
-                <div class="absolute inset-[14px] bg-slate-950/90 backdrop-blur-xl rounded-full border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-[inset_0_0_20px_rgba(6,182,212,0.2)]">
-                     <div id="landingMainLogo" class="relative z-10 flex flex-col items-center justify-center transition-transform duration-500 hover:scale-105 cursor-pointer">
-                         <span class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-400 tracking-tight" style="line-height: 1.1; text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);">THUAN</span>
-                         <div class="flex items-center gap-1.5 mt-0.5">
-                             <span class="h-[1px] w-2 bg-cyan-500/50"></span>
-                             <span class="text-[9px] font-black text-cyan-300 tracking-[0.4em] uppercase" style="text-shadow: 0 0 10px rgba(6, 182, 212, 0.6);">Store</span>
-                             <span class="h-[1px] w-2 bg-cyan-500/50"></span>
+        
+        <div class="z-10 relative flex flex-col items-center justify-center w-full px-6">
+            
+            <div class="relative w-56 h-56 md:w-72 md:h-72 flex items-center justify-center">
+                
+                <!-- VỆ TINH XOAY QUANH (ORBIT SYSTEM) ĐÃ TỐI ƯU CHỐNG GIẬT -->
+                <div class="orbit-track cursor-pointer" title="Chạm để tương tác">
+                    <!-- Sat 1: Setup Kho -->
+                    <div class="sat-wrapper sat-1-pos group">
+                        <div id="satSetup" class="orbit-node text-blue-400">
+                            <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                        </div>
+                        <span class="sat-tooltip tooltip-top">Quản lý kho</span>
+                    </div>
+                    
+                    <!-- Sat 2: Promo -->
+                    <div class="sat-wrapper sat-2-pos group">
+                        <div id="satPromo" class="orbit-node text-purple-400">
+                            <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                        </div>
+                        <span class="sat-tooltip tooltip-right">Khuyến mãi</span>
+                    </div>
+                    
+                    <!-- Sat 3: Discount Default -->
+                    <div class="sat-wrapper sat-3-pos group">
+                        <div id="satDiscount" class="orbit-node text-amber-400">
+                            <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l6-6m-4 8h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <span class="sat-tooltip tooltip-bottom">Chiết khấu</span>
+                    </div>
+                    
+                    <!-- Sat 4: Brand Config -->
+                    <div class="sat-wrapper sat-4-pos group">
+                        <div id="satBrand" class="orbit-node text-slate-400">
+                            <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <span class="sat-tooltip tooltip-left">Cửa hàng</span>
+                    </div>
+                </div>
+
+                <!-- VÒNG TRÒN XOAY & CHỮ BẢNG BÁO GIÁ LÀM NÚT BẤM DUY NHẤT -->
+                <div id="btnStartApp" class="group absolute inset-0 flex items-center justify-center cursor-pointer transition-transform duration-500 hover:scale-105 active:scale-95 z-[40]">
+                    <div class="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-80" style="animation-duration: 2.5s;"></div>
+                    <div class="absolute inset-2 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-80" style="animation-duration: 3s; animation-direction: reverse;"></div>
+                    <div class="absolute inset-[16px] bg-slate-950/95 backdrop-blur-2xl rounded-full border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-[inset_0_0_50px_rgba(6,182,212,0.2)] group-hover:border-cyan-400/60 transition-colors duration-300">
+                         <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
+                             <span class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-300 tracking-wider mb-3" style="line-height: 1.2; text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);">BẢNG<br>BÁO GIÁ</span>
+                             <div class="h-[2px] w-12 bg-gradient-to-r from-transparent via-cyan-500 to-transparent mb-3 opacity-70"></div>
+                             <span id="btnStartText" class="text-[9px] md:text-[10px] font-bold text-cyan-400 uppercase tracking-[0.25em] animate-pulse">Chạm để bắt đầu</span>
                          </div>
-                     </div>
-                </div>
-                <div class="absolute -inset-6 border border-slate-800/40 rounded-full animate-orbit pointer-events-none z-20">
-                    <div class="absolute top-0 left-1/2 -ml-4 -mt-4">
-                        <button class="group relative w-8 h-8 rounded-full bg-slate-900/90 border border-teal-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-teal-400 hover:bg-teal-500/10 transition-all shadow-[0_0_15px_rgba(20,184,166,0.2)] pointer-events-auto animate-orbit-reverse">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                        </button>
-                    </div>
-                    <div class="absolute top-[75%] left-[93.3%] -ml-4 -mt-4">
-                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-blue-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Version 2.0 - Tối ưu SEO & UX')">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </button>
-                    </div>
-                    <div class="absolute top-[75%] left-[6.7%] -ml-4 -mt-4">
-                        <button class="w-8 h-8 rounded-full bg-slate-900/90 border border-cyan-500/40 backdrop-blur-md flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all shadow-[0_0_15px_rgba(6,182,212,0.2)] pointer-events-auto animate-orbit-reverse" onclick="Utils.showToast('Hotline: 0939 125 128 (Thuận Store)')">
-                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        </button>
                     </div>
                 </div>
             </div>
-
-            <div class="flex items-center justify-center gap-3 w-full mb-8 opacity-90 animate-pulse" style="animation-duration: 3s;">
-                <div class="h-[1px] w-8 md:w-16 bg-gradient-to-r from-transparent to-cyan-500/80"></div>
-                <span class="text-[10px] md:text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-400 to-cyan-300 tracking-[0.25em] uppercase" style="text-shadow: 0 0 15px rgba(6,182,212,0.4);">Chạm Đến Tương Lai</span>
-                <div class="h-[1px] w-8 md:w-16 bg-gradient-to-l from-transparent to-cyan-500/80"></div>
-            </div>
-
-            <nav class="grid grid-cols-2 gap-4 w-full mb-6" id="featureGrid">
-                <article class="feature-card selected relative overflow-hidden bg-slate-900/40 border border-slate-800/80 p-4 rounded-3xl cursor-pointer group hover:bg-slate-900/60 transition-all duration-300" data-feature="excel">
-                    <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 border-2 border-transparent group-[.selected]:border-cyan-500/30 rounded-3xl pointer-events-none transition-colors duration-500"></div>
-                    <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-800/80 shadow-inner flex items-center justify-center text-slate-500 group-[.selected]:bg-gradient-to-br group-[.selected]:from-cyan-500/20 group-[.selected]:to-blue-500/20 group-[.selected]:text-cyan-400 group-[.selected]:shadow-[inset_0_0_15px_rgba(6,182,212,0.4)] border border-slate-700/50 group-[.selected]:border-cyan-500/40 mb-3 transition-all duration-300">
-                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.27 6.96L12 12.01l8.73-5.05"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 22.08V12"></path><circle cx="12" cy="12" r="2" class="fill-cyan-400 stroke-none opacity-0 group-[.selected]:opacity-100 group-[.selected]:drop-shadow-[0_0_8px_rgba(6,182,212,1)] transition-opacity duration-300"></circle></svg>
-                    </div>
-                    <h3 class="text-[11px] font-black text-slate-500 group-[.selected]:text-white uppercase tracking-[0.15em] transition-colors">Báo Giá</h3>
-                </article>
-                <article class="feature-card relative overflow-hidden bg-slate-900/40 border border-slate-800/80 p-4 rounded-3xl cursor-pointer group hover:bg-slate-900/60 transition-all duration-300" data-feature="customer">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-600/5 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute inset-0 border-2 border-transparent group-[.selected]:border-indigo-500/30 rounded-3xl pointer-events-none transition-colors duration-500"></div>
-                    <div class="w-12 h-12 mx-auto rounded-2xl bg-slate-800/80 shadow-inner flex items-center justify-center text-slate-500 group-[.selected]:bg-gradient-to-br group-[.selected]:from-indigo-500/20 group-[.selected]:to-purple-500/20 group-[.selected]:text-indigo-400 group-[.selected]:shadow-[inset_0_0_15px_rgba(99,102,241,0.4)] border border-slate-700/50 group-[.selected]:border-indigo-500/40 mb-3 transition-all duration-300">
-                        <svg class="w-6 h-6 transition-transform duration-300 group-hover:scale-110 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" class="text-indigo-400 opacity-0 group-[.selected]:opacity-100 transition-opacity duration-300 group-[.selected]:drop-shadow-[0_0_8px_rgba(99,102,241,1)]" d="M6 8V6a2 2 0 0 1 2-2h2M14 4h2a2 2 0 0 1 2 2v2M6 16v2a2 2 0 0 0 2 2h2M14 20h2a2 2 0 0 0 2-2v-2"></path></svg>
-                    </div>
-                    <h3 class="text-[11px] font-black text-slate-500 group-[.selected]:text-white uppercase tracking-[0.15em] transition-colors">Khách Hàng</h3>
-                </article>
-            </nav>
-
-            <div class="w-full flex flex-col gap-3 mt-2 px-2">
-                <button id="btnContinueSession" class="hidden w-full group relative overflow-hidden rounded-full border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-[0.98] transition-all py-3.5 backdrop-blur-sm">
-                    <div class="flex items-center justify-center gap-2">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span class="text-emerald-400 font-bold text-[11px] uppercase tracking-[0.15em]">Tiếp Tục Bản Cũ</span>
-                    </div>
-                </button>
-                <button id="btnStartApp" class="w-full group relative overflow-hidden rounded-full border border-cyan-500/40 bg-gradient-to-r from-cyan-600/10 to-blue-600/10 hover:from-cyan-600/20 hover:to-blue-600/20 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(6,182,212,0.15)] py-3.5 backdrop-blur-sm">
-                    <div class="flex items-center justify-center gap-2">
-                        <span id="btnStartText" class="text-cyan-50 font-black text-[11px] uppercase tracking-[0.2em]">Bắt Đầu Mới</span>
-                        <svg class="w-4 h-4 text-cyan-300 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </div>
-                </button>
-            </div>
-            <p class="text-slate-600 text-[9px] font-bold tracking-widest uppercase text-center mt-6">© 2026 Thuận Store Inc.</p>
         </div>
     </main>
 
@@ -331,7 +341,7 @@
                     <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg></div>
                     <span class="font-black text-slate-800 tracking-tight">QUẢN LÝ KHO DỮ LIỆU</span>
                 </div>
-                <button id="btnBackToLanding" class="text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-600 transition-colors p-2 -mr-2">Trở Lại</button>
+                <button id="btnCloseSetup" class="text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-slate-600 transition-colors p-2 -mr-2">Trở Lại</button>
             </div>
         </header>
 
@@ -399,8 +409,21 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button id="btnBackToHome" class="text-[10px] font-bold text-slate-600 bg-slate-100 px-3 py-2 rounded-full hover:bg-slate-200 transition-colors uppercase tracking-wider flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg><span class="hidden sm:inline">Trang Chủ</span></button>
-                    <button id="btnEditSetup" class="text-[10px] font-bold text-white bg-indigo-500 px-3 py-2 rounded-full hover:bg-indigo-600 transition-colors uppercase tracking-wider flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg><span class="hidden sm:inline">Quản Lý Kho</span></button>
+                    <button id="btnOpenSetupManager" class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 hover:bg-blue-100 transition-colors shadow-sm" title="Quản lý kho dữ liệu">
+                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                    </button>
+                    <button id="btnOpenPromoManager" class="w-9 h-9 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-100 hover:bg-purple-100 transition-colors shadow-sm" title="Quản lý khuyến mãi">
+                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
+                    </button>
+                    <button id="btnOpenDiscountManager" class="w-9 h-9 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-100 hover:bg-amber-100 transition-colors shadow-sm" title="Mặc định chiết khấu">
+                        <svg class="w-4 h-4 font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l6-6m-4 8h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                    <button id="btnOpenBrandManager" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 hover:bg-slate-200 transition-colors shadow-sm" title="Cấu hình cửa hàng">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                    <button id="btnBackToHome" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 hover:bg-slate-200 transition-colors shadow-sm" title="Về trang chủ">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    </button>
                 </div>
             </div>
         </header>
@@ -408,91 +431,19 @@
         <main class="flex-grow overflow-y-auto p-3 pb-[240px]" id="mainScroll">
             <section class="w-full max-w-5xl mx-auto space-y-3">
                 
-                <!-- Cấu hình thương hiệu & Khách Hàng -->
-                <details class="group bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden transition-all duration-300">
-                    <summary class="flex items-center justify-between p-3.5 cursor-pointer bg-slate-50/50 hover:bg-slate-100 transition-colors">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 transition-colors">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                            </div>
-                            <span class="font-bold text-slate-800 text-xs uppercase tracking-wider">Cài Đặt Cấu Hình</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-medium text-slate-400 group-open:hidden">Mở rộng</span>
-                            <span class="text-[10px] font-medium text-blue-500 hidden group-open:block">Thu gọn</span>
-                            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
-                    </summary>
+                <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex flex-col gap-3">
+                    <input type="text" id="customerName" placeholder="Tên khách hàng / Công trình..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-900 outline-none text-sm border border-slate-200 focus:border-blue-500">
                     
-                    <div class="p-4 border-t border-slate-100 bg-white space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Thông tin khách hàng & Báo giá -->
-                            <div>
-                                <label class="block text-[10px] font-bold text-blue-600 mb-1.5 uppercase tracking-wider">Thông tin đơn hàng</label>
-                                <div class="space-y-3">
-                                    <input type="text" id="customerName" placeholder="Tên khách hàng / Công trình..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-900 outline-none text-sm border border-slate-200 focus:border-blue-500">
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div>
-                                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Người báo giá</label>
-                                            <input type="text" id="senderName" value="THUẬN STORE" class="w-full input-premium rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none border border-slate-100">
-                                        </div>
-                                        <div>
-                                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Số điện thoại</label>
-                                            <input type="text" id="senderPhone" value="0939 125 128" class="w-full input-premium rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none border border-slate-100">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Thiết lập thương hiệu -->
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Thông tin cửa hàng</label>
-                                <div class="space-y-2 w-full">
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <input type="text" id="settingStoreName" value="THUẬN STORE" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-slate-800 uppercase outline-none">
-                                        <input type="text" id="settingSlogan" value="MPE VIETNAM" placeholder="Khẩu hiệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-[10px] font-bold text-slate-500 uppercase outline-none">
-                                    </div>
-                                    <input type="text" id="settingDocTitle" value="BẢNG BÁO GIÁ" placeholder="Tiêu đề tài liệu..." class="w-full input-premium rounded-lg px-2.5 py-2.5 text-xs font-black text-blue-800 uppercase outline-none border border-blue-100 bg-blue-50/50">
-                                </div>
-                            </div>
-                            
-                            <!-- AUTO PROMO -->
-                            <div class="md:col-span-2 pt-5 border-t border-slate-100">
-                                <button id="btnOpenPromoManager" class="w-full flex items-center justify-between gap-3 mb-2 p-3 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl transition-all active:scale-95 shadow-sm text-left group">
-                                    <div class="flex items-center gap-2.5">
-                                        <svg class="w-5 h-5 text-purple-600 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg>
-                                        <span class="text-sm font-black text-purple-700 uppercase tracking-widest">THÊM CT KHUYẾN MÃI</span>
-                                    </div>
-                                    <svg class="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
-                                </button>
-                                <div id="activePromosPreview" class="flex flex-wrap gap-2 mt-1">
-                                    <!-- Render mini badges of active promos here -->
-                                </div>
-                            </div>
-
-                        </div>
+                    <div id="quickPromoButtons" class="flex gap-2 overflow-x-auto hide-scrollbar shrink-0 empty:hidden">
+                        <!-- JS render nút add KM nhanh -->
                     </div>
-                </details>
+                </div>
 
                 <div class="flex gap-3 items-stretch h-[50px]">
-                    <div class="w-[130px] bg-white border border-slate-200 rounded-xl flex items-center p-1.5 shadow-sm relative overflow-hidden focus-within:border-amber-400 focus-within:ring-2 focus-within:ring-amber-100 transition-all shrink-0">
-                        <div class="flex flex-col justify-center pl-2 flex-1">
-                            <label class="text-[10px] font-black text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded uppercase tracking-widest mb-0.5 shadow-sm">CK CHUNG</label>
-                            <div class="flex items-center gap-0.5">
-                                <input type="number" id="globalDiscountInput" value="0" class="w-full bg-transparent text-slate-800 font-black text-sm outline-none p-0">
-                                <span class="text-slate-400 font-bold text-[10px] mr-1">%</span>
-                            </div>
-                        </div>
-                        <!-- NÚT ÁP DỤNG ĐƯỢC LÀM NỔI BẬT HƠN -->
-                        <button id="btnApplyGlobal" class="bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/30 w-8 h-8 rounded-lg flex items-center justify-center active:scale-95 transition-all shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                        </button>
-                    </div>
-
                     <button id="btnOpenSearch" class="flex-1 print-bg-brand text-white font-black rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-[0_8px_20px_-6px_rgba(0,85,165,0.5)] relative overflow-hidden group">
                         <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
                         <svg class="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                        <span class="tracking-[0.15em] uppercase text-xs relative z-10 drop-shadow-sm">CHỌN HÀNG</span>
+                        <span class="tracking-[0.15em] uppercase text-xs relative z-10 drop-shadow-sm">TÌM & CHỌN HÀNG</span>
                     </button>
                 </div>
 
@@ -515,11 +466,8 @@
             </section>
         </main>
 
-        <!-- FOOTER ĐÃ ĐƯỢC THU GỌN VÀ SẮP XẾP LẠI -->
         <footer id="bottomFooter" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-20px_40px_rgba(0,0,0,0.06)] transform translate-y-full transition-transform duration-500 z-40 rounded-t-3xl flex justify-center flex-col">
             <div class="w-full max-w-5xl mx-auto">
-                
-                <!-- Khu vực Tổng Tiền và Tiết Kiệm (Được gộp chung và làm nổi bật) -->
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-1">TỔNG THANH TOÁN</p>
@@ -527,7 +475,6 @@
                     </div>
                     <div class="text-right flex flex-col items-end">
                         <p class="text-[11px] text-slate-400 font-bold line-through mb-1" id="summaryTotalOriginal">0 ₫</p>
-                        <!-- Khối HIGHLIGHT Tiết Kiệm -->
                         <div class="bg-gradient-to-l from-emerald-100 to-emerald-50 border border-emerald-300 px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 transform transition-transform hover:scale-105">
                             <svg class="w-3.5 h-3.5 text-emerald-600 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                             <span class="text-[10px] font-black text-emerald-800 uppercase tracking-widest">Tiết kiệm:</span>
@@ -536,12 +483,8 @@
                     </div>
                 </div>
 
-                <!-- KHU VỰC THÔNG BÁO QUÀ TẶNG/TRỪ TIỀN TỔNG ĐƠN ĐÃ DỜI XUỐNG ĐÂY -->
-                <div id="orderPromoAlert" class="hidden w-full mb-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 border-l-4 border-l-emerald-500 text-emerald-900 px-3 py-2.5 rounded-xl text-[11px] md:text-sm shadow-sm animate-promo-alert">
-                    <!-- Render by JS -->
-                </div>
+                <div id="orderPromoAlert" class="hidden w-full mb-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 border-l-4 border-l-emerald-500 text-emerald-900 px-3 py-2.5 rounded-xl text-[11px] md:text-sm shadow-sm animate-promo-alert"></div>
 
-                <!-- NÚT XUẤT ĐƯỢC LÀM MỎNG LẠI (py-3 thay vì py-4) -->
                 <button id="btnExportMenu" class="w-full print-bg-brand text-white font-black py-3 rounded-xl active:scale-[0.98] transition-transform uppercase tracking-widest text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     KẾT XUẤT BÁO GIÁ
@@ -553,7 +496,123 @@
     <!-- ========================================== -->
     <!-- MODALS                                     -->
     <!-- ========================================== -->
-    
+
+    <!-- MODAL CẤU HÌNH THƯƠNG HIỆU -->
+    <div id="brandManagerModal" class="fullscreen-modal" style="z-index: 105;">
+        <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
+            <div class="w-full max-w-5xl">
+                <div class="flex justify-between items-center">
+                    <button id="btnCloseBrandManager" class="text-slate-500 bg-slate-100 font-bold px-4 py-2.5 rounded-xl uppercase text-xs hover:bg-slate-200 transition-colors">ĐÓNG</button>
+                    <h2 class="font-black text-slate-800 uppercase tracking-widest text-sm">CẤU HÌNH CỬA HÀNG</h2>
+                    <div class="w-16"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-grow overflow-y-auto bg-slate-50 p-4 pb-32">
+            <div class="w-full max-w-xl mx-auto space-y-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Thông tin hiển thị bản in</label>
+                    <div class="space-y-3">
+                        <input type="text" id="settingStoreName" placeholder="Tên thương hiệu..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-900 uppercase outline-none text-sm border border-slate-200 focus:border-blue-500">
+                        <input type="text" id="settingSlogan" placeholder="Khẩu hiệu..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-600 uppercase outline-none text-xs border border-slate-200 focus:border-blue-500">
+                        <input type="text" id="settingDocTitle" placeholder="Tiêu đề tài liệu..." class="w-full input-premium rounded-xl px-3 py-3 font-black text-blue-800 uppercase outline-none text-sm border border-blue-200 bg-blue-50/50 focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Người báo giá</label>
+                    <div class="space-y-3">
+                        <input type="text" id="senderName" placeholder="Tên người báo giá..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-800 outline-none text-sm border border-slate-200 focus:border-blue-500">
+                        <input type="text" id="senderPhone" placeholder="Số điện thoại..." class="w-full input-premium rounded-xl px-3 py-3 font-bold text-slate-800 outline-none text-sm border border-slate-200 focus:border-blue-500">
+                    </div>
+                </div>
+                <button id="btnSaveBrandConfig" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-4 rounded-xl uppercase tracking-widest text-sm transition-transform active:scale-[0.98] shadow-lg flex justify-center items-center gap-2">LƯU CẤU HÌNH</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CẤU HÌNH CHIẾT KHẤU MẶC ĐỊNH -->
+    <div id="discountManagerModal" class="fullscreen-modal" style="z-index: 105;">
+        <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
+            <div class="w-full max-w-5xl">
+                <div class="flex justify-between items-center">
+                    <button id="btnCloseDiscountManager" class="text-slate-500 bg-slate-100 font-bold px-4 py-2.5 rounded-xl uppercase text-xs hover:bg-slate-200 transition-colors">ĐÓNG</button>
+                    <div class="text-center">
+                        <h2 class="font-black text-amber-600 uppercase tracking-widest text-sm">CHIẾT KHẤU MẶC ĐỊNH</h2>
+                        <span class="text-[9px] font-bold text-slate-400">Tự áp dụng khi thêm SP mới</span>
+                    </div>
+                    <div class="w-16"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-grow overflow-y-auto bg-slate-50 p-4 pb-32">
+            <div class="w-full max-w-xl mx-auto space-y-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium mb-4 italic">Khi bạn thiết lập các chỉ số ở đây, mọi sản phẩm được thêm vào giỏ hàng sẽ tự động nhận các mức giảm giá này (trừ khi có chương trình KM ưu tiên hơn).</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-black text-amber-700 bg-amber-100 px-2 py-0.5 rounded uppercase tracking-widest mb-1.5 inline-block shadow-sm">CK CHUNG (%)</label>
+                            <input type="number" id="defBaseDiscount" placeholder="VD: 10" class="w-full input-premium rounded-xl p-3 text-lg font-black text-slate-900 outline-none border-slate-200 focus:border-amber-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] font-black text-blue-800 bg-blue-200 px-2 py-0.5 rounded uppercase tracking-widest mb-1.5 inline-block shadow-sm">KM1 (%)</label>
+                                <input type="number" id="defKm1" placeholder="0" class="w-full input-premium rounded-xl p-3 text-lg font-black text-blue-700 outline-none border-slate-200 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-emerald-800 bg-emerald-200 px-2 py-0.5 rounded uppercase tracking-widest mb-1.5 inline-block shadow-sm">KM2 (%)</label>
+                                <input type="number" id="defKm2" placeholder="0" class="w-full input-premium rounded-xl p-3 text-lg font-black text-emerald-700 outline-none border-slate-200 focus:border-emerald-500">
+                            </div>
+                        </div>
+                        <div class="border-t border-slate-100 pt-4">
+                            <label class="text-[10px] font-black text-purple-800 bg-purple-200 px-2 py-0.5 rounded uppercase tracking-widest mb-1.5 inline-block shadow-sm">TRỪ TIỀN MẶC ĐỊNH</label>
+                            <div class="flex items-center gap-2 mb-2">
+                                <select id="defKmTienType" class="bg-white border border-slate-300 rounded-lg p-2 text-xs font-bold text-purple-700 outline-none">
+                                    <option value="per_item">Trừ theo SP</option>
+                                    <option value="total">Trừ tổng dòng</option>
+                                </select>
+                            </div>
+                            <input type="number" id="defKmTien" placeholder="0" class="w-full input-premium rounded-xl p-3 text-lg font-black text-purple-700 outline-none border-slate-200 focus:border-purple-500">
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="btnSaveDefaults" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-4 rounded-xl uppercase tracking-widest text-sm transition-transform active:scale-[0.98] shadow-lg flex justify-center items-center gap-2">LƯU MẶC ĐỊNH & ÁP DỤNG ALL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TẠO SP THỦ CÔNG -->
+    <div id="manualAddModal" class="fixed inset-0 bg-slate-950/80 z-[3000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300">
+            <h3 class="text-lg font-black text-slate-900 mb-4 text-center uppercase tracking-wide">Thêm Sản Phẩm Mới</h3>
+            <div class="space-y-3 mb-5">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Tên Sản Phẩm *</label>
+                    <input type="text" id="manualName" class="w-full bg-slate-50 rounded-xl p-3 text-sm font-bold outline-none border border-slate-200 focus:border-blue-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Giá Bìa (VND) *</label>
+                        <input type="number" id="manualPrice" class="w-full bg-slate-50 rounded-xl p-3 text-sm font-bold text-blue-600 outline-none border border-slate-200 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-500 uppercase">Đơn Vị Tính</label>
+                        <input type="text" id="manualUnit" value="Cái" class="w-full bg-slate-50 rounded-xl p-3 text-sm font-bold outline-none border border-slate-200 focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-500 uppercase">Mã SP (Tùy chọn)</label>
+                    <input type="text" id="manualCode" class="w-full bg-slate-50 rounded-xl p-3 text-sm font-bold outline-none border border-slate-200 focus:border-blue-500">
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="btnCancelManual" class="flex-1 py-3 rounded-xl text-xs font-black text-slate-600 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all uppercase tracking-widest">Hủy</button>
+                <button id="btnConfirmManual" class="flex-1 py-3 rounded-xl text-xs font-black text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all shadow-md uppercase tracking-widest">Thêm SP</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL QUẢN LÝ KHUYẾN MÃI (AUTO PROMO MANAGER) -->
     <div id="promoManagerModal" class="fullscreen-modal" style="z-index: 105;">
         <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
@@ -565,7 +624,6 @@
                             <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> 
                             KHUYẾN MÃI
                         </h2>
-                        <span class="text-[9px] font-bold text-slate-400 tracking-widest uppercase">Tự động áp dụng</span>
                     </div>
                     <div class="w-16"></div>
                 </div>
@@ -578,7 +636,6 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Thêm Quy Tắc Mới</h3>
                     
-                    <!-- Toggle loại KM -->
                     <div class="flex gap-2 mb-4 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
                         <button id="btnTabItemPromo" class="flex-1 py-2.5 text-xs font-bold bg-white shadow-sm rounded-lg text-purple-700 transition-all">Theo Sản Phẩm</button>
                         <button id="btnTabOrderPromo" class="flex-1 py-2.5 text-xs font-bold text-slate-500 rounded-lg transition-all hover:text-purple-600">Theo Tổng Đơn</button>
@@ -600,10 +657,10 @@
                                 <div>
                                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Loại Giảm Giá</label>
                                     <select id="promoTypeIn" class="w-full input-premium rounded-xl p-3 text-sm font-bold outline-none border-slate-200 focus:border-purple-500">
-                                        <option value="tien_sp">Trừ Tiền / 1 SP (VNĐ)</option>
+                                        <option value="tien_sp">Trừ Tiền / 1 SP</option>
                                         <option value="km1">Giảm KM1 (%)</option>
                                         <option value="km2">Giảm KM2 (%)</option>
-                                        <option value="tien_tong">Trừ Tổng Tiền (VNĐ)</option>
+                                        <option value="tien_tong">Trừ Tổng Tiền</option>
                                     </select>
                                 </div>
                             </div>
@@ -624,18 +681,17 @@
                             <div>
                                 <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Mốc Tổng Thanh Toán (VNĐ)</label>
                                 <input type="number" id="promoOrderMinAmount" class="w-full input-premium rounded-xl p-3 text-sm font-black text-purple-700 outline-none border-slate-200 focus:border-purple-500" placeholder="VD: 5000000">
-                                <!-- CHỨC NĂNG LŨY TIẾN -->
                                 <label class="flex items-center gap-2 mt-2.5 cursor-pointer bg-slate-50 p-2 rounded-lg border border-slate-100 hover:bg-purple-50 transition-colors">
                                     <input type="checkbox" id="promoOrderMultiply" class="w-4 h-4 text-purple-600 rounded cursor-pointer">
-                                    <span class="text-[10px] font-bold text-slate-600">Luỹ tiến (Nhân quà theo bội số của mốc, VD: Mốc 5tr đơn 18tr -> x3 quà)</span>
+                                    <span class="text-[10px] font-bold text-slate-600">Luỹ tiến (Nhân quà theo bội số của mốc)</span>
                                 </label>
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="col-span-2">
                                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Loại Quà Tặng / Ưu Đãi</label>
                                     <select id="promoOrderType" class="w-full input-premium rounded-xl p-3 text-sm font-bold outline-none border-slate-200 focus:border-purple-500">
-                                        <option value="gift">🎁 Tặng Hiện Vật (Bia, Du lịch...)</option>
-                                        <option value="discount">💵 Trừ Trực Tiếp Tiền (VNĐ)</option>
+                                        <option value="gift">🎁 Tặng Hiện Vật</option>
+                                        <option value="discount">💵 Trừ Trực Tiếp Tiền</option>
                                     </select>
                                 </div>
                             </div>
@@ -651,12 +707,9 @@
                     </div>
                 </div>
 
-                <!-- Danh sách đã tạo -->
                 <div>
                     <h3 class="font-black text-slate-800 text-sm uppercase tracking-wider mb-3 px-1">Danh Sách Đang Chạy</h3>
-                    <div id="promoListContainer" class="space-y-3">
-                        <!-- Render Promos Here -->
-                    </div>
+                    <div id="promoListContainer" class="space-y-3"></div>
                 </div>
             </div>
         </div>
@@ -664,16 +717,19 @@
 
     <!-- MODAL CHỌN SẢN PHẨM CHO KHUYẾN MÃI -->
     <div id="promoProductSearchModal" class="fullscreen-modal" style="z-index: 110;">
-        <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
-            <div class="w-full max-w-5xl">
-                <div class="flex justify-between items-center mb-4">
-                    <button id="btnClosePromoSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl uppercase text-xs">TRỞ LẠI</button>
-                    <div class="font-black text-slate-900 uppercase tracking-widest text-sm">CHỌN SP KHUYẾN MÃI</div>
-                    <button id="btnFinishPromoSearch" class="bg-purple-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-transform">XONG</button>
-                </div>
-                <div class="relative">
-                    <input type="text" id="promoSearchInput" placeholder="Tìm sản phẩm để áp dụng KM..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold text-slate-800 outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-50 transition-all shadow-sm">
-                    <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div class="bg-white border-b border-slate-200 flex flex-col shrink-0 shadow-sm relative z-20">
+            <!-- Header fix cho mobile -->
+            <div class="p-4 pt-12 sticky top-0 bg-white z-30 w-full flex flex-col items-center">
+                <div class="w-full max-w-5xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="btnClosePromoSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl uppercase text-xs">TRỞ LẠI</button>
+                        <div class="font-black text-slate-900 uppercase tracking-widest text-sm">CHỌN SP KHUYẾN MÃI</div>
+                        <button id="btnFinishPromoSearch" class="bg-purple-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-transform">XONG</button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="promoSearchInput" placeholder="Tìm sản phẩm để áp dụng KM..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold text-slate-800 outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-50 transition-all shadow-sm">
+                        <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -685,22 +741,32 @@
 
     <!-- MAIN SEARCH MODAL -->
     <div id="searchModal" class="fullscreen-modal">
-        <div class="bg-white border-b border-slate-200 p-4 pt-12 flex flex-col shrink-0 shadow-sm relative z-20 items-center">
-            <div class="w-full max-w-5xl">
-                <div class="flex justify-between items-center mb-4">
-                    <button id="btnCloseSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl uppercase text-xs">ĐÓNG</button>
-                    <div class="font-black text-slate-900 uppercase tracking-widest text-sm">TÌM SẢN PHẨM</div>
-                    <button id="btnFinishSearch" class="print-bg-brand text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-transform">XONG (<span id="cartBadge">0</span>)</button>
-                </div>
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Gõ mã hoặc tên SP..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all shadow-sm">
-                    <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <div class="bg-white border-b border-slate-200 flex flex-col shrink-0 shadow-sm relative z-20">
+            <div class="p-4 pt-12 sticky top-0 bg-white z-30 w-full flex flex-col items-center">
+                <div class="w-full max-w-5xl">
+                    <div class="flex justify-between items-center mb-3">
+                        <button id="btnCloseSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl uppercase text-xs">ĐÓNG</button>
+                        <div class="font-black text-slate-900 uppercase tracking-widest text-sm">TÌM SẢN PHẨM</div>
+                        <button id="btnFinishSearch" class="print-bg-brand text-white font-bold px-4 py-2 rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-transform">XONG (<span id="cartBadge">0</span>)</button>
+                    </div>
+                    <div class="relative mb-3">
+                        <input type="text" id="searchInput" placeholder="Gõ mã hoặc tên SP..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold text-slate-800 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all shadow-sm">
+                        <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex gap-2">
+                            <button id="btnSortInc" class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors bg-white text-slate-500 border border-slate-200 hover:bg-slate-100 flex items-center gap-1"><span class="text-red-500">⬆</span> Tăng</button>
+                            <button id="btnSortDec" class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors bg-white text-slate-500 border border-slate-200 hover:bg-slate-100 flex items-center gap-1"><span class="text-emerald-500">⬇</span> Giảm</button>
+                        </div>
+                        <button id="btnOpenManualAdd" class="px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Thêm Mới</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="bg-slate-50 border-b border-slate-200 shrink-0">
-            <div id="warehouseFilters" class="w-full max-w-5xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar"></div>
+            
+            <div class="bg-slate-50 border-t border-slate-200 shrink-0">
+                <div id="warehouseFilters" class="w-full max-w-5xl mx-auto px-4 py-2.5 flex gap-2 overflow-x-auto whitespace-nowrap hide-scrollbar"></div>
+            </div>
         </div>
 
         <div class="flex-grow overflow-y-auto bg-white pb-32 relative z-0">
@@ -719,41 +785,41 @@
         </div>
         
         <div class="flex-grow overflow-y-auto p-4 bg-slate-50 pb-32 relative">
-            <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm transition-opacity">
+            <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm transition-opacity hidden">
                 <div class="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
                 <div class="text-slate-600 font-bold uppercase tracking-widest text-xs animate-pulse">Đang xử lý dữ liệu...</div>
             </div>
             
             <div id="exportGuide" class="w-full max-w-5xl mx-auto flex flex-col">
                 <div class="print-bg-brand text-white text-[10px] md:text-sm font-bold py-2.5 px-4 rounded-t-xl uppercase tracking-widest flex justify-between items-center shadow-md">
-                    <span class="flex items-center gap-1.5"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Bản Xem Trước (Chạm vào chữ để sửa)</span>
+                    <span class="flex items-center gap-1.5"><svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Bản Xem Trước</span>
                 </div>
                 
                 <div id="previewContainer" class="w-full bg-slate-300 overflow-hidden relative rounded-b-xl border border-t-0 border-slate-200 shadow-lg mb-5 transition-all">
-                    <div id="invoiceRenderArea" style="width: 1600px; background: white; padding: 80px; transform-origin: top left; color: #0f172a;">
+                    <div id="invoiceRenderArea" style="width: 1600px; background: white; padding: 80px; transform-origin: top left; color: #0f172a; position: relative;">
                         <div class="print-border-brand" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; border-bottom-width: 5px; border-bottom-style: solid; padding-bottom: 40px;">
                             <div style="display: flex; align-items: center; gap: 25px;">
                                 <div id="printLogoContainer" class="print-bg-brand" style="width: 120px; height: 120px; border-radius: 24px; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px;">
                                     <img id="printLogo" src="" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo Print">
                                 </div>
                                 <div>
-                                    <div id="printStoreName" contenteditable="true" class="print-text-brand" style="font-size: 65px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">THUẬN STORE</div>
-                                    <div id="printSlogan" contenteditable="true" style="font-size: 26px; color: #64748b; font-weight: 700; letter-spacing: 4px; margin-top: 8px; text-transform: uppercase;">MPE VIETNAM</div>
+                                    <div id="printStoreName" style="font-size: 65px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;" class="print-text-brand"></div>
+                                    <div id="printSlogan" style="font-size: 26px; color: #64748b; font-weight: 700; letter-spacing: 4px; margin-top: 8px; text-transform: uppercase;"></div>
                                 </div>
                             </div>
                             <div style="text-align: right; background: #f8fafc; padding: 25px 35px; border-radius: 16px; border: 2px solid #e2e8f0;">
-                                <div id="pSenderDisplay" contenteditable="true" style="font-weight: 900; font-size: 32px; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;"></div>
-                                <div id="pPhoneDisplay" contenteditable="true" class="print-text-brand" style="font-size: 28px; font-weight: 700;"></div>
+                                <div id="pSenderDisplay" style="font-weight: 900; font-size: 32px; color: #0f172a; text-transform: uppercase; margin-bottom: 8px;"></div>
+                                <div id="pPhoneDisplay" class="print-text-brand" style="font-size: 28px; font-weight: 700;"></div>
                             </div>
                         </div>
                         
-                        <h2 id="printDocTitle" contenteditable="true" style="text-align: center; font-size: 85px; font-weight: 900; color: #0f172a; margin-bottom: 60px; letter-spacing: 4px; text-transform: uppercase;">BẢNG BÁO GIÁ</h2>
+                        <h2 id="printDocTitle" style="text-align: center; font-size: 85px; font-weight: 900; color: #0f172a; margin-bottom: 60px; letter-spacing: 4px; text-transform: uppercase;"></h2>
                         
                         <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
                             <div style="font-size: 36px; color: #475569;">
-                                Kính gửi khách hàng: <strong id="pCustomerPrint" contenteditable="true" style="color: #0f172a; font-size: 42px; display: inline-block; margin-top: 10px;"></strong>
+                                Kính gửi khách hàng: <strong id="pCustomerPrint" style="color: #0f172a; font-size: 42px; display: inline-block; margin-top: 10px;"></strong>
                             </div>
-                            <div contenteditable="true" style="text-align: right; font-size: 32px; color: #64748b; font-style: italic;" id="pDateDisplay"></div>
+                            <div style="text-align: right; font-size: 32px; color: #64748b; font-style: italic;" id="pDateDisplay"></div>
                         </div>
                         
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 50px; font-size: 32px;">
@@ -779,15 +845,15 @@
                         <div style="display: flex; justify-content: flex-end; margin-bottom: 60px;">
                             <div class="print-border-l-brand" style="background: #f8fafc; border-radius: 16px; padding: 40px 70px; display: flex; align-items: center; gap: 70px; border-top: 3px solid #cbd5e1; border-right: 3px solid #cbd5e1; border-bottom: 3px solid #cbd5e1; border-left-width: 15px; border-left-style: solid; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);">
                                 <span style="font-weight: 800; text-transform: uppercase; font-size: 36px; color: #475569;">Tổng thanh toán:</span>
-                                <span id="pTotalPrint" contenteditable="true" class="print-text-brand" style="font-size: 64px; font-weight: 900; min-width: 200px; text-align: right; display: inline-block;"></span>
+                                <span id="pTotalPrint" class="print-text-brand" style="font-size: 64px; font-weight: 900; min-width: 200px; text-align: right; display: inline-block;"></span>
                             </div>
                         </div>
                         
                         <div style="display: flex; gap: 50px;">
-                            <div id="pFinalNote" contenteditable="true" style="flex: 2; font-style: italic; color: #64748b; font-size: 32px; line-height: 1.6; white-space: pre-wrap; padding: 40px; border-radius: 16px; background: #f8fafc; border: 2px solid #e2e8f0; min-height: 150px;"></div>
+                            <div id="pFinalNote" style="flex: 2; font-style: italic; color: #64748b; font-size: 32px; line-height: 1.6; white-space: pre-wrap; padding: 40px; border-radius: 16px; background: #f8fafc; border: 2px solid #e2e8f0; min-height: 150px;"></div>
                             <div style="flex: 1; text-align: center; padding-top: 20px;">
                                 <div style="font-weight: 700; color: #0f172a; font-size: 32px; margin-bottom: 100px;">Đại diện bán hàng</div>
-                                <div id="pSignName" contenteditable="true" class="print-text-brand" style="font-weight: 900; font-size: 36px; text-transform: uppercase; min-width: 200px; display: inline-block;"></div>
+                                <div id="pSignName" class="print-text-brand" style="font-weight: 900; font-size: 36px; text-transform: uppercase; min-width: 200px; display: inline-block;"></div>
                             </div>
                         </div>
                     </div>
@@ -822,7 +888,6 @@
                         Copy Tin Nhắn
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -850,39 +915,29 @@
         const Utils = {
             formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0).replace(/\s+/g, '\u00A0'),
             cleanNumber: (v) => { 
-                if (!v) return 0;
-                if (typeof v === 'number') return v;
+                if (!v) return 0; if (typeof v === 'number') return v;
                 let str = String(v).replace(/[^0-9.,-]/g, "");
                 if (str.includes('.') && str.includes(',')) {
-                    let lastDot = str.lastIndexOf('.');
-                    let lastComma = str.lastIndexOf(',');
+                    let lastDot = str.lastIndexOf('.'); let lastComma = str.lastIndexOf(',');
                     if (lastComma > lastDot) str = str.replace(/\./g, "").replace(",", ".");
                     else str = str.replace(/,/g, "");
                 } else if (str.includes(',')) {
-                    let parts = str.split(',');
-                    if (parts[parts.length-1].length === 3) str = str.replace(/,/g, "");
-                    else str = str.replace(",", ".");
+                    let parts = str.split(','); if (parts[parts.length-1].length === 3) str = str.replace(/,/g, ""); else str = str.replace(",", ".");
                 } else if (str.includes('.')) {
-                    let parts = str.split('.');
-                    if (parts[parts.length-1].length === 3) str = str.replace(/\./g, "");
+                    let parts = str.split('.'); if (parts[parts.length-1].length === 3) str = str.replace(/\./g, "");
                 }
                 return parseFloat(str) || 0;
             },
             normString: (str) => { return str ? str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ""; },
             getIncreaseDecreaseInfo: (u) => {
                 if (u === null || u === undefined || u === "") return null;
-                let str = String(u).trim();
-                if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai") return null;
+                let str = String(u).trim(); if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai") return null;
                 let match = str.match(/([+-]?\d+[\.,]?\d*)%/);
-                if (match) {
-                    let val = parseFloat(match[1].replace(',', '.'));
-                    return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val };
-                }
+                if (match) { let val = parseFloat(match[1].replace(',', '.')); return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val }; }
                 let isDecrease = str.includes('-') || str.includes('−') || str.toLowerCase().includes('giảm');
                 let cleanForCheck = str.toLowerCase().replace(/tăng|giảm|\s+|\+|-|−|%/g, '').replace(',', '.');
                 if (!str.includes('%') && isNaN(Number(cleanForCheck))) return { text: str, type: 'text', value: 0 };
-                let normalizedStr = str.replace(/,/g, '.');
-                let matchOld = normalizedStr.match(/\d+(\.\d+)?/);
+                let normalizedStr = str.replace(/,/g, '.'); let matchOld = normalizedStr.match(/\d+(\.\d+)?/);
                 if (!matchOld) return { text: str, type: 'text', value: 0 };
                 let n = parseFloat(matchOld[0]);
                 if (!str.includes('%') && n > 0 && n < 10 && normalizedStr.includes('.')) n = n * 100;
@@ -891,10 +946,8 @@
                 return { text: n.toFixed(2).replace(/\.?0+$/, '') + '%', type: isDecrease ? 'giảm' : 'tăng', value: isDecrease ? -n : n };
             },
             showToast: (msg) => {
-                const toast = document.getElementById('customToast');
-                document.getElementById('toastMsg').textContent = msg;
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
+                const toast = document.getElementById('customToast'); document.getElementById('toastMsg').textContent = msg;
+                toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000);
             },
             generateId: () => Math.random().toString(36).substr(2, 9)
         };
@@ -906,40 +959,28 @@
             rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [],
             searchTimeout: null, currentOrderPromoEffect: null,
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
-            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50,
-            currentHeaderIndex: 0 // <--- Lưu trữ index của dòng tiêu đề khi nạp Excel
+            defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item' },
+            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0
         };
         const ITEMS_PER_PAGE = 50; 
 
         const LocalDB = {
             save: () => {
                 try {
-                    localStorage.setItem('thuanstore_state', JSON.stringify({
-                        productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand, promos: State.promos
-                    }));
-                } catch(e) { 
-                    console.warn("Lỗi lưu data", e);
-                    if (e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn để lưu. Hãy dùng file Excel nhẹ hơn.");
-                }
+                    localStorage.setItem('thuanstore_state', JSON.stringify({ productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand, defaults: State.defaults, promos: State.promos }));
+                } catch(e) { if (e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn. Hãy dùng file Excel nhẹ hơn."); }
             },
             load: () => {
                 try {
                     const data = localStorage.getItem('thuanstore_state');
                     if (data) {
-                        const parsed = JSON.parse(data);
-                        State.productDB = parsed.productDB || [];
-                        State.warehouses = parsed.warehouses || [];
-                        State.cart = parsed.cart || [];
-                        State.brand = parsed.brand || State.brand;
-                        State.promos = parsed.promos || []; 
-                        if (State.productDB.length > 0 && State.warehouses.length === 0) {
-                            State.warehouses = ['Kho Mặc Định'];
-                            State.productDB.forEach(p => p.warehouse = 'Kho Mặc Định');
-                            LocalDB.save();
-                        }
+                        const p = JSON.parse(data);
+                        State.productDB = p.productDB || []; State.warehouses = p.warehouses || []; State.cart = p.cart || [];
+                        State.brand = p.brand || State.brand; State.defaults = p.defaults || State.defaults; State.promos = p.promos || [];
+                        if (State.productDB.length > 0 && State.warehouses.length === 0) { State.warehouses = ['Kho Mặc Định']; State.productDB.forEach(x => x.warehouse = 'Kho Mặc Định'); LocalDB.save(); }
                         return true;
                     }
-                } catch(e) { console.warn("Lỗi đọc data", e); }
+                } catch(e) {}
                 return false;
             }
         };
@@ -947,98 +988,112 @@
         const DOM = {
             screens: { landing: document.getElementById('screenLanding'), setup: document.getElementById('screenSetup'), main: document.getElementById('screenMain') },
             brand: { 
+                modal: document.getElementById('brandManagerModal'), btnOpen: document.getElementById('btnOpenBrandManager'), btnClose: document.getElementById('btnCloseBrandManager'), btnSave: document.getElementById('btnSaveBrandConfig'),
                 nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), 
                 hLogo: document.getElementById('headerLogo'), hName: document.getElementById('headerStoreName'), hSlogan: document.getElementById('headerSlogan'), 
-                pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), 
-                pDocTitle: document.getElementById('printDocTitle'), printLogoContainer: document.getElementById('printLogoContainer')
+                pLogo: document.getElementById('printLogo'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle')
+            },
+            discount: {
+                modal: document.getElementById('discountManagerModal'), btnOpen: document.getElementById('btnOpenDiscountManager'), btnClose: document.getElementById('btnCloseDiscountManager'), btnSave: document.getElementById('btnSaveDefaults'),
+                baseIn: document.getElementById('defBaseDiscount'), km1In: document.getElementById('defKm1'), km2In: document.getElementById('defKm2'), kmTienIn: document.getElementById('defKmTien'), kmTienTypeIn: document.getElementById('defKmTienType')
+            },
+            manualAdd: {
+                modal: document.getElementById('manualAddModal'), btnOpen: document.getElementById('btnOpenManualAdd'), btnClose: document.getElementById('btnCancelManual'), btnConfirm: document.getElementById('btnConfirmManual'),
+                name: document.getElementById('manualName'), price: document.getElementById('manualPrice'), unit: document.getElementById('manualUnit'), code: document.getElementById('manualCode')
             },
             setup: { 
-                btnContinue: document.getElementById('btnContinueSession'), btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnBackToLanding: document.getElementById('btnBackToLanding'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), btnEdit: document.getElementById('btnEditSetup'),
+                btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'),
                 warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup')
             },
-            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), globalDisc: document.getElementById('globalDiscountInput'), btnApplyGlobal: document.getElementById('btnApplyGlobal'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome') },
-            search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters') },
+            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager') },
+            search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
-            promo: {
-                btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'),
-                tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'),
-                nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'),
-                orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'),
-                btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), previewContainer: document.getElementById('activePromosPreview'),
-                searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList')
-            }
+            promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
         };
 
-        const switchScreen = (screenId) => {
-            Object.values(DOM.screens).forEach(s => s.classList.remove('active'));
-            setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50);
-        };
-        
-        window.addEventListener('beforeunload', function (e) { LocalDB.save(); });
-
-        const updateLandingUI = () => {
-            if (State.productDB && State.productDB.length > 0) {
-                DOM.setup.btnContinue.classList.remove('hidden');
-                if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bản Báo Giá Mới";
-            } else {
-                 DOM.setup.btnContinue.classList.add('hidden');
-                 if (DOM.setup.btnStartText) DOM.setup.btnStartText.textContent = "Bắt Đầu Mới";
-            }
-        };
+        const switchScreen = (screenId) => { Object.values(DOM.screens).forEach(s => s.classList.remove('active')); setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50); };
+        window.addEventListener('beforeunload', () => LocalDB.save());
 
         const setupFixedBrandIdentity = () => {
             document.documentElement.style.setProperty('--brand-color', BRAND_COLOR);
-            const hexStr = BRAND_COLOR.replace('#','');
-            const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
-
-            DOM.brand.hLogo.src = svgWithBg;
-            DOM.brand.pLogo.src = defaultLogoSVG;
-            DOM.brand.pLogo.parentElement.classList.add('print-bg-brand');
-            DOM.brand.hLogo.style.display = 'block';
+            const hexStr = BRAND_COLOR.replace('#',''); const svgWithBg = defaultLogoSVG.replace('<svg', `<svg style='background:%23${hexStr};padding:0;'`);
+            DOM.brand.hLogo.src = svgWithBg; DOM.brand.pLogo.src = defaultLogoSVG; DOM.brand.pLogo.parentElement.classList.add('print-bg-brand'); DOM.brand.hLogo.style.display = 'block';
         };
 
         const updateBrandText = () => {
-            State.brand.name = DOM.brand.nameIn.value || "CỬA HÀNG"; 
-            State.brand.slogan = DOM.brand.sloganIn.value; 
-            State.brand.docTitle = DOM.brand.docTitleIn.value || "BẢNG BÁO GIÁ"; 
-            DOM.brand.hName.textContent = State.brand.name; 
-            DOM.brand.hSlogan.textContent = State.brand.slogan; 
-            DOM.brand.pName.textContent = State.brand.name; 
-            DOM.brand.pSlogan.textContent = State.brand.slogan; 
-            DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
-            DOM.main.senderName.value = State.brand.name; 
-            LocalDB.save();
+            DOM.brand.hName.textContent = State.brand.name; DOM.brand.hSlogan.textContent = State.brand.slogan; 
+            DOM.brand.pName.textContent = State.brand.name; DOM.brand.pSlogan.textContent = State.brand.slogan; DOM.brand.pDocTitle.textContent = State.brand.docTitle; 
+            DOM.main.senderName.value = DOM.main.senderName.value || State.brand.name; 
         };
 
         const initApp = () => {
-            LocalDB.load(); updateLandingUI();
-            DOM.brand.nameIn.value = State.brand.name; 
-            DOM.brand.sloganIn.value = State.brand.slogan; 
-            DOM.brand.docTitleIn.value = State.brand.docTitle;
-            setupFixedBrandIdentity(); 
-            updateBrandText(); 
-            renderSetupWarehouseList(); 
-            PromoLogic.renderPreview(); 
+            LocalDB.load();
+            DOM.brand.nameIn.value = State.brand.name; DOM.brand.sloganIn.value = State.brand.slogan; DOM.brand.docTitleIn.value = State.brand.docTitle;
+            DOM.discount.baseIn.value = State.defaults.baseDiscount || ''; DOM.discount.km1In.value = State.defaults.km1 || ''; DOM.discount.km2In.value = State.defaults.km2 || '';
+            DOM.discount.kmTienIn.value = State.defaults.kmTien || ''; DOM.discount.kmTienTypeIn.value = State.defaults.kmTienType || 'per_item';
+            setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
         };
 
-        DOM.brand.nameIn.addEventListener('input', updateBrandText); 
-        DOM.brand.sloganIn.addEventListener('input', updateBrandText); 
-        DOM.brand.docTitleIn.addEventListener('input', updateBrandText); 
+        // --- ORBIT SATELLITES EVENT LISTENERS ---
+        document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
+        document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
+        document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
+        document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
 
-        DOM.setup.btnContinue.addEventListener('click', () => { switchScreen('main'); CartLogic.render(); Utils.showToast("Đã khôi phục phiên làm việc trước!"); });
-        DOM.main.btnBackToHome.addEventListener('click', () => { updateLandingUI(); switchScreen('landing'); });
+        // MAIN NAVIGATION
+        DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
+        DOM.setup.btnCloseSetup.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
+        DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
+        DOM.setup.btnStart.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
 
-        // ==========================================
+        // BRAND MODAL LOGIC
+        DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        DOM.brand.btnClose.addEventListener('click', () => { DOM.brand.modal.classList.remove('active'); });
+        DOM.brand.btnSave.addEventListener('click', () => {
+            State.brand.name = DOM.brand.nameIn.value.trim() || "CỬA HÀNG"; State.brand.slogan = DOM.brand.sloganIn.value.trim(); State.brand.docTitle = DOM.brand.docTitleIn.value.trim() || "BẢNG BÁO GIÁ";
+            updateBrandText(); LocalDB.save(); DOM.brand.modal.classList.remove('active'); Utils.showToast("Đã lưu cấu hình cửa hàng!");
+        });
+
+        // DISCOUNT MODAL LOGIC
+        DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
+        DOM.discount.btnClose.addEventListener('click', () => { DOM.discount.modal.classList.remove('active'); });
+        DOM.discount.btnSave.addEventListener('click', () => {
+            State.defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); State.defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
+            State.defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); State.defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); State.defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
+            
+            // Áp dụng cho giỏ hàng hiện tại (chỉ đè nếu không có Promo ưu tiên)
+            State.cart.forEach(item => {
+                if (!item.appliedPromoId) {
+                    item.baseDiscount = State.defaults.baseDiscount; item.km1 = State.defaults.km1; item.km2 = State.defaults.km2; item.kmTien = State.defaults.kmTien; item.kmTienType = State.defaults.kmTienType;
+                }
+            });
+            LocalDB.save(); CartLogic.render(); DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và áp dụng Mặc Định mới!");
+        });
+
+        // MANUAL ADD MODAL LOGIC
+        DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
+        DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
+        DOM.manualAdd.btnConfirm.addEventListener('click', () => {
+            const name = DOM.manualAdd.name.value.trim(); const price = Utils.cleanNumber(DOM.manualAdd.price.value);
+            if(!name || price <= 0) return Utils.showToast("Vui lòng nhập Tên và Giá Bìa > 0");
+            const newProduct = { id: 'MANUAL_' + Date.now(), warehouse: 'Thêm Thủ Công', code: DOM.manualAdd.code.value.trim(), name: name, unit: DOM.manualAdd.unit.value.trim() || 'Cái', price: price, searchStr: Utils.normString(`${DOM.manualAdd.code.value.trim()} ${name}`) };
+            State.productDB.push(newProduct);
+            
+            let newItem = { id: Utils.generateId(), productId: newProduct.id, code: newProduct.code, name: newProduct.name, unit: newProduct.unit, originalPrice: newProduct.price, qty: 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: newProduct.warehouse, appliedPromoId: null };
+            State.cart.push(newItem);
+            
+            DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = '';
+            DOM.manualAdd.btnClose.click(); DOM.search.badge.textContent = State.cart.length; CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
+        });
+
+
         // AUTO PROMO LOGIC
-        // ==========================================
-        let editingPromoProductIds = []; 
-        let currentPromoContext = 'item';
-
+        let editingPromoProductIds = []; let currentPromoContext = 'item';
         const PromoLogic = {
             openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); },
-            closeManager: () => { DOM.promo.managerModal.classList.remove('active'); PromoLogic.renderPreview(); CartLogic.render(); },
+            closeManager: () => { DOM.promo.managerModal.classList.remove('active'); PromoLogic.renderQuickButtons(); CartLogic.render(); },
             switchTab: (tab) => {
                 currentPromoContext = tab;
                 if (tab === 'item') {
@@ -1052,39 +1107,27 @@
                 }
             },
             resetForm: () => {
-                DOM.promo.nameIn.value = '';
-                DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'tien_sp'; DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0';
+                DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'tien_sp'; DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0';
                 DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; PromoLogic.updateOrderLabel();
             },
-            updateOrderLabel: () => {
-                if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } 
-                else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; }
-            },
+            updateOrderLabel: () => { if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
             savePromo: () => {
-                const name = DOM.promo.nameIn.value.trim();
-                if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
-
+                const name = DOM.promo.nameIn.value.trim(); if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
                 let newPromo = { id: 'PRM_' + Date.now(), name: name };
-
                 if (currentPromoContext === 'item') {
                     const minQty = parseInt(DOM.promo.minQtyIn.value) || 1; const type = DOM.promo.typeIn.value; const value = Utils.cleanNumber(DOM.promo.valueIn.value);
-                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!");
-                    if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
+                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
                     newPromo.isOrderPromo = false; newPromo.minQty = minQty; newPromo.type = type; newPromo.value = value; newPromo.productIds = [...editingPromoProductIds];
                 } else {
-                    const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim();
-                    const isMultiply = DOM.promo.orderMultiply.checked;
-                    if (minAmount <= 0) return Utils.showToast("Vui lòng nhập mốc tổng thanh toán!");
-                    if (!valRaw) return Utils.showToast("Vui lòng nhập Quà tặng hoặc Số tiền trừ!");
+                    const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim(); const isMultiply = DOM.promo.orderMultiply.checked;
+                    if (minAmount <= 0) return Utils.showToast("Vui lòng nhập mốc tổng thanh toán!"); if (!valRaw) return Utils.showToast("Vui lòng nhập Quà tặng hoặc Số tiền trừ!");
                     newPromo.isOrderPromo = true; newPromo.minAmount = minAmount; newPromo.rewardType = orderType; newPromo.rewardValue = orderType === 'discount' ? Utils.cleanNumber(valRaw) : valRaw; newPromo.isMultiply = isMultiply;
                 }
-
-                State.promos.push(newPromo); LocalDB.save(); Utils.showToast(`Đã lưu KM: ${name}`);
-                PromoLogic.resetForm(); PromoLogic.renderList();
+                State.promos.push(newPromo); LocalDB.save(); Utils.showToast(`Đã lưu KM: ${name}`); PromoLogic.resetForm(); PromoLogic.renderList();
             },
             deletePromo: (id) => {
                 State.promos = State.promos.filter(p => p.id !== id); LocalDB.save(); Utils.showToast("Đã xóa chương trình!"); PromoLogic.renderList();
-                State.cart.forEach(item => { if (item.appliedPromoId === id) PromoLogic.revertPromoOnItem(item); }); CartLogic.render();
+                State.cart.forEach(item => { if (item.appliedPromoId === id) PromoLogic.revertPromoOnItem(item); }); CartLogic.render(); PromoLogic.renderQuickButtons();
             },
             renderList: () => {
                 if (State.promos.length === 0) { DOM.promo.listContainer.innerHTML = '<div class="text-center text-slate-400 text-xs py-4 font-bold">Chưa có chương trình KM nào</div>'; return; }
@@ -1098,93 +1141,60 @@
                     } else {
                         let typeTxt = p.type === 'tien_sp' ? 'Trừ tiền/SP' : (p.type === 'tien_tong' ? 'Trừ tổng tiền' : (p.type === 'km1' ? 'Giảm KM1' : 'Giảm KM2'));
                         let valTxt = (p.type === 'km1' || p.type === 'km2') ? `${p.value}%` : Utils.formatMoney(p.value);
-                        
                         const appliedProducts = p.productIds.map(id => { const prod = State.productDB.find(x => x.id === id); return prod ? prod.name : 'SP đã xóa'; });
                         const displayNames = appliedProducts.slice(0, 3).join(', '); const moreCount = appliedProducts.length > 3 ? ` và ${appliedProducts.length - 3} SP khác` : '';
-                        
                         bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1">Mua >= ${p.minQty} SP 👉 ${typeTxt}: <span class="text-purple-600">${valTxt}</span></p>
                                     <div class="text-[10px] text-slate-500 mt-1.5 italic break-words whitespace-normal border-t border-slate-100 pt-1.5 leading-relaxed">📦 Áp dụng: <span class="font-semibold text-slate-700">${displayNames}${moreCount}</span></div>`;
                     }
-
-                    return `
-                    <div class="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm relative overflow-hidden">
-                        <div class="pr-8 w-full">
-                            <h4 class="text-sm font-black text-slate-800">${p.name}</h4>
-                            ${bodyHtml}
-                        </div>
-                        <button onclick="PromoLogic.deletePromo('${p.id}')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors">
-                            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
-                        </button>
-                    </div>`;
-                }).join('');
-                DOM.promo.listContainer.innerHTML = html;
+                    return `<div class="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm relative overflow-hidden"><div class="pr-8 w-full"><h4 class="text-sm font-black text-slate-800">${p.name}</h4>${bodyHtml}</div><button onclick="PromoLogic.deletePromo('${p.id}')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
+                }).join(''); DOM.promo.listContainer.innerHTML = html;
             },
-            renderPreview: () => {
-                if (State.promos.length === 0) { DOM.promo.previewContainer.innerHTML = ''; return; }
-                const html = State.promos.map(p => {
-                    const color = p.isOrderPromo ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-purple-50 text-purple-700 border-purple-200';
-                    return `<span class="${color} font-bold text-[10px] px-2.5 py-1 rounded-md border shadow-sm">${p.name}</span>`;
-                }).join('');
-                DOM.promo.previewContainer.innerHTML = html;
+            renderQuickButtons: () => {
+                const itemPromos = State.promos.filter(p => !p.isOrderPromo);
+                if (itemPromos.length === 0) { DOM.main.quickPromoRow.innerHTML = ''; return; }
+                const html = itemPromos.map(p => `<button onclick="PromoLogic.quickAddProducts('${p.id}')" class="shrink-0 bg-white border border-slate-200 hover:border-purple-300 text-slate-700 px-3 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> ${p.name}</button>`).join('');
+                DOM.main.quickPromoRow.innerHTML = html;
             },
-            
+            quickAddProducts: (promoId) => {
+                const promo = State.promos.find(p => p.id === promoId); if (!promo) return;
+                let addedCount = 0;
+                promo.productIds.forEach(pid => {
+                    if (!State.cart.some(item => item.productId === pid)) {
+                        const p = State.productDB.find(x => x.id === pid);
+                        if (p) {
+                            let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: promo.minQty > 1 ? promo.minQty : 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                            PromoLogic.checkAndApplyToItem(newItem);
+                            State.cart.push(newItem); addedCount++;
+                        }
+                    }
+                });
+                if (addedCount > 0) { CartLogic.render(); LocalDB.save(); Utils.showToast(`Đã ném ${addedCount} SP vào giỏ!`); DOM.search.badge.textContent = State.cart.length; } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
+            },
             openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); },
             closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
             searchProducts: () => {
-                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = State.productDB;
-                if (term) { list = list.filter(p => p.searchStr.includes(term)); }
+                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = State.productDB; if (term) { list = list.filter(p => p.searchStr.includes(term)); }
                 const html = list.slice(0, 100).map(p => {
                     const isChecked = editingPromoProductIds.includes(p.id);
-                    return `
-                    <label class="w-full max-w-5xl mx-auto p-3 flex justify-between items-center bg-white border-b border-slate-50 cursor-pointer hover:bg-slate-50">
-                        <div class="pr-2 flex-1">
-                            <div class="mb-1 leading-snug">
-                                ${p.code ? `<span class="text-[9px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded border border-slate-200 mr-1.5">${p.code}</span>` : ''}
-                                <span class="font-bold text-slate-800 text-sm">${p.name}</span>
-                            </div>
-                            <span class="text-blue-600 text-xs font-black">${Utils.formatMoney(p.price)}</span>
-                        </div>
-                        <div class="custom-checkbox relative w-6 h-6 shrink-0">
-                            <input type="checkbox" class="opacity-0 absolute inset-0 cursor-pointer z-10" value="${p.id}" ${isChecked ? 'checked' : ''} onchange="PromoLogic.toggleProduct(this)">
-                            <div class="w-6 h-6 border-2 border-slate-300 rounded-md flex items-center justify-center bg-white transition-colors">
-                                <svg class="w-4 h-4 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                            </div>
-                        </div>
-                    </label>`;
-                }).join('');
-                DOM.promo.productList.innerHTML = html;
+                    return `<label class="w-full max-w-5xl mx-auto p-3 flex justify-between items-center bg-white border-b border-slate-50 cursor-pointer hover:bg-slate-50"><div class="pr-2 flex-1"><div class="mb-1 leading-snug">${p.code ? `<span class="text-[9px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded border border-slate-200 mr-1.5">${p.code}</span>` : ''}<span class="font-bold text-slate-800 text-sm">${p.name}</span></div><span class="text-blue-600 text-xs font-black">${Utils.formatMoney(p.price)}</span></div><div class="custom-checkbox relative w-6 h-6 shrink-0"><input type="checkbox" class="opacity-0 absolute inset-0 cursor-pointer z-10" value="${p.id}" ${isChecked ? 'checked' : ''} onchange="PromoLogic.toggleProduct(this)"><div class="w-6 h-6 border-2 border-slate-300 rounded-md flex items-center justify-center bg-white transition-colors"><svg class="w-4 h-4 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
+                }).join(''); DOM.promo.productList.innerHTML = html;
             },
-            toggleProduct: (checkbox) => {
-                const pid = checkbox.value;
-                if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } 
-                else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); }
-                DOM.promo.selectedCount.textContent = editingPromoProductIds.length;
-            },
-
+            toggleProduct: (checkbox) => { const pid = checkbox.value; if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); } DOM.promo.selectedCount.textContent = editingPromoProductIds.length; },
             checkAndApplyToItem: (item) => {
                 const applicablePromo = State.promos.find(p => !p.isOrderPromo && p.productIds.includes(item.productId));
                 if (applicablePromo) {
                     if (item.qty >= applicablePromo.minQty) {
                         if (item.appliedPromoId !== applicablePromo.id) {
-                            if (applicablePromo.type === 'km1') item.km1 = applicablePromo.value;
-                            if (applicablePromo.type === 'km2') item.km2 = applicablePromo.value;
-                            if (applicablePromo.type === 'tien_sp') { item.kmTien = applicablePromo.value; item.kmTienType = 'per_item'; }
-                            if (applicablePromo.type === 'tien_tong') { item.kmTien = applicablePromo.value; item.kmTienType = 'total'; }
-                            item.appliedPromoId = applicablePromo.id; 
-                            Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`);
+                            if (applicablePromo.type === 'km1') item.km1 = applicablePromo.value; if (applicablePromo.type === 'km2') item.km2 = applicablePromo.value;
+                            if (applicablePromo.type === 'tien_sp') { item.kmTien = applicablePromo.value; item.kmTienType = 'per_item'; } if (applicablePromo.type === 'tien_tong') { item.kmTien = applicablePromo.value; item.kmTienType = 'total'; }
+                            item.appliedPromoId = applicablePromo.id; Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`);
                         }
-                    } else {
-                        if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item);
-                    }
+                    } else { if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item); }
                 }
             },
             revertPromoOnItem: (item) => {
                 const oldPromo = State.promos.find(p => p.id === item.appliedPromoId);
-                if (oldPromo && !oldPromo.isOrderPromo) {
-                    if (oldPromo.type === 'km1') item.km1 = 0;
-                    if (oldPromo.type === 'km2') item.km2 = 0;
-                    if (oldPromo.type === 'tien_sp' || oldPromo.type === 'tien_tong') { item.kmTien = 0; }
-                }
+                if (oldPromo && !oldPromo.isOrderPromo) { item.km1 = State.defaults.km1; item.km2 = State.defaults.km2; item.kmTien = State.defaults.kmTien; item.kmTienType = State.defaults.kmTienType; }
                 item.appliedPromoId = null;
             }
         };
@@ -1193,7 +1203,6 @@
         DOM.promo.btnSavePromo.addEventListener('click', PromoLogic.savePromo); DOM.promo.btnSelectProducts.addEventListener('click', PromoLogic.openSearchProducts);
         DOM.promo.btnCloseSearch.addEventListener('click', PromoLogic.closeSearchProducts); DOM.promo.btnFinishSearch.addEventListener('click', PromoLogic.closeSearchProducts);
         DOM.promo.searchInput.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(PromoLogic.searchProducts, 200); });
-        
         DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
         DOM.promo.orderType.addEventListener('change', PromoLogic.updateOrderLabel);
 
@@ -1201,13 +1210,6 @@
         // ==========================================
         // MENU & DATA WAREHOUSE MAPPING
         // ==========================================
-        let selectedMenuFeature = 'excel'; const menuCards = document.querySelectorAll('.feature-card');
-        menuCards.forEach(card => { card.addEventListener('click', () => { menuCards.forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedMenuFeature = card.dataset.feature; }); });
-
-        DOM.setup.btnStart.addEventListener('click', () => { if (selectedMenuFeature === 'excel') { switchScreen('setup'); renderSetupWarehouseList(); } else Utils.showToast("Tính năng này đang được phát triển. Vui lòng quay lại sau!"); });
-        DOM.setup.btnBackToLanding.addEventListener('click', () => { updateLandingUI(); switchScreen('landing'); });
-        DOM.setup.btnEdit.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
-
         function renderSetupWarehouseList() {
             if (State.warehouses.length === 0) { DOM.setup.warehouseListSection.classList.add('hidden'); } else {
                 DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${State.productDB.length} SP`;
@@ -1222,8 +1224,8 @@
         DOM.setup.btnClearAllData.addEventListener('click', openConfirmDeleteModal); DOM.confirmDelete.btnCancel.addEventListener('click', closeConfirmDeleteModal);
         DOM.confirmDelete.btnConfirm.addEventListener('click', () => {
             State.productDB = []; State.warehouses = []; State.cart = []; State.currentFilterWarehouse = 'All'; State.filteredProducts = []; State.promos = []; LocalDB.save();
-            renderSetupWarehouseList(); PromoLogic.renderPreview(); DOM.setup.mapping.classList.add('hidden', 'opacity-0'); DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)"; DOM.setup.fileIn.value = '';
-            updateLandingUI(); CartLogic.render(); closeConfirmDeleteModal(); Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
+            renderSetupWarehouseList(); DOM.setup.mapping.classList.add('hidden', 'opacity-0'); DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)"; DOM.setup.fileIn.value = '';
+            CartLogic.render(); PromoLogic.renderQuickButtons(); closeConfirmDeleteModal(); Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
         });
 
         DOM.setup.fileIn.addEventListener('change', (e) => {
@@ -1233,35 +1235,14 @@
                     const workbook = XLSX.read(evt.target.result, { type: 'binary' }); State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
                     if (!State.rawExcelData || State.rawExcelData.length === 0) return Utils.showToast("File Excel trống hoặc không hợp lệ!");
                     
-                    // --- SMART HEADER DETECTION ---
-                    let bestHIndex = 0;
-                    let maxScore = 0;
-                    const keywords = ['mã', 'code', 'tên', 'name', 'sản phẩm', 'giá', 'price', 'bìa', 'đơn giá', 'đvt', 'đơn vị', 'unit', 'stt'];
-
+                    let bestHIndex = 0; let maxScore = 0; const keywords = ['mã', 'code', 'tên', 'name', 'sản phẩm', 'giá', 'price', 'bìa', 'đơn giá', 'đvt', 'đơn vị', 'unit', 'stt'];
                     for (let i = 0; i < Math.min(25, State.rawExcelData.length); i++) {
-                        const row = State.rawExcelData[i];
-                        if (!row || row.length === 0) continue;
-                        let score = 0;
-                        row.forEach(cell => {
-                            if (cell && typeof cell === 'string') {
-                                const lower = cell.toLowerCase();
-                                if (keywords.some(kw => lower.includes(kw))) score++;
-                            }
-                        });
+                        const row = State.rawExcelData[i]; if (!row || row.length === 0) continue;
+                        let score = 0; row.forEach(cell => { if (cell && typeof cell === 'string') { const lower = cell.toLowerCase(); if (keywords.some(kw => lower.includes(kw))) score++; } });
                         if (score > maxScore) { maxScore = score; bestHIndex = i; }
                     }
-
-                    // Fallback if scoring fails
-                    if (maxScore < 2) {
-                        for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) {
-                            if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 3){ bestHIndex = i; break; }
-                        }
-                    }
-
-                    State.currentHeaderIndex = bestHIndex;
-                    const headers = [];
-                    (State.rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
-                    // -----------------------------
+                    if (maxScore < 2) { for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) { if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 3){ bestHIndex = i; break; } } }
+                    State.currentHeaderIndex = bestHIndex; const headers = []; (State.rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
                     
                     const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
                     [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
@@ -1285,35 +1266,22 @@
             const nameCol = DOM.setup.mapName.value; const priceCol = DOM.setup.mapPrice.value; const wName = DOM.setup.warehouseNameInput.value.trim();
             if(!wName) { Utils.showToast("Vui lòng đặt Tên Kho / Tên Hãng!"); DOM.setup.warehouseNameInput.focus(); return; }
             if(!nameCol || !priceCol) return Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!");
-            
-            let hIndex = State.currentHeaderIndex !== undefined ? State.currentHeaderIndex : 0;
-            const headers = State.rawExcelData[hIndex];
-            
+            let hIndex = State.currentHeaderIndex !== undefined ? State.currentHeaderIndex : 0; const headers = State.rawExcelData[hIndex];
             const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
             
             let newItemsCount = 0;
             for (let i = hIndex + 1; i < State.rawExcelData.length; i++) {
-                const row = State.rawExcelData[i]; 
-                if (!row || row.length === 0) continue;
-
-                // Stop condition for footers (like exported quote)
-                const rowStr = row.join(' ').toLowerCase();
-                if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
-
+                const row = State.rawExcelData[i]; if (!row || row.length === 0) continue;
+                const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
                 if (!row[nI]) continue;
-
-                const code = cI > -1 ? (row[cI] || "") : ""; 
-                const name = row[nI] ? row[nI].toString().trim() : ""; 
-                const rawPrice = pI > -1 ? row[pI] : 0;
-                
+                const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
                 State.productDB.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: uI > -1 ? row[uI] : "Cái", price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`) });
                 newItemsCount++;
             }
-            if(!State.warehouses.includes(wName)) State.warehouses.push(wName);
-            LocalDB.save();
+            if(!State.warehouses.includes(wName)) State.warehouses.push(wName); LocalDB.save();
             DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
             DOM.setup.fileName.textContent = "Chạm để chọn file Excel (.xlsx)"; DOM.setup.fileIn.value = '';
-            renderSetupWarehouseList(); updateLandingUI(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+            renderSetupWarehouseList(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
         });
 
         if (DOM.setup.btnStartFromSetup) DOM.setup.btnStartFromSetup.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
@@ -1333,6 +1301,14 @@
         }
 
         DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; State.currentFilterWarehouse = btn.dataset.w; renderWarehouseFilters(); applyFiltersAndSearch(); });
+        
+        DOM.search.btnSortInc.addEventListener('click', () => { State.currentSort = State.currentSort === 'inc' ? 'none' : 'inc'; updateSortUI(); applyFiltersAndSearch(); });
+        DOM.search.btnSortDec.addEventListener('click', () => { State.currentSort = State.currentSort === 'dec' ? 'none' : 'dec'; updateSortUI(); applyFiltersAndSearch(); });
+        
+        const updateSortUI = () => {
+            DOM.search.btnSortInc.className = `px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors flex items-center gap-1 ${State.currentSort === 'inc' ? 'bg-red-50 text-red-700 border-red-200 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-100'}`;
+            DOM.search.btnSortDec.className = `px-3 py-1.5 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors flex items-center gap-1 ${State.currentSort === 'dec' ? 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-100'}`;
+        };
 
         const applyFiltersAndSearch = () => {
             if (!DOM.search.modal.classList.contains('active')) return;
@@ -1340,17 +1316,31 @@
             let filtered = State.productDB;
             if (State.currentFilterWarehouse !== 'All') filtered = filtered.filter(p => p.warehouse === State.currentFilterWarehouse);
             if (terms.length > 0) filtered = filtered.filter(p => { return terms.every(term => p.searchStr.includes(term)); });
+            
+            if (State.currentSort === 'inc') {
+                filtered.sort((a,b) => {
+                    const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0, type:'tăng'}).type === 'tăng' ? (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value : -999;
+                    const bVal = (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0, type:'tăng'}).type === 'tăng' ? (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value : -999;
+                    return bVal - aVal;
+                });
+            } else if (State.currentSort === 'dec') {
+                filtered.sort((a,b) => {
+                    const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0, type:'giảm'}).type === 'giảm' ? Math.abs((Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value) : -999;
+                    const bVal = (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0, type:'giảm'}).type === 'giảm' ? Math.abs((Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value) : -999;
+                    return bVal - aVal;
+                });
+            }
+
             State.filteredProducts = filtered; State.displayCount = ITEMS_PER_PAGE; renderSearchList();
         };
 
-        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; State.currentFilterWarehouse = 'All'; renderWarehouseFilters(); applyFiltersAndSearch(); };
+        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; State.currentFilterWarehouse = 'All'; State.currentSort = 'none'; updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
         const closeSearch = () => DOM.search.modal.classList.remove('active');
         DOM.search.btnOpen.addEventListener('click', openSearch); DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
         DOM.search.input.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
 
         DOM.search.list.addEventListener('click', (e) => {
-            const btnLoadMore = e.target.closest('#btnLoadMore');
-            if (btnLoadMore) { State.displayCount += ITEMS_PER_PAGE; renderSearchList(); return; }
+            const btnLoadMore = e.target.closest('#btnLoadMore'); if (btnLoadMore) { State.displayCount += ITEMS_PER_PAGE; renderSearchList(); return; }
             const btn = e.target.closest('.btn-toggle-search'); if (!btn) return;
             const productId = btn.dataset.pid; const p = State.productDB.find(x => x.id === productId); if(!p) return;
 
@@ -1359,9 +1349,8 @@
                 State.cart = State.cart.filter(q => q.productId !== p.id); 
                 btn.className = "btn-toggle-search print-bg-brand text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm"; btn.textContent = "THÊM";
             } else {
-                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: Utils.cleanNumber(DOM.main.globalDisc.value), km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
-                PromoLogic.checkAndApplyToItem(newItem);
-                State.cart.push(newItem);
+                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                PromoLogic.checkAndApplyToItem(newItem); State.cart.push(newItem);
                 btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100"; btn.textContent = "XÓA";
             }
             DOM.search.badge.textContent = State.cart.length; CartLogic.render(); LocalDB.save(); 
@@ -1374,13 +1363,9 @@
                 let btnClass = isAdded ? "text-red-500 bg-red-50 border-red-100" : "print-bg-brand text-white shadow-sm"; let btnText = isAdded ? "XÓA" : "THÊM";
                 let incInfo = Utils.getIncreaseDecreaseInfo(p.unit); let unitBadge = '';
                 if (incInfo && incInfo.value !== 0) {
-                    if(incInfo.type === 'tăng') {
-                        unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
-                    } else if (incInfo.type === 'giảm') {
-                        unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
-                    } else {
-                        unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
-                    }
+                    if(incInfo.type === 'tăng') unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
+                    else if (incInfo.type === 'giảm') unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
+                    else unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
                 } else if (p.unit && p.unit.toLowerCase().trim() !== 'cái' && p.unit.toLowerCase().trim() !== '') {
                     unitBadge = `<span class="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-1 rounded-md whitespace-nowrap">${p.unit}</span>`;
                 }
@@ -1401,23 +1386,14 @@
                 </article>`;
             }).join('');
             
-            let loadMoreHtml = '';
-            if (State.displayCount < State.filteredProducts.length) {
-                loadMoreHtml = `
-                    <div class="w-full max-w-5xl mx-auto p-4 flex justify-center bg-slate-50/50 pb-8">
-                        <button id="btnLoadMore" class="px-6 py-2.5 bg-blue-100 text-blue-700 font-black rounded-full text-xs uppercase tracking-widest hover:bg-blue-200 active:scale-95 transition-all shadow-sm flex items-center gap-2">
-                            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                            Hiển thị thêm (${State.displayCount} / ${State.filteredProducts.length})
-                        </button>
-                    </div>`;
-            }
-            DOM.search.list.innerHTML = html + loadMoreHtml;
+            if (State.displayCount < State.filteredProducts.length) { html += `<div class="w-full max-w-5xl mx-auto p-4 flex justify-center bg-slate-50/50 pb-8"><button id="btnLoadMore" class="px-6 py-2.5 bg-blue-100 text-blue-700 font-black rounded-full text-xs uppercase tracking-widest hover:bg-blue-200 active:scale-95 transition-all shadow-sm flex items-center gap-2"><svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>Hiển thị thêm (${State.displayCount} / ${State.filteredProducts.length})</button></div>`; }
+            DOM.search.list.innerHTML = html;
         }
 
         const CartLogic = {
             recalculateItem: (item) => {
                 const qty = Number(item.qty) || 0; const origPrice = Number(item.originalPrice) || 0;
-                const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : (Number(item.extraPromo) || 0); const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
+                const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : 0; const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
                 const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
                 let lineTotal = priceAfterKm2 * qty;
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
@@ -1442,66 +1418,33 @@
             
             updateSummary: () => {
                 let sO = 0, sF = 0; State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; });
-                
-                let bestOrderPromo = null;
-                let nextOrderPromo = null; 
-                let currentOrderDiscount = 0;
-                let orderGiftStr = "";
-                let actualMultiplier = 1;
-
+                let bestOrderPromo = null; let nextOrderPromo = null; let currentOrderDiscount = 0; let orderGiftStr = ""; let actualMultiplier = 1;
                 const orderPromos = State.promos.filter(p => p.isOrderPromo).sort((a, b) => b.minAmount - a.minAmount);
+                
                 for (let i = 0; i < orderPromos.length; i++) {
                     let op = orderPromos[i];
                     if (sF >= op.minAmount) {
-                        bestOrderPromo = op;
-                        nextOrderPromo = i > 0 ? orderPromos[i - 1] : null; 
-                        actualMultiplier = op.isMultiply ? Math.floor(sF / op.minAmount) : 1;
-
-                        if (op.rewardType === 'discount') { 
-                            currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; 
-                        } else { 
+                        bestOrderPromo = op; nextOrderPromo = i > 0 ? orderPromos[i - 1] : null; actualMultiplier = op.isMultiply ? Math.floor(sF / op.minAmount) : 1;
+                        if (op.rewardType === 'discount') { currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; } 
+                        else { 
                             if (op.isMultiply && actualMultiplier > 1) {
                                 let match = op.rewardValue.match(/^(\d+)\s*(.*)/);
-                                if (match) {
-                                    let num = parseInt(match[1]) * actualMultiplier;
-                                    orderGiftStr = `${num} ${match[2]}`;
-                                } else {
-                                    orderGiftStr = `[x${actualMultiplier}] ${op.rewardValue}`;
-                                }
-                            } else {
-                                orderGiftStr = op.rewardValue; 
-                            }
+                                if (match) orderGiftStr = `${parseInt(match[1]) * actualMultiplier} ${match[2]}`; else orderGiftStr = `[x${actualMultiplier}] ${op.rewardValue}`;
+                            } else { orderGiftStr = op.rewardValue; }
                         }
                         break;
                     }
                 }
+                if (!bestOrderPromo && orderPromos.length > 0) nextOrderPromo = orderPromos[orderPromos.length - 1]; 
+                let finalPayable = sF - currentOrderDiscount; if (finalPayable < 0) finalPayable = 0;
 
-                if (!bestOrderPromo && orderPromos.length > 0) {
-                    nextOrderPromo = orderPromos[orderPromos.length - 1]; 
-                }
-
-                let finalPayable = sF - currentOrderDiscount;
-                if (finalPayable < 0) finalPayable = 0;
-
-                DOM.footer.sumOrig.textContent = Utils.formatMoney(sO); 
-                DOM.footer.sumDisc.textContent = Utils.formatMoney(sO - finalPayable); 
-                DOM.footer.sumFinal.textContent = Utils.formatMoney(finalPayable);
+                DOM.footer.sumOrig.textContent = Utils.formatMoney(sO); DOM.footer.sumDisc.textContent = Utils.formatMoney(sO - finalPayable); DOM.footer.sumFinal.textContent = Utils.formatMoney(finalPayable);
                 
-                State.currentOrderPromoEffect = bestOrderPromo ? {
-                    name: bestOrderPromo.name,
-                    msg: currentOrderDiscount > 0 ? `Giảm thêm ${Utils.formatMoney(currentOrderDiscount)}` : `Tặng: ${orderGiftStr}`,
-                    discount: currentOrderDiscount
-                } : null;
+                State.currentOrderPromoEffect = bestOrderPromo ? { name: bestOrderPromo.name, msg: currentOrderDiscount > 0 ? `Giảm thêm ${Utils.formatMoney(currentOrderDiscount)}` : `Tặng: ${orderGiftStr}`, discount: currentOrderDiscount } : null;
 
                 let upsellMsg = "";
-                if (bestOrderPromo && bestOrderPromo.isMultiply) {
-                    let remainder = sF % bestOrderPromo.minAmount;
-                    let amountNeeded = bestOrderPromo.minAmount - remainder;
-                    upsellMsg = `💡 Mua thêm ${Utils.formatMoney(amountNeeded)} nữa để x${actualMultiplier + 1} lần phần quà!`;
-                } else if (nextOrderPromo) {
-                    let amountNeeded = nextOrderPromo.minAmount - sF;
-                    upsellMsg = `💡 Mua thêm ${Utils.formatMoney(amountNeeded)} nữa để đạt mốc: ${nextOrderPromo.name}`;
-                }
+                if (bestOrderPromo && bestOrderPromo.isMultiply) { upsellMsg = `💡 Mua thêm ${Utils.formatMoney(bestOrderPromo.minAmount - (sF % bestOrderPromo.minAmount))} nữa để x${actualMultiplier + 1} lần phần quà!`; } 
+                else if (nextOrderPromo) { upsellMsg = `💡 Mua thêm ${Utils.formatMoney(nextOrderPromo.minAmount - sF)} nữa để đạt mốc: ${nextOrderPromo.name}`; }
 
                 if (bestOrderPromo) {
                     DOM.footer.orderAlert.classList.remove('hidden');
@@ -1509,9 +1452,7 @@
                 } else if (upsellMsg) {
                     DOM.footer.orderAlert.classList.remove('hidden');
                     DOM.footer.orderAlert.innerHTML = `<span class="font-bold text-emerald-800">Chưa đạt mốc KM</span><br><span class="text-[10px] text-emerald-700 mt-0.5 block font-bold">${upsellMsg}</span>`;
-                } else {
-                    DOM.footer.orderAlert.classList.add('hidden');
-                }
+                } else { DOM.footer.orderAlert.classList.add('hidden'); }
             },
             render: () => {
                 if (State.cart.length === 0) { 
@@ -1524,123 +1465,67 @@
                     CartLogic.recalculateItem(item);
                     let incInfo = Utils.getIncreaseDecreaseInfo(item.unit); let unitBadge = '';
                     if (incInfo && incInfo.value !== 0) {
-                        if(incInfo.type === 'tăng') {
-                            unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
-                        } else if (incInfo.type === 'giảm') {
-                            unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
-                        } else {
-                            unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
-                        }
+                        if(incInfo.type === 'tăng') unitBadge = `<span class="text-[10px] font-bold text-red-600 bg-red-50 border border-red-100/50 px-2 py-1 rounded-md whitespace-nowrap">Tăng ${incInfo.text}</span>`;
+                        else if (incInfo.type === 'giảm') unitBadge = `<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100/50 px-2 py-1 rounded-md whitespace-nowrap">Giảm ${incInfo.text}</span>`;
+                        else unitBadge = `<span class="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100/50 px-2 py-1 rounded-md whitespace-nowrap">${incInfo.text}</span>`;
                     } else if (item.unit && item.unit.toLowerCase().trim() !== 'cái' && item.unit.toLowerCase().trim() !== '') {
                         unitBadge = `<span class="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200/60 px-2 py-1 rounded-md whitespace-nowrap">${item.unit}</span>`;
                     }
-
-                    // Tối ưu UI cho thẻ sản phẩm (SaaS Card Style)
                     let borderClass = item.appliedPromoId ? 'ring-2 ring-purple-400/50 border-purple-300' : 'border-slate-200';
 
                     return `
                     <article class="bg-white rounded-2xl p-4 shadow-sm border relative transition-shadow hover:shadow-md ${borderClass}" data-id="${item.id}">
                         ${item.appliedPromoId ? `<div class="absolute -top-2.5 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> AUTO KM</div>` : ''}
-                        
                         <div class="flex justify-between items-start gap-3 mb-3">
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="bg-slate-800 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-md shrink-0">${index+1}</span>
                                     ${item.code ? `<span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${item.code}</span>` : ''}
                                 </div>
-                                <h4 class="text-sm md:text-[15px] font-bold text-slate-900 leading-tight">
-                                    ${item.name}
-                                </h4>
+                                <h4 class="text-sm md:text-[15px] font-bold text-slate-900 leading-tight">${item.name}</h4>
                             </div>
-                            <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0">
-                                <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg>
-                            </button>
+                            <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
                         </div>
-
                         <div class="flex flex-wrap gap-2 items-center mb-4">
                             <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">Bìa: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
-                            ${unitBadge}
-                            ${item.warehouse ? `<span class="text-[9px] bg-indigo-50/80 text-indigo-600 font-bold px-2 py-1 rounded-md uppercase tracking-widest border border-indigo-100/50">${item.warehouse}</span>` : ''}
-                            
+                            ${unitBadge} ${item.warehouse ? `<span class="text-[9px] bg-indigo-50/80 text-indigo-600 font-bold px-2 py-1 rounded-md uppercase tracking-widest border border-indigo-100/50">${item.warehouse}</span>` : ''}
                             <div class="flex-1 min-w-[150px] relative">
                                 <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 <input type="text" data-field="note" value="${item.note || ''}" placeholder="Thêm ghi chú riêng..." class="cart-input-text w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-400 rounded-lg pl-8 pr-3 py-1.5 text-[11px] font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400">
                             </div>
                         </div>
 
-                        <!-- Tối ưu Control Inputs Bar - ĐÃ LÀM NỔI BẬT THEO YÊU CẦU -->
                         <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
                             <div class="grid grid-cols-5 gap-2">
-                                <!-- Khối SL -->
+                                <div class="flex flex-col"><label class="text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
                                 <div class="flex flex-col">
-                                    <label class="text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm">SL</label>
-                                    <input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none">
-                                </div>
-                                <!-- Khối CK% -->
-                                <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5">
-                                        <label class="text-[11px] font-black text-amber-800 bg-amber-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">CK%</label>
-                                        <button data-action="sync" data-field="baseDiscount" class="text-amber-600 hover:text-amber-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-amber-100">
-                                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                                        </button>
-                                    </div>
+                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-amber-800 bg-amber-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-amber-600 hover:text-amber-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-amber-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
                                     <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-amber-200 rounded-lg py-1.5 text-center text-[14px] font-black text-amber-700 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all px-0">
                                 </div>
-                                <!-- Khối KM1 -->
                                 <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5">
-                                        <label class="text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM1</label>
-                                        <button data-action="sync" data-field="km1" class="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-blue-100">
-                                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                                        </button>
-                                    </div>
-                                    <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : (item.extraPromo || 0)}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0">
+                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM1</label><button data-action="sync" data-field="km1" class="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-blue-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                    <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0">
                                 </div>
-                                <!-- Khối KM2 -->
                                 <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5">
-                                        <label class="text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM2</label>
-                                        <button data-action="sync" data-field="km2" class="text-emerald-600 hover:text-emerald-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-emerald-100">
-                                            <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
-                                        </button>
-                                    </div>
+                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM2</label><button data-action="sync" data-field="km2" class="text-emerald-600 hover:text-emerald-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-emerald-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
                                     <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all px-0">
                                 </div>
-                                <!-- Khối Trừ Tiền -->
                                 <div class="flex flex-col">
-                                    <div class="flex items-center justify-center mb-1.5">
-                                        <button data-action="toggleKmType" class="text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border-2 ${item.kmTienType === 'total' ? 'border-red-300 bg-red-100 text-red-800 hover:bg-red-200' : 'border-purple-300 bg-purple-100 text-purple-800 hover:bg-purple-200'}">
-                                            ${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ/SP'}
-                                        </button>
-                                    </div>
+                                    <div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border-2 ${item.kmTienType === 'total' ? 'border-red-300 bg-red-100 text-red-800 hover:bg-red-200' : 'border-purple-300 bg-purple-100 text-purple-800 hover:bg-purple-200'}">${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ/SP'}</button></div>
                                     <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 ${item.kmTienType === 'total' ? 'border-red-300 text-red-700 focus:border-red-500 focus:ring-red-200' : 'border-purple-300 text-purple-700 focus:border-purple-500 focus:ring-purple-200'} rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:ring-2 transition-all px-0">
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Footer Summary trong mỗi Card -->
                         <div class="flex justify-between items-end px-1 mt-1">
-                            <div class="flex flex-col">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Ck</span>
-                                <span class="price-display text-blue-600 text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span>
-                            </div>
-                            <div class="flex flex-col items-end">
-                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span>
-                                <span class="linetotal-display text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span>
-                            </div>
+                            <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Ck</span><span class="price-display text-blue-600 text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
+                            <div class="flex flex-col items-end"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span><span class="linetotal-display text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span></div>
                         </div>
-
                     </article>`;
                 }).join('');
                 
-                DOM.main.quoteList.innerHTML = html;
-                CartLogic.updateSummary();
+                DOM.main.quoteList.innerHTML = html; CartLogic.updateSummary();
             }
         };
-
-        DOM.main.btnApplyGlobal.addEventListener('click', () => { 
-            const val = Utils.cleanNumber(DOM.main.globalDisc.value); State.cart.forEach(i => i.baseDiscount = val); CartLogic.render(); Utils.showToast("Đã áp dụng CK chung!"); LocalDB.save();
-        });
 
         DOM.main.quoteList.addEventListener('click', (e) => {
             const btn = e.target.closest('button'); if(!btn) return;
@@ -1652,11 +1537,10 @@
                 const field = btn.dataset.field; const sourceItem = State.cart.find(i => i.id === id);
                 if(sourceItem) {
                     const val = sourceItem[field]; State.cart.forEach(item => { item[field] = val; });
-                    CartLogic.render(); let fName = field === 'baseDiscount' ? 'Chiết khấu' : 'Khuyến mãi'; Utils.showToast(`Đã đồng bộ ${fName} (${val}%)!`); LocalDB.save();
+                    CartLogic.render(); Utils.showToast(`Đã đồng bộ giá trị (${val})!`); LocalDB.save();
                 }
             } else if (action === 'toggleKmType') {
-                const item = State.cart.find(i => i.id === id);
-                if(item) { item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; CartLogic.render(); LocalDB.save(); }
+                const item = State.cart.find(i => i.id === id); if(item) { item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; CartLogic.render(); LocalDB.save(); }
             }
         });
 
@@ -1672,12 +1556,10 @@
             item[field] = val; 
 
             if (field === 'qty') {
-                PromoLogic.checkAndApplyToItem(item);
-                if(item.appliedPromoId) CartLogic.render(); 
+                PromoLogic.checkAndApplyToItem(item); if(item.appliedPromoId) CartLogic.render(); 
             } else {
                 if ((field === 'km1' || field === 'km2' || field === 'kmTien') && item.appliedPromoId) {
-                    item.appliedPromoId = null;
-                    card.classList.remove('ring-2', 'ring-purple-400/50', 'border-purple-300'); card.classList.add('border-slate-200');
+                    item.appliedPromoId = null; card.classList.remove('ring-2', 'ring-purple-400/50', 'border-purple-300'); card.classList.add('border-slate-200');
                 }
             }
 
@@ -1690,42 +1572,8 @@
             CartLogic.updateSummary(); LocalDB.save();
         });
 
-        // XỬ LÝ TRẢI NGHIỆM GÕ PHÍM (UX) CHO MOBILE
-        DOM.main.quoteList.addEventListener('focusin', (e) => { 
-            if(e.target.classList.contains('cart-input')) {
-                const field = e.target.dataset.field;
-                // Nếu giá trị đang là 0 (hoặc 1 đối với ô Số lượng), tự động xóa rỗng để người dùng nhập liền không bị vướng
-                if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) {
-                    e.target.value = '';
-                } else {
-                    e.target.select(); 
-                }
-            } 
-        });
-
-        DOM.main.quoteList.addEventListener('focusout', (e) => {
-            if(e.target.classList.contains('cart-input')) {
-                // Nếu người dùng bỏ trống và click ra ngoài, khôi phục lại giá trị mặc định để tránh lỗi tính toán
-                if (e.target.value === '') {
-                    const field = e.target.dataset.field;
-                    e.target.value = field === 'qty' ? '1' : '0';
-                    // Ép hệ thống tính toán lại
-                    e.target.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-            }
-        });
-
-        // Áp dụng UX tương tự cho ô CK Chung
-        const globalDiscInput = document.getElementById('globalDiscountInput');
-        if (globalDiscInput) {
-            globalDiscInput.addEventListener('focusin', (e) => {
-                if (e.target.value === '0') e.target.value = '';
-                else e.target.select();
-            });
-            globalDiscInput.addEventListener('focusout', (e) => {
-                if (e.target.value === '') e.target.value = '0';
-            });
-        }
+        DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) e.target.value = ''; else e.target.select(); } });
+        DOM.main.quoteList.addEventListener('focusout', (e) => { if(e.target.classList.contains('cart-input') && e.target.value === '') { const field = e.target.dataset.field; e.target.value = field === 'qty' ? '1' : '0'; e.target.dispatchEvent(new Event('input', { bubbles: true })); } });
 
         // ==========================================
         // EXPORT LOGIC & LIVE PREVIEW
@@ -1734,8 +1582,7 @@
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
                 State.cart.forEach((item, i) => {
-                    sumFinal += item.totalFinal;
-                    let increaseHtml = ''; let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                    sumFinal += item.totalFinal; let increaseHtml = ''; let incInfo = Utils.getIncreaseDecreaseInfo(item.unit);
                     if (incInfo && incInfo.value !== 0) {
                         increaseHtml = incInfo.type === 'tăng' ? `<br><span style="font-size: 20px; color: #dc2626; font-weight: 800; margin-top: 6px; display: inline-block; background: #fef2f2; padding: 2px 10px; border-radius: 8px;">(Tăng ${incInfo.text})</span>` : (incInfo.type === 'giảm' ? `<br><span style="font-size: 20px; color: #059669; font-weight: 800; margin-top: 6px; display: inline-block; background: #ecfdf5; padding: 2px 10px; border-radius: 8px;">(Giảm ${incInfo.text})</span>` : `<br><span style="font-size: 20px; color: #3b82f6; font-weight: 800; margin-top: 6px; display: inline-block; background: #eff6ff; padding: 2px 10px; border-radius: 8px;">(${incInfo.text})</span>`);
                     }
@@ -1757,22 +1604,14 @@
                 document.getElementById('pSenderDisplay').innerHTML = DOM.main.senderName.value.trim(); document.getElementById('pSignName').innerHTML = DOM.main.senderName.value.trim();
                 document.getElementById('pPhoneDisplay').innerHTML = DOM.main.senderPhone.value.trim();
                 
-                // MÓC NỐI HIỂN THỊ KHUYẾN MÃI TỔNG ĐƠN LÊN BẢN IN
-                let finalPayable = sumFinal;
-                const pOrderPromoRow = document.getElementById('pOrderPromoRow');
-                const pOrderPromoText = document.getElementById('pOrderPromoText');
-                
+                let finalPayable = sumFinal; const pOrderPromoRow = document.getElementById('pOrderPromoRow'); const pOrderPromoText = document.getElementById('pOrderPromoText');
                 if (State.currentOrderPromoEffect) {
                     pOrderPromoRow.classList.remove('hidden'); pOrderPromoRow.style.display = 'block';
                     pOrderPromoText.innerHTML = `🎉 KHUYẾN MÃI TỔNG ĐƠN: ${State.currentOrderPromoEffect.name} - ${State.currentOrderPromoEffect.msg}`;
-                    finalPayable -= State.currentOrderPromoEffect.discount;
-                    if (finalPayable < 0) finalPayable = 0;
-                } else {
-                    pOrderPromoRow.classList.add('hidden'); pOrderPromoRow.style.display = 'none';
-                }
+                    finalPayable -= State.currentOrderPromoEffect.discount; if (finalPayable < 0) finalPayable = 0;
+                } else { pOrderPromoRow.classList.add('hidden'); pOrderPromoRow.style.display = 'none'; }
 
                 document.getElementById('pTotalPrint').innerHTML = Utils.formatMoney(finalPayable);
-                
                 const note = DOM.main.promoNote.value.trim();
                 document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${State.brand.name}!`;
                 const now = new Date(); document.getElementById('pDateDisplay').innerHTML = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
@@ -1784,8 +1623,6 @@
                 if(State.cart.length === 0) return; 
                 DOM.export.modal.classList.add('active'); DOM.export.loading.classList.remove('hidden');
                 const total = ExportLogic.generatePrintView();
-                
-                // Cập nhật câu text tự động thông minh
                 let promoMsg = State.currentOrderPromoEffect ? `\n🎁 Quà tặng cho mốc đơn này: ${State.currentOrderPromoEffect.msg.replace('Tặng: ', '')}` : '';
                 DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${State.brand.docTitle.toLowerCase()}.\n👉 Tổng thanh toán: ${Utils.formatMoney(total)}${promoMsg}\n\nAnh/chị xem chi tiết file đính kèm nhé!`;
 
@@ -1799,18 +1636,30 @@
             captureCanvas: async () => {
                 DOM.export.loading.classList.remove('hidden'); DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
                 if (document.activeElement) document.activeElement.blur();
-                const invoice = document.getElementById('invoiceRenderArea'); await new Promise(r => setTimeout(r, 100)); 
+                const invoice = document.getElementById('invoiceRenderArea'); 
+                
                 try {
-                    const canvas = await html2canvas(invoice, { scale: 1.2, backgroundColor: "#ffffff", useCORS: true, logging: false, onclone: (clonedDoc) => { const el = clonedDoc.getElementById('invoiceRenderArea'); el.style.transform = 'none'; } });
+                    const canvas = await html2canvas(invoice, { 
+                        scale: 1.5, 
+                        backgroundColor: "#ffffff", 
+                        useCORS: true, 
+                        logging: false,
+                        onclone: (clonedDoc) => {
+                            const el = clonedDoc.getElementById('invoiceRenderArea');
+                            if(el) { el.style.transform = 'none'; }
+                        }
+                    });
                     DOM.export.loading.classList.add('hidden'); return canvas;
-                } catch (e) { DOM.export.loading.classList.add('hidden'); Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy giảm số lượng Sản phẩm!"); return null; }
+                } catch (e) { 
+                    DOM.export.loading.classList.add('hidden'); Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); return null; 
+                }
             },
 
             exportExcelPro: async () => {
                 Utils.showToast("Đang thu thập dữ liệu từ Bản in...");
                 try {
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
-                    const argbColor = 'FF0055A5'; // Hardcoded Theme Color for Excel
+                    const argbColor = 'FF0055A5'; 
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
@@ -1833,26 +1682,29 @@
                             const row = worksheet.getRow(currentRow); const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; 
                             row.values = [ tds[0].innerText.trim(), tds[1].innerText.trim(), tds[2].innerText.trim(), Utils.cleanNumber(tds[3].innerText), Utils.cleanNumber(rawPriceStr), Utils.cleanNumber(tds[5].innerText), Utils.cleanNumber(tds[6].innerText), tds[7].innerText.trim().replace(/\n/g, ', ') ];
                             row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
-                            row.eachCell((cell, colNumber) => { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; if (colNumber === 1 || colNumber === 4 || colNumber === 8) cell.alignment = { horizontal: 'center' }; });
+                            
+                            row.eachCell((cell, colNumber) => { 
+                                cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; 
+                                if (colNumber === 1 || colNumber === 4) cell.alignment = { horizontal: 'center', vertical: 'middle' }; 
+                                else cell.alignment = { vertical: 'middle' };
+                            });
+                            // FIX EXCEL TRÀN CHỮ: Bật wrap text cho cột Ghi chú
+                            row.getCell(8).alignment = { wrapText: true, vertical: 'top' };
                             currentRow++;
                         }
                     });
                     
                     if (State.currentOrderPromoEffect) {
-                        const promoRow = worksheet.getRow(currentRow);
-                        promoRow.mergeCells(`A${currentRow}:F${currentRow}`);
-                        promoRow.getCell(1).value = `KM Tổng Đơn: ${State.currentOrderPromoEffect.name}`; 
-                        promoRow.getCell(1).font = { italic: true, color: { argb: 'FF7E22CE' } };
-                        promoRow.getCell(1).alignment = { horizontal: 'right' };
-                        promoRow.getCell(7).value = State.currentOrderPromoEffect.msg;
-                        promoRow.getCell(7).font = { bold: true, color: { argb: 'FF7E22CE' } };
+                        const promoRow = worksheet.getRow(currentRow); promoRow.mergeCells(`A${currentRow}:F${currentRow}`);
+                        promoRow.getCell(1).value = `KM Tổng Đơn: ${State.currentOrderPromoEffect.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF7E22CE' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
+                        promoRow.getCell(7).value = State.currentOrderPromoEffect.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF7E22CE' } };
                         currentRow++;
                     }
 
                     const totalRow = worksheet.getRow(currentRow);
                     totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
                     totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').innerText.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
-                    worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 25 } ];
+                    worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 35 } ];
                     
                     const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
@@ -1863,7 +1715,7 @@
             exportPDF: async () => {
                 const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang lưu tệp PDF...");
                 try {
-                    const imgData = canvas.toDataURL("image/jpeg", 0.85); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
+                    const imgData = canvas.toDataURL("image/jpeg", 0.9); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
                     const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
                     const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
                     let heightLeft = scaledImgHeight; let position = 0;
@@ -1881,7 +1733,7 @@
                     if (DOM.export.finalImg.src && DOM.export.finalImg.src.startsWith('blob:')) URL.revokeObjectURL(DOM.export.finalImg.src);
                     const url = URL.createObjectURL(blob); DOM.export.finalImg.src = url;
                     DOM.export.imageModal.classList.remove('hidden'); DOM.export.imageModal.classList.add('flex'); Utils.showToast("Hoàn tất!");
-                }, "image/jpeg", 0.9);
+                }, "image/jpeg", 0.95);
             },
 
             printInvoiceMobile: async () => {
@@ -1897,7 +1749,6 @@
         DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport); DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active'));
         DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro); DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF);
         DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage); DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
-        
         DOM.export.btnCopyMsg.addEventListener('click', () => { DOM.export.msgBox.select(); document.execCommand('copy'); window.getSelection().removeAllRanges(); Utils.showToast("Đã sao chép!"); });
         DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
 
@@ -1909,31 +1760,6 @@
         });
 
         initApp();
-
-        // ==========================================
-        // LOGIC HIỂN THỊ STORY
-        // ==========================================
-        const storyModal = document.getElementById('storyModal'); const landingMainLogo = document.getElementById('landingMainLogo'); const btnCloseStory = document.getElementById('btnCloseStory');
-        const secretImageTrigger = document.getElementById('secretImageTrigger'); const secretModal = document.getElementById('secretModal'); const btnCloseSecret = document.getElementById('btnCloseSecret');
-
-        if (landingMainLogo && storyModal && btnCloseStory) {
-            landingMainLogo.addEventListener('click', () => {
-                storyModal.classList.remove('hidden'); storyModal.classList.add('flex');
-                const spinners = storyModal.querySelectorAll('.animate-spin, .animate-pulse'); spinners.forEach(el => { el.style.animation = 'none'; void el.offsetHeight; el.style.animation = ''; });
-                setTimeout(() => { storyModal.classList.remove('opacity-0'); storyModal.firstElementChild.classList.remove('scale-95'); storyModal.firstElementChild.classList.add('scale-100'); }, 10);
-            });
-
-            const closeStoryFunc = () => { storyModal.classList.add('opacity-0'); storyModal.firstElementChild.classList.remove('scale-100'); storyModal.firstElementChild.classList.add('scale-95'); setTimeout(() => { storyModal.classList.add('hidden'); storyModal.classList.remove('flex'); }, 500); };
-            btnCloseStory.addEventListener('click', closeStoryFunc); storyModal.addEventListener('click', (e) => { if (e.target === storyModal) closeStoryFunc(); });
-
-            if (secretImageTrigger && secretModal && btnCloseSecret) {
-                secretImageTrigger.addEventListener('click', () => {
-                    closeStoryFunc(); setTimeout(() => { secretModal.classList.remove('hidden'); secretModal.classList.add('flex'); setTimeout(() => { secretModal.classList.remove('opacity-0'); secretModal.firstElementChild.classList.remove('scale-95'); secretModal.firstElementChild.classList.add('scale-100'); }, 10); }, 400);
-                });
-                const closeSecretFunc = () => { secretModal.classList.add('opacity-0'); secretModal.firstElementChild.classList.remove('scale-100'); secretModal.firstElementChild.classList.add('scale-95'); setTimeout(() => { secretModal.classList.add('hidden'); secretModal.classList.remove('flex'); }, 500); };
-                btnCloseSecret.addEventListener('click', closeSecretFunc); secretModal.addEventListener('click', (e) => { if (e.target === secretModal) closeSecretFunc(); });
-            }
-        }
     </script>
 </body>
 </html>
