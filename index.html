@@ -77,7 +77,6 @@
             --brand-color: #0055A5;
         }
 
-        /* ANTI-COPY CSS */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: #020617; 
@@ -85,11 +84,9 @@
             overscroll-behavior: none; 
             color: #0f172a;
             margin: 0; padding: 0;
-            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+            /* Đã xóa các mã chặn copy (user-select) ở đây để tăng UX */
         }
-        input, textarea, [contenteditable="true"] {
-            -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
-        }
+        
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
@@ -172,7 +169,7 @@
             z-index: 0;
         }
 
-        /* ANIMATIONS TỐI ƯU */
+        /* ANIMATIONS QUỸ ĐẠO CŨ */
         @keyframes orbitOrbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes orbitCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
@@ -183,6 +180,27 @@
         }
         @media (min-width: 768px) { .orbit-track { inset: -75px; } }
         .orbit-track::before { content: ''; position: absolute; inset: -20px; border: 40px solid transparent; border-radius: 50%; pointer-events: auto; z-index: -1; }
+
+        /* VỆ TINH MỚI (CHỨA TRUYỆN SEO) - XOAY NGƯỢC CHIỀU VÀ QUỸ ĐẠO RỘNG HƠN */
+        @keyframes orbitOrbitReverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes orbitCounterReverse { 0% { transform: rotate(-360deg); } 100% { transform: rotate(0deg); } }
+
+        .orbit-track-outer {
+            position: absolute; inset: -110px; border-radius: 50%; border: 1.5px dashed rgba(168, 85, 247, 0.25);
+            animation: orbitOrbitReverse 50s linear infinite; pointer-events: none; z-index: 15;
+            will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+        }
+        @media (min-width: 768px) { .orbit-track-outer { inset: -140px; } }
+        .orbit-track-outer::before { content: ''; position: absolute; inset: -20px; border: 40px solid transparent; border-radius: 50%; pointer-events: auto; z-index: -1; }
+
+        .sat-wrapper-outer {
+            position: absolute; width: 60px; height: 60px; margin-top: -30px; margin-left: -30px;
+            animation: orbitCounterReverse 50s linear infinite; pointer-events: none; z-index: 30;
+            will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+            /* Đặt vị trí chéo góc */
+            top: 14%; left: 85%;
+        }
+        .orbit-track-outer:hover, .orbit-track-outer:hover .sat-wrapper-outer { animation-play-state: paused !important; border-color: rgba(168, 85, 247, 0.5); }
 
         .sat-wrapper {
             position: absolute; width: 60px; height: 60px; margin-top: -30px; margin-left: -30px;
@@ -243,6 +261,38 @@
         <span id="toastMsg">Thông báo</span>
     </div>
 
+    <!-- BÀI VIẾT KỂ CHUYỆN SEO MODAL (Được gọi từ vệ tinh mới) -->
+    <div id="seoStoryModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-lg shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300 flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-100 pb-3 shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-fuchsia-100 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-fuchsia-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <h3 class="text-sm font-black text-slate-900 uppercase tracking-wide">Câu Chuyện Thành Công</h3>
+                </div>
+                <button id="btnCloseStory" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar text-sm text-slate-600 leading-relaxed space-y-4">
+                <h4 class="text-lg font-black text-slate-800 leading-snug">Hành trình số hóa của cửa hàng vật tư xây dựng Tuấn Phát</h4>
+                
+                <p>Năm cũ khép lại với những đêm thức trắng cặm cụi sửa file excel của anh Tuấn - chủ một cửa hàng vật tư lớn. Mỗi lần khách yêu cầu, anh lại phải lật tung đống sổ sách để dò giá bìa, tính toán từng mức <strong>chiết khấu</strong> phức tạp cho từng đại lý. Cơn ác mộng thực sự đến vào cuối tháng khi cần lập <strong>hóa đơn VAT</strong> và đối soát số liệu.</p>
+                
+                <p>Nhưng mọi thứ đã thay đổi hoàn toàn nhờ sự xuất hiện của <strong class="text-blue-600">Thuận Store</strong>. Đây không chỉ là một <strong>phần mềm quản lý kho</strong> đơn thuần, mà còn là một <strong>hệ thống báo giá</strong> toàn diện giúp anh giải quyết triệt để bài toán kinh doanh. Chỉ với vài cú click trên màn hình, anh có thể tạo ra những bản báo giá chuyên nghiệp, tự động áp dụng các công thức tính toán lũy tiến phức tạp nhất mà không sợ sai sót.</p>
+                
+                <p>Điều tuyệt vời nhất là khả năng <strong>xuất file excel báo giá</strong> hoặc lưu PDF nét căng trực tiếp từ điện thoại để gửi qua Zalo cho đối tác. Toàn bộ dữ liệu bán hàng được hệ thống lưu trữ minh bạch, trở thành <strong>hướng dẫn báo cáo bán hàng</strong> nội bộ cực kỳ chuẩn xác cho nhân viên kiểm kê cuối tuần. Hơn thế nữa, số liệu xuất ra rất chuẩn chỉ, hỗ trợ bộ phận kế toán làm cơ sở <strong>tính thuế</strong> cực kỳ nhanh chóng.</p>
+                
+                <p>Với xu hướng <strong>quản lý bán hàng 2026</strong> đã bước lên một tầm cao mới - đề cao sự tinh gọn và tự động hóa, anh Tuấn giờ đây có thể thảnh thơi vừa nhâm nhi ly cà phê sáng, vừa chốt đơn và gửi báo giá cho khách chỉ trong chưa đầy 30 giây.</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <button id="btnReadMoreClose" class="w-full py-3 rounded-xl text-xs font-black text-white bg-slate-900 hover:bg-slate-800 active:scale-95 transition-all shadow-md uppercase tracking-widest">Đã Hiểu & Bắt Đầu Trải Nghiệm</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL XÁC NHẬN XÓA KHO -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300">
@@ -289,7 +339,18 @@
         
         <div class="z-10 relative flex flex-col items-center justify-center w-full px-6">
             <div class="relative w-56 h-56 md:w-72 md:h-72 flex items-center justify-center">
-                <!-- VỆ TINH XOAY QUANH -->
+                
+                <!-- VỆ TINH XOAY QUANH QUỸ ĐẠO BÊN NGOÀI (CHỨA NỘI DUNG SEO) -->
+                <div class="orbit-track-outer cursor-pointer" title="Khám phá câu chuyện">
+                    <div class="sat-wrapper-outer group">
+                        <div id="satSeoStory" class="orbit-node text-fuchsia-400">
+                            <svg class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <span class="sat-tooltip tooltip-right" style="right: auto; left: 70px;">Câu Chuyện</span>
+                    </div>
+                </div>
+
+                <!-- VỆ TINH XOAY QUANH QUỸ ĐẠO TRONG -->
                 <div class="orbit-track cursor-pointer" title="Chạm để tương tác">
                     <div class="sat-wrapper sat-1-pos group">
                         <div id="satSetup" class="orbit-node text-blue-400">
@@ -988,19 +1049,10 @@
         </div>
     </div>
 
-    <!-- CORE JAVASCRIPT LOGIC (GIỮ NGUYÊN HOÀN TOÀN TỪ USER MANG XUỐNG) -->
+    <!-- CORE JAVASCRIPT LOGIC -->
     <script>
-        // ANTI-COPY SCRIPTS
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) {
-            if(e.keyCode == 123) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) return false;
-        };
-
+        // JS chặn copy đã được xóa bỏ để tăng UX theo yêu cầu.
+        
         const Utils = {
             formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0).replace(/\s+/g, '\u00A0'),
             cleanNumber: (v) => { 
@@ -1203,10 +1255,39 @@
             setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
         };
 
+        // BIND EVENTS CHO VỆ TINH
         document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
         document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
         document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
         document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        
+        // SỰ KIỆN CHO VỆ TINH CÂU CHUYỆN SEO MỚI
+        const btnOpenStory = document.getElementById('satSeoStory');
+        const modalStory = document.getElementById('seoStoryModal');
+        const btnCloseStory = document.getElementById('btnCloseStory');
+        const btnReadMoreClose = document.getElementById('btnReadMoreClose');
+
+        btnOpenStory.addEventListener('click', () => {
+            modalStory.classList.remove('hidden');
+            modalStory.classList.add('flex');
+            setTimeout(() => { 
+                modalStory.classList.remove('opacity-0'); 
+                modalStory.firstElementChild.classList.remove('scale-95'); 
+            }, 10);
+        });
+
+        const closeStoryModal = () => {
+            modalStory.classList.add('opacity-0');
+            modalStory.firstElementChild.classList.add('scale-95');
+            setTimeout(() => { 
+                modalStory.classList.add('hidden'); 
+                modalStory.classList.remove('flex'); 
+            }, 300);
+        };
+
+        btnCloseStory.addEventListener('click', closeStoryModal);
+        btnReadMoreClose.addEventListener('click', closeStoryModal);
+
 
         DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
         
