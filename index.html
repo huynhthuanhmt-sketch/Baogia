@@ -82,28 +82,40 @@
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
         }
 
+        /* --- TỐI ƯU HIỆU NĂNG SAFARI: Đổi display sang visibility --- */
         .app-screen { 
-            display: none; 
-            opacity: 0; 
-            transition: opacity 0.4s ease; 
             position: fixed; 
             inset: 0; 
             width: 100vw;
             height: 100vh; 
             height: 100dvh; 
+            display: flex; 
+            flex-direction: column;
+            visibility: hidden; 
+            opacity: 0; 
+            pointer-events: none;
+            z-index: -1;
+            transition: opacity 0.35s ease, visibility 0.35s; 
         }
-        .app-screen.active { display: flex; opacity: 1; z-index: 10; }
+        .app-screen.active { 
+            visibility: visible; 
+            opacity: 1; 
+            pointer-events: auto; 
+            z-index: 10; 
+        }
 
         .fullscreen-modal { 
             position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
             background: var(--background); z-index: 100; 
             display: flex; flex-direction: column; 
             transform: translateY(100%); 
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease; 
+            opacity: 0; visibility: hidden;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, visibility 0.4s; 
             height: 100dvh;
+            will-change: transform, opacity;
         }
-        .fullscreen-modal.active { transform: translateY(0); opacity: 1; }
+        .fullscreen-modal.active { transform: translateY(0); opacity: 1; visibility: visible; }
+        /* ------------------------------------------------------------- */
         
         #customToast {
             position: fixed; top: 20px; left: 50%; transform: translate(-50%, -150%);
@@ -411,7 +423,7 @@
             </section>
         </main>
 
-        <footer id="bottomFooter" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-20px_40px_rgba(0,0,0,0.06)] transform translate-y-full transition-transform duration-500 z-40 rounded-t-3xl flex justify-center flex-col">
+        <footer id="bottomFooter" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 py-3 shadow-[0_-20px_40px_rgba(0,0,0,0.06)] transform translate-y-full transition-transform duration-500 z-40 rounded-t-3xl flex justify-center flex-col" style="will-change: transform;">
             <div class="w-full max-w-5xl mx-auto">
                 <div class="flex justify-between items-start mb-3">
                     <div>
@@ -942,7 +954,9 @@
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
             defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item' },
             currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0,
-            isCompactView: false
+            isCompactView: false,
+            previousScreenId: 'landing',
+            currentScreenId: 'landing'
         };
         const ITEMS_PER_PAGE = 50; 
 
@@ -996,7 +1010,14 @@
             promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
         };
 
-        const switchScreen = (screenId) => { Object.values(DOM.screens).forEach(s => s.classList.remove('active')); setTimeout(() => { DOM.screens[screenId].classList.add('active'); }, 50); };
+        const switchScreen = (screenId) => { 
+            if (State.currentScreenId !== screenId) {
+                State.previousScreenId = State.currentScreenId;
+                State.currentScreenId = screenId;
+            }
+            Object.values(DOM.screens).forEach(s => s.classList.remove('active')); 
+            DOM.screens[screenId].classList.add('active'); 
+        };
         window.addEventListener('beforeunload', () => LocalDB.save());
 
         const setupFixedBrandIdentity = () => {
@@ -1039,7 +1060,24 @@
 
         // MAIN NAVIGATION
         DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
-        DOM.setup.btnCloseSetup.addEventListener('click', () => { switchScreen('landing'); });
+        
+        // --- LOGIC NÚT BACK CHO QUẢN LÝ KHO ---
+        DOM.setup.btnCloseSetup.addEventListener('click', () => { 
+            // Nếu có giỏ hàng, ưu tiên về main để tiếp tục làm việc
+            if (State.cart && State.cart.length > 0 && State.previousScreenId !== 'main') {
+                switchScreen('main');
+            } else {
+                // Nếu không có giỏ hàng, về lại trang trước đó
+                switchScreen(State.previousScreenId || 'landing'); 
+            }
+        });
+        
+        if (DOM.setup.btnStartFromSetup) DOM.setup.btnStartFromSetup.addEventListener('click', () => { 
+            switchScreen('main'); 
+            CartLogic.render(); 
+        });
+        // --------------------------------------
+
         DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
         DOM.setup.btnStart.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
 
