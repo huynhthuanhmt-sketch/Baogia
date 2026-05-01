@@ -7,8 +7,37 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thuận Store">
-    <meta name="description" content="Hệ thống quản lý kho, tạo báo giá và tính chiết khấu thông minh.">
-    <title>Thuận Store - Hệ Thống Báo Giá</title>
+    
+    <!-- TỐI ƯU SEO SIÊU CẤP -->
+    <title>Thuận Store - Hệ Thống Báo Giá & Quản Lý Bán Hàng</title>
+    <meta name="description" content="Phần mềm quản lý kho, tạo báo giá và tính chiết khấu thông minh. Hỗ trợ trích xuất dữ liệu làm hướng dẫn báo cáo bán hàng và cơ sở kê khai thuế chính xác.">
+    <meta name="keywords" content="Thuận Store, phần mềm quản lý kho, hệ thống báo giá, hướng dẫn báo cáo bán hàng, tính thuế, hóa đơn VAT, chiết khấu, quản lý bán hàng 2026, xuất file excel báo giá">
+    <meta name="author" content="Thuận Store">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Zalo / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Thuận Store - Tạo Báo Giá & Tính Thuế Thông Minh">
+    <meta property="og:description" content="Giải pháp tối ưu tạo báo giá, hỗ trợ tính toán chiết khấu làm báo cáo bán hàng nội bộ và chuẩn hóa quy trình xuất thuế.">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Thuan+Store+-+Bao+Gia">
+    
+    <!-- Schema.org for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Thuận Store",
+      "operatingSystem": "Web, iOS, Android",
+      "applicationCategory": "BusinessApplication",
+      "description": "Ứng dụng web giúp tạo bảng báo giá, tính chiết khấu, hỗ trợ minh bạch số liệu để kê khai thuế và làm hướng dẫn báo cáo bán hàng cho doanh nghiệp.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "VND"
+      }
+    }
+    </script>
+    <!-- END TỐI ƯU SEO -->
     
     <!-- Dynamic SVG Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -245,6 +274,10 @@
     <!-- SCREEN 0: LANDING PAGE                     -->
     <!-- ========================================== -->
     <main id="screenLanding" class="app-screen active flex-col items-center justify-center bg-slate-950 overflow-hidden relative" style="background-color: #020617;">
+        
+        <!-- THẺ H1 TỐI ƯU SEO - ẨN KHỎI GIAO DIỆN -->
+        <h1 class="sr-only">Thuận Store - Phần mềm Quản lý Bán hàng, Tạo Báo giá và Kê khai Thuế</h1>
+
         <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
             <div class="cyber-grid"></div>
             <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] max-w-[1200px] max-h-[1200px] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08)_0%,transparent_60%)] animate-blob"></div>
@@ -297,6 +330,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- SEO TEXT CONTENT (Hiển thị tinh tế không phá bố cục) -->
+        <div class="absolute bottom-[40px] md:bottom-12 w-full px-6 max-w-3xl text-center z-40 opacity-50 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <p class="text-[9px] md:text-[11px] text-slate-400 font-medium leading-relaxed tracking-wide">
+                Hệ thống tối ưu tạo <strong class="text-cyan-400 font-bold">báo giá</strong> và tính chiết khấu. Dễ dàng xuất file minh bạch làm 
+                <strong class="text-blue-400 font-bold">hướng dẫn báo cáo bán hàng</strong> nội bộ và là cơ sở chuẩn xác hỗ trợ kê khai <strong class="text-indigo-400 font-bold">thuế VAT</strong> 2026.
+            </p>
         </div>
 
         <!-- COPYRIGHT FOOTER -->
@@ -385,7 +426,7 @@
                         <div class="flex flex-col ml-1">
                             <div class="flex items-center gap-1.5 mb-0.5">
                                 <svg class="w-4 h-4 text-slate-800 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                <h1 class="text-[15px] font-black text-slate-900 uppercase tracking-tight leading-none mt-0.5">Giỏ Hàng</h1>
+                                <h2 class="text-[15px] font-black text-slate-900 uppercase tracking-tight leading-none mt-0.5">Giỏ Hàng</h2>
                             </div>
                             <span id="itemCountBadge" class="text-[10px] font-bold text-blue-600 pl-6">0 sản phẩm</span>
                         </div>
@@ -944,7 +985,7 @@
         </div>
     </div>
 
-    <!-- CORE JAVASCRIPT LOGIC -->
+    <!-- CORE JAVASCRIPT LOGIC (GIỮ NGUYÊN HOÀN TOÀN TỪ USER MANG XUỐNG) -->
     <script>
         // ANTI-COPY SCRIPTS
         document.addEventListener('contextmenu', event => event.preventDefault());
@@ -1011,10 +1052,8 @@
             }
         };
 
-        // --- CÔNG CỤ TẢI XUỐNG THÔNG MINH CHO ZALO/MOBILE ---
         const DownloadHelper = {
             save: async (blob, filename) => {
-                // Ưu tiên Web Share API (Cực kỳ hiệu quả trên thiết bị di động, bỏ qua giới hạn tải xuống)
                 if (navigator.canShare && navigator.share) {
                     try {
                         const file = new File([blob], filename, { type: blob.type });
@@ -1024,14 +1063,12 @@
                                 title: filename
                             });
                             Utils.showToast("Đã mở menu chia sẻ/lưu tệp!");
-                            return; // Thoát nếu share thành công
+                            return; 
                         }
                     } catch (e) {
                         console.log("Tính năng Share Native bị hủy hoặc lỗi, chuyển sang tải thường...", e);
                     }
                 }
-
-                // Cách tải truyền thống (Fallback)
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
@@ -1045,7 +1082,6 @@
                     URL.revokeObjectURL(url);
                 }, 200);
 
-                // Cảnh báo nếu ở trong môi trường Zalo WebView
                 if (/Zalo/i.test(navigator.userAgent)) {
                     setTimeout(() => {
                         Utils.showToast("Nếu Zalo không tự tải, hãy ấn dấu '...' góc phải trên -> Mở bằng trình duyệt!");
@@ -1156,7 +1192,6 @@
             DOM.discount.baseIn.value = State.defaults.baseDiscount || ''; DOM.discount.km1In.value = State.defaults.km1 || ''; DOM.discount.km2In.value = State.defaults.km2 || '';
             DOM.discount.kmTienIn.value = State.defaults.kmTien || ''; DOM.discount.kmTienTypeIn.value = State.defaults.kmTienType || 'per_item';
             
-            // Set giá trị cho Công thức tính
             const formula = State.defaults.discountFormula || 'sequential';
             const formulaRadio = document.querySelector(`input[name="discountFormula"][value="${formula}"]`);
             if(formulaRadio) formulaRadio.checked = true;
@@ -1165,16 +1200,13 @@
             setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
         };
 
-        // --- ORBIT SATELLITES EVENT LISTENERS ---
         document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
         document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
         document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
         document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
 
-        // MAIN NAVIGATION
         DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
         
-        // --- LOGIC NÚT BACK CHO QUẢN LÝ KHO ---
         DOM.setup.btnCloseSetup.addEventListener('click', () => { 
             if (State.cart && State.cart.length > 0 && State.previousScreenId !== 'main') {
                 switchScreen('main');
@@ -1187,12 +1219,10 @@
             switchScreen('main'); 
             CartLogic.render(); 
         });
-        // --------------------------------------
 
         DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
         DOM.setup.btnStart.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
 
-        // BRAND MODAL LOGIC
         DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
         DOM.brand.btnClose.addEventListener('click', () => { DOM.brand.modal.classList.remove('active'); });
         DOM.brand.btnSave.addEventListener('click', () => {
@@ -1200,14 +1230,12 @@
             updateBrandText(); LocalDB.save(); DOM.brand.modal.classList.remove('active'); Utils.showToast("Đã lưu cấu hình báo giá!");
         });
 
-        // DISCOUNT MODAL LOGIC
         DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
         DOM.discount.btnClose.addEventListener('click', () => { DOM.discount.modal.classList.remove('active'); });
         DOM.discount.btnSave.addEventListener('click', () => {
             State.defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); State.defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
             State.defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); State.defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); State.defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
             
-            // Lưu giá trị công thức tính
             const checkedFormula = document.querySelector('input[name="discountFormula"]:checked');
             State.defaults.discountFormula = checkedFormula ? checkedFormula.value : 'sequential';
             
@@ -1222,7 +1250,6 @@
             LocalDB.save(); CartLogic.render(); DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và tự động cập nhật giỏ hàng!");
         });
 
-        // MANUAL ADD MODAL LOGIC
         DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
         DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
         DOM.manualAdd.btnConfirm.addEventListener('click', () => {
@@ -1238,7 +1265,6 @@
             DOM.manualAdd.btnClose.click(); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
         });
 
-        // VIEW MODE TOGGLE LOGIC
         DOM.main.btnToggleView.addEventListener('click', () => {
             State.isCompactView = !State.isCompactView;
             updateToggleViewUI();
@@ -1246,7 +1272,6 @@
             LocalDB.save();
         });
 
-        // START OVER / RESET QUOTE LOGIC
         const openResetModal = () => { DOM.confirmReset.modal.classList.remove('hidden'); DOM.confirmReset.modal.classList.add('flex'); setTimeout(() => { DOM.confirmReset.modal.classList.remove('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-100'); }, 10); };
         const closeResetModal = () => { DOM.confirmReset.modal.classList.add('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-100'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.confirmReset.modal.classList.add('hidden'); DOM.confirmReset.modal.classList.remove('flex'); }, 300); };
         
@@ -1264,8 +1289,6 @@
             Utils.showToast("Đã làm mới báo giá!");
         });
 
-
-        // AUTO PROMO LOGIC
         let editingPromoProductIds = []; let currentPromoContext = 'item';
         const PromoLogic = {
             openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); },
@@ -1398,10 +1421,6 @@
             if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'VD: 5000'; } else { DOM.promo.valueIn.placeholder = 'VD: 5'; }
         });
 
-
-        // ==========================================
-        // MENU & DATA WAREHOUSE MAPPING
-        // ==========================================
         function renderSetupWarehouseList() {
             if (State.warehouses.length === 0) { DOM.setup.warehouseListSection.classList.add('hidden'); } else {
                 DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${State.productDB.length} SP`;
@@ -1478,9 +1497,6 @@
 
         if (DOM.setup.btnStartFromSetup) DOM.setup.btnStartFromSetup.addEventListener('click', () => { switchScreen('landing'); });
 
-        // ==========================================
-        // TÌM KIẾM & GIỎ HÀNG
-        // ==========================================
         function renderWarehouseFilters() {
             if(State.warehouses.length <= 1) { DOM.search.warehouseFilters.classList.add('hidden'); return; }
             DOM.search.warehouseFilters.classList.remove('hidden');
@@ -1590,21 +1606,17 @@
                 
                 let lineTotal = 0;
 
-                // ÁP DỤNG CÔNG THỨC CHIẾT KHẤU
                 if (State.defaults.discountFormula === 'additive') {
-                    // Công thức Cộng dồn (Tổng %)
                     const totalPercent = (baseDisc + km1 + km2) / 100;
-                    const multiplier = Math.max(0, 1 - totalPercent); // Không để giảm quá 100% gây âm tiền
+                    const multiplier = Math.max(0, 1 - totalPercent); 
                     lineTotal = origPrice * multiplier * qty;
                 } else {
-                    // Công thức Lũy tiến (Nối tiếp) - Mặc định
                     const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
                     const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
                     const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
                     lineTotal = priceAfterKm2 * qty;
                 }
                 
-                // Trừ tiền sau khi đã trừ %
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
                 
                 let promoNotes = "";
@@ -1830,7 +1842,6 @@
 
             CartLogic.recalculateItem(item); 
             
-            // Cập nhật giao diện mượt mà không cần render lại cả list
             if (!item.appliedPromoId) {
                 const priceEl = card.querySelector('.price-display'); if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount); 
                 const lineTotalEl = card.querySelector('.linetotal-display'); if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
@@ -1842,9 +1853,6 @@
         DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) e.target.value = ''; else e.target.select(); } });
         DOM.main.quoteList.addEventListener('focusout', (e) => { if(e.target.classList.contains('cart-input') && e.target.value === '') { const field = e.target.dataset.field; e.target.value = field === 'qty' ? '1' : '0'; e.target.dispatchEvent(new Event('input', { bubbles: true })); } });
 
-        // ==========================================
-        // EXPORT LOGIC & LIVE PREVIEW
-        // ==========================================
         const ExportLogic = {
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
@@ -1905,7 +1913,6 @@
                 DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
                 if (document.activeElement) document.activeElement.blur();
                 
-                // QUAN TRỌNG: Ép scroll về top để html2canvas không bị cắt ngang hoặc render trắng
                 const modalEl = document.querySelector('#exportModal .flex-grow');
                 if (modalEl) modalEl.scrollTo(0, 0);
                 window.scrollTo(0,0);
@@ -1913,13 +1920,11 @@
                 const invoice = document.getElementById('invoiceRenderArea'); 
                 const wrapper = document.getElementById('previewContainer');
                 
-                // FIX LỖI SAFARI/ZALO: Gỡ Transform scale trước khi capture để tránh render lỗi
                 const originalTransform = invoice.style.transform;
                 const originalHeight = wrapper.style.height;
                 invoice.style.transform = 'none';
                 wrapper.style.height = 'auto';
 
-                // Đợi 1 chút xíu để DOM kịp apply css mới trước khi chụp
                 await new Promise(resolve => setTimeout(resolve, 50));
 
                 try {
@@ -1935,7 +1940,6 @@
                     Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); 
                     return null; 
                 } finally {
-                    // Phục hồi lại Transform sau khi chụp xong
                     invoice.style.transform = originalTransform;
                     wrapper.style.height = originalHeight;
                     DOM.export.loading.classList.add('hidden');
@@ -2022,11 +2026,9 @@
             exportImage: async () => {
                 const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang tạo ảnh...");
                 
-                // Dùng Base64 thay vì Blob. Trình duyệt Zalo dễ dàng lưu ảnh Base64 khi nhấn giữ hơn.
                 const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
                 DOM.export.finalImg.src = dataUrl;
                 
-                // Đổi lời nhắc nếu là Zalo
                 const instructionText = document.querySelector('#imageResultModal .bg-blue-500\\/20');
                 if (/Zalo/i.test(navigator.userAgent)) {
                     instructionText.innerHTML = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> TRONG ZALO: HÃY CHẠM GIỮ VÀO ẢNH BÊN DƯỚI RỒI CHỌN "LƯU HÌNH ẢNH"`;
@@ -2061,12 +2063,10 @@
         DOM.export.btnCopyMsg.addEventListener('click', () => { Utils.copyToClipboard(DOM.export.msgBox.value); });
         DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
 
-        // Logic Nút Lưu Ảnh
         DOM.export.btnDownloadImage.addEventListener('click', async () => {
             const url = DOM.export.finalImg.src;
             if (url) {
                 try {
-                    // Chuyển DataURL thành Blob để dùng Web Share API
                     const res = await fetch(url);
                     const blob = await res.blob();
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
@@ -2074,7 +2074,6 @@
                     
                     await DownloadHelper.save(blob, filename);
                 } catch (e) {
-                    // Fallback cách cũ nếu có lỗi
                     const a = document.createElement('a');
                     a.href = url;
                     a.download = `BaoGia_${Date.now()}.jpg`;
