@@ -1011,6 +1011,49 @@
             }
         };
 
+        // --- CÔNG CỤ TẢI XUỐNG THÔNG MINH CHO ZALO/MOBILE ---
+        const DownloadHelper = {
+            save: async (blob, filename) => {
+                // Ưu tiên Web Share API (Cực kỳ hiệu quả trên thiết bị di động, bỏ qua giới hạn tải xuống)
+                if (navigator.canShare && navigator.share) {
+                    try {
+                        const file = new File([blob], filename, { type: blob.type });
+                        if (navigator.canShare({ files: [file] })) {
+                            await navigator.share({
+                                files: [file],
+                                title: filename
+                            });
+                            Utils.showToast("Đã mở menu chia sẻ/lưu tệp!");
+                            return; // Thoát nếu share thành công
+                        }
+                    } catch (e) {
+                        console.log("Tính năng Share Native bị hủy hoặc lỗi, chuyển sang tải thường...", e);
+                    }
+                }
+
+                // Cách tải truyền thống (Fallback)
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 200);
+
+                // Cảnh báo nếu ở trong môi trường Zalo WebView
+                if (/Zalo/i.test(navigator.userAgent)) {
+                    setTimeout(() => {
+                        Utils.showToast("Nếu Zalo không tự tải, hãy ấn dấu '...' góc phải trên -> Mở bằng trình duyệt!");
+                    }, 1000);
+                }
+            }
+        };
+
         const BRAND_COLOR = "#0055A5";
 
         let State = { 
@@ -1133,11 +1176,9 @@
         
         // --- LOGIC NÚT BACK CHO QUẢN LÝ KHO ---
         DOM.setup.btnCloseSetup.addEventListener('click', () => { 
-            // Nếu có giỏ hàng, ưu tiên về main để tiếp tục làm việc
             if (State.cart && State.cart.length > 0 && State.previousScreenId !== 'main') {
                 switchScreen('main');
             } else {
-                // Nếu không có giỏ hàng, về lại trang trước đó
                 switchScreen(State.previousScreenId || 'landing'); 
             }
         });
@@ -1789,7 +1830,7 @@
 
             CartLogic.recalculateItem(item); 
             
-            // Xóa chặn && field !== 'qty' để khi thay đổi số lượng thì hiển thị Thành Tiền tự động cập nhật
+            // Cập nhật giao diện mượt mà không cần render lại cả list
             if (!item.appliedPromoId) {
                 const priceEl = card.querySelector('.price-display'); if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount); 
                 const lineTotalEl = card.querySelector('.linetotal-display'); if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
@@ -1860,7 +1901,8 @@
             },
 
             captureCanvas: async () => {
-                DOM.export.loading.classList.remove('hidden'); DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
+                DOM.export.loading.classList.remove('hidden'); 
+                DOM.export.loading.querySelector('div:last-child').textContent = "Đang xử lý hình ảnh chất lượng cao...";
                 if (document.activeElement) document.activeElement.blur();
                 
                 // QUAN TRỌNG: Ép scroll về top để html2canvas không bị cắt ngang hoặc render trắng
@@ -1869,26 +1911,39 @@
                 window.scrollTo(0,0);
 
                 const invoice = document.getElementById('invoiceRenderArea'); 
+                const wrapper = document.getElementById('previewContainer');
                 
+                // FIX LỖI SAFARI/ZALO: Gỡ Transform scale trước khi capture để tránh render lỗi
+                const originalTransform = invoice.style.transform;
+                const originalHeight = wrapper.style.height;
+                invoice.style.transform = 'none';
+                wrapper.style.height = 'auto';
+
+                // Đợi 1 chút xíu để DOM kịp apply css mới trước khi chụp
+                await new Promise(resolve => setTimeout(resolve, 50));
+
                 try {
                     const canvas = await html2canvas(invoice, { 
                         scale: 1.5, 
                         backgroundColor: "#ffffff", 
                         useCORS: true, 
-                        logging: false,
-                        onclone: (clonedDoc) => {
-                            const el = clonedDoc.getElementById('invoiceRenderArea');
-                            if(el) { el.style.transform = 'none'; }
-                        }
+                        allowTaint: true,
+                        logging: false
                     });
-                    DOM.export.loading.classList.add('hidden'); return canvas;
+                    return canvas;
                 } catch (e) { 
-                    DOM.export.loading.classList.add('hidden'); Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); return null; 
+                    Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); 
+                    return null; 
+                } finally {
+                    // Phục hồi lại Transform sau khi chụp xong
+                    invoice.style.transform = originalTransform;
+                    wrapper.style.height = originalHeight;
+                    DOM.export.loading.classList.add('hidden');
                 }
             },
 
             exportExcelPro: async () => {
-                Utils.showToast("Đang thu thập dữ liệu từ Bản in...");
+                Utils.showToast("Đang thu thập dữ liệu...");
                 try {
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
                     const argbColor = 'FF0055A5'; 
@@ -1937,34 +1992,57 @@
                     totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').textContent.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 35 } ];
                     
-                    const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                    const buffer = await workbook.xlsx.writeBuffer(); 
+                    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                    saveAs(blob, `${shortTitle}_${DOM.main.custName.value.trim() || 'KH'}_${Date.now()}.xlsx`); Utils.showToast("Tải Excel thành công!");
+                    const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || 'KH')}_${Date.now()}.xlsx`;
+                    
+                    await DownloadHelper.save(blob, filename);
                 } catch (error) { Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); }
             },
 
             exportPDF: async () => {
-                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang lưu tệp PDF...");
+                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang kết xuất PDF...");
                 try {
-                    const imgData = canvas.toDataURL("image/jpeg", 0.9); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
+                    const imgData = canvas.toDataURL("image/jpeg", 0.95); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
                     const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
                     const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
                     let heightLeft = scaledImgHeight; let position = 0;
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
+                    
                     const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
-                    pdf.save(`${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`); Utils.showToast("Lưu PDF thành công!");
+                    const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`;
+                    
+                    const blob = pdf.output('blob');
+                    await DownloadHelper.save(blob, filename);
                 } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
             },
 
             exportImage: async () => {
                 const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang tạo ảnh...");
-                canvas.toBlob((blob) => {
-                    if(!blob) return Utils.showToast("Lỗi tạo ảnh");
-                    if (DOM.export.finalImg.src && DOM.export.finalImg.src.startsWith('blob:')) URL.revokeObjectURL(DOM.export.finalImg.src);
-                    const url = URL.createObjectURL(blob); DOM.export.finalImg.src = url;
-                    DOM.export.imageModal.classList.remove('hidden'); DOM.export.imageModal.classList.add('flex'); Utils.showToast("Hoàn tất!");
-                }, "image/jpeg", 0.95);
+                
+                // Dùng Base64 thay vì Blob. Trình duyệt Zalo dễ dàng lưu ảnh Base64 khi nhấn giữ hơn.
+                const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+                DOM.export.finalImg.src = dataUrl;
+                
+                // Đổi lời nhắc nếu là Zalo
+                const instructionText = document.querySelector('#imageResultModal .bg-blue-500\\/20');
+                if (/Zalo/i.test(navigator.userAgent)) {
+                    instructionText.innerHTML = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> TRONG ZALO: HÃY CHẠM GIỮ VÀO ẢNH BÊN DƯỚI RỒI CHỌN "LƯU HÌNH ẢNH"`;
+                    instructionText.classList.replace('text-blue-300', 'text-amber-400');
+                    instructionText.classList.replace('bg-blue-500/20', 'bg-amber-500/20');
+                    instructionText.classList.replace('border-blue-500/30', 'border-amber-500/30');
+                } else {
+                    instructionText.innerHTML = `<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> CHẠM GIỮ ẢNH HOẶC NHẤN "LƯU ẢNH" ĐỂ TẢI VỀ`;
+                    instructionText.classList.replace('text-amber-400', 'text-blue-300');
+                    instructionText.classList.replace('bg-amber-500/20', 'bg-blue-500/20');
+                    instructionText.classList.replace('border-amber-500/30', 'border-blue-500/30');
+                }
+
+                DOM.export.imageModal.classList.remove('hidden'); 
+                DOM.export.imageModal.classList.add('flex'); 
+                Utils.showToast("Hoàn tất!");
             },
 
             printInvoiceMobile: async () => {
@@ -1983,16 +2061,30 @@
         DOM.export.btnCopyMsg.addEventListener('click', () => { Utils.copyToClipboard(DOM.export.msgBox.value); });
         DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
 
-        // Nút lưu ảnh
-        DOM.export.btnDownloadImage.addEventListener('click', () => {
+        // Logic Nút Lưu Ảnh
+        DOM.export.btnDownloadImage.addEventListener('click', async () => {
             const url = DOM.export.finalImg.src;
             if (url) {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `BaoGia_${Date.now()}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                try {
+                    // Chuyển DataURL thành Blob để dùng Web Share API
+                    const res = await fetch(url);
+                    const blob = await res.blob();
+                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
+                    const filename = `BaoGia_${shortTitle}_${Date.now()}.jpg`;
+                    
+                    await DownloadHelper.save(blob, filename);
+                } catch (e) {
+                    // Fallback cách cũ nếu có lỗi
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `BaoGia_${Date.now()}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    if (/Zalo/i.test(navigator.userAgent)) {
+                        Utils.showToast("Nếu ảnh không tải về, hãy CHẠM GIỮ vào ảnh để lưu nhé.");
+                    }
+                }
             }
         });
 
