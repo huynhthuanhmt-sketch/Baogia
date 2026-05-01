@@ -675,16 +675,15 @@
                                 <div>
                                     <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Loại Giảm Giá</label>
                                     <select id="promoTypeIn" class="w-full input-premium rounded-xl p-3 text-sm font-bold outline-none border-slate-200 focus:border-purple-500">
-                                        <option value="tien_sp">Trừ Tiền / 1 SP</option>
-                                        <option value="km1">Giảm KM1 (%)</option>
-                                        <option value="km2">Giảm KM2 (%)</option>
-                                        <option value="tien_tong">Trừ Tổng Tiền</option>
+                                        <option value="extra_percent">Giảm THÊM (%) sau CK mặc định</option>
+                                        <option value="extra_tien_sp">Trừ THÊM tiền / 1 SP (VNĐ)</option>
+                                        <option value="extra_tien_tong">Trừ THÊM tổng tiền (VNĐ)</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
                                 <label class="text-[10px] font-bold text-slate-500 uppercase block mb-1">Mức Giảm (Số tiền hoặc %)</label>
-                                <input type="number" id="promoValueIn" class="w-full input-premium rounded-xl p-3 text-sm font-black text-purple-700 outline-none border-slate-200 focus:border-purple-500" placeholder="VD: 5000">
+                                <input type="number" id="promoValueIn" class="w-full input-premium rounded-xl p-3 text-sm font-black text-purple-700 outline-none border-slate-200 focus:border-purple-500" placeholder="VD: 5">
                             </div>
                             <div class="pt-2">
                                 <button id="btnSelectPromoProducts" class="w-full border-2 border-dashed border-purple-300 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold py-3.5 rounded-xl text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-2">
@@ -1088,13 +1087,16 @@
             State.defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); State.defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
             State.defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); State.defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); State.defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
             
-            // Áp dụng cho giỏ hàng hiện tại (chỉ đè nếu không có Promo ưu tiên)
+            // Áp dụng cho toàn bộ giỏ hàng hiện tại (bao gồm cả SP đang có Khuyến mãi)
             State.cart.forEach(item => {
-                if (!item.appliedPromoId) {
-                    item.baseDiscount = State.defaults.baseDiscount; item.km1 = State.defaults.km1; item.km2 = State.defaults.km2; item.kmTien = State.defaults.kmTien; item.kmTienType = State.defaults.kmTienType;
-                }
+                item.baseDiscount = State.defaults.baseDiscount; 
+                item.km1 = State.defaults.km1; 
+                item.km2 = State.defaults.km2; 
+                item.kmTien = State.defaults.kmTien; 
+                item.kmTienType = State.defaults.kmTienType;
             });
-            LocalDB.save(); CartLogic.render(); DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và áp dụng Mặc Định mới!");
+            
+            LocalDB.save(); CartLogic.render(); DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và tự động cập nhật giỏ hàng!");
         });
 
         // MANUAL ADD MODAL LOGIC
@@ -1150,7 +1152,9 @@
                 }
             },
             resetForm: () => {
-                DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'tien_sp'; DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0';
+                DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'extra_percent'; 
+                DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0';
+                DOM.promo.valueIn.placeholder = 'VD: 5';
                 DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; PromoLogic.updateOrderLabel();
             },
             updateOrderLabel: () => { if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
@@ -1158,8 +1162,11 @@
                 const name = DOM.promo.nameIn.value.trim(); if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
                 let newPromo = { id: 'PRM_' + Date.now(), name: name };
                 if (currentPromoContext === 'item') {
-                    const minQty = parseInt(DOM.promo.minQtyIn.value) || 1; const type = DOM.promo.typeIn.value; const value = Utils.cleanNumber(DOM.promo.valueIn.value);
-                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
+                    const minQty = parseInt(DOM.promo.minQtyIn.value) || 1; 
+                    const type = DOM.promo.typeIn.value; 
+                    const value = Utils.cleanNumber(DOM.promo.valueIn.value);
+                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); 
+                    if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
                     newPromo.isOrderPromo = false; newPromo.minQty = minQty; newPromo.type = type; newPromo.value = value; newPromo.productIds = [...editingPromoProductIds];
                 } else {
                     const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim(); const isMultiply = DOM.promo.orderMultiply.checked;
@@ -1182,11 +1189,13 @@
                         bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1">Tổng đơn >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600">${rewardTxt}</span>${multiplyTxt}</p>
                                     <span class="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded inline-block mt-1.5 font-bold border border-emerald-200 shadow-sm">Dành cho Tổng đơn</span>`;
                     } else {
-                        let typeTxt = p.type === 'tien_sp' ? 'Trừ tiền/SP' : (p.type === 'tien_tong' ? 'Trừ tổng tiền' : (p.type === 'km1' ? 'Giảm KM1' : 'Giảm KM2'));
-                        let valTxt = (p.type === 'km1' || p.type === 'km2') ? `${p.value}%` : Utils.formatMoney(p.value);
+                        let typeTxt = p.type === 'extra_tien_sp' ? 'Trừ THÊM tiền/SP' : (p.type === 'extra_tien_tong' ? 'Trừ THÊM tổng tiền' : 'Giảm THÊM (%)');
+                        let valTxt = p.type === 'extra_percent' ? `${p.value}%` : Utils.formatMoney(p.value);
+                        let inheritanceBadge = `<span class="ml-1.5 text-[8px] font-black bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-200 uppercase tracking-widest">+ Áp dụng cùng CK Mặc định</span>`;
+
                         const appliedProducts = p.productIds.map(id => { const prod = State.productDB.find(x => x.id === id); return prod ? prod.name : 'SP đã xóa'; });
                         const displayNames = appliedProducts.slice(0, 3).join(', '); const moreCount = appliedProducts.length > 3 ? ` và ${appliedProducts.length - 3} SP khác` : '';
-                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1">Mua >= ${p.minQty} SP 👉 ${typeTxt}: <span class="text-purple-600">${valTxt}</span></p>
+                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1 flex items-center flex-wrap gap-y-1">Mua >= ${p.minQty} SP 👉 ${typeTxt}: <span class="text-purple-600 ml-1">${valTxt}</span>${inheritanceBadge}</p>
                                     <div class="text-[10px] text-slate-500 mt-1.5 italic break-words whitespace-normal border-t border-slate-100 pt-1.5 leading-relaxed">📦 Áp dụng: <span class="font-semibold text-slate-700">${displayNames}${moreCount}</span></div>`;
                     }
                     return `<div class="bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center shadow-sm relative overflow-hidden"><div class="pr-8 w-full"><h4 class="text-sm font-black text-slate-800">${p.name}</h4>${bodyHtml}</div><button onclick="PromoLogic.deletePromo('${p.id}')" class="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
@@ -1228,17 +1237,20 @@
                 if (applicablePromo) {
                     if (item.qty >= applicablePromo.minQty) {
                         if (item.appliedPromoId !== applicablePromo.id) {
-                            if (applicablePromo.type === 'km1') item.km1 = applicablePromo.value; if (applicablePromo.type === 'km2') item.km2 = applicablePromo.value;
-                            if (applicablePromo.type === 'tien_sp') { item.kmTien = applicablePromo.value; item.kmTienType = 'per_item'; } if (applicablePromo.type === 'tien_tong') { item.kmTien = applicablePromo.value; item.kmTienType = 'total'; }
-                            item.appliedPromoId = applicablePromo.id; Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`);
+                            item.appliedPromoId = applicablePromo.id; 
+                            item.promoType = applicablePromo.type;
+                            item.promoValue = applicablePromo.value;
+                            Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`);
                         }
                     } else { if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item); }
                 }
             },
             revertPromoOnItem: (item) => {
-                const oldPromo = State.promos.find(p => p.id === item.appliedPromoId);
-                if (oldPromo && !oldPromo.isOrderPromo) { item.km1 = State.defaults.km1; item.km2 = State.defaults.km2; item.kmTien = State.defaults.kmTien; item.kmTienType = State.defaults.kmTienType; }
-                item.appliedPromoId = null;
+                if (item.appliedPromoId) {
+                    item.appliedPromoId = null;
+                    item.promoType = null;
+                    item.promoValue = null;
+                }
             }
         };
 
@@ -1248,6 +1260,17 @@
         DOM.promo.searchInput.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(PromoLogic.searchProducts, 200); });
         DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
         DOM.promo.orderType.addEventListener('change', PromoLogic.updateOrderLabel);
+        
+        DOM.promo.typeIn.addEventListener('change', () => {
+            const val = DOM.promo.typeIn.value;
+            DOM.promo.valueIn.value = '';
+            
+            if (val.includes('tien')) {
+                DOM.promo.valueIn.placeholder = 'VD: 5000';
+            } else {
+                DOM.promo.valueIn.placeholder = 'VD: 5';
+            }
+        });
 
 
         // ==========================================
@@ -1437,16 +1460,39 @@
             recalculateItem: (item) => {
                 const qty = Number(item.qty) || 0; const origPrice = Number(item.originalPrice) || 0;
                 const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : 0; const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
-                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
+                
+                // 1. Tính toán giá sau CK mặc định
+                const priceAfterBaseDisc = origPrice * (1 - baseDisc / 100); 
+                const priceAfterKm1 = priceAfterBaseDisc * (1 - km1 / 100); 
+                const priceAfterKm2 = priceAfterKm1 * (1 - km2 / 100); 
                 let lineTotal = priceAfterKm2 * qty;
+                
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
+                
+                // 2. Lớp Giảm Giá Khuyến Mãi (Áp dụng nối tiếp vào kết quả trên)
+                let promoNotes = "";
+                if (item.appliedPromoId && item.promoType) {
+                    if (item.promoType === 'extra_percent') {
+                        lineTotal = lineTotal * (1 - item.promoValue / 100);
+                        promoNotes = `KM thêm: -${item.promoValue}%`;
+                    } else if (item.promoType === 'extra_tien_sp') {
+                        lineTotal -= (item.promoValue * qty);
+                        promoNotes = `KM thêm: -${Utils.formatMoney(item.promoValue)}/SP`;
+                    } else if (item.promoType === 'extra_tien_tong') {
+                        lineTotal -= item.promoValue;
+                        promoNotes = `KM thêm: -${Utils.formatMoney(item.promoValue)}(Tổng)`;
+                    }
+                }
+
                 if(lineTotal < 0) lineTotal = 0;
                 
-                item.priceAfterDiscount = qty > 0 ? Math.round(lineTotal / qty) : Math.round(priceAfterKm2); 
+                item.priceAfterDiscount = qty > 0 ? Math.round(lineTotal / qty) : Math.round(lineTotal); 
                 item.totalFinal = Math.round(lineTotal); item.totalOriginal = Math.round(origPrice * qty);
 
                 let dNotes = [];
                 if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`); if (km1 > 0) dNotes.push(`KM1: ${km1}%`); if (km2 > 0) dNotes.push(`KM2: ${km2}%`); if (kmTien > 0) dNotes.push(`Giảm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
+                if (promoNotes) dNotes.push(promoNotes);
+
                 let currentAutoStr = dNotes.join(', ');
                 if (item.note === undefined) item.note = ""; if (item.lastAutoStr === undefined) item.lastAutoStr = "";
 
@@ -1600,10 +1646,6 @@
 
             if (field === 'qty') {
                 PromoLogic.checkAndApplyToItem(item); if(item.appliedPromoId) CartLogic.render(); 
-            } else {
-                if ((field === 'km1' || field === 'km2' || field === 'kmTien') && item.appliedPromoId) {
-                    item.appliedPromoId = null; card.classList.remove('ring-2', 'ring-purple-400/50', 'border-purple-300'); card.classList.add('border-slate-200');
-                }
             }
 
             CartLogic.recalculateItem(item); 
