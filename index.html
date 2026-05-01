@@ -117,12 +117,6 @@
         @keyframes pulsePromo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(0.98); } }
         .animate-promo-alert { animation: pulsePromo 2s infinite; }
 
-        @keyframes glass-shine {
-            0% { transform: translateX(-100%) skewX(-15deg); }
-            50%, 100% { transform: translateX(200%) skewX(-15deg); }
-        }
-        .animate-glass-shine { animation: glass-shine 2.5s infinite; }
-
         .cyber-grid {
             position: absolute; inset: 0;
             background-image: linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px);
@@ -459,36 +453,30 @@
             </div>
         </header>
 
-        <main class="flex-grow overflow-y-auto relative" id="mainScroll">
+        <main class="flex-grow overflow-y-auto relative bg-slate-50/50" id="mainScroll">
             <!-- STICKY TOP CONTROL -->
-            <div class="sticky top-0 z-30 bg-slate-50/95 backdrop-blur-md border-b border-slate-200 shadow-sm flex flex-col">
-                <div class="w-full max-w-5xl mx-auto px-3 pt-3 pb-2 space-y-2.5">
-                    <div id="quickPromoButtons" class="flex gap-2 overflow-x-auto hide-scrollbar shrink-0 empty:hidden pb-1">
+            <div class="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm">
+                <div class="w-full max-w-5xl mx-auto px-4 py-3 flex flex-col gap-3">
+                    <div id="quickPromoButtons" class="flex gap-2 overflow-x-auto hide-scrollbar shrink-0 empty:hidden">
                         <!-- JS render nút add KM nhanh -->
                     </div>
 
-                    <div class="flex gap-3 items-stretch h-[54px]">
-                        <button id="btnOpenSearch" class="flex-1 relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white font-black rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all duration-300 shadow-[0_8px_30px_-6px_rgba(79,70,229,0.5)] border border-white/20 group">
-                            <!-- Hiệu ứng bóng kính lướt qua -->
-                            <div class="absolute inset-0 w-[150%] bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-glass-shine pointer-events-none"></div>
-                            
-                            <div class="relative z-10 flex items-center justify-center gap-2.5">
-                                <div class="bg-white/20 p-1.5 rounded-xl backdrop-blur-md group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300 shadow-sm border border-white/10">
-                                    <svg class="w-5 h-5 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                </div>
-                                <span class="tracking-[0.2em] uppercase text-[13px] drop-shadow-md">TÌM & CHỌN HÀNG</span>
-                            </div>
-                        </button>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="font-black text-slate-900 text-sm md:text-base uppercase tracking-tight">Giỏ Hàng</h2>
+                            <span id="itemCountBadge" class="text-[10px] font-bold text-slate-500">0 sản phẩm</span>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <button id="btnResetQuote" class="text-slate-400 hover:text-orange-500 transition-colors bg-slate-50 hover:bg-orange-50 p-2.5 rounded-xl" title="Làm mới báo giá">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            </button>
+                            <button id="btnOpenSearch" class="bg-blue-600 text-white font-black text-[11px] uppercase tracking-widest px-5 py-2.5 rounded-xl shadow-[0_4px_15px_-3px_rgba(37,99,235,0.4)] hover:bg-blue-700 hover:shadow-[0_6px_20px_-3px_rgba(37,99,235,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                                THÊM SP
+                            </button>
+                        </div>
                     </div>
-                </div>
-
-                <!-- THANH TIÊU ĐỀ ĐƠN HÀNG (ĐÃ GHIM CÙNG LÊN TRÊN) -->
-                <div class="w-full max-w-5xl mx-auto px-4 py-2.5 bg-slate-100/80 border-t border-slate-200/50 flex justify-between items-center">
-                    <div class="flex items-center gap-2">
-                        <h2 class="font-black text-slate-900 text-sm uppercase tracking-tight">Chi tiết Đơn hàng</h2>
-                        <button id="btnResetQuote" class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2.5 py-1.5 rounded-md uppercase tracking-widest border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all flex items-center gap-1 shadow-sm"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> LÀM MỚI</button>
-                    </div>
-                    <span id="itemCountBadge" class="text-[11px] font-black text-blue-700 bg-blue-100 px-3 py-1 rounded-md uppercase tracking-widest shadow-sm border border-blue-200">0 MÓN</span>
                 </div>
             </div>
 
@@ -517,17 +505,12 @@
 
                 <div id="orderPromoAlert" class="hidden w-full mb-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 border-l-4 border-l-emerald-500 text-emerald-900 px-3 py-2.5 rounded-xl text-[11px] md:text-sm shadow-sm animate-promo-alert"></div>
 
-                <button id="btnExportMenu" class="w-full relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white font-black py-4 rounded-2xl active:scale-[0.98] transition-all duration-300 shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)] border border-slate-700 group">
-                    <!-- Hiệu ứng bóng kính lướt qua -->
-                    <div class="absolute inset-0 w-[150%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-glass-shine pointer-events-none" style="animation-delay: 1.2s;"></div>
-                    
-                    <div class="relative z-10 flex items-center justify-center gap-3">
-                        <div class="bg-gradient-to-br from-amber-400 to-orange-500 p-2 rounded-xl shadow-inner group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300">
-                            <svg class="w-5 h-5 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        </div>
-                        <span class="tracking-[0.25em] uppercase text-sm drop-shadow-md text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">KẾT XUẤT BÁO GIÁ</span>
-                    </div>
-                </button>
+                <div class="flex justify-center mt-4 w-full pb-1">
+                    <button id="btnExportMenu" class="bg-slate-900 text-white font-black text-sm uppercase tracking-widest px-8 py-3.5 rounded-xl shadow-[0_8px_20px_-4px_rgba(15,23,42,0.4)] hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2.5 w-full md:w-auto md:min-w-[320px]">
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        XUẤT BÁO GIÁ
+                    </button>
+                </div>
             </div>
         </footer>
     </div>
@@ -1052,8 +1035,8 @@
                 btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'),
                 warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup')
             },
-            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote') },
-            search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
+            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch') },
+            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
@@ -1424,7 +1407,8 @@
 
         const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; State.currentFilterWarehouse = 'All'; State.currentSort = 'none'; updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
         const closeSearch = () => DOM.search.modal.classList.remove('active');
-        DOM.search.btnOpen.addEventListener('click', openSearch); DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
+        DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
+        DOM.main.btnOpenSearch.addEventListener('click', openSearch);
         DOM.search.input.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
 
         DOM.search.list.addEventListener('click', (e) => {
@@ -1568,9 +1552,9 @@
             render: () => {
                 if (State.cart.length === 0) { 
                     DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-2xl p-10 text-center border-2 border-dashed border-slate-200 text-slate-400 font-bold uppercase text-xs">Vui lòng chọn sản phẩm</div>'; 
-                    DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0 MÓN`; DOM.search.badge.textContent = `0`; return; 
+                    DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0 sản phẩm`; DOM.search.badge.textContent = `0`; return; 
                 }
-                DOM.footer.bar.classList.remove('translate-y-full'); DOM.main.itemCount.textContent = `${State.cart.length} MÓN`; DOM.search.badge.textContent = State.cart.length;
+                DOM.footer.bar.classList.remove('translate-y-full'); DOM.main.itemCount.textContent = `${State.cart.length} sản phẩm`; DOM.search.badge.textContent = State.cart.length;
 
                 const html = State.cart.map((item, index) => {
                     CartLogic.recalculateItem(item);
