@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -931,17 +930,15 @@
 
     <!-- MODAL HIỂN THỊ KẾT QUẢ ẢNH -->
     <div id="imageResultModal" class="fixed inset-0 bg-slate-950 z-[1000] hidden flex-col transition-opacity duration-300">
-        <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center shadow-lg shrink-0">
-            <div class="w-full max-w-5xl mx-auto flex justify-between items-center">
-                <button id="btnCloseImageResult" class="text-slate-400 bg-slate-800 font-bold px-4 py-2 rounded-xl text-xs uppercase active:scale-95 transition-colors hover:text-white">ĐÓNG</button>
-                <span class="font-black text-cyan-400 uppercase tracking-widest text-sm text-center">BẢN IN HOÀN CHỈNH</span>
-                <div class="w-16"></div>
-            </div>
+        <div class="bg-slate-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between shadow-lg shrink-0">
+            <button id="btnCloseImageResult" class="text-slate-400 bg-slate-800 font-bold px-4 py-2 rounded-xl text-xs uppercase active:scale-95 transition-colors hover:text-white">ĐÓNG</button>
+            <span class="font-black text-cyan-400 uppercase tracking-widest text-sm text-center hidden sm:block mx-2">BẢN IN HOÀN CHỈNH</span>
+            <button id="btnDownloadImage" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase active:scale-95 transition-colors hover:bg-blue-500 whitespace-nowrap">LƯU ẢNH</button>
         </div>
         <div class="flex-grow overflow-y-auto p-4 flex flex-col items-center pb-20">
             <div class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-4 py-3 rounded-xl text-[11px] md:text-sm font-bold w-full max-w-2xl text-center mb-5 flex flex-wrap gap-2 items-center justify-center animate-pulse shrink-0">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                CHẠM VÀ GIỮ ẢNH BÊN DƯỚI ĐỂ LƯU VÀO MÁY
+                CHẠM GIỮ ẢNH HOẶC NHẤN "LƯU ẢNH" ĐỂ TẢI VỀ
             </div>
             <img id="finalGeneratedImage" class="w-full max-w-4xl rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-slate-700 bg-white" alt="Hóa đơn hoàn chỉnh" />
         </div>
@@ -1072,7 +1069,7 @@
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView'), txtToggleView: document.getElementById('txtToggleView') },
             search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
-            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart') },
+            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnDownloadImage: document.getElementById('btnDownloadImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
             confirmReset: { modal: document.getElementById('confirmResetModal'), btnCancel: document.getElementById('btnCancelReset'), btnConfirm: document.getElementById('btnConfirmResetAction') },
             promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
@@ -1197,7 +1194,7 @@
             State.cart.push(newItem);
             
             DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = '';
-            DOM.manualAdd.btnClose.click(); DOM.search.badge.textContent = State.cart.length; CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
+            DOM.manualAdd.btnClose.click(); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
         });
 
         // VIEW MODE TOGGLE LOGIC
@@ -1313,7 +1310,7 @@
                         }
                     }
                 });
-                if (addedCount > 0) { CartLogic.render(); LocalDB.save(); Utils.showToast(`Đã ném ${addedCount} SP vào giỏ!`); DOM.search.badge.textContent = State.cart.length; } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
+                if (addedCount > 0) { CartLogic.render(); LocalDB.save(); Utils.showToast(`Đã ném ${addedCount} SP vào giỏ!`); } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
             },
             openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); },
             closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
@@ -1508,7 +1505,7 @@
                 PromoLogic.checkAndApplyToItem(newItem); State.cart.push(newItem);
                 btn.className = "btn-toggle-search text-red-500 font-bold text-xs bg-red-50 px-4 py-2 rounded-xl border border-red-100"; btn.textContent = "XÓA";
             }
-            DOM.search.badge.textContent = State.cart.length; CartLogic.render(); LocalDB.save(); 
+            CartLogic.render(); LocalDB.save(); 
         });
 
         function renderSearchList() {
@@ -1605,7 +1602,12 @@
             },
             
             updateSummary: () => {
-                let sO = 0, sF = 0; State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; });
+                let sO = 0, sF = 0, totalQty = 0; 
+                State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); });
+                
+                DOM.main.itemCount.textContent = `${totalQty} sản phẩm`;
+                DOM.search.badge.textContent = totalQty;
+                
                 let bestOrderPromo = null; let nextOrderPromo = null; let currentOrderDiscount = 0; let orderGiftStr = ""; let actualMultiplier = 1;
                 const orderPromos = State.promos.filter(p => p.isOrderPromo).sort((a, b) => b.minAmount - a.minAmount);
                 
@@ -1647,7 +1649,13 @@
                     DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-2xl p-10 text-center border-2 border-dashed border-slate-200 text-slate-400 font-bold uppercase text-xs">Vui lòng chọn sản phẩm</div>'; 
                     DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0 sản phẩm`; DOM.search.badge.textContent = `0`; return; 
                 }
-                DOM.footer.bar.classList.remove('translate-y-full'); DOM.main.itemCount.textContent = `${State.cart.length} sản phẩm`; DOM.search.badge.textContent = State.cart.length;
+                
+                let totalQty = 0;
+                State.cart.forEach(item => totalQty += (Number(item.qty) || 0));
+                
+                DOM.footer.bar.classList.remove('translate-y-full'); 
+                DOM.main.itemCount.textContent = `${totalQty} sản phẩm`; 
+                DOM.search.badge.textContent = totalQty;
 
                 const html = State.cart.map((item, index) => {
                     CartLogic.recalculateItem(item);
@@ -1774,13 +1782,17 @@
             item[field] = val; 
 
             if (field === 'qty') {
-                PromoLogic.checkAndApplyToItem(item); if(item.appliedPromoId) CartLogic.render(); 
+                const oldPromoId = item.appliedPromoId;
+                PromoLogic.checkAndApplyToItem(item); 
+                if(oldPromoId !== item.appliedPromoId) { CartLogic.render(); }
             }
 
             CartLogic.recalculateItem(item); 
-            if (!item.appliedPromoId && field !== 'qty') {
-                card.querySelector('.price-display').textContent = Utils.formatMoney(item.priceAfterDiscount); 
-                card.querySelector('.linetotal-display').textContent = Utils.formatMoney(item.totalFinal);
+            
+            // Xóa chặn && field !== 'qty' để khi thay đổi số lượng thì hiển thị Thành Tiền tự động cập nhật
+            if (!item.appliedPromoId) {
+                const priceEl = card.querySelector('.price-display'); if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount); 
+                const lineTotalEl = card.querySelector('.linetotal-display'); if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
                 const noteInput = card.querySelector('.cart-input-text'); if (noteInput && noteInput.value !== item.note) noteInput.value = item.note;
             }
             CartLogic.updateSummary(); LocalDB.save();
@@ -1881,13 +1893,13 @@
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
                     const argbColor = 'FF0055A5'; 
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
-                    titleCell.value = document.getElementById('printDocTitle').innerText.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
+                    titleCell.value = document.getElementById('printDocTitle').textContent.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
                     
-                    worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true }; worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').innerText.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
-                    worksheet.getCell('G3').value = document.getElementById('pDateDisplay').innerText.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
-                    worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true }; worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').innerText.trim();
-                    worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').innerText.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
+                    worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true }; worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').textContent.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
+                    worksheet.getCell('G3').value = document.getElementById('pDateDisplay').textContent.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
+                    worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true }; worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').textContent.trim();
+                    worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').textContent.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
                     
                     const headerRow = worksheet.getRow(6);
                     headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
@@ -1900,7 +1912,7 @@
                         const tds = tr.querySelectorAll('td');
                         if (tds.length >= 8) {
                             const row = worksheet.getRow(currentRow); const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; 
-                            row.values = [ tds[0].innerText.trim(), tds[1].innerText.trim(), tds[2].innerText.trim(), Utils.cleanNumber(tds[3].innerText), Utils.cleanNumber(rawPriceStr), Utils.cleanNumber(tds[5].innerText), Utils.cleanNumber(tds[6].innerText), tds[7].innerText.trim().replace(/\n/g, ', ') ];
+                            row.values = [ tds[0].textContent.trim(), tds[1].textContent.trim(), tds[2].textContent.trim(), Utils.cleanNumber(tds[3].textContent), Utils.cleanNumber(rawPriceStr), Utils.cleanNumber(tds[5].textContent), Utils.cleanNumber(tds[6].textContent), tds[7].textContent.trim().replace(/\n/g, ', ') ];
                             row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
                             
                             row.eachCell((cell, colNumber) => { 
@@ -1922,7 +1934,7 @@
 
                     const totalRow = worksheet.getRow(currentRow);
                     totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
-                    totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').innerText.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
+                    totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').textContent.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 35 } ];
                     
                     const buffer = await workbook.xlsx.writeBuffer(); const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -1971,6 +1983,19 @@
         DOM.export.btnCopyMsg.addEventListener('click', () => { Utils.copyToClipboard(DOM.export.msgBox.value); });
         DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
 
+        // Nút lưu ảnh
+        DOM.export.btnDownloadImage.addEventListener('click', () => {
+            const url = DOM.export.finalImg.src;
+            if (url) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `BaoGia_${Date.now()}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        });
+
         window.addEventListener('resize', () => {
             if(DOM.export.modal.classList.contains('active')) {
                 const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea');
@@ -1982,6 +2007,3 @@
     </script>
 </body>
 </html>
-
-
-
