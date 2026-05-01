@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -427,7 +428,7 @@
     <div id="screenMain" class="app-screen flex-col bg-slate-50">
         <main class="flex-grow overflow-y-auto relative" id="mainScroll">
             
-            <!-- STICKY HEADER (Tối ưu cực độ - Gọn gàng & Sang trọng) -->
+            <!-- STICKY HEADER -->
             <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm pb-3">
                 
                 <!-- Dòng 1: Tiêu đề Giỏ hàng & Các nút Cấu hình -->
@@ -461,19 +462,24 @@
                     </div>
                 </div>
 
-                <!-- Dòng 2: Nút Hành Động (Tìm thêm sản phẩm & Làm mới) -->
+                <!-- Dòng 2: Nút Hành Động -->
                 <div class="w-full max-w-5xl mx-auto px-4 flex items-center gap-2.5">
                     <button id="btnOpenSearch" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-black text-xs uppercase tracking-widest py-3 rounded-xl shadow-[0_4px_15px_-3px_rgba(37,99,235,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                        THÊM SẢN PHẨM
+                        THÊM SP
                     </button>
-                    <button id="btnResetQuote" class="shrink-0 bg-orange-50 text-orange-600 font-bold text-[11px] uppercase tracking-widest px-4 py-3 rounded-xl border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                    <!-- NÚT THU GỌN / CHI TIẾT MỚI -->
+                    <button id="btnToggleView" class="shrink-0 bg-slate-50 text-slate-600 font-bold text-[11px] uppercase tracking-widest px-3 py-3 rounded-xl border border-slate-200 hover:bg-slate-100 active:scale-95 transition-all flex items-center justify-center gap-1.5">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        <span id="txtToggleView">THU GỌN</span>
+                    </button>
+                    <button id="btnResetQuote" class="shrink-0 bg-orange-50 text-orange-600 font-bold text-[11px] uppercase tracking-widest px-3 py-3 rounded-xl border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all flex items-center justify-center gap-1.5">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                         LÀM MỚI
                     </button>
                 </div>
 
-                <!-- Dòng 3: Khuyến Mãi Nhanh (Sẽ ẩn nếu không có) -->
+                <!-- Dòng 3: Khuyến Mãi Nhanh -->
                 <div id="quickPromoButtons" class="w-full max-w-5xl mx-auto px-4 flex gap-2 overflow-x-auto hide-scrollbar pt-3 empty:hidden">
                     <!-- JS render nút add KM nhanh -->
                 </div>
@@ -989,14 +995,15 @@
             searchTimeout: null, currentOrderPromoEffect: null,
             brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
             defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item' },
-            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0
+            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0,
+            isCompactView: false // Trạng thái hiển thị Thu gọn/Chi tiết
         };
         const ITEMS_PER_PAGE = 50; 
 
         const LocalDB = {
             save: () => {
                 try {
-                    localStorage.setItem('thuanstore_state', JSON.stringify({ productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand, defaults: State.defaults, promos: State.promos }));
+                    localStorage.setItem('thuanstore_state', JSON.stringify({ productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand, defaults: State.defaults, promos: State.promos, isCompactView: State.isCompactView }));
                 } catch(e) { if (e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn. Hãy dùng file Excel nhẹ hơn."); }
             },
             load: () => {
@@ -1006,6 +1013,7 @@
                         const p = JSON.parse(data);
                         State.productDB = p.productDB || []; State.warehouses = p.warehouses || []; State.cart = p.cart || [];
                         State.brand = p.brand || State.brand; State.defaults = p.defaults || State.defaults; State.promos = p.promos || [];
+                        State.isCompactView = p.isCompactView || false;
                         if (State.productDB.length > 0 && State.warehouses.length === 0) { State.warehouses = ['Kho Mặc Định']; State.productDB.forEach(x => x.warehouse = 'Kho Mặc Định'); LocalDB.save(); }
                         return true;
                     }
@@ -1033,7 +1041,7 @@
                 btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'),
                 warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup')
             },
-            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch') },
+            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView'), txtToggleView: document.getElementById('txtToggleView') },
             search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart') },
@@ -1054,11 +1062,26 @@
             DOM.main.senderName.value = DOM.main.senderName.value || State.brand.name; 
         };
 
+        const updateToggleViewUI = () => {
+            if (!DOM.main.btnToggleView) return;
+            if (State.isCompactView) {
+                DOM.main.txtToggleView.textContent = 'CHI TIẾT';
+                DOM.main.btnToggleView.classList.remove('text-slate-600', 'bg-slate-50', 'border-slate-200', 'hover:bg-slate-100');
+                DOM.main.btnToggleView.classList.add('text-blue-600', 'bg-blue-50', 'border-blue-200', 'hover:bg-blue-100');
+            } else {
+                DOM.main.txtToggleView.textContent = 'THU GỌN';
+                DOM.main.btnToggleView.classList.remove('text-blue-600', 'bg-blue-50', 'border-blue-200', 'hover:bg-blue-100');
+                DOM.main.btnToggleView.classList.add('text-slate-600', 'bg-slate-50', 'border-slate-200', 'hover:bg-slate-100');
+            }
+        };
+
         const initApp = () => {
             LocalDB.load();
             DOM.brand.nameIn.value = State.brand.name; DOM.brand.sloganIn.value = State.brand.slogan; DOM.brand.docTitleIn.value = State.brand.docTitle;
             DOM.discount.baseIn.value = State.defaults.baseDiscount || ''; DOM.discount.km1In.value = State.defaults.km1 || ''; DOM.discount.km2In.value = State.defaults.km2 || '';
             DOM.discount.kmTienIn.value = State.defaults.kmTien || ''; DOM.discount.kmTienTypeIn.value = State.defaults.kmTienType || 'per_item';
+            
+            updateToggleViewUI();
             setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
         };
 
@@ -1115,6 +1138,14 @@
             
             DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = '';
             DOM.manualAdd.btnClose.click(); DOM.search.badge.textContent = State.cart.length; CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
+        });
+
+        // VIEW MODE TOGGLE LOGIC
+        DOM.main.btnToggleView.addEventListener('click', () => {
+            State.isCompactView = !State.isCompactView;
+            updateToggleViewUI();
+            CartLogic.render();
+            LocalDB.save();
         });
 
         // START OVER / RESET QUOTE LOGIC
@@ -1565,54 +1596,78 @@
                     }
                     let borderClass = item.appliedPromoId ? 'ring-2 ring-purple-400/50 border-purple-300' : 'border-slate-200';
 
-                    return `
-                    <article class="bg-white rounded-2xl p-4 shadow-sm border relative transition-shadow hover:shadow-md ${borderClass}" data-id="${item.id}">
-                        ${item.appliedPromoId ? `<div class="absolute -top-2.5 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> AUTO KM</div>` : ''}
-                        <div class="flex justify-between items-start gap-3 mb-3">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1.5">
-                                    <span class="bg-blue-600 text-white text-[11px] font-black w-6 h-6 flex items-center justify-center rounded-md shrink-0 shadow-sm">${index+1}</span>
-                                    ${item.code ? `<span class="text-[11px] font-black text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md uppercase tracking-wider shadow-sm">${item.code}</span>` : ''}
+                    if (State.isCompactView) {
+                        // HIỂN THỊ CHẾ ĐỘ THU GỌN (COMPACT)
+                        return `
+                        <article class="bg-white rounded-2xl p-4 shadow-sm border relative transition-shadow hover:shadow-md ${borderClass}" data-id="${item.id}">
+                            ${item.appliedPromoId ? `<div class="absolute -top-2.5 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> AUTO KM</div>` : ''}
+                            <div class="flex justify-between items-start gap-3">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <span class="bg-blue-600 text-white text-[11px] font-black w-6 h-6 flex items-center justify-center rounded-md shrink-0 shadow-sm">${index+1}</span>
+                                        ${item.code ? `<span class="text-[11px] font-black text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md uppercase tracking-wider shadow-sm">${item.code}</span>` : ''}
+                                        <span class="text-[11px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md shadow-sm uppercase tracking-widest">SL: ${item.qty}</span>
+                                    </div>
+                                    <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${item.name}</h4>
                                 </div>
-                                <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${item.name}</h4>
+                                <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
                             </div>
-                            <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
-                        </div>
-                        <div class="flex flex-wrap gap-2 items-center mb-4">
-                            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">Bìa: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
-                            ${unitBadge} ${item.warehouse ? `<span class="text-[9px] bg-indigo-50/80 text-indigo-600 font-bold px-2 py-1 rounded-md uppercase tracking-widest border border-indigo-100/50">${item.warehouse}</span>` : ''}
-                            <div class="flex-1 min-w-[150px] relative">
-                                <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                <input type="text" data-field="note" value="${item.note || ''}" placeholder="Thêm ghi chú riêng..." class="cart-input-text w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-400 rounded-lg pl-8 pr-3 py-1.5 text-[11px] font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400">
+                            <div class="flex justify-between items-end mt-2 pt-3 border-t border-slate-100">
+                                <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Sau Ck</span><span class="price-display text-blue-600 text-[16px] md:text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
+                                <div class="flex flex-col items-end"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span><span class="linetotal-display text-[18px] md:text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span></div>
                             </div>
-                        </div>
+                        </article>`;
+                    } else {
+                        // HIỂN THỊ CHẾ ĐỘ CHI TIẾT ĐẦY ĐỦ NHƯ CŨ
+                        return `
+                        <article class="bg-white rounded-2xl p-4 shadow-sm border relative transition-shadow hover:shadow-md ${borderClass}" data-id="${item.id}">
+                            ${item.appliedPromoId ? `<div class="absolute -top-2.5 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[9px] font-black px-3 py-1 rounded-full shadow-sm uppercase tracking-widest flex items-center gap-1 z-10"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg> AUTO KM</div>` : ''}
+                            <div class="flex justify-between items-start gap-3 mb-3">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1.5">
+                                        <span class="bg-blue-600 text-white text-[11px] font-black w-6 h-6 flex items-center justify-center rounded-md shrink-0 shadow-sm">${index+1}</span>
+                                        ${item.code ? `<span class="text-[11px] font-black text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md uppercase tracking-wider shadow-sm">${item.code}</span>` : ''}
+                                    </div>
+                                    <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${item.name}</h4>
+                                </div>
+                                <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
+                            </div>
+                            <div class="flex flex-wrap gap-2 items-center mb-4">
+                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200/60 px-2.5 py-1 rounded-md">Bìa: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
+                                ${unitBadge} ${item.warehouse ? `<span class="text-[9px] bg-indigo-50/80 text-indigo-600 font-bold px-2 py-1 rounded-md uppercase tracking-widest border border-indigo-100/50">${item.warehouse}</span>` : ''}
+                                <div class="flex-1 min-w-[150px] relative">
+                                    <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    <input type="text" data-field="note" value="${item.note || ''}" placeholder="Thêm ghi chú riêng..." class="cart-input-text w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-blue-400 rounded-lg pl-8 pr-3 py-1.5 text-[11px] font-medium text-slate-700 outline-none transition-all placeholder:text-slate-400">
+                                </div>
+                            </div>
 
-                        <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
-                            <div class="grid grid-cols-5 gap-2">
-                                <div class="flex flex-col"><label class="text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
-                                <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-amber-800 bg-amber-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-amber-600 hover:text-amber-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-amber-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
-                                    <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-amber-200 rounded-lg py-1.5 text-center text-[14px] font-black text-amber-700 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all px-0">
-                                </div>
-                                <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM1</label><button data-action="sync" data-field="km1" class="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-blue-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
-                                    <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0">
-                                </div>
-                                <div class="flex flex-col">
-                                    <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM2</label><button data-action="sync" data-field="km2" class="text-emerald-600 hover:text-emerald-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-emerald-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
-                                    <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all px-0">
-                                </div>
-                                <div class="flex flex-col">
-                                    <div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border-2 ${item.kmTienType === 'total' ? 'border-red-300 bg-red-100 text-red-800 hover:bg-red-200' : 'border-purple-300 bg-purple-100 text-purple-800 hover:bg-purple-200'}">${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ/SP'}</button></div>
-                                    <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 ${item.kmTienType === 'total' ? 'border-red-300 text-red-700 focus:border-red-500 focus:ring-red-200' : 'border-purple-300 text-purple-700 focus:border-purple-500 focus:ring-purple-200'} rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:ring-2 transition-all px-0">
+                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
+                                <div class="grid grid-cols-5 gap-2">
+                                    <div class="flex flex-col"><label class="text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-amber-800 bg-amber-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">CK%</label><button data-action="sync" data-field="baseDiscount" class="text-amber-600 hover:text-amber-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-amber-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-amber-200 rounded-lg py-1.5 text-center text-[14px] font-black text-amber-700 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all px-0">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM1</label><button data-action="sync" data-field="km1" class="text-blue-600 hover:text-blue-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-blue-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center justify-center gap-1 mb-1.5"><label class="text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1.5 py-0.5 uppercase tracking-widest shadow-sm">KM2</label><button data-action="sync" data-field="km2" class="text-emerald-600 hover:text-emerald-800 transition-colors bg-white rounded-full shadow-sm p-0.5 border border-emerald-100"><svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg></button></div>
+                                        <input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all px-0">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="flex items-center justify-center mb-1.5"><button data-action="toggleKmType" class="text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider transition-colors border-2 ${item.kmTienType === 'total' ? 'border-red-300 bg-red-100 text-red-800 hover:bg-red-200' : 'border-purple-300 bg-purple-100 text-purple-800 hover:bg-purple-200'}">${item.kmTienType === 'total' ? 'TRỪ TỔNG' : 'TRỪ/SP'}</button></div>
+                                        <input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 ${item.kmTienType === 'total' ? 'border-red-300 text-red-700 focus:border-red-500 focus:ring-red-200' : 'border-purple-300 text-purple-700 focus:border-purple-500 focus:ring-purple-200'} rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:ring-2 transition-all px-0">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex justify-between items-end px-1 mt-1">
-                            <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Ck</span><span class="price-display text-blue-600 text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
-                            <div class="flex flex-col items-end"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span><span class="linetotal-display text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span></div>
-                        </div>
-                    </article>`;
+                            <div class="flex justify-between items-end px-1 mt-1">
+                                <div class="flex flex-col"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Đơn Giá Ck</span><span class="price-display text-blue-600 text-[17px] font-black tracking-tight leading-none">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
+                                <div class="flex flex-col items-end"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Thành Tiền</span><span class="linetotal-display text-[19px] font-black text-slate-900 leading-none">${Utils.formatMoney(item.totalFinal)}</span></div>
+                            </div>
+                        </article>`;
+                    }
                 }).join('');
                 
                 DOM.main.quoteList.innerHTML = html; CartLogic.updateSummary();
@@ -1851,3 +1906,5 @@
     </script>
 </body>
 </html>
+
+```
