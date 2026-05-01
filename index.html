@@ -251,7 +251,7 @@
         <span id="toastMsg">Thông báo</span>
     </div>
 
-    <!-- MODAL XÁC NHẬN XÓA -->
+    <!-- MODAL XÁC NHẬN XÓA KHO -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
         <div class="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300">
             <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-4 mx-auto">
@@ -262,6 +262,21 @@
             <div class="flex gap-3">
                 <button id="btnCancelDelete" class="flex-1 py-3 rounded-xl text-xs font-black text-slate-600 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all uppercase tracking-widest">Hủy Bỏ</button>
                 <button id="btnConfirmDeleteAction" class="flex-1 py-3 rounded-xl text-xs font-black text-white bg-red-500 hover:bg-red-600 active:scale-95 transition-all shadow-md shadow-red-500/20 uppercase tracking-widest">Xóa Ngay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN LÀM MỚI BÁO GIÁ (BẮT ĐẦU LẠI) -->
+    <div id="confirmResetModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-3xl p-6 w-[90%] max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300">
+            <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mb-4 mx-auto">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+            </div>
+            <h3 class="text-lg font-black text-slate-900 mb-2 text-center uppercase tracking-wide">Bắt Đầu Lại</h3>
+            <p class="text-xs text-slate-500 mb-6 font-medium text-center leading-relaxed">Giỏ hàng và thông tin khách hàng hiện tại sẽ bị xóa sạch để bạn tạo báo giá mới. Bạn có chắc chắn?</p>
+            <div class="flex gap-3">
+                <button id="btnCancelReset" class="flex-1 py-3 rounded-xl text-xs font-black text-slate-600 bg-slate-100 hover:bg-slate-200 active:scale-95 transition-all uppercase tracking-widest">Hủy Bỏ</button>
+                <button id="btnConfirmResetAction" class="flex-1 py-3 rounded-xl text-xs font-black text-white bg-orange-500 hover:bg-orange-600 active:scale-95 transition-all shadow-md shadow-orange-500/20 uppercase tracking-widest">Đồng Ý</button>
             </div>
         </div>
     </div>
@@ -370,10 +385,10 @@
 
                 <article class="glass-card p-6">
                     <div class="flex items-center gap-3 mb-4"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center">1</div><h2 class="font-bold text-slate-800">Thêm Bảng Giá / Hãng Mới</h2></div>
-                    <label class="block w-full border-2 border-dashed border-slate-300 bg-slate-50/50 hover:bg-slate-100 rounded-2xl p-8 text-center cursor-pointer transition-colors group">
+                    <label class="block w-full max-w-full overflow-hidden border-2 border-dashed border-slate-300 bg-slate-50/50 hover:bg-slate-100 rounded-2xl p-6 md:p-8 text-center cursor-pointer transition-colors group">
                         <input type="file" id="fileInput" accept=".xlsx, .xls, .csv" class="hidden">
                         <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-200 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform"><svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg></div>
-                        <span id="fileName" class="text-sm font-bold text-slate-600 group-hover:text-blue-600">Chạm để chọn file Excel (.xlsx)</span>
+                        <span id="fileName" class="text-sm font-bold text-slate-600 group-hover:text-blue-600 block w-full truncate px-2">Chạm để chọn file Excel (.xlsx)</span>
                     </label>
                 </article>
 
@@ -449,7 +464,10 @@
 
                 <div>
                     <div class="flex justify-between items-end mb-2 px-1 mt-2">
-                        <h2 class="font-black text-slate-900 text-sm uppercase tracking-tight">Chi tiết Đơn hàng</h2>
+                        <div class="flex items-center gap-2">
+                            <h2 class="font-black text-slate-900 text-sm uppercase tracking-tight">Chi tiết Đơn hàng</h2>
+                            <button id="btnResetQuote" class="text-[9px] font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded uppercase tracking-widest border border-orange-200 hover:bg-orange-100 active:scale-95 transition-all flex items-center gap-1 shadow-sm"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> LÀM MỚI</button>
+                        </div>
                         <span id="itemCountBadge" class="text-[10px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded uppercase tracking-widest">0 MÓN</span>
                     </div>
                     <div id="quoteList" class="space-y-3 pb-4"></div>
@@ -859,7 +877,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                     <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-95 transition-all">
                         <svg class="w-6 h-6 md:w-7 md:h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         <span class="text-[10px] md:text-xs uppercase tracking-wider">Máy In</span>
@@ -877,6 +895,12 @@
                         <span class="text-[10px] md:text-xs uppercase tracking-wider">Xuất Excel</span>
                     </button>
                 </div>
+
+                <!-- BÚT BẮT ĐẦU LẠI NẰM RIÊNG BIỆT ĐỂ KHÔNG PHÁ BỐ CỤC GRID 4 -->
+                <button id="btnExportRestart" class="w-full bg-slate-100 border border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl uppercase tracking-widest text-[11px] md:text-xs mb-6 hover:bg-slate-200 active:scale-95 transition-all flex justify-center items-center gap-2">
+                    <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    TẠO BÁO GIÁ MỚI (BẮT ĐẦU LẠI)
+                </button>
 
                 <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 mb-6 text-left relative overflow-hidden">
                     <p class="text-indigo-900 text-[10px] md:text-xs font-black uppercase tracking-widest flex items-center gap-1 mb-3">
@@ -902,7 +926,7 @@
             </div>
         </div>
         <div class="flex-grow overflow-y-auto p-4 flex flex-col items-center pb-20">
-            <div class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-4 py-3 rounded-xl text-[11px] md:text-sm font-bold w-full max-w-2xl text-center mb-5 flex gap-2 items-center justify-center animate-pulse shrink-0">
+            <div class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-4 py-3 rounded-xl text-[11px] md:text-sm font-bold w-full max-w-2xl text-center mb-5 flex flex-wrap gap-2 items-center justify-center animate-pulse shrink-0">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 CHẠM VÀ GIỮ ẢNH BÊN DƯỚI ĐỂ LƯU VÀO MÁY
             </div>
@@ -1005,11 +1029,12 @@
                 btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'),
                 warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup')
             },
-            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager') },
+            main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote') },
             search: { btnOpen: document.getElementById('btnOpenSearch'), modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
-            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage') },
+            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
+            confirmReset: { modal: document.getElementById('confirmResetModal'), btnCancel: document.getElementById('btnCancelReset'), btnConfirm: document.getElementById('btnConfirmResetAction') },
             promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
         };
 
@@ -1086,6 +1111,24 @@
             
             DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = '';
             DOM.manualAdd.btnClose.click(); DOM.search.badge.textContent = State.cart.length; CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
+        });
+
+        // START OVER / RESET QUOTE LOGIC
+        const openResetModal = () => { DOM.confirmReset.modal.classList.remove('hidden'); DOM.confirmReset.modal.classList.add('flex'); setTimeout(() => { DOM.confirmReset.modal.classList.remove('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-100'); }, 10); };
+        const closeResetModal = () => { DOM.confirmReset.modal.classList.add('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-100'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.confirmReset.modal.classList.add('hidden'); DOM.confirmReset.modal.classList.remove('flex'); }, 300); };
+        
+        DOM.main.btnResetQuote.addEventListener('click', openResetModal);
+        DOM.export.btnExportRestart.addEventListener('click', openResetModal);
+        DOM.confirmReset.btnCancel.addEventListener('click', closeResetModal);
+        DOM.confirmReset.btnConfirm.addEventListener('click', () => {
+            State.cart = [];
+            DOM.main.custName.value = '';
+            DOM.main.promoNote.value = '';
+            CartLogic.render();
+            LocalDB.save();
+            closeResetModal();
+            DOM.export.modal.classList.remove('active');
+            Utils.showToast("Đã làm mới báo giá!");
         });
 
 
