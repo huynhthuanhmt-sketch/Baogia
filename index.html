@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -47,6 +48,10 @@
         .animate-blob { animation: blob 7s infinite; }
         @keyframes pulsePromo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(0.98); } }
         .animate-promo-alert { animation: pulsePromo 2s infinite; }
+        
+        /* Hiệu ứng nhấp nháy cho số Hotline */
+        @keyframes pulseHotline { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        .animate-hotline { animation: pulseHotline 2s infinite; }
 
         .cyber-grid { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(6, 182, 212, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(6, 182, 212, 0.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); z-index: 0; }
         
@@ -123,6 +128,39 @@
         </div>
     </div>
 
+    <!-- MODAL LỜI CẢM ƠN VÀ GÓP Ý DEMO TỪ HOTLINE -->
+    <div id="demoFeedbackModal" class="fixed inset-0 bg-slate-950/80 z-[2500] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
+            <!-- Header Modal -->
+            <div class="bg-gradient-to-r from-emerald-600 to-teal-600 p-5 shrink-0 relative">
+                <button id="btnCloseFeedback" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <h3 class="text-lg font-black text-white uppercase tracking-wide flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> 
+                    Thuận Store - Bản Demo 2026
+                </h3>
+                <p class="text-emerald-100 text-[11px] font-medium mt-1 tracking-wide">Trải nghiệm miễn phí giải pháp chuyển đổi số toàn diện.</p>
+            </div>
+
+            <!-- Nội dung & Form -->
+            <div class="p-6 overflow-y-auto hide-scrollbar flex-grow space-y-4 text-[13px] text-slate-600 leading-relaxed">
+                <div class="space-y-3">
+                    <p class="text-slate-800 font-bold text-sm">Chào bạn, người đồng hành cùng sự phát triển của ngành bán lẻ vật tư điện nước!</p>
+                    <p>Bạn đang trải nghiệm trực tiếp <strong>Phiên bản Demo Miễn phí</strong> của hệ sinh thái <strong>Thuận Store 2026</strong>. Đây không chỉ là một trang web báo giá đơn thuần, mà là kết tinh của tư duy quản trị tinh gọn và công nghệ tự động hóa hiện đại nhất.</p>
+                    <p>Chúng tôi thấu hiểu sâu sắc rằng, việc quản lý hàng ngàn mã sản phẩm, xử lý <span class="text-blue-600 font-semibold">ma trận chiết khấu đại lý</span> và lên báo giá nhanh chóng cho nhà thầu là những <i>"nút thắt"</i> tiêu tốn hàng giờ đồng hồ mỗi ngày của bạn. Với triết lý <strong>"Làm ít hơn - Đạt hiệu quả cao hơn"</strong>, hệ thống này được sinh ra để tự động hóa hoàn toàn quy trình đó, giúp bạn cắt giảm đến 80% thời gian cho các tác vụ thủ công.</p>
+                    <p>Vì đây là bản thử nghiệm nhằm khảo sát tính ứng dụng thực tế vào luồng kinh doanh, chúng tôi rất mong muốn được lắng nghe những góc nhìn chuyên môn từ bạn. Mọi ý kiến đóng góp sẽ là viên gạch nền tảng quý giá giúp chúng tôi hoàn thiện giải pháp chuẩn mực nhất.</p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mt-5">
+                    <label class="block text-[11px] font-black text-slate-800 uppercase tracking-widest mb-2 flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Hòm Thư Góp Ý (Bảo mật 100%)</label>
+                    <textarea id="feedbackText" rows="3" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm font-medium outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all resize-none shadow-sm" placeholder="Chia sẻ suy nghĩ, tính năng bạn mong muốn hoặc bất kỳ khó khăn nào bạn gặp phải..."></textarea>
+                    <button id="btnSubmitFeedback" class="mt-3 w-full bg-slate-900 text-white font-black py-3.5 rounded-xl uppercase text-xs tracking-widest shadow-lg hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2">
+                        Gửi Góp Ý Về Hệ Thống <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL XÓA KHO -->
     <div id="confirmDeleteModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300">
@@ -190,7 +228,13 @@
             </div>
         </div>
 
-        <div class="absolute bottom-6 w-full text-center z-50 pointer-events-none pb-[env(safe-area-inset-bottom)]">
+        <div class="absolute bottom-6 w-full text-center z-50 pointer-events-none pb-[env(safe-area-inset-bottom)] flex flex-col items-center">
+            <!-- NÚT HOTLINE NHẤP NHÁY MỚI THÊM VÀO -->
+            <div id="demoHotlineTrigger" class="mb-4 inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full cursor-pointer animate-hotline backdrop-blur-md transition-all hover:bg-emerald-500/20 active:scale-95 pointer-events-auto">
+                <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                <span class="text-xs font-black tracking-widest">HOTLINE: 0939.125.128</span>
+            </div>
+            
             <p class="text-[10px] text-slate-500/70 font-semibold tracking-[0.25em] uppercase">© 2026 Thuận Store</p>
         </div>
     </main>
@@ -366,10 +410,8 @@
                         <input type="text" id="searchInput" placeholder="Gõ mã hoặc tên SP..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold outline-none focus:border-blue-500">
                         <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <!-- CONTROL PANEL TÌM KIẾM ĐÃ ĐƯỢC GỘP NÚT -->
                     <div class="flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar pb-1">
                         <div class="flex gap-2 shrink-0">
-                            <!-- NÚT GỘP TĂNG GIẢM -->
                             <button id="btnSortCycle" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1 shadow-sm">
                                 🔄 Biến Động: Tất Cả
                             </button>
@@ -581,7 +623,6 @@
             },
             normString: (str) => { return str ? str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ""; },
             getIncreaseDecreaseInfo: (u) => {
-                // Đọc phần trăm tăng giảm
                 if (u === null || u === undefined || u === "") return null;
                 let str = String(u).trim(); 
                 if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai" || str === "0%") return null;
@@ -651,7 +692,7 @@
                 brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
                 defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', discountFormula: 'sequential' },
                 currentFilterWarehouse: 'All', 
-                fluctuationSort: 'normal', // Trạng thái gộp mới: 'normal', 'inc', 'dec'
+                fluctuationSort: 'normal', 
                 filteredProducts: [], displayCount: 50,
                 isCompactView: false, currentScreenId: 'landing'
             },
@@ -716,7 +757,7 @@
             manualAdd: { modal: document.getElementById('manualAddModal'), btnOpen: document.getElementById('btnOpenManualAdd'), btnClose: document.getElementById('btnCancelManual'), btnConfirm: document.getElementById('btnConfirmManual'), name: document.getElementById('manualName'), price: document.getElementById('manualPrice'), unit: document.getElementById('manualUnit'), code: document.getElementById('manualCode') },
             setup: { btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup') },
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView') },
-            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, // Nút gộp
+            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, 
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnDownloadImage: document.getElementById('btnDownloadImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
@@ -965,6 +1006,65 @@
         document.getElementById('btnCloseStory').addEventListener('click', closeStoryModal);
         document.getElementById('btnReadMoreClose').addEventListener('click', closeStoryModal);
 
+        // LOGIC HOTLINE MỚI
+        const demoHotlineTrigger = document.getElementById('demoHotlineTrigger');
+        const demoFeedbackModal = document.getElementById('demoFeedbackModal');
+        const btnCloseFeedback = document.getElementById('btnCloseFeedback');
+        const btnSubmitFeedback = document.getElementById('btnSubmitFeedback');
+        const feedbackText = document.getElementById('feedbackText');
+
+        const openFeedbackModal = () => {
+            demoFeedbackModal.classList.remove('hidden'); demoFeedbackModal.classList.add('flex');
+            setTimeout(() => { demoFeedbackModal.classList.remove('opacity-0'); demoFeedbackModal.firstElementChild.classList.remove('scale-95'); }, 10);
+        };
+
+        const closeFeedbackModal = () => {
+            demoFeedbackModal.classList.add('opacity-0'); demoFeedbackModal.firstElementChild.classList.add('scale-95');
+            setTimeout(() => { demoFeedbackModal.classList.add('hidden'); demoFeedbackModal.classList.remove('flex'); }, 300);
+        };
+
+        if(demoHotlineTrigger) demoHotlineTrigger.addEventListener('click', openFeedbackModal);
+        if(btnCloseFeedback) btnCloseFeedback.addEventListener('click', closeFeedbackModal);
+
+        if(btnSubmitFeedback) {
+            btnSubmitFeedback.addEventListener('click', async () => {
+                const content = feedbackText.value.trim();
+                if(!content) { Utils.showToast("Vui lòng nhập nội dung góp ý nhé!"); return; }
+
+                const originalText = btnSubmitFeedback.innerHTML;
+                btnSubmitFeedback.innerHTML = '<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Đang gửi...';
+                btnSubmitFeedback.disabled = true;
+
+                try {
+                    const response = await fetch("https://formsubmit.co/ajax/nhatanhhao@gmail.com", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            _subject: "Góp ý từ Demo Thuận Store",
+                            message: content,
+                            time: new Date().toLocaleString('vi-VN')
+                        })
+                    });
+
+                    if (response.ok) {
+                        Utils.showToast("Cảm ơn bạn! Góp ý đã được gửi thành công.");
+                        feedbackText.value = '';
+                        closeFeedbackModal();
+                    } else {
+                        Utils.showToast("Có lỗi xảy ra, vui lòng thử lại sau.");
+                    }
+                } catch (error) {
+                    Utils.showToast("Không thể kết nối. Vui lòng kiểm tra lại mạng.");
+                } finally {
+                    btnSubmitFeedback.innerHTML = originalText;
+                    btnSubmitFeedback.disabled = false;
+                }
+            });
+        }
+
         DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
         DOM.setup.btnCloseSetup.addEventListener('click', () => { 
             const cart = AppState.get('cart');
@@ -1000,7 +1100,6 @@
 
         const openResetModal = () => { DOM.confirmReset.modal.classList.remove('hidden'); DOM.confirmReset.modal.classList.add('flex'); setTimeout(() => { DOM.confirmReset.modal.classList.remove('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-100'); }, 10); };
         
-        // FIX: Sửa lỗi dùng sai classList.remove làm sập Javascript khi Làm Mới
         const closeResetModal = () => { 
             DOM.confirmReset.modal.classList.add('opacity-0'); 
             DOM.confirmReset.modal.firstElementChild.classList.remove('scale-100'); 
@@ -1073,7 +1172,6 @@
         // 8. KHO DỮ LIỆU
         const openConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.remove('hidden'); DOM.confirmDelete.modal.classList.add('flex'); setTimeout(() => { DOM.confirmDelete.modal.classList.remove('opacity-0'); DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-100'); }, 10); };
         
-        // FIX: Sửa lỗi dùng sai classList.remove làm sập Javascript khi Xóa kho
         const closeConfirmDeleteModal = () => { 
             return new Promise(resolve => {
                 DOM.confirmDelete.modal.classList.add('opacity-0'); 
@@ -1214,7 +1312,6 @@
 
         DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; AppState.set('currentFilterWarehouse', btn.dataset.w, true); renderWarehouseFilters(); applyFiltersAndSearch(); });
         
-        // Gộp 3 nút thành 1 nút xoay vòng (Cycle button logic)
         DOM.search.btnSortCycle.addEventListener('click', () => {
             let currentState = AppState.get('fluctuationSort');
             let nextState = currentState === 'normal' ? 'inc' : (currentState === 'inc' ? 'dec' : 'normal');
@@ -1246,7 +1343,6 @@
             
             if (AppState.get('currentFilterWarehouse') !== 'All') filtered = filtered.filter(p => p.warehouse === AppState.get('currentFilterWarehouse'));
             
-            // Lọc theo Nút Gộp
             if (sortState === 'inc') {
                 filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'tăng');
             } else if (sortState === 'dec') {
@@ -1255,7 +1351,6 @@
 
             if (terms.length > 0) filtered = filtered.filter(p => terms.every(term => p.searchStr.includes(term)));
             
-            // Sắp xếp theo % nếu đang trong chế độ lọc
             if (sortState === 'inc') {
                 filtered.sort((a,b) => {
                     const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value;
@@ -1326,7 +1421,6 @@
             DOM.search.list.innerHTML = html;
         }
 
-        // Thêm Thủ Công
         DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
         DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
         DOM.manualAdd.btnConfirm.addEventListener('click', () => {
@@ -1669,3 +1763,5 @@
     </script>
 </body>
 </html>
+
+
