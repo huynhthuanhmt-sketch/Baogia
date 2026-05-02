@@ -7,39 +7,11 @@
     <meta name="theme-color" content="#020617">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Thuận Store">
+    <meta name="apple-mobile-web-app-title" content="Thuận Store V2">
     
-    <title>Thuận Store - Hệ Thống Báo Giá & Quản Lý Bán Hàng</title>
-    <meta name="description" content="Phần mềm quản lý kho, tạo báo giá và tính chiết khấu thông minh. Hỗ trợ trích xuất dữ liệu làm hướng dẫn báo cáo bán hàng và cơ sở kê khai thuế chính xác.">
-    <meta name="keywords" content="Thuận Store, phần mềm quản lý kho, hệ thống báo giá, hướng dẫn báo cáo bán hàng, tính thuế, hóa đơn VAT, chiết khấu, quản lý bán hàng 2026, xuất file excel báo giá, đồ điện mpe">
-    <meta name="author" content="Thuận Store">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://thuanstore.com/">
+    <title>Thuận Store - Hệ Thống Báo Giá & Quản Lý Bán Hàng V2</title>
     
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Thuận Store - Tạo Báo Giá & Tính Thuế Thông Minh">
-    <meta property="og:description" content="Giải pháp tối ưu tạo báo giá, hỗ trợ tính toán chiết khấu làm báo cáo bán hàng nội bộ và chuẩn hóa quy trình xuất thuế.">
-    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=Thuan+Store+-+Bao+Gia">
-    <meta property="og:url" content="https://thuanstore.com/">
-    
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Thuận Store",
-      "operatingSystem": "Web, iOS, Android",
-      "applicationCategory": "BusinessApplication",
-      "description": "Ứng dụng web giúp tạo bảng báo giá, tính chiết khấu, hỗ trợ minh bạch số liệu để kê khai thuế và làm hướng dẫn báo cáo bán hàng cho doanh nghiệp.",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "VND"
-      }
-    }
-    </script>
-    
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
-    
+    <!-- TAI THƯ VIỆN GỐC -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -112,6 +84,10 @@
         
         .logo-glow { filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.6)); }
         .pb-safe { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
+        
+        /* Animation cho trạng thái giỏ hàng Reactive */
+        @keyframes highlight-fade { from { background-color: rgba(59, 130, 246, 0.15); } to { background-color: transparent; } }
+        .reactive-update { animation: highlight-fade 0.5s ease-out; }
     </style>
 </head>
 <body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -377,7 +353,7 @@
         </div>
     </div>
 
-    <!-- MODAL SEARCH -->
+    <!-- MODAL SEARCH THÔNG MINH -->
     <div id="searchModal" class="fullscreen-modal">
         <div class="bg-white border-b border-slate-200 flex flex-col shrink-0 shadow-sm relative z-20">
             <div class="p-4 pt-12 sticky top-0 bg-white z-30 w-full flex flex-col items-center">
@@ -391,12 +367,15 @@
                         <input type="text" id="searchInput" placeholder="Gõ mã hoặc tên SP..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold outline-none focus:border-blue-500">
                         <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="flex gap-2">
-                            <button id="btnSortInc" class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1">⬆ Tăng</button>
-                            <button id="btnSortDec" class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1">⬇ Giảm</button>
+                    <!-- CONTROL PANEL TÌM KIẾM ĐÃ ĐƯỢC GỘP NÚT -->
+                    <div class="flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar pb-1">
+                        <div class="flex gap-2 shrink-0">
+                            <!-- NÚT GỘP TĂNG GIẢM -->
+                            <button id="btnSortCycle" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1 shadow-sm">
+                                🔄 Biến Động: Tất Cả
+                            </button>
                         </div>
-                        <button id="btnOpenManualAdd" class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase bg-blue-50 text-blue-600 border border-blue-200">+ Thêm Mới</button>
+                        <button id="btnOpenManualAdd" class="px-3 py-1.5 rounded-lg text-xs font-bold uppercase bg-blue-50 text-blue-600 border border-blue-200 shrink-0">+ Thêm Mới</button>
                     </div>
                 </div>
             </div>
@@ -495,6 +474,7 @@
             <div id="exportGuide" class="w-full max-w-5xl mx-auto flex flex-col">
                 <div class="print-bg-brand text-white text-xs font-bold py-2.5 px-4 rounded-t-xl uppercase shadow-md">Bản Xem Trước</div>
                 <div id="previewContainer" class="w-full bg-slate-300 overflow-hidden relative rounded-b-xl border border-t-0 border-slate-200 shadow-lg mb-5">
+                    <!-- KHU VỰC IN ẢNH/PDF -->
                     <div id="invoiceRenderArea" style="width: 1600px; background: white; padding: 80px; transform-origin: top left; color: #0f172a; position: relative;">
                         <div class="print-border-brand" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; border-bottom-width: 5px; border-bottom-style: solid; padding-bottom: 40px;">
                             <div style="display: flex; align-items: center; gap: 25px;">
@@ -581,8 +561,9 @@
         </div>
     </div>
 
-    <!-- CORE JAVASCRIPT LOGIC (Logic từ Code 2) -->
+    <!-- CORE JAVASCRIPT LOGIC (REACTIVE ARCHITECTURE) -->
     <script>
+        // 1. UTILS CORE
         const Utils = {
             formatMoney: (val) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val || 0).replace(/\s+/g, '\u00A0'),
             cleanNumber: (v) => { 
@@ -601,19 +582,29 @@
             },
             normString: (str) => { return str ? str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ""; },
             getIncreaseDecreaseInfo: (u) => {
+                // Đọc phần trăm tăng giảm
                 if (u === null || u === undefined || u === "") return null;
-                let str = String(u).trim(); if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai") return null;
+                let str = String(u).trim(); 
+                if (str.toLowerCase() === "cái" || str.toLowerCase() === "cai" || str === "0%") return null;
+                
                 let match = str.match(/([+-]?\d+[\.,]?\d*)%/);
-                if (match) { let val = parseFloat(match[1].replace(',', '.')); return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val }; }
+                if (match) { 
+                    let val = parseFloat(match[1].replace(',', '.')); 
+                    if(val === 0) return null;
+                    return { text: Math.abs(val) + '%', type: val < 0 ? 'giảm' : 'tăng', value: val }; 
+                }
+                
                 let isDecrease = str.includes('-') || str.includes('−') || str.toLowerCase().includes('giảm');
                 let cleanForCheck = str.toLowerCase().replace(/tăng|giảm|\s+|\+|-|−|%/g, '').replace(',', '.');
-                if (!str.includes('%') && isNaN(Number(cleanForCheck))) return { text: str, type: 'text', value: 0 };
+                if (!str.includes('%') && isNaN(Number(cleanForCheck))) return null;
+                
                 let normalizedStr = str.replace(/,/g, '.'); let matchOld = normalizedStr.match(/\d+(\.\d+)?/);
-                if (!matchOld) return { text: str, type: 'text', value: 0 };
+                if (!matchOld) return null;
                 let n = parseFloat(matchOld[0]);
                 if (!str.includes('%') && n > 0 && n < 10 && normalizedStr.includes('.')) n = n * 100;
-                if (n === 0) return { text: '0%', type: 'text', value: 0 };
+                if (n === 0) return null;
                 if (typeof u === 'number' && u < 0) isDecrease = true;
+                
                 return { text: n.toFixed(2).replace(/\.?0+$/, '') + '%', type: isDecrease ? 'giảm' : 'tăng', value: isDecrease ? -n : n };
             },
             showToast: (msg) => {
@@ -623,12 +614,9 @@
             generateId: () => Math.random().toString(36).substr(2, 9),
             copyToClipboard: async (text) => {
                 try {
-                    await navigator.clipboard.writeText(text);
-                    Utils.showToast("Đã sao chép vào khay nhớ tạm!");
+                    await navigator.clipboard.writeText(text); Utils.showToast("Đã sao chép vào khay nhớ tạm!");
                 } catch (err) {
-                    const textArea = document.createElement("textarea");
-                    textArea.value = text;
-                    document.body.appendChild(textArea);
+                    const textArea = document.createElement("textarea"); textArea.value = text; document.body.appendChild(textArea);
                     textArea.select();
                     try { document.execCommand("copy"); Utils.showToast("Đã sao chép vào khay nhớ tạm!"); } 
                     catch (ex) { Utils.showToast("Trình duyệt không hỗ trợ copy tự động."); }
@@ -644,10 +632,9 @@
                         const file = new File([blob], filename, { type: blob.type });
                         if (navigator.canShare({ files: [file] })) {
                             await navigator.share({ files: [file], title: filename });
-                            Utils.showToast("Đã mở menu chia sẻ/lưu tệp!");
-                            return; 
+                            Utils.showToast("Đã mở menu chia sẻ/lưu tệp!"); return; 
                         }
-                    } catch (e) { console.log("Tính năng Share Native bị hủy hoặc lỗi, chuyển sang tải thường...", e); }
+                    } catch (e) { console.log("Tính năng Share Native bị hủy hoặc lỗi, chuyển sang tải thường..."); }
                 }
                 const url = URL.createObjectURL(blob); const a = document.createElement('a');
                 a.style.display = 'none'; a.href = url; a.download = filename; document.body.appendChild(a); a.click();
@@ -658,29 +645,63 @@
 
         const BRAND_COLOR = "#0055A5";
 
-        let State = { 
-            rawExcelData: [], productDB: [], warehouses: [], cart: [], promos: [], searchTimeout: null, currentOrderPromoEffect: null,
-            brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
-            defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', discountFormula: 'sequential' },
-            currentFilterWarehouse: 'All', filteredProducts: [], displayCount: 50, currentSort: 'none', currentHeaderIndex: 0,
-            isCompactView: false, previousScreenId: 'landing', currentScreenId: 'landing'
+        // 2. CENTRAL STATE MANAGEMENT
+        const AppState = {
+            data: {
+                productDB: [], warehouses: [], cart: [], promos: [], currentOrderPromoEffect: null,
+                brand: { name: "THUẬN STORE", slogan: "MPE VIETNAM", docTitle: "BẢNG BÁO GIÁ" },
+                defaults: { baseDiscount: 0, km1: 0, km2: 0, kmTien: 0, kmTienType: 'per_item', discountFormula: 'sequential' },
+                currentFilterWarehouse: 'All', 
+                fluctuationSort: 'normal', // Trạng thái gộp mới: 'normal', 'inc', 'dec'
+                filteredProducts: [], displayCount: 50,
+                isCompactView: false, currentScreenId: 'landing'
+            },
+            listeners: {},
+            subscribe(key, callback) { if (!this.listeners[key]) this.listeners[key] = []; this.listeners[key].push(callback); },
+            publish(key) { if (this.listeners[key]) this.listeners[key].forEach(cb => cb(this.data[key])); },
+            set(key, value, silent = false) { 
+                this.data[key] = value; 
+                LocalDB.save(); 
+                if (!silent) this.publish(key); 
+            },
+            get(key) { return this.data[key]; },
+            
+            updateCartItem(id, updater) {
+                const index = this.data.cart.findIndex(i => i.id === id);
+                if (index > -1) {
+                    updater(this.data.cart[index]);
+                    LocalDB.save();
+                    this.publish('cart_item_updated'); 
+                }
+            }
         };
-        const ITEMS_PER_PAGE = 50; 
 
         const LocalDB = {
             save: () => {
                 try {
-                    localStorage.setItem('thuanstore_state', JSON.stringify({ productDB: State.productDB, warehouses: State.warehouses, cart: State.cart, brand: State.brand, defaults: State.defaults, promos: State.promos, isCompactView: State.isCompactView }));
+                    const toSave = { 
+                        productDB: AppState.data.productDB, warehouses: AppState.data.warehouses, 
+                        cart: AppState.data.cart, brand: AppState.data.brand, 
+                        defaults: AppState.data.defaults, promos: AppState.data.promos, 
+                        isCompactView: AppState.data.isCompactView 
+                    };
+                    localStorage.setItem('thuanstore_state_v2', JSON.stringify(toSave));
                 } catch(e) { if (e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn. Hãy dùng file Excel nhẹ hơn."); }
             },
             load: () => {
                 try {
-                    const data = localStorage.getItem('thuanstore_state');
-                    if (data) {
-                        const p = JSON.parse(data);
-                        State.productDB = p.productDB || []; State.warehouses = p.warehouses || []; State.cart = p.cart || [];
-                        State.brand = p.brand || State.brand; State.defaults = p.defaults || State.defaults; State.promos = p.promos || []; State.isCompactView = p.isCompactView || false;
-                        if (State.productDB.length > 0 && State.warehouses.length === 0) { State.warehouses = ['Kho Mặc Định']; State.productDB.forEach(x => x.warehouse = 'Kho Mặc Định'); LocalDB.save(); }
+                    const dataStr = localStorage.getItem('thuanstore_state_v2');
+                    if (dataStr) {
+                        const p = JSON.parse(dataStr);
+                        AppState.data.productDB = p.productDB || []; AppState.data.warehouses = p.warehouses || []; AppState.data.cart = p.cart || [];
+                        AppState.data.brand = p.brand || AppState.data.brand; AppState.data.defaults = p.defaults || AppState.data.defaults; 
+                        AppState.data.promos = p.promos || []; AppState.data.isCompactView = p.isCompactView || false;
+                        
+                        if (AppState.data.productDB.length > 0 && AppState.data.warehouses.length === 0) { 
+                            AppState.data.warehouses = ['Kho Mặc Định']; 
+                            AppState.data.productDB.forEach(x => x.warehouse = 'Kho Mặc Định'); 
+                            LocalDB.save(); 
+                        }
                         return true;
                     }
                 } catch(e) {}
@@ -688,6 +709,7 @@
             }
         };
 
+        // 3. DOM ELEMENTS CACHING
         const DOM = {
             screens: { landing: document.getElementById('screenLanding'), setup: document.getElementById('screenSetup'), main: document.getElementById('screenMain') },
             brand: { modal: document.getElementById('brandManagerModal'), btnOpen: document.getElementById('btnOpenBrandManager'), btnClose: document.getElementById('btnCloseBrandManager'), btnSave: document.getElementById('btnSaveBrandConfig'), nameIn: document.getElementById('settingStoreName'), sloganIn: document.getElementById('settingSlogan'), docTitleIn: document.getElementById('settingDocTitle'), pName: document.getElementById('printStoreName'), pSlogan: document.getElementById('printSlogan'), pDocTitle: document.getElementById('printDocTitle') },
@@ -695,7 +717,7 @@
             manualAdd: { modal: document.getElementById('manualAddModal'), btnOpen: document.getElementById('btnOpenManualAdd'), btnClose: document.getElementById('btnCancelManual'), btnConfirm: document.getElementById('btnConfirmManual'), name: document.getElementById('manualName'), price: document.getElementById('manualPrice'), unit: document.getElementById('manualUnit'), code: document.getElementById('manualCode') },
             setup: { btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup') },
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView') },
-            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortInc: document.getElementById('btnSortInc'), btnSortDec: document.getElementById('btnSortDec') },
+            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, // Nút gộp
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnDownloadImage: document.getElementById('btnDownloadImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
@@ -703,409 +725,29 @@
             promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
         };
 
+        // 4. UI SCREEN MANAGEMENT
+        let previousScreenId = 'landing';
         const switchScreen = (screenId) => { 
-            if (State.currentScreenId !== screenId) { State.previousScreenId = State.currentScreenId; State.currentScreenId = screenId; }
+            if (AppState.data.currentScreenId !== screenId) { previousScreenId = AppState.data.currentScreenId; AppState.data.currentScreenId = screenId; }
             Object.values(DOM.screens).forEach(s => s.classList.remove('active')); DOM.screens[screenId].classList.add('active'); 
         };
-        window.addEventListener('beforeunload', () => LocalDB.save());
 
+        // 5. BRANDING LOGIC
         const setupFixedBrandIdentity = () => { document.documentElement.style.setProperty('--brand-color', BRAND_COLOR); };
-        const updateBrandText = () => { DOM.brand.pName.textContent = State.brand.name; DOM.brand.pSlogan.textContent = State.brand.slogan; DOM.brand.pDocTitle.textContent = State.brand.docTitle; DOM.main.senderName.value = DOM.main.senderName.value || State.brand.name; };
-
-        // Giao diện Button Thu Gọn lấy nguyên bản của Code 1
-        const updateToggleViewUI = () => {
-            if (!DOM.main.btnToggleView) return;
-            if (State.isCompactView) { DOM.main.btnToggleView.classList.remove('text-slate-600', 'bg-slate-50', 'border-slate-200'); DOM.main.btnToggleView.classList.add('text-blue-600', 'bg-blue-50', 'border-blue-200'); } 
-            else { DOM.main.btnToggleView.classList.remove('text-blue-600', 'bg-blue-50', 'border-blue-200'); DOM.main.btnToggleView.classList.add('text-slate-600', 'bg-slate-50', 'border-slate-200'); }
+        const updateBrandText = () => { 
+            const brand = AppState.get('brand');
+            DOM.brand.pName.textContent = brand.name; DOM.brand.pSlogan.textContent = brand.slogan; DOM.brand.pDocTitle.textContent = brand.docTitle; 
+            DOM.main.senderName.value = DOM.main.senderName.value || brand.name; 
         };
 
-        const initApp = () => {
-            LocalDB.load();
-            DOM.brand.nameIn.value = State.brand.name; DOM.brand.sloganIn.value = State.brand.slogan; DOM.brand.docTitleIn.value = State.brand.docTitle;
-            DOM.discount.baseIn.value = State.defaults.baseDiscount || ''; DOM.discount.km1In.value = State.defaults.km1 || ''; DOM.discount.km2In.value = State.defaults.km2 || '';
-            DOM.discount.kmTienIn.value = State.defaults.kmTien || ''; DOM.discount.kmTienTypeIn.value = State.defaults.kmTienType || 'per_item';
-            
-            const formula = State.defaults.discountFormula || 'sequential';
-            const formulaRadio = document.querySelector(`input[name="discountFormula"][value="${formula}"]`);
-            if(formulaRadio) formulaRadio.checked = true;
-            
-            updateToggleViewUI(); setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
-        };
-
-        // BIND EVENT VỆ TINH CODE 1
-        document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
-        document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
-        document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
-        document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
-        
-        // SỰ KIỆN CÂU CHUYỆN SEO TỪ LOGO GIỮA TRANG CHỦ (Giao diện 1)
-        const logoTrigger = document.getElementById('brandLogoTrigger');
-        const modalStory = document.getElementById('seoStoryModal');
-        const btnCloseStory = document.getElementById('btnCloseStory');
-        const btnReadMoreClose = document.getElementById('btnReadMoreClose');
-
-        if(logoTrigger) {
-            logoTrigger.addEventListener('click', () => {
-                modalStory.classList.remove('hidden'); modalStory.classList.add('flex');
-                setTimeout(() => { modalStory.classList.remove('opacity-0'); modalStory.firstElementChild.classList.remove('scale-95'); }, 10);
-            });
-        }
-
-        const closeStoryModal = () => {
-            modalStory.classList.add('opacity-0'); modalStory.firstElementChild.classList.add('scale-95');
-            setTimeout(() => { modalStory.classList.add('hidden'); modalStory.classList.remove('flex'); }, 300);
-        };
-
-        btnCloseStory.addEventListener('click', closeStoryModal);
-        btnReadMoreClose.addEventListener('click', closeStoryModal);
-
-
-        DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
-        
-        DOM.setup.btnCloseSetup.addEventListener('click', () => { 
-            if (State.cart && State.cart.length > 0 && State.previousScreenId !== 'main') { switchScreen('main'); } 
-            else { switchScreen(State.previousScreenId || 'landing'); }
-        });
-        
-        if (DOM.setup.btnStartFromSetup) DOM.setup.btnStartFromSetup.addEventListener('click', () => { switchScreen('main'); CartLogic.render(); });
-
-        DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
-        DOM.setup.btnStart.addEventListener('click', () => { CartLogic.render(); switchScreen('main'); });
-
-        DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
-        DOM.brand.btnClose.addEventListener('click', () => { DOM.brand.modal.classList.remove('active'); });
-        DOM.brand.btnSave.addEventListener('click', () => {
-            State.brand.name = DOM.brand.nameIn.value.trim() || "CỬA HÀNG"; State.brand.slogan = DOM.brand.sloganIn.value.trim(); State.brand.docTitle = DOM.brand.docTitleIn.value.trim() || "BẢNG BÁO GIÁ";
-            updateBrandText(); LocalDB.save(); DOM.brand.modal.classList.remove('active'); Utils.showToast("Đã lưu cấu hình báo giá!");
-        });
-
-        DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
-        DOM.discount.btnClose.addEventListener('click', () => { DOM.discount.modal.classList.remove('active'); });
-        DOM.discount.btnSave.addEventListener('click', () => {
-            State.defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); State.defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
-            State.defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); State.defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); State.defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
-            
-            const checkedFormula = document.querySelector('input[name="discountFormula"]:checked');
-            State.defaults.discountFormula = checkedFormula ? checkedFormula.value : 'sequential';
-            
-            State.cart.forEach(item => { item.baseDiscount = State.defaults.baseDiscount; item.km1 = State.defaults.km1; item.km2 = State.defaults.km2; item.kmTien = State.defaults.kmTien; item.kmTienType = State.defaults.kmTienType; });
-            LocalDB.save(); CartLogic.render(); DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và tự động cập nhật giỏ hàng!");
-        });
-
-        DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
-        DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
-        DOM.manualAdd.btnConfirm.addEventListener('click', () => {
-            const name = DOM.manualAdd.name.value.trim(); const price = Utils.cleanNumber(DOM.manualAdd.price.value);
-            if(!name || price <= 0) return Utils.showToast("Vui lòng nhập Tên và Giá Bìa > 0");
-            const newProduct = { id: 'MANUAL_' + Date.now(), warehouse: 'Thêm Thủ Công', code: DOM.manualAdd.code.value.trim(), name: name, unit: DOM.manualAdd.unit.value.trim() || 'Cái', price: price, searchStr: Utils.normString(`${DOM.manualAdd.code.value.trim()} ${name}`) };
-            State.productDB.push(newProduct);
-            
-            let newItem = { id: Utils.generateId(), productId: newProduct.id, code: newProduct.code, name: newProduct.name, unit: newProduct.unit, originalPrice: newProduct.price, qty: 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: newProduct.warehouse, appliedPromoId: null };
-            State.cart.push(newItem);
-            
-            DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = '';
-            DOM.manualAdd.btnClose.click(); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save(); Utils.showToast("Đã thêm Sản phẩm mới!");
-        });
-
-        DOM.main.btnToggleView.addEventListener('click', () => { State.isCompactView = !State.isCompactView; updateToggleViewUI(); CartLogic.render(); LocalDB.save(); });
-
-        const openResetModal = () => { DOM.confirmReset.modal.classList.remove('hidden'); DOM.confirmReset.modal.classList.add('flex'); setTimeout(() => { DOM.confirmReset.modal.classList.remove('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-100'); }, 10); };
-        const closeResetModal = () => { DOM.confirmReset.modal.classList.add('opacity-0'); DOM.confirmReset.modal.firstElementChild.remove('scale-100'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.confirmReset.modal.classList.add('hidden'); DOM.confirmReset.modal.classList.remove('flex'); }, 300); };
-        
-        DOM.main.btnResetQuote.addEventListener('click', openResetModal);
-        DOM.export.btnExportRestart.addEventListener('click', openResetModal);
-        DOM.confirmReset.btnCancel.addEventListener('click', closeResetModal);
-        DOM.confirmReset.btnConfirm.addEventListener('click', () => { State.cart = []; DOM.main.custName.value = ''; DOM.main.promoNote.value = ''; CartLogic.render(); LocalDB.save(); closeResetModal(); DOM.export.modal.classList.remove('active'); Utils.showToast("Đã làm mới báo giá!"); });
-
-        let editingPromoProductIds = []; let currentPromoContext = 'item';
-        const PromoLogic = {
-            openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); },
-            closeManager: () => { DOM.promo.managerModal.classList.remove('active'); PromoLogic.renderQuickButtons(); CartLogic.render(); },
-            switchTab: (tab) => {
-                currentPromoContext = tab;
-                if (tab === 'item') { DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupItem.classList.remove('hidden'); DOM.promo.groupOrder.classList.add('hidden'); } 
-                else { DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupOrder.classList.remove('hidden'); DOM.promo.groupItem.classList.add('hidden'); }
-            },
-            resetForm: () => { DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'extra_percent'; DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'VD: 5'; DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; PromoLogic.updateOrderLabel(); },
-            updateOrderLabel: () => { if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
-            savePromo: () => {
-                const name = DOM.promo.nameIn.value.trim(); if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
-                let newPromo = { id: 'PRM_' + Date.now(), name: name };
-                if (currentPromoContext === 'item') {
-                    const minQty = parseInt(DOM.promo.minQtyIn.value) || 1; const type = DOM.promo.typeIn.value; const value = Utils.cleanNumber(DOM.promo.valueIn.value);
-                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
-                    newPromo.isOrderPromo = false; newPromo.minQty = minQty; newPromo.type = type; newPromo.value = value; newPromo.productIds = [...editingPromoProductIds];
-                } else {
-                    const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim(); const isMultiply = DOM.promo.orderMultiply.checked;
-                    if (minAmount <= 0) return Utils.showToast("Vui lòng nhập mốc tổng thanh toán!"); if (!valRaw) return Utils.showToast("Vui lòng nhập Quà tặng hoặc Số tiền trừ!");
-                    newPromo.isOrderPromo = true; newPromo.minAmount = minAmount; newPromo.rewardType = orderType; newPromo.rewardValue = orderType === 'discount' ? Utils.cleanNumber(valRaw) : valRaw; newPromo.isMultiply = isMultiply;
-                }
-                State.promos.push(newPromo); LocalDB.save(); Utils.showToast(`Đã lưu KM: ${name}`); PromoLogic.resetForm(); PromoLogic.renderList();
-            },
-            deletePromo: (id) => { State.promos = State.promos.filter(p => p.id !== id); LocalDB.save(); Utils.showToast("Đã xóa chương trình!"); PromoLogic.renderList(); State.cart.forEach(item => { if (item.appliedPromoId === id) PromoLogic.revertPromoOnItem(item); }); CartLogic.render(); PromoLogic.renderQuickButtons(); },
-            renderList: () => {
-                if (State.promos.length === 0) { DOM.promo.listContainer.innerHTML = '<div class="text-center text-slate-400 text-xs py-4 font-bold">Chưa có chương trình KM nào</div>'; return; }
-                const html = State.promos.map(p => {
-                    let bodyHtml = '';
-                    if (p.isOrderPromo) {
-                        let rewardTxt = p.rewardType === 'discount' ? `Trừ tiền: ${Utils.formatMoney(p.rewardValue)}` : `Tặng: ${p.rewardValue}`;
-                        let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-black px-1 bg-indigo-50 rounded border border-indigo-100">(x Luỹ Tiến)</span>` : '';
-                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1">Tổng đơn >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600">${rewardTxt}</span>${multiplyTxt}</p>`;
-                    } else {
-                        let typeTxt = p.type === 'extra_tien_sp' ? 'Trừ THÊM tiền/SP' : (p.type === 'extra_tien_tong' ? 'Trừ THÊM tổng tiền' : 'Giảm THÊM (%)');
-                        let valTxt = p.type === 'extra_percent' ? `${p.value}%` : Utils.formatMoney(p.value);
-                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1 flex items-center flex-wrap gap-y-1">Mua >= ${p.minQty} SP 👉 ${typeTxt}: <span class="text-indigo-600 ml-1">${valTxt}</span></p><p class="text-[9px] truncate text-slate-400">Áp dụng: ${p.productIds.length} SP</p>`;
-                    }
-                    return `<div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center"><div class="min-w-0 flex-1"><h4 class="text-xs font-bold text-slate-800 truncate">${p.name}</h4>${bodyHtml}</div><button onclick="PromoLogic.deletePromo('${p.id}')" class="ml-2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
-                }).join(''); DOM.promo.listContainer.innerHTML = html;
-            },
-            renderQuickButtons: () => {
-                const itemPromos = State.promos.filter(p => !p.isOrderPromo);
-                if (itemPromos.length === 0) { DOM.main.quickPromoRow.innerHTML = ''; return; }
-                const html = itemPromos.map(p => `<button onclick="PromoLogic.quickAddProducts('${p.id}')" class="shrink-0 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm whitespace-nowrap">${p.name}</button>`).join('');
-                DOM.main.quickPromoRow.innerHTML = html;
-            },
-            quickAddProducts: (promoId) => {
-                const promo = State.promos.find(p => p.id === promoId); if (!promo) return; let addedCount = 0;
-                promo.productIds.forEach(pid => {
-                    if (!State.cart.some(item => item.productId === pid)) {
-                        const p = State.productDB.find(x => x.id === pid);
-                        if (p) {
-                            let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: promo.minQty > 1 ? promo.minQty : 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
-                            PromoLogic.checkAndApplyToItem(newItem); State.cart.push(newItem); addedCount++;
-                        }
-                    }
-                });
-                if (addedCount > 0) { CartLogic.render(); LocalDB.save(); Utils.showToast(`Đã thêm ${addedCount} SP vào giỏ!`); } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
-            },
-            openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); },
-            closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
-            searchProducts: () => {
-                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = State.productDB; if (term) { list = list.filter(p => p.searchStr.includes(term)); }
-                const html = list.slice(0, 100).map(p => {
-                    const isChecked = editingPromoProductIds.includes(p.id);
-                    return `<label class="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-50 border-b border-slate-50"><div class="flex-1 min-w-0 pr-2"><div class="text-xs font-bold text-slate-800 truncate">${p.name}</div><div class="text-[10px] text-blue-600 font-bold">${Utils.formatMoney(p.price)}</div></div><div class="custom-checkbox relative w-5 h-5"><input type="checkbox" class="opacity-0 absolute inset-0 z-10" value="${p.id}" ${isChecked ? 'checked' : ''} onchange="PromoLogic.toggleProduct(this)"><div class="w-5 h-5 border-2 border-slate-300 rounded flex items-center justify-center bg-white"><svg class="w-3 h-3 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
-                }).join(''); DOM.promo.productList.innerHTML = html;
-            },
-            toggleProduct: (checkbox) => { const pid = checkbox.value; if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); } DOM.promo.selectedCount.textContent = editingPromoProductIds.length; },
-            checkAndApplyToItem: (item) => {
-                const applicablePromo = State.promos.find(p => !p.isOrderPromo && p.productIds.includes(item.productId));
-                if (applicablePromo) {
-                    if (item.qty >= applicablePromo.minQty) {
-                        if (item.appliedPromoId !== applicablePromo.id) { item.appliedPromoId = applicablePromo.id; item.promoType = applicablePromo.type; item.promoValue = applicablePromo.value; Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`); }
-                    } else { if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item); }
-                }
-            },
-            revertPromoOnItem: (item) => { if (item.appliedPromoId) { item.appliedPromoId = null; item.promoType = null; item.promoValue = null; } }
-        };
-
-        DOM.promo.btnOpenManager.addEventListener('click', PromoLogic.openManager); DOM.promo.btnCloseManager.addEventListener('click', PromoLogic.closeManager);
-        DOM.promo.btnSavePromo.addEventListener('click', PromoLogic.savePromo); DOM.promo.btnSelectProducts.addEventListener('click', PromoLogic.openSearchProducts);
-        DOM.promo.btnCloseSearch.addEventListener('click', PromoLogic.closeSearchProducts); DOM.promo.btnFinishSearch.addEventListener('click', PromoLogic.closeSearchProducts);
-        DOM.promo.searchInput.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(PromoLogic.searchProducts, 200); });
-        DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
-        DOM.promo.typeIn.addEventListener('change', () => { const val = DOM.promo.typeIn.value; DOM.promo.valueIn.value = ''; if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'VD: 5000'; } else { DOM.promo.valueIn.placeholder = 'VD: 5'; } });
-
-        function renderSetupWarehouseList() {
-            if (State.warehouses.length === 0) { DOM.setup.warehouseListSection.classList.add('hidden'); } else {
-                DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${State.productDB.length} SP`;
-                DOM.setup.warehouseBadges.innerHTML = State.warehouses.map(w => `<span class="bg-indigo-50 text-indigo-700 font-bold text-[10px] px-2 py-1 rounded border border-indigo-100">${w}</span>`).join('');
-            }
-        }
-
-        const openConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.remove('hidden'); DOM.confirmDelete.modal.classList.add('flex'); setTimeout(() => { DOM.confirmDelete.modal.classList.remove('opacity-0'); DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-100'); }, 10); };
-        const closeConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.add('opacity-0'); DOM.confirmDelete.modal.firstElementChild.remove('scale-100'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.confirmDelete.modal.classList.add('hidden'); DOM.confirmDelete.modal.classList.remove('flex'); }, 300); };
-
-        DOM.setup.btnClearAllData.addEventListener('click', openConfirmDeleteModal); DOM.confirmDelete.btnCancel.addEventListener('click', closeConfirmDeleteModal);
-        DOM.confirmDelete.btnConfirm.addEventListener('click', () => {
-            State.productDB = []; State.warehouses = []; State.cart = []; State.currentFilterWarehouse = 'All'; State.filteredProducts = []; State.promos = []; LocalDB.save();
-            renderSetupWarehouseList(); DOM.setup.mapping.classList.add('hidden', 'opacity-0'); DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; DOM.setup.fileIn.value = '';
-            CartLogic.render(); PromoLogic.renderQuickButtons(); closeConfirmDeleteModal(); Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
-        });
-
-        DOM.setup.fileIn.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return; DOM.setup.fileName.textContent = file.name; const reader = new FileReader(); 
-            reader.onload = (evt) => {
-                try {
-                    // FIX: Xóa tham số { raw: false } để thư viện đọc chính xác các cột chứa giá có công thức / định dạng thô
-                    const workbook = XLSX.read(evt.target.result, { type: 'binary' }); 
-                    State.rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
-                    
-                    if (!State.rawExcelData || State.rawExcelData.length === 0) return Utils.showToast("File Excel trống hoặc không hợp lệ!");
-                    
-                    let bestHIndex = 0; let maxScore = 0; const keywords = ['mã', 'code', 'tên', 'name', 'sản phẩm', 'giá', 'price', 'bìa', 'đơn giá', 'đvt', 'đơn vị', 'unit', 'stt'];
-                    for (let i = 0; i < Math.min(25, State.rawExcelData.length); i++) {
-                        const row = State.rawExcelData[i]; if (!row || row.length === 0) continue;
-                        let score = 0; row.forEach(cell => { if (cell && typeof cell === 'string') { const lower = cell.toLowerCase(); if (keywords.some(kw => lower.includes(kw))) score++; } });
-                        if (score > maxScore) { maxScore = score; bestHIndex = i; }
-                    }
-                    if (maxScore < 2) { for(let i = 0; i < Math.min(15, State.rawExcelData.length); i++) { if(State.rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 3){ bestHIndex = i; break; } } }
-                    State.currentHeaderIndex = bestHIndex; const headers = []; (State.rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
-                    
-                    const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
-                    [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
-                    
-                    DOM.setup.mapping.classList.remove('hidden'); setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
-                    let priceColSet = false;
-                    headers.forEach(h => {
-                        let lower = h.toLowerCase();
-                        if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h;
-                        if(lower.includes('tên') || lower.includes('name') || lower.includes('sản phẩm')) DOM.setup.mapName.value = h;
-                        if(lower.includes('đvt') || lower.includes('đơn vị') || lower.includes('unit')) DOM.setup.mapUnit.value = h;
-                        if(!priceColSet && (lower.includes('giá') || lower.includes('price') || lower.includes('bìa'))) { DOM.setup.mapPrice.value = h; priceColSet = true; }
-                    });
-                    let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
-                } catch (err) { Utils.showToast("Lỗi đọc file Excel."); console.error(err); }
-            }; reader.readAsBinaryString(file);
-        });
-
-        DOM.setup.btnConfirm.addEventListener('click', () => {
-            if (!State.rawExcelData || State.rawExcelData.length === 0) return Utils.showToast("Vui lòng tải lên file Excel trước!");
-            const nameCol = DOM.setup.mapName.value; const priceCol = DOM.setup.mapPrice.value; const wName = DOM.setup.warehouseNameInput.value.trim();
-            if(!wName) { Utils.showToast("Vui lòng đặt Tên Kho / Tên Hãng!"); DOM.setup.warehouseNameInput.focus(); return; }
-            if(!nameCol || !priceCol) return Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!");
-            let hIndex = State.currentHeaderIndex !== undefined ? State.currentHeaderIndex : 0; const headers = State.rawExcelData[hIndex];
-            const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
-            
-            let newItemsCount = 0;
-            for (let i = hIndex + 1; i < State.rawExcelData.length; i++) {
-                const row = State.rawExcelData[i]; if (!row || row.length === 0) continue;
-                const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
-                if (!row[nI]) continue;
-                
-                const code = cI > -1 ? (row[cI] || "") : ""; 
-                const name = row[nI] ? row[nI].toString().trim() : ""; 
-                const rawPrice = pI > -1 ? row[pI] : 0;
-                
-                // FIX: Khôi phục chính xác % khi đọc dữ liệu raw float từ Excel (vd: 0.05 -> "5%")
-                let rawUnit = uI > -1 ? row[uI] : "Cái";
-                if (typeof rawUnit === 'number' && rawUnit !== 0 && rawUnit > -1 && rawUnit < 1) {
-                    rawUnit = (rawUnit * 100).toFixed(2).replace(/\.?0+$/, '') + '%';
-                } else if (rawUnit === "" || rawUnit == null) {
-                    rawUnit = "Cái";
-                } else if (typeof rawUnit === 'string' && rawUnit.trim() !== "") {
-                    let numParsed = Number(rawUnit.trim());
-                    if (!isNaN(numParsed) && numParsed !== 0 && numParsed > -1 && numParsed < 1) {
-                        rawUnit = (numParsed * 100).toFixed(2).replace(/\.?0+$/, '') + '%';
-                    }
-                }
-
-                State.productDB.push({ 
-                    id: 'P' + Date.now() + '_' + i, 
-                    warehouse: wName, 
-                    code: code, 
-                    name: name, 
-                    unit: rawUnit, 
-                    price: Utils.cleanNumber(rawPrice), 
-                    searchStr: Utils.normString(`${code || ''} ${name || ''}`) 
-                });
-                newItemsCount++;
-            }
-            if(!State.warehouses.includes(wName)) State.warehouses.push(wName); LocalDB.save();
-            DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
-            DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; DOM.setup.fileIn.value = '';
-            renderSetupWarehouseList(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
-        });
-
-        function renderWarehouseFilters() {
-            if(State.warehouses.length <= 1) { DOM.search.warehouseFilters.classList.add('hidden'); return; }
-            DOM.search.warehouseFilters.classList.remove('hidden');
-            let html = `<button data-w="All" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${State.currentFilterWarehouse === 'All' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}">TẤT CẢ</button>`;
-            State.warehouses.forEach(w => {
-                const isActive = State.currentFilterWarehouse === w;
-                html += `<button data-w="${w}" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${isActive ? 'bg-blue-600 text-white' : 'bg-white text-slate-500 border border-slate-200'}">${w}</button>`;
-            });
-            DOM.search.warehouseFilters.innerHTML = html;
-        }
-
-        DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; State.currentFilterWarehouse = btn.dataset.w; renderWarehouseFilters(); applyFiltersAndSearch(); });
-        
-        DOM.search.btnSortInc.addEventListener('click', () => { State.currentSort = State.currentSort === 'inc' ? 'none' : 'inc'; updateSortUI(); applyFiltersAndSearch(); });
-        DOM.search.btnSortDec.addEventListener('click', () => { State.currentSort = State.currentSort === 'dec' ? 'none' : 'dec'; updateSortUI(); applyFiltersAndSearch(); });
-        
-        const updateSortUI = () => {
-            DOM.search.btnSortInc.className = `px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors flex items-center gap-1 ${State.currentSort === 'inc' ? 'bg-red-50 text-red-600 border border-red-200' : 'bg-white text-slate-500 border border-slate-200'}`;
-            DOM.search.btnSortDec.className = `px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors flex items-center gap-1 ${State.currentSort === 'dec' ? 'bg-emerald-50 text-emerald-600 border border-emerald-200' : 'bg-white text-slate-500 border border-slate-200'}`;
-        };
-
-        const applyFiltersAndSearch = () => {
-            if (!DOM.search.modal.classList.contains('active')) return;
-            const terms = Utils.normString(DOM.search.input.value.trim()).split(/\s+/).filter(t => t.length > 0);
-            let filtered = State.productDB;
-            if (State.currentFilterWarehouse !== 'All') filtered = filtered.filter(p => p.warehouse === State.currentFilterWarehouse);
-            if (terms.length > 0) filtered = filtered.filter(p => { return terms.every(term => p.searchStr.includes(term)); });
-            
-            if (State.currentSort === 'inc') {
-                filtered.sort((a,b) => {
-                    const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0, type:'tăng'}).type === 'tăng' ? (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value : -999;
-                    const bVal = (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0, type:'tăng'}).type === 'tăng' ? (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value : -999;
-                    return bVal - aVal;
-                });
-            } else if (State.currentSort === 'dec') {
-                filtered.sort((a,b) => {
-                    const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0, type:'giảm'}).type === 'giảm' ? Math.abs((Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value) : -999;
-                    const bVal = (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0, type:'giảm'}).type === 'giảm' ? Math.abs((Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value) : -999;
-                    return bVal - aVal;
-                });
-            }
-
-            State.filteredProducts = filtered; State.displayCount = ITEMS_PER_PAGE; renderSearchList();
-        };
-
-        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; State.currentFilterWarehouse = 'All'; State.currentSort = 'none'; updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
-        const closeSearch = () => DOM.search.modal.classList.remove('active');
-        DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
-        DOM.main.btnOpenSearch.addEventListener('click', openSearch);
-        DOM.search.input.addEventListener('input', () => { clearTimeout(State.searchTimeout); State.searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
-
-        DOM.search.list.addEventListener('click', (e) => {
-            const btnLoadMore = e.target.closest('#btnLoadMore'); if (btnLoadMore) { State.displayCount += ITEMS_PER_PAGE; renderSearchList(); return; }
-            const btn = e.target.closest('.btn-toggle-search'); if (!btn) return;
-            const productId = btn.dataset.pid; const p = State.productDB.find(x => x.id === productId); if(!p) return;
-
-            const isAdded = State.cart.some(q => q.productId === p.id);
-            if(isAdded) {
-                State.cart = State.cart.filter(q => q.productId !== p.id); 
-                btn.className = "btn-toggle-search bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm"; btn.textContent = "THÊM";
-            } else {
-                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: State.defaults.baseDiscount, km1: State.defaults.km1, km2: State.defaults.km2, kmTien: State.defaults.kmTien, kmTienType: State.defaults.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
-                PromoLogic.checkAndApplyToItem(newItem); State.cart.push(newItem);
-                btn.className = "btn-toggle-search text-red-500 bg-red-50 border border-red-100 px-5 py-2 rounded-xl text-xs font-bold shadow-sm"; btn.textContent = "XÓA";
-            }
-            CartLogic.render(); LocalDB.save(); 
-        });
-
-        function renderSearchList() {
-            const itemsToRender = State.filteredProducts.slice(0, State.displayCount);
-            let html = itemsToRender.map(p => {
-                const isAdded = State.cart.some(q => q.productId === p.id);
-                let btnClass = isAdded ? "text-red-500 bg-red-50 border border-red-100 shadow-sm" : "bg-blue-600 text-white shadow-sm"; let btnText = isAdded ? "XÓA" : "THÊM";
-                
-                return `
-                <article class="p-4 flex justify-between items-center bg-white border-b border-slate-50">
-                    <div class="pr-2 flex-1 min-w-0">
-                        <div class="mb-1 truncate"><span class="font-bold text-slate-900 text-[15px]">${p.name}</span></div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-blue-600 text-[13px] font-black">${Utils.formatMoney(p.price)}</span>
-                            ${p.code ? `<span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-bold">${p.code}</span>` : ''}
-                        </div>
-                    </div>
-                    <button data-pid="${p.id}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold shrink-0 active:scale-95 transition-transform">${btnText}</button>
-                </article>`;
-            }).join('');
-            
-            if (State.displayCount < State.filteredProducts.length) { html += `<div class="p-4 flex justify-center bg-slate-50"><button id="btnLoadMore" class="px-6 py-2 bg-blue-100 text-blue-700 font-bold rounded-full text-xs uppercase shadow-sm">Hiển thị thêm (${State.displayCount}/${State.filteredProducts.length})</button></div>`; }
-            DOM.search.list.innerHTML = html;
-        }
-
+        // 6. CART ENGINE
         const CartLogic = {
             recalculateItem: (item) => {
                 const qty = Number(item.qty) || 0; const origPrice = Number(item.originalPrice) || 0;
                 const baseDisc = Number(item.baseDiscount) || 0; const km1 = item.km1 !== undefined ? Number(item.km1) : 0; const km2 = Number(item.km2) || 0; const kmTien = Number(item.kmTien) || 0;
                 
                 let lineTotal = 0;
-
-                if (State.defaults.discountFormula === 'additive') {
+                if (AppState.data.defaults.discountFormula === 'additive') {
                     const totalPercent = (baseDisc + km1 + km2) / 100;
                     const multiplier = Math.max(0, 1 - totalPercent); 
                     lineTotal = origPrice * multiplier * qty;
@@ -1147,14 +789,14 @@
             },
             
             updateSummary: () => {
+                const cart = AppState.get('cart');
                 let sO = 0, sF = 0, totalQty = 0; 
-                State.cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); });
+                cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); });
                 
-                DOM.main.itemCount.textContent = `${totalQty}`;
-                DOM.search.badge.textContent = totalQty;
+                DOM.main.itemCount.textContent = `${totalQty}`; DOM.search.badge.textContent = totalQty;
                 
                 let bestOrderPromo = null; let currentOrderDiscount = 0; let orderGiftStr = ""; let actualMultiplier = 1;
-                const orderPromos = State.promos.filter(p => p.isOrderPromo).sort((a, b) => b.minAmount - a.minAmount);
+                const orderPromos = AppState.get('promos').filter(p => p.isOrderPromo).sort((a, b) => b.minAmount - a.minAmount);
                 
                 for (let i = 0; i < orderPromos.length; i++) {
                     let op = orderPromos[i];
@@ -1178,31 +820,37 @@
                 DOM.footer.sumDisc.style.display = sO > finalPayable ? 'inline-block' : 'none';
                 DOM.footer.sumFinal.textContent = Utils.formatMoney(finalPayable);
                 
-                State.currentOrderPromoEffect = bestOrderPromo ? { name: bestOrderPromo.name, msg: currentOrderDiscount > 0 ? `- ${Utils.formatMoney(currentOrderDiscount)}` : `Tặng: ${orderGiftStr}`, discount: currentOrderDiscount } : null;
+                AppState.data.currentOrderPromoEffect = bestOrderPromo ? { name: bestOrderPromo.name, msg: currentOrderDiscount > 0 ? `- ${Utils.formatMoney(currentOrderDiscount)}` : `Tặng: ${orderGiftStr}`, discount: currentOrderDiscount } : null;
 
                 if (bestOrderPromo) {
                     DOM.footer.orderAlert.classList.remove('hidden');
-                    DOM.footer.orderAlert.innerHTML = `🎉 <strong>${bestOrderPromo.name}</strong>: ${State.currentOrderPromoEffect.msg}`;
+                    DOM.footer.orderAlert.innerHTML = `🎉 <strong>${bestOrderPromo.name}</strong>: ${AppState.data.currentOrderPromoEffect.msg}`;
                 } else { DOM.footer.orderAlert.classList.add('hidden'); }
             },
-            render: () => {
-                if (State.cart.length === 0) { 
+            
+            renderFull: () => {
+                const cart = AppState.get('cart');
+                const isCompactView = AppState.get('isCompactView');
+                
+                if (cart.length === 0) { 
                     DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-xl p-8 text-center text-slate-400 font-bold text-xs border border-slate-200">Chưa có sản phẩm nào</div>'; 
                     DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0`; DOM.search.badge.textContent = `0`; return; 
                 }
                 
                 DOM.footer.bar.classList.remove('translate-y-full'); 
 
-                const html = State.cart.map((item, index) => {
+                const html = cart.map((item, index) => {
                     CartLogic.recalculateItem(item);
                     let borderClass = item.appliedPromoId ? 'ring-2 ring-indigo-400/50 border-indigo-300' : 'border-slate-200';
+                    let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                    let flucBadge = flucInfo ? `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded font-bold ${flucInfo.type==='tăng'?'bg-red-100 text-red-600':'bg-emerald-100 text-emerald-600'}">${flucInfo.type === 'tăng' ? '⬆' : '⬇'} ${flucInfo.text}</span>` : '';
 
-                    if (State.isCompactView) {
+                    if (isCompactView) {
                         return `
                         <article class="bg-white rounded-xl p-4 shadow-sm border relative ${borderClass}" data-id="${item.id}">
                             <div class="flex justify-between items-start gap-2">
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-[14px] font-bold text-slate-900 leading-tight mb-1.5 break-words">${index+1}. ${item.name}</div>
+                                    <div class="text-[14px] font-bold text-slate-900 leading-tight mb-1.5 break-words">${index+1}. ${item.name} ${flucBadge}</div>
                                     <div class="text-[11px] text-slate-500 font-medium">SL: <span class="font-bold text-blue-600">${item.qty}</span> | Đơn: <span class="font-bold text-blue-600">${Utils.formatMoney(item.priceAfterDiscount)}</span></div>
                                 </div>
                                 <div class="text-right shrink-0">
@@ -1221,7 +869,7 @@
                                         <span class="bg-blue-600 text-white text-[11px] font-black w-6 h-6 flex items-center justify-center rounded-md shrink-0 shadow-sm">${index+1}</span>
                                         ${item.code ? `<span class="text-[11px] font-black text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md uppercase tracking-wider shadow-sm">${item.code}</span>` : ''}
                                     </div>
-                                    <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${item.name}</h4>
+                                    <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${item.name} ${flucBadge}</h4>
                                 </div>
                                 <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
                             </div>
@@ -1248,71 +896,551 @@
                 }).join('');
                 
                 DOM.main.quoteList.innerHTML = html; CartLogic.updateSummary();
+            },
+            
+            updateTargetedItemDOM: (item) => {
+                const article = DOM.main.quoteList.querySelector(`article[data-id="${item.id}"]`);
+                if(article) {
+                    const priceEl = article.querySelector('.price-display');
+                    const lineTotalEl = article.querySelector('.linetotal-display');
+                    const noteInput = article.querySelector('.cart-input-text');
+                    
+                    if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount);
+                    if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
+                    if(noteInput && noteInput.value !== item.note) noteInput.value = item.note;
+                    
+                    article.classList.remove('reactive-update');
+                    void article.offsetWidth; 
+                    article.classList.add('reactive-update');
+                }
+                CartLogic.updateSummary();
             }
         };
+
+        AppState.subscribe('cart', CartLogic.renderFull);
+
+        const updateToggleViewUI = () => {
+            if (!DOM.main.btnToggleView) return;
+            const isCompact = AppState.get('isCompactView');
+            if (isCompact) { DOM.main.btnToggleView.classList.remove('text-slate-600', 'bg-slate-50', 'border-slate-200'); DOM.main.btnToggleView.classList.add('text-blue-600', 'bg-blue-50', 'border-blue-200'); } 
+            else { DOM.main.btnToggleView.classList.remove('text-blue-600', 'bg-blue-50', 'border-blue-200'); DOM.main.btnToggleView.classList.add('text-slate-600', 'bg-slate-50', 'border-slate-200'); }
+        };
+
+        // 7. EVENT BINDING & CONTROLLERS
+        document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
+        document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
+        document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
+        document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        
+        const logoTrigger = document.getElementById('brandLogoTrigger');
+        const modalStory = document.getElementById('seoStoryModal');
+        if(logoTrigger) {
+            logoTrigger.addEventListener('click', () => {
+                modalStory.classList.remove('hidden'); modalStory.classList.add('flex');
+                setTimeout(() => { modalStory.classList.remove('opacity-0'); modalStory.firstElementChild.classList.remove('scale-95'); }, 10);
+            });
+        }
+        const closeStoryModal = () => {
+            modalStory.classList.add('opacity-0'); modalStory.firstElementChild.classList.add('scale-95');
+            setTimeout(() => { modalStory.classList.add('hidden'); modalStory.classList.remove('flex'); }, 300);
+        };
+        document.getElementById('btnCloseStory').addEventListener('click', closeStoryModal);
+        document.getElementById('btnReadMoreClose').addEventListener('click', closeStoryModal);
+
+        DOM.main.btnBackToHome.addEventListener('click', () => { switchScreen('landing'); });
+        DOM.setup.btnCloseSetup.addEventListener('click', () => { 
+            const cart = AppState.get('cart');
+            if (cart && cart.length > 0 && previousScreenId !== 'main') { switchScreen('main'); } 
+            else { switchScreen(previousScreenId || 'landing'); }
+        });
+        if (DOM.setup.btnStartFromSetup) DOM.setup.btnStartFromSetup.addEventListener('click', () => { switchScreen('main'); CartLogic.renderFull(); });
+        DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
+        DOM.setup.btnStart.addEventListener('click', () => { CartLogic.renderFull(); switchScreen('main'); });
+
+        DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        DOM.brand.btnClose.addEventListener('click', () => { DOM.brand.modal.classList.remove('active'); });
+        DOM.brand.btnSave.addEventListener('click', () => {
+            const brand = AppState.get('brand');
+            brand.name = DOM.brand.nameIn.value.trim() || "CỬA HÀNG"; brand.slogan = DOM.brand.sloganIn.value.trim(); brand.docTitle = DOM.brand.docTitleIn.value.trim() || "BẢNG BÁO GIÁ";
+            AppState.set('brand', brand, true); updateBrandText(); DOM.brand.modal.classList.remove('active'); Utils.showToast("Đã lưu cấu hình báo giá!");
+        });
+
+        DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
+        DOM.discount.btnClose.addEventListener('click', () => { DOM.discount.modal.classList.remove('active'); });
+        DOM.discount.btnSave.addEventListener('click', () => {
+            const defaults = AppState.get('defaults');
+            defaults.baseDiscount = Utils.cleanNumber(DOM.discount.baseIn.value); defaults.km1 = Utils.cleanNumber(DOM.discount.km1In.value);
+            defaults.km2 = Utils.cleanNumber(DOM.discount.km2In.value); defaults.kmTien = Utils.cleanNumber(DOM.discount.kmTienIn.value); defaults.kmTienType = DOM.discount.kmTienTypeIn.value;
+            const checkedFormula = document.querySelector('input[name="discountFormula"]:checked'); defaults.discountFormula = checkedFormula ? checkedFormula.value : 'sequential';
+            AppState.set('defaults', defaults, true);
+            
+            let cart = AppState.get('cart');
+            cart.forEach(item => { item.baseDiscount = defaults.baseDiscount; item.km1 = defaults.km1; item.km2 = defaults.km2; item.kmTien = defaults.kmTien; item.kmTienType = defaults.kmTienType; });
+            AppState.set('cart', cart); 
+            DOM.discount.modal.classList.remove('active'); Utils.showToast("Đã lưu và tự động cập nhật giỏ hàng!");
+        });
+
+        const openResetModal = () => { DOM.confirmReset.modal.classList.remove('hidden'); DOM.confirmReset.modal.classList.add('flex'); setTimeout(() => { DOM.confirmReset.modal.classList.remove('opacity-0'); DOM.confirmReset.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmReset.modal.firstElementChild.classList.add('scale-100'); }, 10); };
+        
+        // FIX: Sửa lỗi dùng sai classList.remove làm sập Javascript khi Làm Mới
+        const closeResetModal = () => { 
+            DOM.confirmReset.modal.classList.add('opacity-0'); 
+            DOM.confirmReset.modal.firstElementChild.classList.remove('scale-100'); 
+            DOM.confirmReset.modal.firstElementChild.classList.add('scale-95'); 
+            setTimeout(() => { 
+                DOM.confirmReset.modal.classList.add('hidden'); 
+                DOM.confirmReset.modal.classList.remove('flex'); 
+            }, 300); 
+        };
+        
+        DOM.main.btnResetQuote.addEventListener('click', openResetModal);
+        DOM.export.btnExportRestart.addEventListener('click', openResetModal);
+        DOM.confirmReset.btnCancel.addEventListener('click', closeResetModal);
+        DOM.confirmReset.btnConfirm.addEventListener('click', () => { 
+            AppState.set('cart', []); 
+            DOM.main.custName.value = ''; DOM.main.promoNote.value = ''; 
+            closeResetModal(); DOM.export.modal.classList.remove('active'); Utils.showToast("Đã làm mới báo giá!"); 
+        });
+
+        DOM.main.btnToggleView.addEventListener('click', () => { AppState.set('isCompactView', !AppState.get('isCompactView')); updateToggleViewUI(); CartLogic.renderFull(); });
 
         DOM.main.quoteList.addEventListener('click', (e) => {
             const btn = e.target.closest('button, label'); if(!btn || !btn.dataset.action) return;
             const card = btn.closest('article'); const id = card.dataset.id; const action = btn.dataset.action;
 
             if(action === 'remove') {
-                State.cart = State.cart.filter(i => i.id !== id); CartLogic.render(); applyFiltersAndSearch(); LocalDB.save();
+                AppState.set('cart', AppState.get('cart').filter(i => i.id !== id));
+                applyFiltersAndSearch(); 
             } else if (action === 'sync') {
-                const field = btn.dataset.field; const sourceItem = State.cart.find(i => i.id === id);
+                const field = btn.dataset.field; const sourceItem = AppState.get('cart').find(i => i.id === id);
                 if(sourceItem) {
-                    const val = sourceItem[field]; State.cart.forEach(item => { item[field] = val; });
-                    CartLogic.render(); LocalDB.save();
+                    const val = sourceItem[field]; 
+                    let cart = AppState.get('cart');
+                    cart.forEach(item => { item[field] = val; });
+                    AppState.set('cart', cart);
                     Utils.showToast(`Đã đồng bộ mức ${val}% cho TOÀN BỘ giỏ hàng!`); 
                 }
             } else if (action === 'toggleKmType') {
-                const item = State.cart.find(i => i.id === id); 
-                if(item) { 
-                    item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total'; 
-                    CartLogic.render(); LocalDB.save(); 
-                }
+                AppState.updateCartItem(id, (item) => {
+                    item.kmTienType = item.kmTienType === 'total' ? 'per_item' : 'total';
+                    CartLogic.recalculateItem(item);
+                    CartLogic.updateTargetedItemDOM(item);
+                });
             }
         });
 
         DOM.main.quoteList.addEventListener('input', (e) => {
             if(!e.target.classList.contains('cart-input') && !e.target.classList.contains('cart-input-text')) return;
             const card = e.target.closest('article'); const id = card.dataset.id; const field = e.target.dataset.field;
-            const item = State.cart.find(i => i.id === id); if(!item) return; 
 
-            if (e.target.classList.contains('cart-input-text')) { item[field] = e.target.value; LocalDB.save(); return; }
+            AppState.updateCartItem(id, (item) => {
+                if (e.target.classList.contains('cart-input-text')) { item[field] = e.target.value; return; }
+                let val = Utils.cleanNumber(e.target.value);
+                if (field === 'qty' && val < 1) { val = 1; e.target.value = 1; }
+                item[field] = val; 
 
-            let val = Utils.cleanNumber(e.target.value);
-            if (field === 'qty' && val < 1) { val = 1; e.target.value = 1; }
-            item[field] = val; 
+                if (field === 'qty') {
+                    const oldPromoId = item.appliedPromoId;
+                    PromoLogic.checkAndApplyToItem(item); 
+                    if(oldPromoId !== item.appliedPromoId) { setTimeout(() => CartLogic.renderFull(), 0); return; } 
+                }
 
-            if (field === 'qty') {
-                const oldPromoId = item.appliedPromoId;
-                PromoLogic.checkAndApplyToItem(item); 
-                if(oldPromoId !== item.appliedPromoId) { CartLogic.render(); }
-            }
-
-            CartLogic.recalculateItem(item); 
-            
-            if (!item.appliedPromoId) {
-                const priceEl = card.querySelector('.price-display'); if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount); 
-                const lineTotalEl = card.querySelector('.linetotal-display'); if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
-                const noteInput = card.querySelector('.cart-input-text'); if (noteInput && noteInput.value !== item.note) noteInput.value = item.note;
-            }
-            CartLogic.updateSummary(); LocalDB.save();
+                CartLogic.recalculateItem(item); 
+                if (!item.appliedPromoId) { CartLogic.updateTargetedItemDOM(item); }
+            });
         });
 
         DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) e.target.value = ''; else e.target.select(); } });
         DOM.main.quoteList.addEventListener('focusout', (e) => { if(e.target.classList.contains('cart-input') && e.target.value === '') { const field = e.target.dataset.field; e.target.value = field === 'qty' ? '1' : '0'; e.target.dispatchEvent(new Event('input', { bubbles: true })); } });
 
+
+        // 8. KHO DỮ LIỆU
+        const openConfirmDeleteModal = () => { DOM.confirmDelete.modal.classList.remove('hidden'); DOM.confirmDelete.modal.classList.add('flex'); setTimeout(() => { DOM.confirmDelete.modal.classList.remove('opacity-0'); DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-95'); DOM.confirmDelete.modal.firstElementChild.classList.add('scale-100'); }, 10); };
+        
+        // FIX: Sửa lỗi dùng sai classList.remove làm sập Javascript khi Xóa kho
+        const closeConfirmDeleteModal = () => { 
+            return new Promise(resolve => {
+                DOM.confirmDelete.modal.classList.add('opacity-0'); 
+                DOM.confirmDelete.modal.firstElementChild.classList.remove('scale-100'); 
+                DOM.confirmDelete.modal.firstElementChild.classList.add('scale-95'); 
+                setTimeout(() => { 
+                    DOM.confirmDelete.modal.classList.add('hidden'); 
+                    DOM.confirmDelete.modal.classList.remove('flex'); 
+                    resolve();
+                }, 300);
+            });
+        };
+
+        DOM.setup.btnClearAllData.addEventListener('click', openConfirmDeleteModal); 
+        DOM.confirmDelete.btnCancel.addEventListener('click', closeConfirmDeleteModal);
+        
+        DOM.confirmDelete.btnConfirm.addEventListener('click', async () => {
+            await closeConfirmDeleteModal();
+            try {
+                AppState.set('productDB', [], true);
+                AppState.set('warehouses', [], true);
+                AppState.set('cart', []); 
+                AppState.set('currentFilterWarehouse', 'All', true);
+                AppState.set('promos', [], true);
+                AppState.set('fluctuationSort', 'normal', true);
+
+                DOM.setup.mapping.classList.add('hidden', 'opacity-0'); 
+                DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; 
+                DOM.setup.fileIn.value = ''; 
+                
+                renderSetupWarehouseList(); 
+                PromoLogic.renderQuickButtons(); 
+                applyFiltersAndSearch(); 
+                
+                Utils.showToast("Đã dọn dẹp sạch Kho dữ liệu!");
+            } catch(e) { console.error(e); Utils.showToast("Có lỗi xảy ra, tải lại trang..."); }
+        });
+
+        function renderSetupWarehouseList() {
+            const warehouses = AppState.get('warehouses');
+            if (warehouses.length === 0) { DOM.setup.warehouseListSection.classList.add('hidden'); } else {
+                DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${AppState.get('productDB').length} SP`;
+                DOM.setup.warehouseBadges.innerHTML = warehouses.map(w => `<span class="bg-indigo-50 text-indigo-700 font-bold text-[10px] px-2 py-1 rounded border border-indigo-100">${w}</span>`).join('');
+            }
+        }
+
+        DOM.setup.fileIn.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return; DOM.setup.fileName.textContent = file.name; const reader = new FileReader(); 
+            reader.onload = (evt) => {
+                try {
+                    const workbook = XLSX.read(evt.target.result, { type: 'binary' }); 
+                    let rawExcelData = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { header: 1, defval: "" });
+                    
+                    if (!rawExcelData || rawExcelData.length === 0) return Utils.showToast("File Excel trống hoặc không hợp lệ!");
+                    
+                    let bestHIndex = 0; let maxScore = 0; const keywords = ['mã', 'code', 'tên', 'name', 'sản phẩm', 'giá', 'price', 'bìa', 'đơn giá', 'đvt', 'đơn vị', 'unit', 'stt'];
+                    for (let i = 0; i < Math.min(25, rawExcelData.length); i++) {
+                        const row = rawExcelData[i]; if (!row || row.length === 0) continue;
+                        let score = 0; row.forEach(cell => { if (cell && typeof cell === 'string') { const lower = cell.toLowerCase(); if (keywords.some(kw => lower.includes(kw))) score++; } });
+                        if (score > maxScore) { maxScore = score; bestHIndex = i; }
+                    }
+                    if (maxScore < 2) { for(let i = 0; i < Math.min(15, rawExcelData.length); i++) { if(rawExcelData[i].filter(x => x && x.toString().trim() !== "").length >= 3){ bestHIndex = i; break; } } }
+                    
+                    AppState.data.tempRawExcel = rawExcelData; AppState.data.tempHeaderIndex = bestHIndex;
+                    const headers = []; (rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
+                    
+                    const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
+                    [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
+                    
+                    DOM.setup.mapping.classList.remove('hidden'); setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
+                    let priceColSet = false;
+                    headers.forEach(h => {
+                        let lower = h.toLowerCase();
+                        if(lower.includes('mã') || lower.includes('code')) DOM.setup.mapCode.value = h;
+                        if(lower.includes('tên') || lower.includes('name') || lower.includes('sản phẩm')) DOM.setup.mapName.value = h;
+                        if(lower.includes('đvt') || lower.includes('đơn vị') || lower.includes('unit')) DOM.setup.mapUnit.value = h;
+                        if(!priceColSet && (lower.includes('giá') || lower.includes('price') || lower.includes('bìa'))) { DOM.setup.mapPrice.value = h; priceColSet = true; }
+                    });
+                    let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
+                } catch (err) { Utils.showToast("Lỗi đọc file Excel."); console.error(err); }
+            }; reader.readAsBinaryString(file);
+        });
+
+        DOM.setup.btnConfirm.addEventListener('click', () => {
+            const rawExcelData = AppState.data.tempRawExcel;
+            if (!rawExcelData || rawExcelData.length === 0) return Utils.showToast("Vui lòng tải lên file Excel trước!");
+            const nameCol = DOM.setup.mapName.value; const priceCol = DOM.setup.mapPrice.value; const wName = DOM.setup.warehouseNameInput.value.trim();
+            if(!wName) { Utils.showToast("Vui lòng đặt Tên Kho / Tên Hãng!"); DOM.setup.warehouseNameInput.focus(); return; }
+            if(!nameCol || !priceCol) return Utils.showToast("Cần ghép ít nhất cột Tên SP và Giá Bìa!");
+            
+            let hIndex = AppState.data.tempHeaderIndex !== undefined ? AppState.data.tempHeaderIndex : 0; const headers = rawExcelData[hIndex];
+            const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
+            
+            let newItemsCount = 0; let products = AppState.get('productDB');
+            for (let i = hIndex + 1; i < rawExcelData.length; i++) {
+                const row = rawExcelData[i]; if (!row || row.length === 0) continue;
+                const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
+                if (!row[nI]) continue;
+                
+                const code = cI > -1 ? (row[cI] || "") : ""; 
+                const name = row[nI] ? row[nI].toString().trim() : ""; 
+                const rawPrice = pI > -1 ? row[pI] : 0;
+                
+                let rawUnit = uI > -1 ? row[uI] : "Cái";
+                if (typeof rawUnit === 'number' && rawUnit !== 0 && rawUnit > -1 && rawUnit < 1) { rawUnit = (rawUnit * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } 
+                else if (rawUnit === "" || rawUnit == null) { rawUnit = "Cái"; } 
+                else if (typeof rawUnit === 'string' && rawUnit.trim() !== "") {
+                    let numParsed = Number(rawUnit.trim());
+                    if (!isNaN(numParsed) && numParsed !== 0 && numParsed > -1 && numParsed < 1) { rawUnit = (numParsed * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; }
+                }
+
+                products.push({ 
+                    id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: rawUnit, price: Utils.cleanNumber(rawPrice), 
+                    searchStr: Utils.normString(`${code || ''} ${name || ''}`) 
+                });
+                newItemsCount++;
+            }
+            
+            AppState.set('productDB', products, true);
+            let whs = AppState.get('warehouses'); if(!whs.includes(wName)) { whs.push(wName); AppState.set('warehouses', whs, true); }
+            LocalDB.save();
+            
+            DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
+            DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; DOM.setup.fileIn.value = '';
+            renderSetupWarehouseList(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+        });
+
+        // 9. TÌM KIẾM & NÚT GỘP TĂNG GIẢM
+        function renderWarehouseFilters() {
+            const whs = AppState.get('warehouses');
+            if(whs.length <= 1) { DOM.search.warehouseFilters.classList.add('hidden'); return; }
+            DOM.search.warehouseFilters.classList.remove('hidden');
+            const cw = AppState.get('currentFilterWarehouse');
+            let html = `<button data-w="All" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${cw === 'All' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}">TẤT CẢ</button>`;
+            whs.forEach(w => { html += `<button data-w="${w}" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${cw === w ? 'bg-blue-600 text-white' : 'bg-white text-slate-500 border border-slate-200'}">${w}</button>`; });
+            DOM.search.warehouseFilters.innerHTML = html;
+        }
+
+        DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; AppState.set('currentFilterWarehouse', btn.dataset.w, true); renderWarehouseFilters(); applyFiltersAndSearch(); });
+        
+        // Gộp 3 nút thành 1 nút xoay vòng (Cycle button logic)
+        DOM.search.btnSortCycle.addEventListener('click', () => {
+            let currentState = AppState.get('fluctuationSort');
+            let nextState = currentState === 'normal' ? 'inc' : (currentState === 'inc' ? 'dec' : 'normal');
+            AppState.set('fluctuationSort', nextState, true);
+            updateSortUI();
+            applyFiltersAndSearch();
+        });
+        
+        const updateSortUI = () => {
+            const s = AppState.get('fluctuationSort');
+            const btn = DOM.search.btnSortCycle;
+            if (s === 'normal') {
+                btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1 shadow-sm';
+                btn.innerHTML = '🔄 Biến Động: Tất Cả';
+            } else if (s === 'inc') {
+                btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-red-50 text-red-600 border border-red-200 flex items-center gap-1 shadow-sm';
+                btn.innerHTML = '⬆ Tăng Cao Nhất';
+            } else if (s === 'dec') {
+                btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-1 shadow-sm';
+                btn.innerHTML = '⬇ Giảm Cao Nhất';
+            }
+        };
+
+        const applyFiltersAndSearch = () => {
+            if (!DOM.search.modal.classList.contains('active')) return;
+            const terms = Utils.normString(DOM.search.input.value.trim()).split(/\s+/).filter(t => t.length > 0);
+            let filtered = AppState.get('productDB');
+            const sortState = AppState.get('fluctuationSort');
+            
+            if (AppState.get('currentFilterWarehouse') !== 'All') filtered = filtered.filter(p => p.warehouse === AppState.get('currentFilterWarehouse'));
+            
+            // Lọc theo Nút Gộp
+            if (sortState === 'inc') {
+                filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'tăng');
+            } else if (sortState === 'dec') {
+                filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'giảm');
+            }
+
+            if (terms.length > 0) filtered = filtered.filter(p => terms.every(term => p.searchStr.includes(term)));
+            
+            // Sắp xếp theo % nếu đang trong chế độ lọc
+            if (sortState === 'inc') {
+                filtered.sort((a,b) => {
+                    const aVal = (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value;
+                    const bVal = (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value;
+                    return bVal - aVal;
+                });
+            } else if (sortState === 'dec') {
+                filtered.sort((a,b) => {
+                    const aVal = Math.abs((Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value);
+                    const bVal = Math.abs((Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value);
+                    return bVal - aVal;
+                });
+            }
+
+            AppState.set('filteredProducts', filtered, true); AppState.set('displayCount', 50, true); renderSearchList();
+        };
+
+        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
+        const closeSearch = () => DOM.search.modal.classList.remove('active');
+        DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
+        DOM.main.btnOpenSearch.addEventListener('click', openSearch);
+        let searchTimeout; DOM.search.input.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
+
+        DOM.search.list.addEventListener('click', (e) => {
+            const btnLoadMore = e.target.closest('#btnLoadMore'); if (btnLoadMore) { AppState.set('displayCount', AppState.get('displayCount') + 50, true); renderSearchList(); return; }
+            const btn = e.target.closest('.btn-toggle-search'); if (!btn) return;
+            const productId = btn.dataset.pid; const p = AppState.get('productDB').find(x => x.id === productId); if(!p) return;
+
+            let cart = AppState.get('cart');
+            const isAdded = cart.some(q => q.productId === p.id);
+            if(isAdded) {
+                cart = cart.filter(q => q.productId !== p.id); 
+                btn.className = "btn-toggle-search bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm"; btn.textContent = "THÊM";
+            } else {
+                const defs = AppState.get('defaults');
+                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                PromoLogic.checkAndApplyToItem(newItem); cart.push(newItem);
+                btn.className = "btn-toggle-search text-red-500 bg-red-50 border border-red-100 px-5 py-2 rounded-xl text-xs font-bold shadow-sm"; btn.textContent = "XÓA";
+            }
+            AppState.set('cart', cart);
+        });
+
+        function renderSearchList() {
+            const filtered = AppState.get('filteredProducts'); const count = AppState.get('displayCount'); const cart = AppState.get('cart');
+            const itemsToRender = filtered.slice(0, count);
+            
+            let html = itemsToRender.map(p => {
+                const isAdded = cart.some(q => q.productId === p.id);
+                let btnClass = isAdded ? "text-red-500 bg-red-50 border border-red-100 shadow-sm" : "bg-blue-600 text-white shadow-sm"; let btnText = isAdded ? "XÓA" : "THÊM";
+                
+                let flucInfo = Utils.getIncreaseDecreaseInfo(p.unit);
+                let flucBadge = flucInfo ? `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded font-bold ${flucInfo.type==='tăng'?'bg-red-100 text-red-600':'bg-emerald-100 text-emerald-600'}">${flucInfo.type === 'tăng' ? '⬆ Tăng' : '⬇ Giảm'} ${flucInfo.text}</span>` : '';
+
+                return `
+                <article class="p-4 flex justify-between items-center bg-white border-b border-slate-50">
+                    <div class="pr-2 flex-1 min-w-0">
+                        <div class="mb-1 truncate"><span class="font-bold text-slate-900 text-[15px]">${p.name}</span> ${flucBadge}</div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-blue-600 text-[13px] font-black">${Utils.formatMoney(p.price)}</span>
+                            ${p.code ? `<span class="text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded font-bold">${p.code}</span>` : ''}
+                        </div>
+                    </div>
+                    <button data-pid="${p.id}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold shrink-0 active:scale-95 transition-transform">${btnText}</button>
+                </article>`;
+            }).join('');
+            
+            if (count < filtered.length) { html += `<div class="p-4 flex justify-center bg-slate-50"><button id="btnLoadMore" class="px-6 py-2 bg-blue-100 text-blue-700 font-bold rounded-full text-xs uppercase shadow-sm">Hiển thị thêm (${count}/${filtered.length})</button></div>`; }
+            DOM.search.list.innerHTML = html;
+        }
+
+        // Thêm Thủ Công
+        DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
+        DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
+        DOM.manualAdd.btnConfirm.addEventListener('click', () => {
+            const name = DOM.manualAdd.name.value.trim(); const price = Utils.cleanNumber(DOM.manualAdd.price.value);
+            if(!name || price <= 0) return Utils.showToast("Vui lòng nhập Tên và Giá Bìa > 0");
+            const newProduct = { id: 'MANUAL_' + Date.now(), warehouse: 'Thêm Thủ Công', code: DOM.manualAdd.code.value.trim(), name: name, unit: DOM.manualAdd.unit.value.trim() || 'Cái', price: price, searchStr: Utils.normString(`${DOM.manualAdd.code.value.trim()} ${name}`) };
+            let prods = AppState.get('productDB'); prods.push(newProduct); AppState.set('productDB', prods, true);
+            
+            const defs = AppState.get('defaults');
+            let newItem = { id: Utils.generateId(), productId: newProduct.id, code: newProduct.code, name: newProduct.name, unit: newProduct.unit, originalPrice: newProduct.price, qty: 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: newProduct.warehouse, appliedPromoId: null };
+            let cart = AppState.get('cart'); cart.push(newItem); AppState.set('cart', cart);
+            
+            DOM.manualAdd.name.value = ''; DOM.manualAdd.price.value = ''; DOM.manualAdd.code.value = ''; DOM.manualAdd.btnClose.click(); 
+            applyFiltersAndSearch(); Utils.showToast("Đã thêm Sản phẩm mới!");
+        });
+
+        // 10. KHUYẾN MÃI (PROMO)
+        let editingPromoProductIds = []; let currentPromoContext = 'item';
+        const PromoLogic = {
+            openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); },
+            closeManager: () => { DOM.promo.managerModal.classList.remove('active'); PromoLogic.renderQuickButtons(); CartLogic.renderFull(); },
+            switchTab: (tab) => {
+                currentPromoContext = tab;
+                if (tab === 'item') { DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupItem.classList.remove('hidden'); DOM.promo.groupOrder.classList.add('hidden'); } 
+                else { DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupOrder.classList.remove('hidden'); DOM.promo.groupItem.classList.add('hidden'); }
+            },
+            resetForm: () => { DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'extra_percent'; DOM.promo.valueIn.value = ''; editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'VD: 5'; DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; PromoLogic.updateOrderLabel(); },
+            updateOrderLabel: () => { if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
+            savePromo: () => {
+                const name = DOM.promo.nameIn.value.trim(); if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
+                let newPromo = { id: 'PRM_' + Date.now(), name: name };
+                if (currentPromoContext === 'item') {
+                    const minQty = parseInt(DOM.promo.minQtyIn.value) || 1; const type = DOM.promo.typeIn.value; const value = Utils.cleanNumber(DOM.promo.valueIn.value);
+                    if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng!");
+                    newPromo.isOrderPromo = false; newPromo.minQty = minQty; newPromo.type = type; newPromo.value = value; newPromo.productIds = [...editingPromoProductIds];
+                } else {
+                    const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim(); const isMultiply = DOM.promo.orderMultiply.checked;
+                    if (minAmount <= 0) return Utils.showToast("Vui lòng nhập mốc tổng thanh toán!"); if (!valRaw) return Utils.showToast("Vui lòng nhập Quà tặng hoặc Số tiền trừ!");
+                    newPromo.isOrderPromo = true; newPromo.minAmount = minAmount; newPromo.rewardType = orderType; newPromo.rewardValue = orderType === 'discount' ? Utils.cleanNumber(valRaw) : valRaw; newPromo.isMultiply = isMultiply;
+                }
+                let promos = AppState.get('promos'); promos.push(newPromo); AppState.set('promos', promos, true);
+                Utils.showToast(`Đã lưu KM: ${name}`); PromoLogic.resetForm(); PromoLogic.renderList();
+            },
+            deletePromo: (id) => { 
+                let promos = AppState.get('promos').filter(p => p.id !== id); AppState.set('promos', promos, true);
+                let cart = AppState.get('cart'); cart.forEach(item => { if (item.appliedPromoId === id) PromoLogic.revertPromoOnItem(item); }); AppState.set('cart', cart);
+                Utils.showToast("Đã xóa chương trình!"); PromoLogic.renderList(); PromoLogic.renderQuickButtons(); 
+            },
+            renderList: () => {
+                const promos = AppState.get('promos');
+                if (promos.length === 0) { DOM.promo.listContainer.innerHTML = '<div class="text-center text-slate-400 text-xs py-4 font-bold">Chưa có chương trình KM nào</div>'; return; }
+                const html = promos.map(p => {
+                    let bodyHtml = '';
+                    if (p.isOrderPromo) {
+                        let rewardTxt = p.rewardType === 'discount' ? `Trừ tiền: ${Utils.formatMoney(p.rewardValue)}` : `Tặng: ${p.rewardValue}`;
+                        let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-black px-1 bg-indigo-50 rounded border border-indigo-100">(x Luỹ Tiến)</span>` : '';
+                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1">Tổng đơn >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600">${rewardTxt}</span>${multiplyTxt}</p>`;
+                    } else {
+                        let typeTxt = p.type === 'extra_tien_sp' ? 'Trừ THÊM tiền/SP' : (p.type === 'extra_tien_tong' ? 'Trừ THÊM tổng tiền' : 'Giảm THÊM (%)');
+                        let valTxt = p.type === 'extra_percent' ? `${p.value}%` : Utils.formatMoney(p.value);
+                        bodyHtml = `<p class="text-[10px] text-slate-500 font-bold mt-1 flex items-center flex-wrap gap-y-1">Mua >= ${p.minQty} SP 👉 ${typeTxt}: <span class="text-indigo-600 ml-1">${valTxt}</span></p><p class="text-[9px] truncate text-slate-400">Áp dụng: ${p.productIds.length} SP</p>`;
+                    }
+                    return `<div class="bg-white p-3 rounded-xl border border-slate-200 flex justify-between items-center"><div class="min-w-0 flex-1"><h4 class="text-xs font-bold text-slate-800 truncate">${p.name}</h4>${bodyHtml}</div><button onclick="PromoLogic.deletePromo('${p.id}')" class="ml-2 w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
+                }).join(''); DOM.promo.listContainer.innerHTML = html;
+            },
+            renderQuickButtons: () => {
+                const itemPromos = AppState.get('promos').filter(p => !p.isOrderPromo);
+                if (itemPromos.length === 0) { DOM.main.quickPromoRow.innerHTML = ''; return; }
+                const html = itemPromos.map(p => `<button onclick="PromoLogic.quickAddProducts('${p.id}')" class="shrink-0 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm whitespace-nowrap">${p.name}</button>`).join('');
+                DOM.main.quickPromoRow.innerHTML = html;
+            },
+            quickAddProducts: (promoId) => {
+                const promo = AppState.get('promos').find(p => p.id === promoId); if (!promo) return; let addedCount = 0;
+                let cart = AppState.get('cart'); const prods = AppState.get('productDB'); const defs = AppState.get('defaults');
+                
+                promo.productIds.forEach(pid => {
+                    if (!cart.some(item => item.productId === pid)) {
+                        const p = prods.find(x => x.id === pid);
+                        if (p) {
+                            let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: promo.minQty > 1 ? promo.minQty : 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                            PromoLogic.checkAndApplyToItem(newItem); cart.push(newItem); addedCount++;
+                        }
+                    }
+                });
+                if (addedCount > 0) { AppState.set('cart', cart); Utils.showToast(`Đã thêm ${addedCount} SP vào giỏ!`); } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
+            },
+            openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); },
+            closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
+            searchProducts: () => {
+                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = AppState.get('productDB'); if (term) { list = list.filter(p => p.searchStr.includes(term)); }
+                const html = list.slice(0, 100).map(p => {
+                    const isChecked = editingPromoProductIds.includes(p.id);
+                    return `<label class="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-50 border-b border-slate-50"><div class="flex-1 min-w-0 pr-2"><div class="text-xs font-bold text-slate-800 truncate">${p.name}</div><div class="text-[10px] text-blue-600 font-bold">${Utils.formatMoney(p.price)}</div></div><div class="custom-checkbox relative w-5 h-5"><input type="checkbox" class="opacity-0 absolute inset-0 z-10" value="${p.id}" ${isChecked ? 'checked' : ''} onchange="PromoLogic.toggleProduct(this)"><div class="w-5 h-5 border-2 border-slate-300 rounded flex items-center justify-center bg-white"><svg class="w-3 h-3 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
+                }).join(''); DOM.promo.productList.innerHTML = html;
+            },
+            toggleProduct: (checkbox) => { const pid = checkbox.value; if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); } DOM.promo.selectedCount.textContent = editingPromoProductIds.length; },
+            checkAndApplyToItem: (item) => {
+                const applicablePromo = AppState.get('promos').find(p => !p.isOrderPromo && p.productIds.includes(item.productId));
+                if (applicablePromo) {
+                    if (item.qty >= applicablePromo.minQty) {
+                        if (item.appliedPromoId !== applicablePromo.id) { item.appliedPromoId = applicablePromo.id; item.promoType = applicablePromo.type; item.promoValue = applicablePromo.value; Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`); }
+                    } else { if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item); }
+                }
+            },
+            revertPromoOnItem: (item) => { if (item.appliedPromoId) { item.appliedPromoId = null; item.promoType = null; item.promoValue = null; } }
+        };
+
+        DOM.promo.btnOpenManager.addEventListener('click', PromoLogic.openManager); DOM.promo.btnCloseManager.addEventListener('click', PromoLogic.closeManager);
+        DOM.promo.btnSavePromo.addEventListener('click', PromoLogic.savePromo); DOM.promo.btnSelectProducts.addEventListener('click', PromoLogic.openSearchProducts);
+        DOM.promo.btnCloseSearch.addEventListener('click', PromoLogic.closeSearchProducts); DOM.promo.btnFinishSearch.addEventListener('click', PromoLogic.closeSearchProducts);
+        DOM.promo.searchInput.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(PromoLogic.searchProducts, 200); });
+        DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
+        DOM.promo.typeIn.addEventListener('change', () => { const val = DOM.promo.typeIn.value; DOM.promo.valueIn.value = ''; if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'VD: 5000'; } else { DOM.promo.valueIn.placeholder = 'VD: 5'; } });
+
+        // 11. EXPORT ENGINE
         const ExportLogic = {
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
-                State.cart.forEach((item, i) => {
+                AppState.get('cart').forEach((item, i) => {
                     sumFinal += item.totalFinal; 
+                    
+                    let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                    let printName = item.name;
+                    if (flucInfo) { printName += ` <strong style="color:${flucInfo.type === 'tăng' ? '#dc2626' : '#059669'}; font-size: 24px;">[${flucInfo.type === 'tăng' ? 'Tăng' : 'Giảm'} ${flucInfo.text}]</strong>`; }
+
                     tbody.innerHTML += `
                     <tr style="border-bottom: 2px solid #e2e8f0; background: ${i%2!==0?'#f8fafc':'#ffffff'};">
                         <td contenteditable="true" style="padding: 20px 15px; text-align: center; color: #64748b; font-weight: 600; vertical-align: middle;">${i + 1}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${item.name}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${printName}</td>
                         <td contenteditable="true" class="print-text-brand" style="padding: 20px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.originalPrice)}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.priceAfterDiscount)}</td>
@@ -1326,26 +1454,28 @@
                 document.getElementById('pPhoneDisplay').innerHTML = DOM.main.senderPhone.value.trim();
                 
                 let finalPayable = sumFinal; const pOrderPromoRow = document.getElementById('pOrderPromoRow'); const pOrderPromoText = document.getElementById('pOrderPromoText');
-                if (State.currentOrderPromoEffect) {
+                const orderPromoEffect = AppState.get('currentOrderPromoEffect');
+                if (orderPromoEffect) {
                     pOrderPromoRow.classList.remove('hidden'); pOrderPromoRow.style.display = 'block';
-                    pOrderPromoText.innerHTML = `🎉 TỔNG ĐƠN TẶNG/GIẢM: ${State.currentOrderPromoEffect.msg}`;
-                    finalPayable -= State.currentOrderPromoEffect.discount; if (finalPayable < 0) finalPayable = 0;
+                    pOrderPromoText.innerHTML = `🎉 TỔNG ĐƠN TẶNG/GIẢM: ${orderPromoEffect.msg}`;
+                    finalPayable -= orderPromoEffect.discount; if (finalPayable < 0) finalPayable = 0;
                 } else { pOrderPromoRow.classList.add('hidden'); pOrderPromoRow.style.display = 'none'; }
 
                 document.getElementById('pTotalPrint').innerHTML = Utils.formatMoney(finalPayable);
                 const note = DOM.main.promoNote.value.trim();
-                document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${State.brand.name}!`;
+                document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${note}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${AppState.get('brand').name}!`;
                 const now = new Date(); document.getElementById('pDateDisplay').innerHTML = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
                 
                 return finalPayable;
             },
             
             prepareExport: () => {
-                if(State.cart.length === 0) return; 
+                if(AppState.get('cart').length === 0) return; 
                 DOM.export.modal.classList.add('active'); DOM.export.loading.classList.remove('hidden');
                 const total = ExportLogic.generatePrintView();
-                let promoMsg = State.currentOrderPromoEffect ? `\n🎁 Quà tặng cho mốc đơn này: ${State.currentOrderPromoEffect.msg.replace('Tặng: ', '')}` : '';
-                DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${State.brand.docTitle.toLowerCase()}.\n👉 Tổng thanh toán: ${Utils.formatMoney(total)}${promoMsg}\n\nAnh/chị xem chi tiết file đính kèm nhé!`;
+                const opEff = AppState.get('currentOrderPromoEffect');
+                let promoMsg = opEff ? `\n🎁 Quà tặng cho mốc đơn này: ${opEff.msg.replace('Tặng: ', '')}` : '';
+                DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${AppState.get('brand').docTitle.toLowerCase()}.\n👉 Tổng thanh toán: ${Utils.formatMoney(total)}${promoMsg}\n\nAnh/chị xem chi tiết file đính kèm nhé!`;
 
                 setTimeout(() => {
                     const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea');
@@ -1392,30 +1522,37 @@
                     headerRow.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
                     headerRow.height = 30;
                     
-                    let currentRow = 7; const domRows = document.querySelectorAll('#printTbody tr');
-                    domRows.forEach((tr) => {
-                        const tds = tr.querySelectorAll('td');
-                        if (tds.length >= 8) {
-                            const row = worksheet.getRow(currentRow); const rawPriceStr = tds[4].innerHTML.split('<br>')[0]; 
-                            row.values = [ tds[0].textContent.trim(), tds[1].textContent.trim(), tds[2].textContent.trim(), Utils.cleanNumber(tds[3].textContent), Utils.cleanNumber(rawPriceStr), Utils.cleanNumber(tds[5].textContent), Utils.cleanNumber(tds[6].textContent), tds[7].textContent.trim().replace(/\n/g, ', ') ];
-                            row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
-                            
-                            row.eachCell((cell, colNumber) => { 
-                                cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; 
-                                if (colNumber === 1 || colNumber === 4) cell.alignment = { horizontal: 'center', vertical: 'middle' }; 
-                                else cell.alignment = { vertical: 'middle' };
-                            });
-                            row.getCell(8).alignment = { wrapText: true, vertical: 'top' };
-                            currentRow++;
-                        }
+                    let currentRow = 7; 
+                    const cartData = AppState.get('cart');
+                    
+                    cartData.forEach((item, idx) => {
+                         const row = worksheet.getRow(currentRow);
+                         let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                         let excelName = item.name;
+                         if (flucInfo) excelName += ` [${flucInfo.type === 'tăng' ? 'Tăng' : 'Giảm'} ${flucInfo.text}]`;
+
+                         row.values = [ idx + 1, item.code || '-', excelName, item.qty, item.originalPrice, item.priceAfterDiscount, item.totalFinal, item.note || '' ];
+                         row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
+                         
+                         row.eachCell((cell, colNumber) => { 
+                             cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; 
+                             if (colNumber === 1 || colNumber === 4) cell.alignment = { horizontal: 'center', vertical: 'middle' }; 
+                             else cell.alignment = { vertical: 'middle' };
+                         });
+                         row.getCell(8).alignment = { wrapText: true, vertical: 'top' };
+                         
+                         if(flucInfo && flucInfo.type === 'tăng') { row.getCell(3).font = { color: { argb: 'FFDC2626' } }; }
+                         else if(flucInfo && flucInfo.type === 'giảm') { row.getCell(3).font = { color: { argb: 'FF059669' } }; }
+
+                         currentRow++;
                     });
                     
-                    // FIX LỖI CRASH FILE EXCEL TẠI ĐÂY
-                    if (State.currentOrderPromoEffect) {
+                    const opEff = AppState.get('currentOrderPromoEffect');
+                    if (opEff) {
                         const promoRow = worksheet.getRow(currentRow); 
-                        worksheet.mergeCells(`A${currentRow}:F${currentRow}`); // Fix: sử dụng worksheet.mergeCells
-                        promoRow.getCell(1).value = `KM Tổng Đơn: ${State.currentOrderPromoEffect.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF4338CA' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
-                        promoRow.getCell(7).value = State.currentOrderPromoEffect.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF4338CA' } };
+                        worksheet.mergeCells(`A${currentRow}:F${currentRow}`); 
+                        promoRow.getCell(1).value = `KM Tổng Đơn: ${opEff.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF4338CA' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
+                        promoRow.getCell(7).value = opEff.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF4338CA' } };
                         currentRow++;
                     }
 
@@ -1426,7 +1563,7 @@
                     
                     const buffer = await workbook.xlsx.writeBuffer(); 
                     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
+                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
                     const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || 'KH')}_${Date.now()}.xlsx`;
                     
                     await DownloadHelper.save(blob, filename);
@@ -1443,11 +1580,10 @@
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
                     
-                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
+                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
                     const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`;
                     
-                    const blob = pdf.output('blob');
-                    await DownloadHelper.save(blob, filename);
+                    const blob = pdf.output('blob'); await DownloadHelper.save(blob, filename);
                 } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
             },
 
@@ -1478,7 +1614,7 @@
             if (url) {
                 try {
                     const res = await fetch(url); const blob = await res.blob();
-                    const shortTitle = Utils.normString(State.brand.docTitle).split(' ').slice(0,2).join('_');
+                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
                     const filename = `BaoGia_${shortTitle}_${Date.now()}.jpg`;
                     await DownloadHelper.save(blob, filename);
                 } catch (e) {
@@ -1495,10 +1631,27 @@
             }
         });
 
+        // 12. INIT
+        const initApp = () => {
+            LocalDB.load();
+            
+            const brand = AppState.get('brand');
+            DOM.brand.nameIn.value = brand.name; DOM.brand.sloganIn.value = brand.slogan; DOM.brand.docTitleIn.value = brand.docTitle;
+            
+            const defs = AppState.get('defaults');
+            DOM.discount.baseIn.value = defs.baseDiscount || ''; DOM.discount.km1In.value = defs.km1 || ''; DOM.discount.km2In.value = defs.km2 || '';
+            DOM.discount.kmTienIn.value = defs.kmTien || ''; DOM.discount.kmTienTypeIn.value = defs.kmTienType || 'per_item';
+            
+            const formula = defs.discountFormula || 'sequential';
+            const formulaRadio = document.querySelector(`input[name="discountFormula"][value="${formula}"]`);
+            if(formulaRadio) formulaRadio.checked = true;
+            
+            updateToggleViewUI(); setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
+        };
+
         initApp();
     </script>
 </body>
 </html>
-
 
 
