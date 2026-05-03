@@ -385,8 +385,16 @@
                         <span class="absolute -top-2.5 left-4 bg-slate-200 text-slate-600 text-[10px] font-black px-2 py-0.5 rounded uppercase">1. Điều kiện mua</span>
                         <div class="mt-2">
                             <label class="text-xs font-bold text-slate-800 mb-2 block">Số lượng tối thiểu để kích hoạt:</label>
-                            <input type="number" id="promoMinQtyIn" min="1" value="1" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black text-slate-900 outline-none focus:border-indigo-500">
-                            <p class="text-[10px] text-slate-500 mt-2 font-medium italic">* Hệ thống tự động nhân quà lũy tiến (vd đk=10: mua 20 x2 quà, mua 30 x3 quà).</p>
+                            <input type="number" id="promoMinQtyIn" min="1" value="1" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black text-slate-900 outline-none focus:border-indigo-500 mb-3">
+                            <div class="space-y-2 bg-white p-3 rounded-lg border border-slate-200">
+                                <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer">
+                                    <input type="checkbox" id="promoItemMultiply" checked class="w-4 h-4 rounded text-indigo-600"> 
+                                    Nhân quà lũy tiến theo số lượng
+                                </label>
+                                <div id="promoItemMaxCapContainer" class="pl-6 pt-1">
+                                    <input type="number" id="promoItemMaxCap" placeholder="Giới hạn tối đa (bỏ trống nếu không giới hạn)" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-bold text-slate-700 outline-none focus:border-indigo-500">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -904,27 +912,53 @@
                 
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
                 
-                let promoNotes = "";
-                if (item.appliedPromoId && item.promoType) {
-                    if (item.promoType === 'extra_percent') { lineTotal = lineTotal * (1 - item.promoValue / 100); promoNotes = `KM giảm thêm: -${item.promoValue}%`; } 
-                    else if (item.promoType === 'extra_tien_sp') { lineTotal -= (item.promoValue * qty); promoNotes = `KM giảm thêm: -${Utils.formatMoney(item.promoValue)}/SP`; } 
-                    else if (item.promoType === 'extra_tien_tong') { lineTotal -= item.promoValue; promoNotes = `KM giảm thêm: -${Utils.formatMoney(item.promoValue)}(Tổng)`; }
+              let promoNotesArr = [];
+                // Lọc TẤT CẢ các KM áp dụng được cho SP này
+                const activePromos = AppState.get('promos').filter(p => !p.isOrderPromo && p.productIds.includes(item.productId) && qty >= p.minQty);
+
+                if (activePromos.length > 0) {
+                    item.appliedPromoId = activePromos[0].id; // Lấy ID đầu tiên để bật viền sáng UI
                     
-                    else if (item.promoType === 'gift_same') {
-                        let multiplier = Math.floor(qty / (item.promoMinQty || 1));
-                        if(multiplier > 0) {
-                            let totalGifts = multiplier * (item.promoGiftQty || 1);
-                            promoNotes = `🎁 Tặng thêm ${totalGifts} SP cùng loại`;
+                    activePromos.forEach(promo => {
+                        if (promo.type === 'extra_percent') { 
+                            lineTotal = lineTotal * (1 - promo.value / 100); 
+                            promoNotesArr.push(`KM giảm thêm: -${promo.value}%`); 
                         }
-                    }
-                    else if (item.promoType === 'gift_other') {
-                        let multiplier = Math.floor(qty / (item.promoMinQty || 1));
-                        if(multiplier > 0) {
-                            let totalGifts = multiplier * (item.promoGiftQty || 1);
-                            promoNotes = `🎁 Tặng kèm ${totalGifts} ${item.promoGiftName}`;
+                        else if (promo.type === 'extra_tien_sp') { 
+                            lineTotal -= (promo.value * qty); 
+                            promoNotesArr.push(`KM giảm thêm: -${Utils.formatMoney(promo.value)}/SP`); 
                         }
-                    }
+                        else if (promo.type === 'extra_tien_tong') { 
+                            lineTotal -= promo.value; 
+                            promoNotesArr.push(`KM giảm thêm: -${Utils.formatMoney(promo.value)}(Tổng)`); 
+                        }
+                        else if (promo.type === 'gift_same' || promo.type === 'gift_other') {
+                            let totalGifts = 0;
+                            if (promo.isMultiply) {
+                                let multiplier = Math.floor(qty / (promo.minQty || 1));
+                                totalGifts = multiplier * (promo.giftQty || 1);
+                                // Phanh hãm: Kiểm tra giới hạn (Max Cap)
+                                if (promo.maxCap && totalGifts > promo.maxCap) {
+                                    totalGifts = promo.maxCap;
+                                }
+                            } else {
+                                totalGifts = promo.giftQty || 1; // Chỉ tặng 1 lần duy nhất
+                            }
+                            
+                            if (totalGifts > 0) {
+                                if (promo.type === 'gift_same') {
+                                    promoNotesArr.push(`🎁 Tặng thêm ${totalGifts} SP cùng loại`);
+                                } else {
+                                    promoNotesArr.push(`🎁 Tặng kèm ${totalGifts} ${promo.giftName}`);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    item.appliedPromoId = null;
                 }
+                
+                let promoNotes = promoNotesArr.join(' + ');
 
                 if(lineTotal < 0) lineTotal = 0;
                 
@@ -1496,8 +1530,8 @@
                 DOM.promo.giftQtyIn.value = ''; DOM.promo.giftNameIn.value = '';
                 editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'VD: 5'; 
                 DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; 
-                PromoLogic.handleTypeChange(); PromoLogic.updateOrderLabel(); 
-            },
+                PromoLogic.handleTypeChange(); PromoLogic.updateOrderLabel(); const multiCb = document.getElementById('promoItemMultiply'); if(multiCb) multiCb.checked = true;
+                const capIn = document.getElementById('promoItemMaxCap'); if(capIn) capIn.value = '';            },
             
             updateOrderLabel: () => { if (DOM.promo.orderType.value === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
             
@@ -1511,7 +1545,11 @@
                     
                     if (editingPromoProductIds.length === 0) return Utils.showToast("Vui lòng chọn ít nhất 1 sản phẩm áp dụng ở Bước 3!");
                     
+                    const isMultiply = document.getElementById('promoItemMultiply').checked;
+                    const maxCap = parseInt(document.getElementById('promoItemMaxCap').value) || null;
+                    
                     newPromo.isOrderPromo = false; newPromo.minQty = minQty; newPromo.type = type; newPromo.productIds = [...editingPromoProductIds];
+                    newPromo.isMultiply = isMultiply; newPromo.maxCap = maxCap;
                     
                     if(type.startsWith('gift_')) {
                         const giftQty = parseInt(DOM.promo.giftQtyIn.value);
@@ -1606,24 +1644,22 @@
             
             toggleProduct: (checkbox) => { const pid = checkbox.value; if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); } DOM.promo.selectedCount.textContent = editingPromoProductIds.length; },
             
-            checkAndApplyToItem: (item) => {
-                const applicablePromo = AppState.get('promos').find(p => !p.isOrderPromo && p.productIds.includes(item.productId));
-                if (applicablePromo) {
-                    if (item.qty >= applicablePromo.minQty) {
-                        if (item.appliedPromoId !== applicablePromo.id) { 
-                            item.appliedPromoId = applicablePromo.id; 
-                            item.promoType = applicablePromo.type; 
-                            item.promoValue = applicablePromo.value; 
-                            item.promoMinQty = applicablePromo.minQty;
-                            item.promoGiftQty = applicablePromo.giftQty;
-                            item.promoGiftName = applicablePromo.giftName;
-                            Utils.showToast(`🔥 Khuyến mãi: ${applicablePromo.name}`); 
+            ccheckAndApplyToItem: (item) => {
+                const applicablePromos = AppState.get('promos').filter(p => !p.isOrderPromo && p.productIds.includes(item.productId));
+                if (applicablePromos.length > 0) {
+                    let isEligible = applicablePromos.some(p => item.qty >= p.minQty);
+                    if (isEligible) {
+                        if (!item.appliedPromoId) {
+                            item.appliedPromoId = applicablePromos[0].id;
+                            Utils.showToast(`🔥 Hệ thống đã áp dụng khuyến mãi tự động!`);
                         }
-                    } else { if (item.appliedPromoId === applicablePromo.id) PromoLogic.revertPromoOnItem(item); }
+                    } else {
+                        PromoLogic.revertPromoOnItem(item);
+                    }
+                } else {
+                    PromoLogic.revertPromoOnItem(item);
                 }
             },
-            revertPromoOnItem: (item) => { if (item.appliedPromoId) { item.appliedPromoId = null; item.promoType = null; item.promoValue = null; item.promoMinQty = null; item.promoGiftQty = null; item.promoGiftName = null; } }
-        };
 
         DOM.promo.btnOpenManager.addEventListener('click', PromoLogic.openManager); DOM.promo.btnCloseManager.addEventListener('click', PromoLogic.closeManager);
         DOM.promo.btnSavePromo.addEventListener('click', PromoLogic.savePromo); DOM.promo.btnSelectProducts.addEventListener('click', PromoLogic.openSearchProducts);
