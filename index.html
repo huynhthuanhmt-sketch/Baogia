@@ -128,7 +128,7 @@
         </div>
     </div>
 
-    <!-- MODAL LỜI CẢM ƠN VÀ GÓP Ý DEMO TỪ HOTLINE (TỐI ƯU CHO NGƯỜI DÙNG CUỐI) -->
+    <!-- MODAL LỜI CẢM ƠN VÀ GÓP Ý DEMO TỪ HOTLINE -->
     <div id="demoFeedbackModal" class="fixed inset-0 bg-slate-950/80 z-[2500] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
         <div class="bg-white rounded-3xl w-full max-w-lg shadow-[0_10px_40px_rgba(0,0,0,0.3)] transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] overflow-hidden border border-slate-100">
             <!-- Header Modal -->
@@ -141,7 +141,7 @@
                 <p class="text-emerald-100 text-[11px] font-medium mt-1 tracking-wide">Trải nghiệm hệ thống báo giá chuyên nghiệp nhất.</p>
             </div>
 
-            <!-- Nội dung & Form (Lược bỏ cảnh báo rườm rà) -->
+            <!-- Nội dung & Form -->
             <div class="p-6 overflow-y-auto hide-scrollbar flex-grow space-y-4 text-[13px] text-slate-600 leading-relaxed">
                 <div class="space-y-3">
                     <p class="text-slate-800 font-bold text-sm">Chào bạn, cảm ơn bạn đã dành thời gian trải nghiệm!</p>
@@ -275,7 +275,7 @@
 
                 <article id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
                     <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex justify-center items-center">2</div><h2 class="font-bold text-slate-800">Cấu Hình Cột</h2></div>
-                    <input type="text" id="warehouseNameInput" placeholder="Tên Hãng (VD: MPE)..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold mb-4 border-blue-200">
+                    <input type="text" id="warehouseNameInput" placeholder="Tên Danh Mục/Kho..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold mb-4 border-blue-200">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div><label class="text-[10px] font-bold text-slate-500 block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm"></select></div>
                         <div><label class="text-[10px] font-bold text-blue-600 block mb-1">Tên SP *</label><select id="mapName" class="w-full input-premium rounded-xl p-3 text-sm border-blue-200"></select></div>
@@ -447,7 +447,7 @@
         <div class="bg-white border-b border-slate-200 p-4 pt-12 flex items-center justify-between shrink-0 shadow-sm relative z-20">
             <button id="btnClosePromoManager" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-lg text-xs">ĐÓNG</button>
             <h2 class="font-black text-indigo-600 text-sm">KHUYẾN MÃI</h2>
-            <div class="w-16"></div>
+            <div class="w-20"></div>
         </div>
         <div class="flex-grow overflow-y-auto bg-slate-50 p-4 pb-32">
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 mb-6">
@@ -483,7 +483,7 @@
                         <input type="text" id="promoOrderValue" placeholder="Tên quà..." class="w-full bg-white border border-indigo-200 rounded-lg p-2 text-base font-black text-indigo-700 outline-none">
                     </div>
                 </div>
-                <button id="btnSavePromo" class="w-full bg-indigo-600 text-white font-black py-4 rounded-xl uppercase text-sm mt-4 shadow-md">LƯU CHƯƠNG TRÌNH</button>
+                <button id="btnSavePromo" class="w-full bg-indigo-600 text-white font-black py-4 rounded-xl uppercase text-sm mt-4 shadow-md">THÊM CHƯƠNG TRÌNH</button>
             </div>
             <h3 class="font-black text-slate-800 text-sm uppercase mb-3">Danh Sách Đang Chạy</h3>
             <div id="promoListContainer" class="space-y-3"></div>
@@ -506,13 +506,17 @@
         <div class="bg-white p-4 pt-12 border-b border-slate-200 flex items-center justify-between shadow-sm shrink-0 z-20">
             <button id="btnCloseExport" class="font-bold text-slate-500 bg-slate-100 px-4 py-2 rounded-xl uppercase text-xs">TRỞ LẠI</button>
             <span class="font-black text-slate-900 text-sm uppercase">Công Cụ Xuất</span>
-            <div class="w-16"></div>
+            <div class="w-20"></div>
         </div>
         <div class="flex-grow overflow-y-auto p-4 bg-slate-50 pb-32 relative">
-            <div id="exportLoading" class="w-full flex flex-col items-center justify-center py-32 bg-white/80 absolute inset-0 z-50 backdrop-blur-sm hidden">
-                <div class="w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-                <div class="text-slate-600 font-bold text-xs uppercase animate-pulse">Đang xử lý...</div>
+            <!-- MÀN HÌNH CHỜ (BLOCK CLICKS) -->
+            <div id="exportLoading" class="fixed inset-0 flex-col items-center justify-center bg-slate-900/60 backdrop-blur-md z-[600] hidden pointer-events-auto">
+                <div class="bg-white p-6 rounded-2xl shadow-xl flex flex-col items-center">
+                    <div class="w-10 h-10 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+                    <div class="text-slate-800 font-bold text-xs uppercase animate-pulse">Đang xử lý xuất file...</div>
+                </div>
             </div>
+
             <div id="exportGuide" class="w-full max-w-5xl mx-auto flex flex-col">
                 <div class="print-bg-brand text-white text-xs font-bold py-2.5 px-4 rounded-t-xl uppercase shadow-md">Bản Xem Trước</div>
                 <div id="previewContainer" class="w-full bg-slate-300 overflow-hidden relative rounded-b-xl border border-t-0 border-slate-200 shadow-lg mb-5">
@@ -623,6 +627,19 @@
                 return parseFloat(str) || 0;
             },
             normString: (str) => { return str ? str.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") : ""; },
+            
+            // HÀM MỚI: Rút gọn tên file và loại bỏ ký tự lạ để tên file trông chuyên nghiệp
+            cleanFileName: (str) => { 
+                return str ? str.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "") : "Khach"; 
+            },
+            
+            // HÀM MỚI: Định dạng ngày giờ ngắn gọn (VD: 040526_0930)
+            getShortDate: () => {
+                const d = new Date();
+                const pad = (n) => n.toString().padStart(2, '0');
+                return `${pad(d.getDate())}${pad(d.getMonth()+1)}${d.getFullYear().toString().slice(2)}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+            },
+
             getIncreaseDecreaseInfo: (u) => {
                 if (u === null || u === undefined || u === "") return null;
                 let str = String(u).trim(); 
@@ -673,9 +690,14 @@
                         const file = new File([blob], filename, { type: blob.type });
                         if (navigator.canShare({ files: [file] })) {
                             await navigator.share({ files: [file], title: filename });
-                            Utils.showToast("Đã mở menu chia sẻ/lưu tệp!"); return; 
+                            Utils.showToast("Đã mở menu chia sẻ/lưu tệp!"); 
+                            return; // Dừng lại ở đây, không gọi logic phía dưới nếu đã share
                         }
-                    } catch (e) { console.log("Tính năng Share Native bị hủy hoặc lỗi, chuyển sang tải thường..."); }
+                    } catch (e) { 
+                        // Nếu user hủy chia sẻ (AbortError), không làm gì thêm tránh lặp tải file
+                        if (e.name === 'AbortError' || e.name === 'NotAllowedError') return;
+                        console.log("Share API bị lỗi, chuyển sang tải thường..."); 
+                    }
                 }
                 const url = URL.createObjectURL(blob); const a = document.createElement('a');
                 a.style.display = 'none'; a.href = url; a.download = filename; document.body.appendChild(a); a.click();
@@ -1298,7 +1320,10 @@
             
             DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
             DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; DOM.setup.fileIn.value = '';
-            renderSetupWarehouseList(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+            renderSetupWarehouseList(); 
+            
+            DOM.setup.btnCloseSetup.click(); // Tự động đóng sau khi thêm
+            Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
         });
 
         // 9. TÌM KIẾM & NÚT GỘP TĂNG GIẢM
@@ -1538,6 +1563,8 @@
         DOM.promo.typeIn.addEventListener('change', () => { const val = DOM.promo.typeIn.value; DOM.promo.valueIn.value = ''; if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'VD: 5000'; } else { DOM.promo.valueIn.placeholder = 'VD: 5'; } });
 
         // 11. EXPORT ENGINE
+        let isExporting = false; // KHÓA: Chống bấm đúp xuất file nhiều lần
+
         const ExportLogic = {
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
@@ -1583,7 +1610,7 @@
             
             prepareExport: () => {
                 if(AppState.get('cart').length === 0) return; 
-                DOM.export.modal.classList.add('active'); DOM.export.loading.classList.remove('hidden');
+                DOM.export.modal.classList.add('active');
                 const total = ExportLogic.generatePrintView();
                 const opEff = AppState.get('currentOrderPromoEffect');
                 let promoMsg = opEff ? `\n🎁 Quà tặng cho mốc đơn này: ${opEff.msg.replace('Tặng: ', '')}` : '';
@@ -1592,12 +1619,13 @@
                 setTimeout(() => {
                     const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea');
                     const scale = wrapper.clientWidth / 1600; invoice.style.transform = `scale(${scale})`; wrapper.style.height = `${Math.ceil(invoice.offsetHeight * scale)}px`;
-                    DOM.export.loading.classList.add('hidden');
                 }, 100); 
             },
 
             captureCanvas: async () => {
                 DOM.export.loading.classList.remove('hidden'); 
+                DOM.export.loading.classList.add('flex'); 
+                
                 if (document.activeElement) document.activeElement.blur();
                 
                 const modalEl = document.querySelector('#exportModal .flex-grow');
@@ -1609,13 +1637,26 @@
 
                 await new Promise(resolve => setTimeout(resolve, 50));
 
-                try { return await html2canvas(invoice, { scale: 1.5, backgroundColor: "#ffffff", useCORS: true, allowTaint: true, logging: false }); } 
-                catch (e) { Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); return null; } 
-                finally { invoice.style.transform = originalTransform; wrapper.style.height = originalHeight; DOM.export.loading.classList.add('hidden'); }
+                try { 
+                    return await html2canvas(invoice, { scale: 1.5, backgroundColor: "#ffffff", useCORS: true, allowTaint: true, logging: false }); 
+                } 
+                catch (e) { 
+                    Utils.showToast("Lỗi: Quá tải bộ nhớ, hãy thử lại!"); 
+                    return null; 
+                } 
+                finally { 
+                    invoice.style.transform = originalTransform; wrapper.style.height = originalHeight; 
+                    DOM.export.loading.classList.add('hidden');
+                    DOM.export.loading.classList.remove('flex');
+                }
             },
 
             exportExcelPro: async () => {
-                Utils.showToast("Đang thu thập dữ liệu...");
+                if(isExporting) return;
+                isExporting = true;
+                DOM.export.loading.classList.remove('hidden'); 
+                DOM.export.loading.classList.add('flex');
+
                 try {
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
                     const argbColor = 'FF0055A5'; 
@@ -1675,15 +1716,29 @@
                     
                     const buffer = await workbook.xlsx.writeBuffer(); 
                     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
-                    const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || 'KH')}_${Date.now()}.xlsx`;
+                    
+                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
+                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.xlsx`;
                     
                     await DownloadHelper.save(blob, filename);
-                } catch (error) { Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); }
+                } catch (error) { 
+                    Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); 
+                } finally {
+                    isExporting = false;
+                    DOM.export.loading.classList.add('hidden'); 
+                    DOM.export.loading.classList.remove('flex');
+                }
             },
 
             exportPDF: async () => {
-                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang kết xuất PDF...");
+                if(isExporting) return;
+                isExporting = true;
+                const canvas = await ExportLogic.captureCanvas(); 
+                if(!canvas) { isExporting = false; return; }
+                
+                DOM.export.loading.classList.remove('hidden'); 
+                DOM.export.loading.classList.add('flex');
+                
                 try {
                     const imgData = canvas.toDataURL("image/jpeg", 0.95); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
                     const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
@@ -1692,26 +1747,42 @@
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
                     
-                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
-                    const filename = `${shortTitle}_${Utils.normString(DOM.main.custName.value.trim() || "Khach_Hang").replace(/ /g, '_')}.pdf`;
+                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
+                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.pdf`;
                     
                     const blob = pdf.output('blob'); await DownloadHelper.save(blob, filename);
-                } catch (error) { Utils.showToast("Lỗi xuất PDF!"); }
+                } catch (error) { 
+                    Utils.showToast("Lỗi xuất PDF!"); 
+                } finally {
+                    isExporting = false;
+                    DOM.export.loading.classList.add('hidden'); 
+                    DOM.export.loading.classList.remove('flex');
+                }
             },
 
             exportImage: async () => {
-                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang tạo ảnh...");
+                if(isExporting) return;
+                isExporting = true;
+                const canvas = await ExportLogic.captureCanvas(); 
+                if(!canvas) { isExporting = false; return; }
+                
                 const dataUrl = canvas.toDataURL("image/jpeg", 0.95); DOM.export.finalImg.src = dataUrl;
-                DOM.export.imageModal.classList.remove('hidden'); DOM.export.imageModal.classList.add('flex'); Utils.showToast("Hoàn tất!");
+                DOM.export.imageModal.classList.remove('hidden'); DOM.export.imageModal.classList.add('flex'); 
+                isExporting = false;
             },
 
             printInvoiceMobile: async () => {
-                const canvas = await ExportLogic.captureCanvas(); if(!canvas) return; Utils.showToast("Đang kết nối máy in...");
+                if(isExporting) return;
+                isExporting = true;
+                const canvas = await ExportLogic.captureCanvas(); 
+                if(!canvas) { isExporting = false; return; }
+                
                 const imgData = canvas.toDataURL("image/jpeg", 0.95); const iframe = document.createElement('iframe'); 
                 iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0'; iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0'; document.body.appendChild(iframe);
                 const iframeDoc = iframe.contentWindow.document; iframeDoc.open();
                 iframeDoc.write(`<html><head><title>In Báo Giá</title><style>@page { size: A4 portrait; margin: 0; } body { margin: 0; padding: 10mm; display: flex; justify-content: center; background: white; } img { width: 100%; max-width: 190mm; height: auto; object-fit: contain; }</style></head><body><img src="${imgData}" /></body></html>`); 
-                iframeDoc.close(); setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); }, 2000); }, 500);
+                iframeDoc.close(); 
+                setTimeout(() => { iframe.contentWindow.focus(); iframe.contentWindow.print(); setTimeout(() => { document.body.removeChild(iframe); isExporting = false; }, 2000); }, 500);
             }
         };
 
@@ -1726,11 +1797,11 @@
             if (url) {
                 try {
                     const res = await fetch(url); const blob = await res.blob();
-                    const shortTitle = Utils.normString(AppState.get('brand').docTitle).split(' ').slice(0,2).join('_');
-                    const filename = `BaoGia_${shortTitle}_${Date.now()}.jpg`;
+                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
+                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.jpg`;
                     await DownloadHelper.save(blob, filename);
                 } catch (e) {
-                    const a = document.createElement('a'); a.href = url; a.download = `BaoGia_${Date.now()}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                    const a = document.createElement('a'); a.href = url; a.download = `BaoGia_${Utils.getShortDate()}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
                     if (/Zalo/i.test(navigator.userAgent)) { Utils.showToast("Nếu ảnh không tải về, hãy CHẠM GIỮ vào ảnh để lưu nhé."); }
                 }
             }
