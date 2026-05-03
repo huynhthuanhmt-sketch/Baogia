@@ -39,11 +39,11 @@
         .input-premium { background: #f1f5f9; border: 1px solid transparent; transition: all 0.25s ease; }
         .input-premium:focus { background: #ffffff; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); outline: none; }
 
-        /* FIX: Bổ sung 100vh fallback cho các thiết bị cũ không hỗ trợ dvh */
-        .app-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100vh; height: 100dvh; display: flex; flex-direction: column; visibility: hidden; opacity: 0; pointer-events: none; z-index: -1; transition: opacity 0.3s ease, visibility 0.3s; -webkit-transform: translateZ(0); }
+        /* FIX: Loại bỏ height: 100vh để Android không bị thanh điều hướng che lấp chân trang. Chỉ dùng top 0 bottom 0 là đủ khít màn hình */
+        .app-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; display: flex; flex-direction: column; visibility: hidden; opacity: 0; pointer-events: none; z-index: -1; transition: opacity 0.3s ease, visibility 0.3s; -webkit-transform: translateZ(0); }
         .app-screen.active { visibility: visible; opacity: 1; pointer-events: auto; z-index: 10; }
 
-        .fullscreen-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--background); z-index: 100; display: flex; flex-direction: column; transform: translateY(100%); opacity: 0; visibility: hidden; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, visibility 0.35s; height: 100vh; height: 100dvh; will-change: transform, opacity; }
+        .fullscreen-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--background); z-index: 100; display: flex; flex-direction: column; transform: translateY(100%); opacity: 0; visibility: hidden; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, visibility 0.35s; will-change: transform, opacity; }
         .fullscreen-modal.active { transform: translateY(0); opacity: 1; visibility: visible; }
         
         #customToast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -150%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); color: white; padding: 12px 24px; border-radius: 100px; font-weight: 600; font-size: 13px; z-index: 9999; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.1); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; gap: 8px; }
@@ -196,10 +196,18 @@
     </div>
 
     <!-- SCREEN 0: LANDING PAGE -->
-    <main id="screenLanding" class="app-screen active flex-col items-center justify-center bg-slate-950 overflow-hidden relative" style="background-color: #020617;">
+    <main id="screenLanding" class="app-screen active bg-slate-950 overflow-hidden" style="background-color: #020617;">
         <h1 class="sr-only">Thuận Store - Công Cụ Tạo Bảng Báo Giá</h1>
 
-        <header class="absolute top-8 left-0 w-full flex flex-col items-center justify-center z-50 pointer-events-none">
+        <!-- BACKGROUNDS -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="cyber-grid"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08)_0%,transparent_60%)] animate-blob"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.08)_0%,transparent_60%)] animate-blob" style="animation-delay: 2s;"></div>
+        </div>
+
+        <!-- HEADER CỐ ĐỊNH PHÍA TRÊN -->
+        <header class="w-full flex flex-col items-center justify-center pt-8 md:pt-12 pb-4 z-50 shrink-0 pointer-events-none">
             <div id="brandLogoTrigger" class="flex flex-col items-center cursor-pointer pointer-events-auto group select-none px-4 py-2" title="Khám phá công cụ">
                 <div class="flex items-center justify-center gap-2">
                     <svg class="w-6 h-6 md:w-7 md:h-7 text-cyan-400 logo-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -213,15 +221,10 @@
             </div>
         </header>
 
-        <div class="fixed top-0 left-0 right-0 bottom-0 overflow-hidden pointer-events-none z-0">
-            <div class="cyber-grid"></div>
-            <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08)_0%,transparent_60%)] animate-blob"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.08)_0%,transparent_60%)] animate-blob" style="animation-delay: 2s;"></div>
-        </div>
-        
-        <!-- FIX: Thêm shrink-0 và aspect-square vào div bọc hình tròn để chống móp méo trên Tablet ngang -->
-        <div class="z-10 relative flex flex-col items-center justify-center w-full px-6 flex-1 my-auto md:-mt-10">
-            <div class="relative w-56 h-56 md:w-72 md:h-72 shrink-0 aspect-square rounded-full flex items-center justify-center">
+        <!-- CENTER: VÒNG QUỸ ĐẠO (TỰ ĐỘNG CHIA KHÔNG GIAN) -->
+        <div class="flex-1 flex flex-col items-center justify-center w-full px-6 min-h-0 z-10 relative">
+            <div class="relative w-[240px] h-[240px] md:w-[320px] md:h-[320px] shrink-0 rounded-full flex items-center justify-center">
+                <!-- QUỸ ĐẠO LỚN -->
                 <div class="orbit-track cursor-pointer" title="Chạm để tương tác">
                     <div class="sat-wrapper sat-1-pos group"><div id="satSetup" class="orbit-node text-blue-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg></div><span class="sat-tooltip tooltip-top">Quản lý kho</span></div>
                     <div class="sat-wrapper sat-2-pos group"><div id="satPromo" class="orbit-node text-indigo-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg></div><span class="sat-tooltip tooltip-right">Khuyến mãi</span></div>
@@ -253,9 +256,10 @@
             </div>
         </div>
 
-        <div class="absolute bottom-4 w-full text-center z-50 pointer-events-none pb-[env(safe-area-inset-bottom)] flex flex-col items-center">
+        <!-- FOOTER CỐ ĐỊNH PHÍA DƯỚI -->
+        <footer class="w-full text-center z-50 pb-6 md:pb-8 pt-4 shrink-0 pointer-events-none">
             <p class="text-[10px] text-slate-500/70 font-semibold tracking-[0.25em] uppercase">© Thuận Store</p>
-        </div>
+        </footer>
     </main>
 
     <!-- SCREEN 1: SETUP EXCEL -->
@@ -1959,6 +1963,4 @@
     </script>
 </body>
 </html>
-
-
 
