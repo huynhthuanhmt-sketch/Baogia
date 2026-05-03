@@ -914,7 +914,7 @@
                         let multiplier = Math.floor(qty / (item.promoMinQty || 1));
                         if(multiplier > 0) {
                             let totalGifts = multiplier * (item.promoGiftQty || 1);
-                            promoNotes = `🎁 Tặng thêm ${totalGifts} ${item.unit} cùng loại`;
+                            promoNotes = `🎁 Tặng thêm ${totalGifts} SP cùng loại`;
                         }
                     }
                     else if (item.promoType === 'gift_other') {
