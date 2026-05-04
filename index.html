@@ -1073,7 +1073,10 @@
                             </div>
                             
                             <div class="flex flex-col gap-2 mb-4">
-                                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1.5 rounded-md self-start">Giá Bìa Mặc Định: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
+                                <div class="flex justify-between items-center w-full">
+                                    <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1.5 rounded-md">Giá Bìa Mặc Định: <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
+                                    <label class="text-[9px] md:text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-200 rounded px-2 py-1 cursor-pointer shadow-sm hover:bg-indigo-100 transition-colors flex items-center gap-1 active:scale-95" data-action="sync" data-field="note"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg> ĐỒNG BỘ</label>
+                                </div>
                                 <div class="relative w-full">
                                     <input type="text" data-field="note" value="${item.note || ''}" placeholder="Ghi chú in báo giá..." class="cart-input-text w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-[11px] font-medium outline-none focus:border-blue-400 text-slate-700">
                                 </div>
@@ -1270,7 +1273,12 @@
             } else if (action === 'sync') {
                 const field = btn.dataset.field; const sourceItem = AppState.get('cart').find(i => i.id === id);
                 if(sourceItem) {
-                    const val = sourceItem[field]; let cart = AppState.get('cart'); cart.forEach(item => { item[field] = val; }); AppState.set('cart', cart); Utils.showToast(`Đã đồng bộ mức ${val}% cho TOÀN BỘ giỏ hàng!`); 
+                    const val = sourceItem[field]; let cart = AppState.get('cart'); cart.forEach(item => { item[field] = val; }); AppState.set('cart', cart); 
+                    if (field === 'note') {
+                        Utils.showToast(`Đã đồng bộ Ghi chú cho TOÀN BỘ giỏ hàng!`);
+                    } else {
+                        Utils.showToast(`Đã đồng bộ mức ${val}% cho TOÀN BỘ giỏ hàng!`); 
+                    }
                 }
             } else if (action === 'toggleKmType') {
                 AppState.updateCartItem(id, (item) => {
