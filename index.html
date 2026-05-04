@@ -1373,13 +1373,15 @@
                 const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
                 if (!row[nI]) continue;
                 
-                const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
+                const code = cI > -1 ? String(row[cI] || "").trim() : ""; 
+                const name = row[nI] ? row[nI].toString().trim() : ""; 
+                const rawPrice = pI > -1 ? row[pI] : 0;
                 let rawUnit = uI > -1 ? row[uI] : "Cái";
                 if (typeof rawUnit === 'number' && rawUnit !== 0 && rawUnit > -1 && rawUnit < 1) { rawUnit = (rawUnit * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } 
                 else if (rawUnit === "" || rawUnit == null) { rawUnit = "Cái"; } 
                 else if (typeof rawUnit === 'string' && rawUnit.trim() !== "") { let numParsed = Number(rawUnit.trim()); if (!isNaN(numParsed) && numParsed !== 0 && numParsed > -1 && numParsed < 1) { rawUnit = (numParsed * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } }
 
-                products.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: rawUnit, price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`) });
+                products.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: rawUnit, price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code} ${name}`) });
                 newItemsCount++;
             }
             
@@ -1412,7 +1414,7 @@
             else if (s === 'dec') { btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-1 shadow-sm'; btn.innerHTML = '⬇ Giảm Cao Nhất'; }
         };
 
-                const applyFiltersAndSearch = () => {
+          const applyFiltersAndSearch = () => {
             if (!DOM.search.modal.classList.contains('active')) return;
             const rawSearch = DOM.search.input.value.trim();
             const terms = Utils.normString(rawSearch).split(/\s+/).filter(t => t.length > 0);
@@ -1431,11 +1433,8 @@
 
             if (terms.length > 0) {
                 filtered = filtered.filter(p => {
-                    // Ưu tiên 1: Khớp chính xác mã sản phẩm (không quan tâm hoa thường)
-                    const pCode = (p.code || "").toString().toLowerCase();
-                    if (pCode === rawSearch.toLowerCase()) return true;
-
-                    // Ưu tiên 2: Khớp tất cả các từ khóa trong tên/mã đã chuẩn hóa
+                    const pCode = String(p.code || "").toLowerCase();
+                    if (rawSearch.length > 0 && pCode.includes(rawSearch.toLowerCase())) return true;
                     return terms.every(term => p.searchStr.includes(term));
                 });
             }
@@ -1450,8 +1449,7 @@
             AppState.set('displayCount', 50, true); 
             renderSearchList();
         };
-
-
+        
         const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
         const closeSearch = () => DOM.search.modal.classList.remove('active');
         DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
