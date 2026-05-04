@@ -1599,7 +1599,7 @@
                 const html = promos.map(p => {
                     let bodyHtml = '';
                     if (p.isOrderPromo) {
-                        let rewardTxt = p.rewardType === 'discount' ? `Trừ ${Utils.formatMoney(p.rewardValue)}` : `Tặng ${p.rewardValue}`;
+                        let rewardTxt = p.rewardType === 'discount' ? `Trừ ${Utils.formatMoney(p.rewardValue)}` : (p.rewardType === 'discount_percent' ? `Giảm ${p.rewardValue}%` : `Tặng ${p.rewardValue}`);
                         let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-black px-1.5 bg-indigo-50 rounded border border-indigo-100">(x Luỹ Tiến)</span>` : '';
                         bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5">Mua >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600 font-bold">${rewardTxt}</span>${multiplyTxt}</p>`;
                     } else {
