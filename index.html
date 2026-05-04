@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -994,17 +993,18 @@
                 for (let i = 0; i < orderPromos.length; i++) {
                     let op = orderPromos[i];
                     if (sF >= op.minAmount) {
-                            bestOrderPromo = op; actualMultiplier = op.isMultiply ? Math.floor(sF / op.minAmount) : 1;
-                            if (op.rewardType === 'discount') { currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; } 
-                            else if (op.rewardType === 'discount_percent') { currentOrderDiscount = Math.round(sF * (Number(op.rewardValue) || 0) / 100); }
-                            else { 
-                                if (op.isMultiply && actualMultiplier > 1) {
-                                    let match = op.rewardValue.match(/^(\d+)\s*(.*)/);
-                                    if (match) orderGiftStr = `${parseInt(match[1]) * actualMultiplier} ${match[2]}`; else orderGiftStr = `[x${actualMultiplier}] ${op.rewardValue}`;
-                                } else { orderGiftStr = op.rewardValue; }
-                            }
-                            break;
+                        bestOrderPromo = op; actualMultiplier = op.isMultiply ? Math.floor(sF / op.minAmount) : 1;
+                        if (op.rewardType === 'discount') { currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; } 
+                        else if (op.rewardType === 'discount_percent') { currentOrderDiscount = Math.round(sF * (Number(op.rewardValue) || 0) / 100); }
+                        else { 
+                            if (op.isMultiply && actualMultiplier > 1) {
+                                let match = op.rewardValue.match(/^(\d+)\s*(.*)/);
+                                if (match) orderGiftStr = `${parseInt(match[1]) * actualMultiplier} ${match[2]}`; else orderGiftStr = `[x${actualMultiplier}] ${op.rewardValue}`;
+                            } else { orderGiftStr = op.rewardValue; }
                         }
+                        break;
+                    }
+                }
                 
                 let finalPayable = sF - currentOrderDiscount; if (finalPayable < 0) finalPayable = 0;
 
@@ -1676,6 +1676,7 @@
         DOM.promo.searchInput.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(PromoLogic.searchProducts, 200); });
         DOM.promo.tabItem.addEventListener('click', () => PromoLogic.switchTab('item')); DOM.promo.tabOrder.addEventListener('click', () => PromoLogic.switchTab('order'));
         DOM.promo.typeIn.addEventListener('change', PromoLogic.handleTypeChange);
+        DOM.promo.orderType.addEventListener('change', PromoLogic.updateOrderLabel); // <-- FIX: Đã thêm dòng bắt sự kiện hiển thị ở đây
 
         // 11. EXPORT ENGINE
         let isExporting = false; 
@@ -2008,4 +2009,3 @@
     </script>
 </body>
 </html>
-
