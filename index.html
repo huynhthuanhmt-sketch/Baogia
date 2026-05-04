@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -1085,6 +1085,16 @@
                             <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
                                 <div class="grid grid-cols-5 gap-2">
                                     <div class="flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
+                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1 py-0.5">CK(%)</label></div><input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 px-0 appearance-none"></div>
+                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5">KM1(%)</label></div><input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
+                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5">KM2(%)</label></div><input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
+                                    <div class="flex flex-col"><div class="flex justify-center mb-1.5"><button data-action="toggleKmType" class="text-[9px] font-black px-1 py-0.5 rounded border ${item.kmTienType==='total'?'border-rose-400 bg-rose-100 text-rose-800':'border-indigo-400 bg-indigo-100 text-indigo-800'}">${item.kmTienType==='total'?'-TỔNG':'- /SP'}</button></div><input type="number" data-field="kmTien" value="${item.kmTien}" class="cart-input w-full bg-white border-2 border-indigo-200 rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:border-indigo-500 px-0 appearance-none"></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
+                                <div class="grid grid-cols-5 gap-2">
+                                    <div class="flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">SL</label><input type="number" min="1" data-field="qty" value="${item.qty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
                                     <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1 py-0.5 cursor-pointer" data-action="sync" data-field="baseDiscount">CK(%)</label></div><input type="number" data-field="baseDiscount" value="${item.baseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 px-0 appearance-none"></div>
                                     <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5 cursor-pointer" data-action="sync" data-field="km1">KM1(%)</label></div><input type="number" data-field="km1" value="${item.km1 !== undefined ? item.km1 : 0}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
                                     <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5 cursor-pointer" data-action="sync" data-field="km2">KM2(%)</label></div><input type="number" data-field="km2" value="${item.km2 || 0}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
@@ -1274,11 +1284,7 @@
                 const field = btn.dataset.field; const sourceItem = AppState.get('cart').find(i => i.id === id);
                 if(sourceItem) {
                     const val = sourceItem[field]; let cart = AppState.get('cart'); cart.forEach(item => { item[field] = val; }); AppState.set('cart', cart); 
-                    if (field === 'note') {
-                        Utils.showToast(`Đã đồng bộ Ghi chú cho TOÀN BỘ giỏ hàng!`);
-                    } else {
-                        Utils.showToast(`Đã đồng bộ mức ${val}% cho TOÀN BỘ giỏ hàng!`); 
-                    }
+                    Utils.showToast(`Đã đồng bộ Ghi chú cho TOÀN BỘ giỏ hàng!`); 
                 }
             } else if (action === 'toggleKmType') {
                 AppState.updateCartItem(id, (item) => {
