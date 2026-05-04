@@ -1684,7 +1684,19 @@
         const ExportLogic = {
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
-                AppState.get('cart').forEach((item, i) => {
+                const cart = AppState.get('cart');
+                
+                // KIỂM TRA: Nếu tất cả SP có giá bìa bằng đơn giá (không có chiết khấu)
+                const isNoDiscount = cart.length > 0 && cart.every(item => item.originalPrice === item.priceAfterDiscount);
+                
+                // Ẩn/Hiện cột Giá Bìa trên thẻ thead tĩnh của HTML
+                const theadRow = tbody.previousElementSibling?.querySelector('tr');
+                if (theadRow && theadRow.children.length >= 5) {
+                    theadRow.children[4].style.display = isNoDiscount ? 'none' : 'table-cell';
+                    theadRow.children[2].style.width = isNoDiscount ? '37%' : '23%'; // Bù khoảng trống cho cột Tên SP
+                }
+
+                cart.forEach((item, i) => {
                     sumFinal += item.totalFinal; 
                     
                     let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
@@ -1702,7 +1714,7 @@
                         <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-weight: 800; color: #0f172a; vertical-align: middle;">${item.code || '-'}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: left; line-height: 1.5; color: #1e293b; font-weight: 600; vertical-align: middle;">${printName}</td>
                         <td contenteditable="true" class="print-text-brand" style="padding: 20px 15px; text-align: center; font-weight: 900; vertical-align: middle;">${item.qty}</td>
-                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.originalPrice)}</td>
+                        <td contenteditable="true" style="padding: 20px 15px; text-align: right; color: #64748b; font-weight: 600; vertical-align: middle; white-space: nowrap; display: ${isNoDiscount ? 'none' : 'table-cell'};">${Utils.formatMoney(item.originalPrice)}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 800; color: #334155; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.priceAfterDiscount)}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: right; font-weight: 900; color: #0f172a; vertical-align: middle; white-space: nowrap;">${Utils.formatMoney(item.totalFinal)}</td>
                         <td contenteditable="true" style="padding: 20px 15px; text-align: left; font-size: 24px; color: #dc2626; font-style: italic; font-weight: 700; vertical-align: middle;">${renderNote}</td>
@@ -1772,7 +1784,6 @@
                 }
             },
 
-            // FIX: Đảm bảo ExcelJS không bị lỗi crash do giá trị rỗng/undefined
             exportExcelPro: async () => {
                 if(isExporting) return;
                 isExporting = true;
@@ -1834,7 +1845,14 @@
                     const totalRow = worksheet.getRow(currentRow);
                     totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
                     totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').textContent.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
+                    
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 35 } ];
+                    
+                    // KIỂM TRA VÀ ẨN CỘT GIÁ BÌA TRONG EXCEL NẾU KHÔNG CÓ CHIẾT KHẤU
+                    const isNoDiscount = cartData.length > 0 && cartData.every(item => item.originalPrice === item.priceAfterDiscount);
+                    if (isNoDiscount) {
+                        worksheet.getColumn(5).hidden = true; // Cột 5 là cột Giá Bìa
+                    }
                     
                     const buffer = await workbook.xlsx.writeBuffer(); 
                     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -1959,7 +1977,6 @@
                 }, 1000);
             }
         };
-
         DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport); DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active'));
         DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro); DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF);
         DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage); DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
