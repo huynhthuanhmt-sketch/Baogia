@@ -1266,7 +1266,7 @@
             const card = btn.closest('article'); const id = card.dataset.id; const action = btn.dataset.action;
 
             if(action === 'remove') {
-                AppState.set('cart', AppState.get('cart').filter(i => i !== id)); applyFiltersAndSearch(); 
+                AppState.set('cart', AppState.get('cart').filter(i => i.id !== id)); applyFiltersAndSearch();
             } else if (action === 'sync') {
                 const field = btn.dataset.field; const sourceItem = AppState.get('cart').find(i => i.id === id);
                 if(sourceItem) {
