@@ -297,6 +297,12 @@
                 <article id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
                     <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex justify-center items-center">2</div><h2 class="font-bold text-slate-800">Cấu Hình Cột</h2></div>
                     <input type="text" id="warehouseNameInput" placeholder="Tên Danh Mục/Kho..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold mb-4 border-blue-200">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div><label class="text-[10px] font-bold text-slate-500 block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm"></select></div>
+                        <div><label class="text-[10px] font-bold text-blue-600 block mb-1">Tên SP *</label><select id="mapName" class="w-full input-premium rounded-xl p-3 text-sm border-blue-200"></select></div>
+                        <div><label class="text-[10px] font-bold text-slate-500 block mb-1">ĐVT / % Tăng</label><select id="mapUnit" class="w-full input-premium rounded-xl p-3 text-sm"></select></div>
+                        <div><label class="text-[10px] font-bold text-blue-600 block mb-1">Giá Bìa *</label><select id="mapPrice" class="w-full input-premium rounded-xl p-3 text-sm border-blue-200"></select></div>
+                    </div>
                     <button id="btnConfirmMapping" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl text-sm shadow-lg">LƯU VÀO KHO</button>
                 </article>
             </div>
@@ -649,13 +655,12 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg><span class="text-[10px] sm:text-xs uppercase text-center">Máy In</span></button>
-    <button id="btnActionPDF" class="bg-rose-50 border border-rose-100 text-rose-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-[10px] sm:text-xs uppercase text-center">Lưu PDF</span></button>
-    <button id="btnActionImage" class="bg-blue-50 border border-blue-100 text-blue-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-[10px] sm:text-xs uppercase text-center">Lưu Ảnh</span></button>
-    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg><span class="text-[10px] sm:text-xs uppercase text-center">Xuất Excel</span></button>
-    <button id="btnActionPriceList" class="bg-orange-50 border border-orange-100 text-orange-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95 col-span-2 md:col-span-1"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-[10px] sm:text-xs uppercase text-center">Bảng Giá</span></button>
-</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    <button id="btnActionPrint" class="bg-white border border-slate-200 text-slate-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg><span class="text-xs uppercase">Máy In</span></button>
+                    <button id="btnActionPDF" class="bg-rose-50 border border-rose-100 text-rose-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg><span class="text-xs uppercase">Lưu PDF</span></button>
+                    <button id="btnActionImage" class="bg-blue-50 border border-blue-100 text-blue-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><span class="text-xs uppercase">Lưu Ảnh</span></button>
+                    <button id="btnActionExcel" class="bg-emerald-50 border border-emerald-100 text-emerald-700 py-4 rounded-xl font-bold flex flex-col items-center gap-2 shadow-sm active:scale-95"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg><span class="text-xs uppercase">Xuất Excel</span></button>
+                </div>
                 
                 <button id="btnExportRestart" class="w-full bg-slate-100 border border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl uppercase tracking-widest text-[11px] md:text-xs mb-6 hover:bg-slate-200 active:scale-95 transition-all flex justify-center items-center gap-2">
                     <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -867,7 +872,7 @@
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView') },
             search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, 
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
-            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnPriceList: document.getElementById('btnActionPriceList')},
+            export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnDownloadImage: document.getElementById('btnDownloadImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
             confirmReset: { modal: document.getElementById('confirmResetModal'), btnCancel: document.getElementById('btnCancelReset'), btnConfirm: document.getElementById('btnConfirmResetAction') },
             promo: { btnOpenManager: document.getElementById('btnOpenPromoManager'), managerModal: document.getElementById('promoManagerModal'), btnCloseManager: document.getElementById('btnClosePromoManager'), tabItem: document.getElementById('btnTabItemPromo'), tabOrder: document.getElementById('btnTabOrderPromo'), groupItem: document.getElementById('groupItemPromo'), groupOrder: document.getElementById('groupOrderPromo'), nameIn: document.getElementById('promoNameIn'), minQtyIn: document.getElementById('promoMinQtyIn'), typeIn: document.getElementById('promoTypeIn'), valueIn: document.getElementById('promoValueIn'), valueContainer: document.getElementById('promoValueContainer'), giftContainer: document.getElementById('promoGiftContainer'), giftSearchBox: document.getElementById('promoGiftSearchBox'), giftQtyIn: document.getElementById('promoGiftQtyIn'), giftNameIn: document.getElementById('promoGiftNameIn'), orderMinAmount: document.getElementById('promoOrderMinAmount'), orderType: document.getElementById('promoOrderType'), orderValue: document.getElementById('promoOrderValue'), orderLabel: document.getElementById('labelOrderValue'), orderMultiply: document.getElementById('promoOrderMultiply'), btnSelectProducts: document.getElementById('btnSelectPromoProducts'), selectedCount: document.getElementById('promoSelectedCount'), btnSavePromo: document.getElementById('btnSavePromo'), listContainer: document.getElementById('promoListContainer'), searchModal: document.getElementById('promoProductSearchModal'), btnCloseSearch: document.getElementById('btnClosePromoSearch'), btnFinishSearch: document.getElementById('btnFinishPromoSearch'), searchInput: document.getElementById('promoSearchInput'), productList: document.getElementById('promoProductList') }
@@ -1768,98 +1773,6 @@
             },
 
             // FIX: Đảm bảo ExcelJS không bị lỗi crash do giá trị rỗng/undefined
-            exportPriceListExcel: async () => {
-                if(isExporting) return;
-                isExporting = true;
-                DOM.export.loading.classList.remove('hidden'); 
-                DOM.export.loading.classList.add('flex');
-
-                try {
-                    const workbook = new ExcelJS.Workbook(); 
-                    const worksheet = workbook.addWorksheet('BangGia'); 
-                    const argbColor = 'FFEA580C'; // Màu cam cho bảng giá
-
-                    const cartData = AppState.get('cart');
-                    if (cartData.length === 0) throw new Error("Chưa có sản phẩm");
-
-                    // Kiểm tra xem có bất kỳ SP nào có giá bìa khác giá chiết khấu không
-                    const hasDiscount = cartData.some(item => item.originalPrice !== item.priceAfterDiscount);
-
-                    // Thiết lập cột dựa trên điều kiện
-                    let headers = ['STT', 'Mã SP', 'Tên Sản Phẩm'];
-                    if (hasDiscount) {
-                        headers.push('Giá Bìa (VND)', 'Giá Chiết Khấu (VND)');
-                    } else {
-                        headers.push('Giá Net (VND)');
-                    }
-
-                    // Gộp ô tiêu đề
-                    worksheet.mergeCells(`A1:${hasDiscount ? 'E1' : 'D1'}`); 
-                    const titleCell = worksheet.getCell('A1');
-                    titleCell.value = 'BẢNG GIÁ SẢN PHẨM'; 
-                    titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
-                    titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; 
-                    worksheet.getRow(1).height = 40;
-                    
-                    const headerRow = worksheet.getRow(3);
-                    headerRow.values = headers;
-                    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }; 
-                    headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-                    headerRow.eachCell((cell) => { 
-                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; 
-                        cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; 
-                    });
-                    headerRow.height = 30;
-                    
-                    let currentRow = 4; 
-                    
-                    cartData.forEach((item, idx) => {
-                         const row = worksheet.getRow(currentRow);
-                         let excelName = item.name;
-                         
-                         let rowData = [idx + 1, item.code || '-', excelName];
-                         if (hasDiscount) {
-                             rowData.push(item.originalPrice || 0, item.priceAfterDiscount || 0);
-                         } else {
-                             rowData.push(item.originalPrice || 0); // Chỉ giữ 1 giá đổi tên thành Giá Net
-                         }
-                         row.values = rowData;
-
-                         row.eachCell((cell, colNumber) => { 
-                             cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; 
-                             if (colNumber === 1 || colNumber === 2) cell.alignment = { horizontal: 'center', vertical: 'middle' }; 
-                             else cell.alignment = { vertical: 'middle' };
-
-                             // Format tiền tệ
-                             if ((hasDiscount && (colNumber === 4 || colNumber === 5)) || (!hasDiscount && colNumber === 4)) {
-                                 cell.numFmt = '#,##0';
-                             }
-                         });
-                         currentRow++;
-                    });
-                    
-                    // Căn chỉnh độ rộng cột
-                    if (hasDiscount) {
-                        worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 20 }, { width: 20 } ];
-                    } else {
-                        worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 25 } ];
-                    }
-                    
-                    const buffer = await workbook.xlsx.writeBuffer(); 
-                    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-                    
-                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
-                    const filename = `BangGia_${cleanCust}_${Utils.getShortDate()}.xlsx`;
-                    
-                    await DownloadHelper.save(blob, filename);
-                } catch (error) { 
-                    Utils.showToast("Lỗi khi xuất Bảng Giá!"); console.error(error); 
-                } finally {
-                    isExporting = false;
-                    DOM.export.loading.classList.add('hidden'); 
-                    DOM.export.loading.classList.remove('flex');
-                }
-            },
             exportExcelPro: async () => {
                 if(isExporting) return;
                 isExporting = true;
@@ -2049,7 +1962,6 @@
 
         DOM.footer.btnExport.addEventListener('click', ExportLogic.prepareExport); DOM.export.btnClose.addEventListener('click', () => DOM.export.modal.classList.remove('active'));
         DOM.export.btnExcel.addEventListener('click', ExportLogic.exportExcelPro); DOM.export.btnPDF.addEventListener('click', ExportLogic.exportPDF);
-        DOM.export.btnPriceList.addEventListener('click', ExportLogic.exportPriceListExcel);
         DOM.export.btnImage.addEventListener('click', ExportLogic.exportImage); DOM.export.btnPrint.addEventListener('click', ExportLogic.printInvoiceMobile);
         DOM.export.btnCopyMsg.addEventListener('click', () => { Utils.copyToClipboard(DOM.export.msgBox.value); });
         DOM.export.btnCloseImage.addEventListener('click', () => { DOM.export.imageModal.classList.add('hidden'); DOM.export.imageModal.classList.remove('flex'); });
