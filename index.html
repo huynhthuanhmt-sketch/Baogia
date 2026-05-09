@@ -296,8 +296,34 @@
 
                 <article id="mappingSection" class="glass-card p-6 hidden opacity-0 transition-opacity duration-500 border-t-4 border-t-blue-500">
                     <div class="flex items-center gap-3 mb-5"><div class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex justify-center items-center">2</div><h2 class="font-bold text-slate-800">Cấu Hình Cột</h2></div>
-                    <input type="text" id="warehouseNameInput" placeholder="Tên Danh Mục/Kho..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold mb-4 border-blue-200">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <<input type="text" id="warehouseNameInput" placeholder="Tên Danh Mục/Kho..." class="w-full input-premium bg-white rounded-lg p-3 text-sm font-bold mb-4 border-blue-200">
+                
+                <div class="flex gap-2 mb-4 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                    <label class="flex-1 text-center cursor-pointer relative">
+                        <input type="radio" name="importMode" value="master" checked class="peer sr-only" onchange="document.getElementById('updateSettings').classList.add('hidden')">
+                        <div class="py-2 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-blue-700 transition-all">1. Tạo Kho Gốc</div>
+                    </label>
+                    <label class="flex-1 text-center cursor-pointer relative" id="modeUpdateLabel">
+                        <input type="radio" name="importMode" value="update" id="importModeUpdate" class="peer sr-only" onchange="document.getElementById('updateSettings').classList.remove('hidden')">
+                        <div class="py-2 text-xs font-bold text-slate-500 rounded-lg peer-checked:bg-white peer-checked:shadow-sm peer-checked:text-emerald-700 transition-all">2. Cập Nhật Giá Net</div>
+                    </label>
+                </div>
+
+                <div id="updateSettings" class="hidden bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-emerald-700 block mb-1">Cột Giá Chốt/Net *</label>
+                            <select id="mapTargetPrice" class="w-full input-premium rounded-xl p-3 text-sm border-emerald-200"></select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-600 block mb-1">CK Dự Phòng (%)</label>
+                            <input type="number" id="fallbackDiscountInput" value="38" class="w-full input-premium bg-white rounded-xl p-3 text-sm font-bold">
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-emerald-600 mt-2 font-medium">Lưu ý: Chỉ tính lại bù trừ tự động cho các SP đã có sẵn trong kho dựa theo Mã SP.</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div><label class="text-[10px] font-bold text-slate-500 block mb-1">Mã SP</label><select id="mapCode" class="w-full input-premium rounded-xl p-3 text-sm"></select></div>
                         <div><label class="text-[10px] font-bold text-blue-600 block mb-1">Tên SP *</label><select id="mapName" class="w-full input-premium rounded-xl p-3 text-sm border-blue-200"></select></div>
                         <div><label class="text-[10px] font-bold text-slate-500 block mb-1">ĐVT / % Tăng</label><select id="mapUnit" class="w-full input-premium rounded-xl p-3 text-sm"></select></div>
@@ -1341,9 +1367,19 @@
                     AppState.data.tempRawExcel = rawExcelData; AppState.data.tempHeaderIndex = bestHIndex;
                     const headers = []; (rawExcelData[bestHIndex] || []).forEach((h, idx) => { headers.push(h ? h.toString().trim() : `Cột ${idx+1}`); });
                     
-                    const pop = (el) => { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); };
-                    [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice].forEach(pop);
+                    const pop = (el) => { if(el) { el.innerHTML = '<option value="">-- Chọn Cột --</option>'; headers.forEach(h => el.add(new Option(h, h))); } };
+                    [DOM.setup.mapCode, DOM.setup.mapName, DOM.setup.mapUnit, DOM.setup.mapPrice, document.getElementById('mapTargetPrice')].forEach(pop);
                     
+                    // Kiểm tra DB trống để Disable Chế độ 2
+                    const dbCurrent = AppState.get('productDB');
+                    const modeUpdateRadio = document.getElementById('importModeUpdate');
+                    const modeUpdateLabelDiv = document.querySelector('#modeUpdateLabel div');
+                    if(dbCurrent.length === 0) {
+                        modeUpdateRadio.disabled = true; modeUpdateLabelDiv.classList.add('opacity-50', 'cursor-not-allowed'); modeUpdateLabelDiv.innerText = "2. Cập Nhật (Kho Trống)";
+                    } else {
+                        modeUpdateRadio.disabled = false; modeUpdateLabelDiv.classList.remove('opacity-50', 'cursor-not-allowed'); modeUpdateLabelDiv.innerText = "2. Cập Nhật Giá Net";
+                    }
+
                     DOM.setup.mapping.classList.remove('hidden'); setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
                     let priceColSet = false;
                     headers.forEach(h => {
@@ -1352,6 +1388,7 @@
                         if(lower.includes('tên') || lower.includes('name') || lower.includes('sản phẩm')) DOM.setup.mapName.value = h;
                         if(lower.includes('đvt') || lower.includes('đơn vị') || lower.includes('unit')) DOM.setup.mapUnit.value = h;
                         if(!priceColSet && (lower.includes('giá') || lower.includes('price') || lower.includes('bìa'))) { DOM.setup.mapPrice.value = h; priceColSet = true; }
+                        if(lower.includes('bán') || lower.includes('net') || lower.includes('05')) { const mapTgt = document.getElementById('mapTargetPrice'); if(mapTgt) mapTgt.value = h; }
                     });
                     let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
                 } catch (err) { Utils.showToast("Lỗi đọc file Excel."); }
@@ -1367,30 +1404,67 @@
             
             let hIndex = AppState.data.tempHeaderIndex !== undefined ? AppState.data.tempHeaderIndex : 0; const headers = rawExcelData[hIndex];
             const nI = headers.indexOf(nameCol), pI = headers.indexOf(priceCol), cI = headers.indexOf(DOM.setup.mapCode.value), uI = headers.indexOf(DOM.setup.mapUnit.value);
+            const tI = document.getElementById('mapTargetPrice') ? headers.indexOf(document.getElementById('mapTargetPrice').value) : -1;
             
-            let newItemsCount = 0; let products = AppState.get('productDB');
-            for (let i = hIndex + 1; i < rawExcelData.length; i++) {
-                const row = rawExcelData[i]; if (!row || row.length === 0) continue;
-                const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
-                if (!row[nI]) continue;
-                
-                const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
-                let rawUnit = uI > -1 ? row[uI] : "Cái";
-                if (typeof rawUnit === 'number' && rawUnit !== 0 && rawUnit > -1 && rawUnit < 1) { rawUnit = (rawUnit * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } 
-                else if (rawUnit === "" || rawUnit == null) { rawUnit = "Cái"; } 
-                else if (typeof rawUnit === 'string' && rawUnit.trim() !== "") { let numParsed = Number(rawUnit.trim()); if (!isNaN(numParsed) && numParsed !== 0 && numParsed > -1 && numParsed < 1) { rawUnit = (numParsed * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } }
+            const importMode = document.querySelector('input[name="importMode"]:checked').value;
+            const fallbackVal = document.getElementById('fallbackDiscountInput') ? Number(document.getElementById('fallbackDiscountInput').value) || 0 : 38;
+            const defs = AppState.get('defaults');
+            
+            let newItemsCount = 0; let updateItemsCount = 0; let currentDB = AppState.get('productDB');
+            
+            if (importMode === 'master') {
+                for (let i = hIndex + 1; i < rawExcelData.length; i++) {
+                    const row = rawExcelData[i]; if (!row || row.length === 0) continue;
+                    const rowStr = row.join(' ').toLowerCase(); if (rowStr.includes('tổng cộng:') || rowStr.includes('tổng thanh toán')) break;
+                    if (!row[nI]) continue;
+                    
+                    const code = cI > -1 ? (row[cI] || "") : ""; const name = row[nI] ? row[nI].toString().trim() : ""; const rawPrice = pI > -1 ? row[pI] : 0;
+                    let rawUnit = uI > -1 ? row[uI] : "Cái";
+                    if (typeof rawUnit === 'number' && rawUnit !== 0 && rawUnit > -1 && rawUnit < 1) { rawUnit = (rawUnit * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } 
+                    else if (rawUnit === "" || rawUnit == null) { rawUnit = "Cái"; } 
+                    else if (typeof rawUnit === 'string' && rawUnit.trim() !== "") { let numParsed = Number(rawUnit.trim()); if (!isNaN(numParsed) && numParsed !== 0 && numParsed > -1 && numParsed < 1) { rawUnit = (numParsed * 100).toFixed(2).replace(/\.?0+$/, '') + '%'; } }
 
-                products.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: rawUnit, price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`) });
-                newItemsCount++;
+                    currentDB.push({ id: 'P' + Date.now() + '_' + i, warehouse: wName, code: code, name: name, unit: rawUnit, price: Utils.cleanNumber(rawPrice), searchStr: Utils.normString(`${code || ''} ${name || ''}`), autoAdjustment: 0, fallbackDiscount: 0 });
+                    newItemsCount++;
+                }
+            } else if (importMode === 'update') {
+                if(tI === -1) return Utils.showToast("Cập Nhật Net yêu cầu phải chọn Cột Giá Chốt/Net!");
+                let processedCodes = new Set();
+                
+                for (let i = hIndex + 1; i < rawExcelData.length; i++) {
+                    const row = rawExcelData[i]; if (!row || row.length === 0) continue;
+                    const code = cI > -1 ? (row[cI] || "").toString().trim() : ""; if (!code) continue;
+                    
+                    const targetPrice = Utils.cleanNumber(row[tI]);
+                    let matchIndex = currentDB.findIndex(p => p.code === code);
+                    
+                    if (matchIndex !== -1) {
+                        processedCodes.add(code); let pItem = currentDB[matchIndex];
+                        let originalPrice = pItem.price || 0; let draftPrice = 0;
+                        let baseDisc = defs.baseDiscount || 0; let km1 = defs.km1 || 0; let km2 = defs.km2 || 0;
+                        
+                        if (defs.discountFormula === 'additive') {
+                            let totalPercent = (baseDisc + km1 + km2) / 100; draftPrice = originalPrice * Math.max(0, 1 - totalPercent);
+                        } else { draftPrice = originalPrice * (1 - baseDisc / 100) * (1 - km1 / 100) * (1 - km2 / 100); }
+                        
+                        pItem.autoAdjustment = Math.round(draftPrice - targetPrice); pItem.fallbackDiscount = 0; updateItemsCount++;
+                    }
+                }
+                
+                currentDB.forEach(pItem => {
+                    if (pItem.code && !processedCodes.has(pItem.code)) { pItem.fallbackDiscount = fallbackVal; pItem.autoAdjustment = 0; }
+                });
             }
             
-            AppState.set('productDB', products, true);
+            AppState.set('productDB', currentDB, true);
             let whs = AppState.get('warehouses'); if(!whs.includes(wName)) { whs.push(wName); AppState.set('warehouses', whs, true); }
             LocalDB.save(); PromoLogic.updateDataList();
             
             DOM.setup.mapping.classList.add('opacity-0'); setTimeout(() => DOM.setup.mapping.classList.add('hidden'), 500);
             DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)"; DOM.setup.fileIn.value = '';
-            renderSetupWarehouseList(); DOM.setup.btnCloseSetup.click(); Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+            renderSetupWarehouseList(); DOM.setup.btnCloseSetup.click(); 
+            if(importMode === 'master') Utils.showToast(`Đã thêm ${newItemsCount} SP vào kho "${wName}"!`);
+            else Utils.showToast(`Đã cập nhật bù trừ giá Net cho ${updateItemsCount} SP!`);
         });
 
         // 9. TÌM KIẾM
@@ -1445,7 +1519,16 @@
                 btn.className = "btn-toggle-search bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm transition-colors"; btn.textContent = "THÊM";
             } else {
                 const defs = AppState.get('defaults');
-                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                let finalBase = defs.baseDiscount; let finalKm1 = defs.km1; let finalKm2 = defs.km2;
+                let finalKmTien = defs.kmTien; let finalKmTienType = defs.kmTienType;
+                
+                if (p.autoAdjustment !== undefined && p.autoAdjustment !== 0) {
+                    finalKmTien = p.autoAdjustment; finalKmTienType = 'per_item';
+                } else if (p.fallbackDiscount !== undefined && p.fallbackDiscount > 0) {
+                    finalBase = p.fallbackDiscount; finalKm1 = 0; finalKm2 = 0; finalKmTien = 0;
+                }
+                
+                let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
                 PromoLogic.checkAndApplyToItem(newItem); cart.push(newItem);
                 btn.className = "btn-toggle-search text-red-500 bg-red-50 border border-red-100 px-5 py-2 rounded-xl text-xs font-bold shadow-sm transition-colors"; btn.textContent = "XÓA";
             }
