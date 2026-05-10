@@ -940,6 +940,12 @@
                     lineTotal = priceAfterKm2 * qty;
                 }
                 
+                // 1. Trừ ngầm bù trừ Giá Net (autoAdjustment)
+                const pInfo = AppState.get('productDB').find(x => x.id === item.productId);
+                const autoAdj = pInfo ? (pInfo.autoAdjustment || 0) : 0;
+                if (autoAdj !== 0) { lineTotal -= (autoAdj * qty); }
+
+                // 2. Trừ thêm tiền nhập thủ công trên giao diện (kmTien)
                 if (item.kmTienType === 'total') { lineTotal -= kmTien; } else { lineTotal -= (kmTien * qty); }
                 
                 let promoNotesArr = [];
@@ -996,7 +1002,9 @@
                 item.totalFinal = Math.round(lineTotal); item.totalOriginal = Math.round(origPrice * qty);
 
                 let dNotes = [];
-                if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`); if (km1 > 0) dNotes.push(`KM1: ${km1}%`); if (km2 > 0) dNotes.push(`KM2: ${km2}%`); if (kmTien > 0) dNotes.push(`Giảm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
+                if (baseDisc > 0) dNotes.push(`CK: ${baseDisc}%`); if (km1 > 0) dNotes.push(`KM1: ${km1}%`); if (km2 > 0) dNotes.push(`KM2: ${km2}%`); 
+                if (autoAdj !== 0) dNotes.push(`Net: ${autoAdj > 0 ? '-' : '+'}${Utils.formatMoney(Math.abs(autoAdj))}/SP`);
+                if (kmTien > 0) dNotes.push(`Giảm thêm: ${Utils.formatMoney(kmTien)}${item.kmTienType === 'total' ? '(Tổng)' : '/SP'}`);
                 if (promoNotes) dNotes.push(promoNotes);
 
                 let currentAutoStr = dNotes.join(' | ');
@@ -1016,9 +1024,9 @@
                 let sFElectrical = 0; // Bộ nhớ riêng cho tiền Thiết Bị Điện
                 
                 // AI tự nhận diện thiết bị điện qua Tên SP, Mã SP hoặc Tên Kho
-                const elecKeywords = ["công tắc", "ổ cắm", "mcb", "rcbo", "elcb", "cầu dao", "tủ điện", "phích cắm", "ống cứng", "ống mềm", "ruột gà", "nẹp", "quạt hút", "bút thử điện", "vợt muỗi", "đui đèn", "smart", "wifi", "chuông", "isolator", "contactor", "rơ le", "relay"];
+                const elecKeywords = ["công tắc", "ổ cắm", "mcb", "rcbo", "elcb", "cầu dao", "tủ điện", "phích cắm", "ống cứng", "ống mềm", "ruột gà", "nẹp", "quạt hút", "bút thử điện", "vợt muỗi", "đui đèn", "smart", "wifi", "chuông", "isolator", "contactor", "rơ le", "relay", "aptomat", "át", "cb", "cảm biến", "timer"];
 
-                cart.forEach(q => { 
+                cart.forEach(q => {
                     sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); 
                     
                     let nameLower = q.name.toLowerCase();
@@ -1546,19 +1554,16 @@
             if(isAdded) {
                 cart = cart.filter(q => q.productId !== p.id); 
                 btn.className = "btn-toggle-search bg-blue-600 text-white px-5 py-2 rounded-xl text-xs font-bold active:scale-95 shadow-sm transition-colors"; btn.textContent = "THÊM";
-            } else {
+           } else {
                 const defs = AppState.get('defaults');
                 let finalBase = defs.baseDiscount; let finalKm1 = defs.km1; let finalKm2 = defs.km2;
                 let finalKmTien = defs.kmTien; let finalKmTienType = defs.kmTienType;
                 
-                if (p.autoAdjustment !== undefined && p.autoAdjustment !== 0) {
-                    finalKmTien = p.autoAdjustment; finalKmTienType = 'per_item';
-                } else if (p.fallbackDiscount !== undefined && p.fallbackDiscount > 0) {
+                if (p.fallbackDiscount !== undefined && p.fallbackDiscount > 0) {
                     finalBase = p.fallbackDiscount; finalKm1 = 0; finalKm2 = 0; finalKmTien = 0;
                 }
                 
                 let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
-                PromoLogic.checkAndApplyToItem(newItem); cart.push(newItem);
                 btn.className = "btn-toggle-search text-red-500 bg-red-50 border border-red-100 px-5 py-2 rounded-xl text-xs font-bold shadow-sm transition-colors"; btn.textContent = "XÓA";
             }
             AppState.set('cart', cart);
