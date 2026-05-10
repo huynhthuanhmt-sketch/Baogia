@@ -1029,14 +1029,15 @@
                 cart.forEach(q => {
                     sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); 
                     
-                    let nameLower = (q.name || "").toLowerCase();
-                    let codeLower = (q.code || "").toLowerCase();
-                    
-                    // Nếu là MPE, hoặc tên kho có chữ "điện"/"công tắc", hoặc tên SP/mã SP có chứa từ khóa
-                    let isElec = elecKeywords.some(kw => nameLower.includes(kw) || codeLower.includes(kw));
-                    if(whLower.includes("điện") || whLower.includes("công tắc") || whLower.includes("mpe") || isElec) {
-                        sFElectrical += q.totalFinal;
-                    }
+                    llet nameLower = (q.name || "").toLowerCase();
+                let codeLower = (q.code || "").toLowerCase();
+                let whLower = (q.warehouse || "").toLowerCase(); // FIX: Bổ sung khai báo biến kho
+                
+                // Nếu là MPE, hoặc tên kho có chữ "điện"/"công tắc", hoặc tên SP/mã SP có chứa từ khóa
+                let isElec = elecKeywords.some(kw => nameLower.includes(kw) || codeLower.includes(kw));
+                if(whLower.includes("điện") || whLower.includes("công tắc") || whLower.includes("mpe") || isElec) {
+                    sFElectrical += q.totalFinal;
+                }
                 });
                 
                 DOM.main.itemCount.textContent = `${totalQty}`; DOM.search.badge.textContent = totalQty;
@@ -1562,7 +1563,7 @@
                     finalBase = p.fallbackDiscount; finalKm1 = 0; finalKm2 = 0; finalKmTien = 0;
                 }
                 
-                llet newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+              let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
                 
                 PromoLogic.checkAndApplyToItem(newItem); 
                 cart.push(newItem);
