@@ -1029,7 +1029,7 @@
                 cart.forEach(q => {
                     sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); 
                     
-                    llet nameLower = (q.name || "").toLowerCase();
+                    let nameLower = (q.name || "").toLowerCase();
                 let codeLower = (q.code || "").toLowerCase();
                 let whLower = (q.warehouse || "").toLowerCase(); // FIX: Bổ sung khai báo biến kho
                 
