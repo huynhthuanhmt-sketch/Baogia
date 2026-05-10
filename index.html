@@ -472,8 +472,13 @@
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
                         <label class="text-[11px] font-black text-slate-700 mb-2 block">MỐC TỔNG ĐƠN (VNĐ):</label>
                         
-                        <input type="number" id="promoOrderMinAmount" placeholder="VD: 5000000" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black outline-none mb-3">
-                        <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-white p-2 rounded border border-slate-200"><input type="checkbox" id="promoOrderMultiply" class="w-4 h-4 rounded text-indigo-600"> Tự động nhân quà lũy tiến</label>
+                       <input type="number" id="promoOrderMinAmount" placeholder="VD: 5000000" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black outline-none mb-3">
+                        <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-white p-2 rounded border border-slate-200 mb-2"><input type="checkbox" id="promoOrderMultiply" class="w-4 h-4 rounded text-indigo-600"> Tự động nhân quà lũy tiến</label>
+                        
+                        <label class="flex items-center gap-2 text-[11px] font-bold text-emerald-800 cursor-pointer bg-emerald-50 p-2 rounded border border-emerald-200">
+                            <input type="checkbox" id="promoOrderElectricalOnly" class="w-4 h-4 rounded text-emerald-600"> 
+                            Chỉ áp dụng tính tổng cho nhóm Thiết Bị Điện
+                        </label>
                     </div>
                     <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
                         <label class="text-[11px] font-black text-indigo-700 mb-2 block">ƯU ĐÃI NHẬN:</label>
@@ -1008,20 +1013,45 @@
             updateSummary: () => {
                 const cart = AppState.get('cart');
                 let sO = 0, sF = 0, totalQty = 0; 
-                cart.forEach(q => { sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); });
+                let sFElectrical = 0; // Bộ nhớ riêng cho tiền Thiết Bị Điện
+                
+                // AI tự nhận diện thiết bị điện qua Tên SP, Mã SP hoặc Tên Kho
+                const elecKeywords = ["công tắc", "ổ cắm", "mcb", "rcbo", "elcb", "cầu dao", "tủ điện", "phích cắm", "ống cứng", "ống mềm", "ruột gà", "nẹp", "quạt hút", "bút thử điện", "vợt muỗi", "đui đèn", "smart", "wifi", "chuông", "isolator", "contactor", "rơ le", "relay"];
+
+                cart.forEach(q => { 
+                    sO += q.totalOriginal; sF += q.totalFinal; totalQty += (Number(q.qty) || 0); 
+                    
+                    let nameLower = q.name.toLowerCase();
+                    let codeLower = (q.code || "").toLowerCase();
+                    let whLower = (q.warehouse || "").toLowerCase();
+                    
+                    // Nếu là MPE, hoặc tên kho có chữ "điện"/"công tắc", hoặc tên SP/mã SP có chứa từ khóa
+                    let isElec = elecKeywords.some(kw => nameLower.includes(kw) || codeLower.includes(kw));
+                    if(whLower.includes("điện") || whLower.includes("công tắc") || whLower.includes("mpe") || isElec) {
+                        sFElectrical += q.totalFinal;
+                    }
+                });
                 
                 DOM.main.itemCount.textContent = `${totalQty}`; DOM.search.badge.textContent = totalQty;
                 
                 let bestOrderPromo = null; let currentOrderDiscount = 0; let orderGiftStr = ""; let actualMultiplier = 1;
+                // Sắp xếp ưu tiên mốc tiền lớn nhất trước
                 const orderPromos = AppState.get('promos').filter(p => p.isOrderPromo).sort((a, b) => b.minAmount - a.minAmount);
                 
                 for (let i = 0; i < orderPromos.length; i++) {
                     let op = orderPromos[i];
-                    if (sF >= op.minAmount) {
-                        bestOrderPromo = op; actualMultiplier = op.isMultiply ? Math.floor(sF / op.minAmount) : 1;
-                        if (op.rewardType === 'discount') { currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; } 
-                        else if (op.rewardType === 'discount_percent') { currentOrderDiscount = Math.round(sF * (Number(op.rewardValue) || 0) / 100); }
-                        else { 
+                    // Phân luồng: Lấy tổng tiền ĐÚNG với yêu cầu của Khuyến mãi
+                    let targetTotal = op.isElectricalOnly ? sFElectrical : sF;
+
+                    if (targetTotal >= op.minAmount) {
+                        bestOrderPromo = op; actualMultiplier = op.isMultiply ? Math.floor(targetTotal / op.minAmount) : 1;
+                        
+                        if (op.rewardType === 'discount') { 
+                            currentOrderDiscount = (Number(op.rewardValue) || 0) * actualMultiplier; 
+                        } else if (op.rewardType === 'discount_percent') { 
+                            // Giảm % trên phần tiền đạt điều kiện (của TB điện hoặc cả bill)
+                            currentOrderDiscount = Math.round(targetTotal * (Number(op.rewardValue) || 0) / 100); 
+                        } else { 
                             if (op.isMultiply && actualMultiplier > 1) {
                                 let match = op.rewardValue.match(/^(\d+)\s*(.*)/);
                                 if (match) orderGiftStr = `${parseInt(match[1]) * actualMultiplier} ${match[2]}`; else orderGiftStr = `[x${actualMultiplier}] ${op.rewardValue}`;
@@ -1615,7 +1645,8 @@
                 DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'extra_percent'; DOM.promo.valueIn.value = ''; 
                 DOM.promo.giftQtyIn.value = ''; DOM.promo.giftNameIn.value = '';
                 editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'VD: 5'; 
-                DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; 
+               DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; 
+                const elecCb = document.getElementById('promoOrderElectricalOnly'); if(elecCb) elecCb.checked = false;
                 PromoLogic.handleTypeChange(); PromoLogic.updateOrderLabel(); 
                 const multiCb = document.getElementById('promoItemMultiply'); if(multiCb) multiCb.checked = true;
                 const capIn = document.getElementById('promoItemMaxCap'); if(capIn) capIn.value = '';
@@ -1656,10 +1687,13 @@
                         if (value <= 0) return Utils.showToast("Vui lòng nhập mức giảm lớn hơn 0!"); 
                         newPromo.value = value;
                     }
-                } else {
+               } else {
                     const minAmount = Utils.cleanNumber(DOM.promo.orderMinAmount.value); const orderType = DOM.promo.orderType.value; const valRaw = DOM.promo.orderValue.value.trim(); const isMultiply = DOM.promo.orderMultiply.checked;
+                    const isElectricalOnly = document.getElementById('promoOrderElectricalOnly') ? document.getElementById('promoOrderElectricalOnly').checked : false;
+
                     if (minAmount <= 0) return Utils.showToast("Vui lòng nhập mốc tổng thanh toán!"); if (!valRaw) return Utils.showToast("Vui lòng nhập Quà tặng hoặc Số tiền trừ!");
                     newPromo.isOrderPromo = true; newPromo.minAmount = minAmount; newPromo.rewardType = orderType; newPromo.rewardValue = orderType === 'discount' ? Utils.cleanNumber(valRaw) : valRaw; newPromo.isMultiply = isMultiply;
+                    newPromo.isElectricalOnly = isElectricalOnly;
                 }
                 
                 let promos = AppState.get('promos'); promos.push(newPromo); AppState.set('promos', promos, true);
@@ -1680,10 +1714,11 @@
                 
                 const html = promos.map(p => {
                     let bodyHtml = '';
-                    if (p.isOrderPromo) {
+                   if (p.isOrderPromo) {
                         let rewardTxt = p.rewardType === 'discount' ? `Trừ ${Utils.formatMoney(p.rewardValue)}` : (p.rewardType === 'discount_percent' ? `Giảm ${p.rewardValue}%` : `Tặng ${p.rewardValue}`);
                         let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-black px-1.5 bg-indigo-50 rounded border border-indigo-100">(x Luỹ Tiến)</span>` : '';
-                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5">Mua >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600 font-bold">${rewardTxt}</span>${multiplyTxt}</p>`;
+                        let elecBadge = p.isElectricalOnly ? `<span class="text-[9px] text-emerald-700 ml-1 font-black px-1.5 bg-emerald-100 rounded border border-emerald-200">[Chỉ TB Điện]</span>` : '';
+                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5">Mua >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600 font-bold">${rewardTxt}</span>${multiplyTxt}${elecBadge}</p>`;
                     } else {
                         let logicTxt = '';
                         if (p.type === 'gift_same') logicTxt = `🎁 Tặng ${p.giftQty} cùng loại`;
