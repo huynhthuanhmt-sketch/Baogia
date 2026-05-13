@@ -940,16 +940,23 @@
                                     <h1 className="text-2xl font-black text-blue-900 tracking-tight uppercase">Lịch Chăm Sóc Khách Hàng</h1>
                                     <p className="text-sm font-medium text-slate-500 mt-1">Quản lý Tuyến & Doanh số</p>
                                 </div>
-                                <div className="flex items-center justify-center gap-3 z-10 w-full md:w-auto mt-4 md:mt-0">
-                                    {activeTab !== 'upload' && (
-                                        <button onClick={goBack} className="bg-slate-100 hover:bg-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 border border-slate-200 active:scale-95">
-                                            <i className="fa-solid fa-arrow-left"></i> <span>Quay lại</span>
-                                        </button>
-                                    )}
-                                    <button onClick={() => window.location.href = 'https://thuanstore.com'} className="bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 border border-blue-200 shadow-sm active:scale-95">
-                                        <i className="fa-solid fa-house"></i> <span>Trang chủ</span>
-                                    </button>
-                                </div>
+                                <div className="flex items-center justify-between border-t border-slate-100 pt-3 mt-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <button onClick={() => expandedCustomer === c.id ? setExpandedCustomer(null) : openEditForm(c)} className="text-[11px] bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold px-2.5 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5">
+                                                            <i className="fa-solid fa-pencil"></i> Sửa Thông Tin & DS
+                                                        </button>
+                                                        <button onClick={() => {
+                                                            const url = new URL('https://thuanstore.com/');
+                                                            url.searchParams.append('kh', c.name);
+                                                            window.open(url.toString(), '_blank');
+                                                        }} className="text-[11px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1.5 rounded transition border border-emerald-200 flex items-center gap-1.5 shadow-sm active:scale-95">
+                                                            <i className="fa-solid fa-file-invoice-dollar"></i> Tạo Báo Giá
+                                                        </button>
+                                                    </div>
+                                                    <button onClick={() => setCustomerToDelete(c)} className="w-7 h-7 flex items-center justify-center hover:bg-red-50 text-slate-400 hover:text-red-500 rounded transition-colors" title="Xóa KH">
+                                                        <i className="fa-solid fa-trash-can"></i>
+                                                    </button>
+                                                </div>
                             </div>
 
                             <div className="flex bg-slate-50 p-2 overflow-x-auto w-full border-b border-slate-100 justify-start md:justify-center gap-1">
