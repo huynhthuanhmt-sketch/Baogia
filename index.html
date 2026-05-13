@@ -2138,11 +2138,33 @@
             }
         });
 
-        // 12. INIT
+      // 12. INIT
         const initApp = () => {
             LocalDB.load();
             const brand = AppState.get('brand');
             DOM.brand.nameIn.value = brand.name; DOM.brand.sloganIn.value = brand.slogan; DOM.brand.docTitleIn.value = brand.docTitle;
+            
+            // --- BỘ ĐỒNG BỘ DỮ LIỆU XUYÊN TRANG ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const passedCustomerName = urlParams.get('kh');
+            
+            if (passedCustomerName) {
+                // Điền tên khách hàng vào ô
+                DOM.main.custName.value = passedCustomerName;
+                
+                // Mở thẳng vào giao diện làm việc chính
+                switchScreen('main'); 
+                CartLogic.renderFull();
+                
+                // Báo hiệu thành công
+                setTimeout(() => {
+                    Utils.showToast(`Đã đồng bộ khách hàng: ${passedCustomerName}`);
+                }, 800);
+
+                // Dọn dẹp URL cho gọn gàng (Tùy chọn)
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            // --- KẾT THÚC BỘ ĐỒNG BỘ ---
             
             const defs = AppState.get('defaults');
             DOM.discount.baseIn.value = defs.baseDiscount || ''; DOM.discount.km1In.value = defs.km1 || ''; DOM.discount.km2In.value = defs.km2 || '';
