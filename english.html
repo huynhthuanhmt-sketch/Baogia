@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <title>AmeriLingo - Tiếng Anh Định Cư Mỹ A-Z</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] }, colors: { usblue: '#0A3161', usred: '#B31942' } } }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #0f172a; --accent: #0A3161; --background: #f8fafc; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; -webkit-tap-highlight-color: transparent; overscroll-behavior: none; color: #0f172a; margin: 0; padding: 0; }
+        
+        .glass-card { background: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(226, 232, 240, 0.8); transition: all 0.3s ease; }
+        .app-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; display: flex; flex-direction: column; visibility: hidden; opacity: 0; pointer-events: none; z-index: -1; transition: opacity 0.3s ease, visibility 0.3s; }
+        .app-screen.active { visibility: visible; opacity: 1; pointer-events: auto; z-index: 10; }
+
+        #customToast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -150%); background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); color: white; padding: 12px 24px; border-radius: 100px; font-weight: 600; font-size: 13px; z-index: 9999; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); display: flex; align-items: center; gap: 8px; }
+        #customToast.show { transform: translate(-50%, 0); }
+
+        @keyframes blob { 0%, 100% { transform: translate(0px, 0px) scale(1); } 50% { transform: translate(20px, -20px) scale(1.05); } }
+        .animate-blob { animation: blob 7s infinite ease-in-out; }
+        
+        .cyber-grid { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%); z-index: 0; }
+        
+        @keyframes orbitOrbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes orbitCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+        
+        .orbit-track { position: absolute; top: -55px; left: -55px; right: -55px; bottom: -55px; border-radius: 50%; border: 1.5px dashed rgba(255, 255, 255, 0.2); animation: orbitOrbit 40s linear infinite; pointer-events: none; z-index: 20; }
+        @media (min-width: 768px) { .orbit-track { top: -75px; left: -75px; right: -75px; bottom: -75px; } }
+        
+        .sat-wrapper { position: absolute; width: 60px; height: 60px; margin-top: -30px; margin-left: -30px; animation: orbitCounter 40s linear infinite; pointer-events: none; z-index: 30; flex-shrink: 0; }
+        .orbit-track:hover, .orbit-track:hover .sat-wrapper { animation-play-state: paused !important; border-color: rgba(255, 255, 255, 0.5); }
+        .sat-1-pos { top: 0; left: 50%; } .sat-2-pos { top: 50%; left: 100%; } .sat-3-pos { top: 100%; left: 50%; } .sat-4-pos { top: 50%; left: 0%; }
+
+        .orbit-node { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; pointer-events: auto; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(4px); border: 2px solid rgba(255, 255, 255, 0.15); box-shadow: 0 0 20px rgba(0, 0, 0, 0.6); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
+        .orbit-node:hover { transform: scale(1.15); background: var(--accent); border-color: white; box-shadow: 0 0 30px var(--accent); }
+        
+        .sat-tooltip { position: absolute; white-space: nowrap; background: rgba(255, 255, 255, 0.95); color: #0f172a; font-size: 11px; font-weight: 800; padding: 8px 12px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; text-transform: uppercase; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); z-index: 50; }
+        .group:hover .sat-tooltip { opacity: 1; }
+        .tooltip-top { top: 70px; left: 50%; transform: translateX(-50%); } 
+        .tooltip-right { right: 70px; top: 50%; transform: translateY(-50%); } 
+        .tooltip-bottom { bottom: 70px; left: 50%; transform: translateX(-50%); } 
+        .tooltip-left { left: 70px; top: 50%; transform: translateY(-50%); }
+
+        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .speaker-btn { transition: all 0.2s; }
+        .speaker-btn:active { transform: scale(0.9); }
+        .speaker-btn.playing { color: #10b981; animation: pulsePlay 1s infinite; }
+        @keyframes pulsePlay { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
+
+    <div id="customToast">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span id="toastMsg">Thông báo</span>
+    </div>
+
+    <!-- SCREEN 0: LANDING PAGE -->
+    <main id="screenLanding" class="app-screen active bg-slate-950 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+            <div class="cyber-grid"></div>
+            <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle_at_center,rgba(179,25,66,0.15)_0%,transparent_60%)] animate-blob"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle_at_center,rgba(10,49,97,0.15)_0%,transparent_60%)] animate-blob" style="animation-delay: 2s;"></div>
+        </div>
+
+        <header class="w-full flex flex-col items-center justify-center pt-12 pb-4 z-50 shrink-0 pointer-events-none">
+            <div class="flex flex-col items-center pointer-events-auto select-none px-4 py-2">
+                <div class="flex items-center justify-center gap-2">
+                    <!-- Icon Cờ/Ngôi sao -->
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <span class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-wider uppercase drop-shadow-md">AmeriLingo</span>
+                </div>
+                <div class="flex items-center gap-2 mt-2">
+                    <div class="h-[1px] w-8 bg-gradient-to-r from-transparent to-red-500"></div>
+                    <span class="text-[10px] text-slate-300 font-bold tracking-[0.2em] uppercase">Tiếng Anh Định Cư Mỹ A-Z</span>
+                    <div class="h-[1px] w-8 bg-gradient-to-l from-transparent to-blue-500"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 flex flex-col items-center justify-center w-full px-6 min-h-0 z-10 relative">
+            <div class="relative w-[280px] h-[280px] md:w-[360px] md:h-[360px] shrink-0 rounded-full flex items-center justify-center">
+                
+                <div class="orbit-track">
+                    <div class="sat-wrapper sat-1-pos group"><div class="orbit-node text-blue-400" onclick="startCategory('nhap_canh')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><span class="sat-tooltip tooltip-top">Sân bay & Giấy tờ</span></div>
+                    <div class="sat-wrapper sat-2-pos group"><div class="orbit-node text-red-400" onclick="startCategory('doi_song')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></div><span class="sat-tooltip tooltip-right">Đời sống & Ngân hàng</span></div>
+                    <div class="sat-wrapper sat-3-pos group"><div class="orbit-node text-emerald-400" onclick="startCategory('y_te')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></div><span class="sat-tooltip tooltip-bottom">Y tế & Bảo hiểm</span></div>
+                    <div class="sat-wrapper sat-4-pos group"><div class="orbit-node text-amber-400" onclick="startCategory('cong_viec')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg></div><span class="sat-tooltip tooltip-left">Đi làm & Thuế</span></div>
+                </div>
+
+                <div id="btnStartApp" class="group absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center cursor-pointer transition-transform duration-500 hover:scale-105 active:scale-95 z-[60]">
+                    <div class="absolute top-0 left-0 right-0 bottom-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#B31942_360deg)] animate-spin opacity-80" style="animation-duration: 3s;"></div>
+                    <div class="absolute top-2 left-2 right-2 bottom-2 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#0A3161_360deg)] animate-spin opacity-80" style="animation-duration: 2.5s; animation-direction: reverse;"></div>
+                    <div class="absolute top-[16px] left-[16px] right-[16px] bottom-[16px] bg-slate-950/90 backdrop-blur-md rounded-full border border-slate-700 flex items-center justify-center overflow-hidden shadow-[inset_0_0_50px_rgba(10,49,97,0.5)]">
+                         <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
+                             <span class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-300 tracking-wider mb-2">BẮT ĐẦU<br>HỌC</span>
+                             <div class="h-[2px] w-12 bg-gradient-to-r from-transparent via-red-500 to-transparent mb-2"></div>
+                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] animate-pulse">Chọn chủ đề xung quanh</span>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="w-full text-center z-50 pb-8 pt-4 shrink-0 pointer-events-none">
+            <p class="text-[10px] text-slate-500 font-semibold tracking-[0.25em] uppercase">US Immigrant Survival Guide</p>
+        </footer>
+    </main>
+
+    <!-- SCREEN 1: MAIN WORKSPACE (LESSON VIEW) -->
+    <div id="screenMain" class="app-screen flex-col bg-slate-50">
+        <main class="flex-grow overflow-y-auto relative" id="mainScroll">
+            <!-- STICKY HEADER -->
+            <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm pb-3">
+                <div class="w-full max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <button onclick="switchScreen('landing')" class="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-slate-200 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <div>
+                            <h2 id="categoryTitle" class="text-lg font-black text-usblue uppercase tracking-tight">Chủ đề</h2>
+                            <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-widest"><span id="learnedCount">0</span> / <span id="totalCount">0</span> Đã lưu</p>
+                        </div>
+                    </div>
+                    <!-- Nút hướng dẫn AI -->
+                    <button onclick="Utils.showToast('Tính năng luyện nói AI đang được phát triển!')" class="w-10 h-10 rounded-xl bg-red-50 text-usred flex items-center justify-center border border-red-100">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH BÀI HỌC -->
+            <section class="w-full max-w-3xl mx-auto p-4 pb-10">
+                <div id="lessonList" class="space-y-4 pt-2">
+                    <!-- Javascript will inject flashcards here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // --- 1. DATA (CHUYÊN GIA NGÔN NGỮ & ĐỊNH CƯ MỸ CHUYÊN Sâu) ---
+        const DB = {
+            'nhap_canh': {
+                title: 'Sân bay, DMV & Giấy tờ Pháp lý',
+                lessons: [
+                    // Sân bay & Hải quan
+                    { en: "Do you have anything to declare? Any agricultural products, meat, or cash over $10,000?", vi: "Bạn có gì cần khai báo không? Nông sản, thịt, hoặc tiền mặt trên 10.000 đô la?", tip: "Hải quan Mỹ (CBP) cực kỳ nghiêm ngặt. Nếu mang trên $10,000 tiền mặt cho cả gia đình, BẮT BUỘC phải khai báo form FinCEN 105. Không khai báo sẽ bị tịch thu và phạt nặng." },
+                    { en: "I am a Lawful Permanent Resident. Here is my Green Card.", vi: "Tôi là Thường trú nhân hợp pháp. Đây là Thẻ Xanh của tôi.", tip: "Lawful Permanent Resident (LPR) là thuật ngữ pháp lý chính xác cho người có Thẻ Xanh. Hãy dùng từ này thay vì chỉ nói 'I live here'." },
+                    { en: "I need to be directed to the secondary inspection area.", vi: "Tôi cần được hướng dẫn đến khu vực kiểm tra thứ cấp.", tip: "'Secondary inspection' là phòng kiểm tra riêng (thường gọi là 'vào phòng tối'). Đừng hoảng sợ, đôi khi chỉ là để xác minh lại hồ sơ bảo lãnh." },
+                    // DMV & Bằng lái (Nỗi ám ảnh của người mới)
+                    { en: "I would like to apply for a Real ID and take the written test for my Class C driver's license.", vi: "Tôi muốn xin Thẻ Real ID và thi lý thuyết cho bằng lái xe hạng C.", tip: "Real ID là thẻ căn cước bắt buộc để bay nội địa Mỹ (có ngôi sao vàng). Class C là bằng lái xe ô tô thông thường." },
+                    { en: "Here are my proofs of residency: my utility bill and bank statement.", vi: "Đây là các giấy tờ chứng minh nơi cư trú của tôi: hóa đơn điện nước và sao kê ngân hàng.", tip: "DMV luôn yêu cầu 2 'Proofs of residency' (chứng minh địa chỉ). Hóa đơn điện nước (Utility bill) và thư từ ngân hàng/chính phủ là uy tín nhất." },
+                    { en: "I need to update my change of address on my vehicle registration.", vi: "Tôi cần cập nhật thay đổi địa chỉ trên giấy đăng ký xe của mình.", tip: "Khi chuyển nhà ở Mỹ, bạn có tối đa 10-30 ngày (tùy bang) để đổi địa chỉ với DMV và USCIS (Sở Di Trú) bằng mẫu đơn AR-11." },
+                    // Social Security
+                    { en: "I need a replacement for my Social Security Card. I brought my unexpired foreign passport.", vi: "Tôi cần cấp lại Thẻ An sinh xã hội. Tôi có mang theo hộ chiếu nước ngoài còn hạn.", tip: "SSN (Social Security Number) là mã số sinh tử ở Mỹ. Tuyệt đối KHÔNG chụp ảnh, KHÔNG mang theo trong ví để tránh bị đánh cắp danh tính (Identity Theft)." }
+                ]
+            },
+            'doi_song': {
+                title: 'Thuê nhà, Ngân hàng & Giao thông',
+                lessons: [
+                    // Thuê nhà (Housing)
+                    { en: "What are the requirements for the background check and credit check?", vi: "Yêu cầu cho việc kiểm tra lý lịch và kiểm tra tín dụng là gì?", tip: "Người mới qua chưa có Credit Score (Điểm tín dụng) sẽ rất khó thuê nhà. Bạn thường phải nhờ người Co-signer (bảo lãnh) hoặc đóng tiền cọc (Security deposit) gấp đôi." },
+                    { en: "Does the lease agreement allow subletting, and what is the penalty for breaking the lease?", vi: "Hợp đồng thuê có cho phép cho thuê lại không, và hình phạt khi phá vỡ hợp đồng là gì?", tip: "Tuyệt đối không tự ý cho thuê lại (sublet) nếu hợp đồng cấm. Phá hợp đồng (Break lease) có thể khiến bạn bị đền tiền 2-3 tháng và lưu vết xấu trong lịch sử thuê nhà." },
+                    { en: "Are there any HOA fees or restrictions on street parking?", vi: "Có phí quản lý khu dân cư (HOA) hay quy định hạn chế đậu xe trên đường không?", tip: "HOA (Homeowners Association) có quyền lực rất lớn. Họ có thể phạt bạn vì cỏ mọc quá cao, sơn nhà sai màu, hoặc đậu xe ngoài đường qua đêm." },
+                    // Ngân hàng (Banking)
+                    { en: "I would like to open a checking account and apply for a secured credit card to build my credit.", vi: "Tôi muốn mở tài khoản thanh toán và xin thẻ tín dụng ký quỹ để xây dựng điểm tín dụng.", tip: "Secured Credit Card là cách duy nhất người mới định cư có thể bắt đầu xây dựng điểm tín dụng. Bạn bỏ vào $500 làm cọc, ngân hàng cho bạn hạn mức $500." },
+                    { en: "What is the routing number and account number for setting up direct deposit?", vi: "Số định tuyến và số tài khoản để thiết lập chuyển lương trực tiếp là gì?", tip: "'Routing number' là mã số của ngân hàng (9 chữ số), 'Account number' là số tài khoản cá nhân của bạn. Cần 2 số này để công ty trả lương." },
+                    // Giao thông (Traffic & Police)
+                    { en: "Is this full coverage or just liability insurance?", vi: "Đây là bảo hiểm hai chiều hay chỉ là bảo hiểm trách nhiệm dân sự 1 chiều?", tip: "Liability (1 chiều) là BẮT BUỘC theo luật, chỉ đền cho người bạn đụng trúng. Full coverage (Comprehensive & Collision) đền cho cả xe của bạn." },
+                    { en: "Officer, my license and registration are in the glove compartment. May I reach for them?", vi: "Thưa cảnh sát, bằng lái và giấy đăng ký xe của tôi ở trong hộc để găng tay. Tôi có thể lấy chúng không?", tip: "VĂN HÓA SỐNG CÒN: Bị cảnh sát tấp vào lề (pulled over), KHÔNG ĐƯỢC BƯỚC XUỐNG XE. Đặt hai tay lên vô lăng, làm gì cũng phải xin phép trước để cảnh sát không nghĩ bạn rút vũ khí." }
+                ]
+            },
+            'y_te': {
+                title: 'Y tế, Bảo hiểm & Cấp cứu',
+                lessons: [
+                    // Bảo hiểm y tế (Cực kỳ phức tạp)
+                    { en: "What is my monthly premium, deductible, and out-of-pocket maximum?", vi: "Phí hàng tháng, mức khấu trừ tự trả, và hạn mức chi trả tối đa từ túi tiền của tôi là bao nhiêu?", tip: "Premium: Tiền đóng hàng tháng. Deductible: Số tiền bạn phải TỰ TRẢ TRƯỚC khi bảo hiểm bắt đầu chia sẻ chi phí. Out-of-pocket maximum: Số tiền tối đa bạn phải trả trong 1 năm." },
+                    { en: "Is this primary care physician (PCP) in-network for my HMO plan?", vi: "Bác sĩ gia đình này có nằm trong mạng lưới bảo hiểm HMO của tôi không?", tip: "Bảo hiểm HMO bắt buộc bạn phải có Bác sĩ gia đình (PCP). Bệnh gì cũng phải gặp PCP trước để xin giấy giới thiệu (Referral) mới được đi khám bác sĩ chuyên khoa (Specialist)." },
+                    { en: "Will this procedure require prior authorization from my insurance?", vi: "Thủ thuật y tế này có cần sự chấp thuận trước từ bảo hiểm của tôi không?", tip: "Rất nhiều phẫu thuật, chụp MRI, CT ở Mỹ cần 'Prior authorization' (Xin phép trước). Nếu bác sĩ tự ý làm mà không xin phép, bạn sẽ phải tự trả 100% hóa đơn (có thể lên tới chục ngàn đô)." },
+                    // Triệu chứng & Khám bệnh
+                    { en: "I am experiencing a sharp, throbbing pain in my lower abdomen.", vi: "Tôi đang bị đau nhói và đau buốt từng cơn ở vùng bụng dưới.", tip: "Từ vựng diễn tả cơn đau: Sharp (đau nhói như dao đâm), Throbbing (đau giật giật theo nhịp tim), Dull ache (đau âm ỉ), Numbness (tê rần)." },
+                    { en: "I need to refill my prescription for hypertension at the pharmacy.", vi: "Tôi cần lấy thuốc định kỳ cho bệnh cao huyết áp tại nhà thuốc.", tip: "Ở Mỹ bạn không thể tự ra tiệm mua thuốc kháng sinh hay thuốc trị bệnh mãn tính. Bác sĩ phải kê đơn điện tử gửi thẳng ra Pharmacy (CVS/Walgreens)." },
+                    // Khẩn cấp
+                    { en: "I don't have health insurance. Do you have financial assistance or a sliding fee scale?", vi: "Tôi không có bảo hiểm y tế. Ở đây có chương trình hỗ trợ tài chính hay thang phí theo thu nhập không?", tip: "Nếu thu nhập thấp và không có bảo hiểm, khi vào bệnh viện hãy hỏi phòng Billing về 'Financial assistance' hoặc 'Sliding scale' để được giảm 50-100% viện phí." }
+                ]
+            },
+            'cong_viec': {
+                title: 'Công việc, Thuế & Phúc lợi',
+                lessons: [
+                    // Phỏng vấn & Hợp đồng
+                    { en: "Is this an at-will employment? Is there a probationary period?", vi: "Đây có phải là hợp đồng lao động tự nguyện không? Có thời gian thử việc không?", tip: "'At-will employment' (Lao động tự nguyện) có nghĩa là công ty ở Mỹ có thể sa thải bạn BẤT CỨ LÚC NÀO, KHÔNG CẦN LÝ DO, và ngược lại bạn cũng có thể nghỉ ngang không cần lý do." },
+                    { en: "What is the company's policy on PTO (Paid Time Off) and sick leave?", vi: "Chính sách của công ty về Ngày nghỉ có lương và nghỉ ốm là gì?", tip: "PTO là ngày nghỉ có trả lương, gom chung cả đi chơi và nghỉ bệnh. Khác với Việt Nam, Mỹ không có luật liên bang bắt buộc phải cho nhân viên nghỉ phép năm." },
+                    // Thuế & Lương
+                    { en: "I am a W-2 employee, but I also do some 1099 independent contractor work.", vi: "Tôi là nhân viên chính thức (W-2), nhưng tôi cũng làm thêm một số công việc tự do (1099).", tip: "Mẫu W-2: Công ty đóng giúp bạn 50% thuế An sinh xã hội & Medicare. Mẫu 1099: Bạn là chủ thầu phụ, bạn tự lãnh trọn đóng 100% các loại thuế này (Self-employment tax)." },
+                    { en: "How many allowances should I claim on my W-4 form?", vi: "Tôi nên khai bao nhiêu người phụ thuộc trên biểu mẫu thuế W-4 của mình?", tip: "W-4 là mẫu bạn điền ngày đầu tiên đi làm. Khai nhiều người phụ thuộc (Dependents) -> Trừ thuế mỗi tháng ít -> Lãnh lương nhiều hơn (nhưng cuối năm khai thuế có thể bị đóng bù)." },
+                    // Phúc lợi & Sa thải
+                    { en: "Does the company offer a 401(k) match program?", vi: "Công ty có chương trình đối ứng quỹ hưu trí 401(k) không?", tip: "401(k) là quỹ hưu trí ở Mỹ. 'Match program' là phúc lợi lớn nhất: Ví dụ bạn bỏ 5% lương vào quỹ, công ty sẽ tặng thêm cho bạn 5% nữa (tiền miễn phí)." },
+                    { en: "I am giving my two-week notice. Will I receive severance pay?", vi: "Tôi nộp đơn xin nghỉ việc báo trước 2 tuần. Tôi có nhận được tiền trợ cấp thôi việc không?", tip: "'Two-week notice' là phép lịch sự tối thiểu ở Mỹ khi nghỉ việc. 'Severance pay' (trợ cấp thôi việc) thường chỉ có khi công ty đuổi việc/sa thải hàng loạt (Layoff)." },
+                    { en: "I was injured on the job. I need to file a worker's compensation claim.", vi: "Tôi bị thương trong lúc làm việc. Tôi cần nộp đơn yêu cầu bồi thường tai nạn lao động.", tip: "Nếu tai nạn ở chỗ làm, TUYỆT ĐỐI không dùng bảo hiểm y tế cá nhân. Bạn phải báo ngay cho quản lý để dùng 'Worker's Compensation' của công ty, họ sẽ đền 100% chi phí y tế và lương lúc bạn nghỉ." }
+                ]
+            }
+        };
+
+        // --- 2. UTILS & STATE ---
+        const Utils = {
+            showToast: (msg) => {
+                const toast = document.getElementById('customToast');
+                document.getElementById('toastMsg').textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            },
+            speak: (text, btnElement) => {
+                if (!window.speechSynthesis) {
+                    return Utils.showToast("Trình duyệt không hỗ trợ đọc giọng nói.");
+                }
+                
+                // Hiệu ứng nút đang đọc
+                document.querySelectorAll('.speaker-btn').forEach(btn => btn.classList.remove('playing'));
+                btnElement.classList.add('playing');
+
+                window.speechSynthesis.cancel(); // Dừng câu trước đó nếu đang đọc
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US'; // Chuẩn giọng Mỹ
+                utterance.rate = 0.85; // Đọc chậm một chút cho người mới học dễ nghe
+                utterance.pitch = 1;
+
+                utterance.onend = () => {
+                    btnElement.classList.remove('playing');
+                };
+                utterance.onerror = () => {
+                    btnElement.classList.remove('playing');
+                };
+
+                window.speechSynthesis.speak(utterance);
+            }
+        };
+
+        let currentCat = '';
+        let savedLessons = JSON.parse(localStorage.getItem('amerilingo_saved') || '[]');
+
+        const switchScreen = (screenId) => {
+            document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId === 'landing' ? 'screenLanding' : 'screenMain').classList.add('active');
+            if(screenId === 'landing') window.speechSynthesis.cancel();
+        };
+
+        const toggleSave = (index, btnElement) => {
+            const uniqueId = `${currentCat}_${index}`;
+            if (savedLessons.includes(uniqueId)) {
+                savedLessons = savedLessons.filter(id => id !== uniqueId);
+                btnElement.classList.remove('text-usred', 'bg-red-50', 'border-red-200');
+                btnElement.classList.add('text-slate-400', 'bg-slate-50', 'border-slate-200');
+                btnElement.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`;
+            } else {
+                savedLessons.push(uniqueId);
+                btnElement.classList.remove('text-slate-400', 'bg-slate-50', 'border-slate-200');
+                btnElement.classList.add('text-usred', 'bg-red-50', 'border-red-200');
+                btnElement.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`;
+                Utils.showToast("Đã lưu câu này vào bộ nhớ!");
+            }
+            localStorage.setItem('amerilingo_saved', JSON.stringify(savedLessons));
+            updateHeaderCounts();
+        };
+
+        const updateHeaderCounts = () => {
+            if(!currentCat) return;
+            const data = DB[currentCat].lessons;
+            document.getElementById('totalCount').textContent = data.length;
+            const savedInThisCat = savedLessons.filter(id => id.startsWith(currentCat)).length;
+            document.getElementById('learnedCount').textContent = savedInThisCat;
+        };
+
+        // --- 3. RENDERING ---
+        window.startCategory = (catId) => {
+            currentCat = catId;
+            const data = DB[catId];
+            if(!data) return;
+
+            document.getElementById('categoryTitle').textContent = data.title;
+            updateHeaderCounts();
+            
+            const listEl = document.getElementById('lessonList');
+            listEl.innerHTML = data.lessons.map((item, index) => {
+                const uniqueId = `${catId}_${index}`;
+                const isSaved = savedLessons.includes(uniqueId);
+                
+                const btnSaveClass = isSaved ? 'text-usred bg-red-50 border-red-200' : 'text-slate-400 bg-slate-50 border-slate-200';
+                const iconSave = isSaved ? `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>` : `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>`;
+
+                return `
+                <article class="glass-card p-5 border border-slate-200 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-usblue rounded-l-2xl"></div>
+                    
+                    <div class="flex justify-between items-start gap-4 mb-3 pl-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg md:text-xl font-black text-usblue leading-snug mb-1">${item.en}</h3>
+                            <p class="text-[14px] text-slate-600 font-medium">${item.vi}</p>
+                        </div>
+                        <div class="flex flex-col gap-2 shrink-0">
+                            <button onclick="Utils.speak('${item.en.replace(/'/g, "\\'")}', this)" class="speaker-btn w-10 h-10 rounded-full bg-blue-50 text-usblue flex items-center justify-center border border-blue-100 hover:bg-blue-100 shadow-sm" title="Nghe phát âm">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.56.276 2.56-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 11-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z"/><path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z"/></svg>
+                            </button>
+                            <button onclick="toggleSave(${index}, this)" class="w-10 h-10 rounded-full flex items-center justify-center border transition-colors shadow-sm ${btnSaveClass}" title="Lưu/Yêu thích">
+                                ${iconSave}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pl-3">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-black uppercase text-amber-700 bg-amber-200 px-2 py-0.5 rounded tracking-wider">🇺🇸 Văn hóa Mỹ</span>
+                            </div>
+                            <p class="text-[13px] text-amber-900 font-medium leading-relaxed">${item.tip}</p>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
+
+            switchScreen('main');
+            window.scrollTo(0,0);
+        };
+
+        // Khởi động vào thẳng category đầu tiên nếu người dùng click nút Start giữa màn hình
+        document.getElementById('btnStartApp').addEventListener('click', () => {
+            startCategory('nhap_canh');
+        });
+    </script>
+</body>
+</html>
