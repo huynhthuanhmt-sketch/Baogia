@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Điền DS-260 Tự Động Nhận Diện Word</title>
+    <title>Hệ Thống Điền DS-260 Tự Động & Voice AI (Full)</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,19 +25,26 @@
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f8fafc;
+            scroll-behavior: smooth;
         }
         .step-content {
             display: none;
-            animation: fadeIn 0.4s ease-out forwards;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .step-content.active {
             display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeIn 0.4s ease-out forwards;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Custom Input Styles */
+        
+        /* Custom Input Styles - Làm mượt */
         .input-group label {
             display: flex;
             align-items: center;
@@ -45,6 +52,10 @@
             color: #334155;
             margin-bottom: 0.375rem;
             font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+        .input-group:focus-within label {
+            color: #2563eb;
         }
         .input-field {
             width: 100%;
@@ -52,13 +63,22 @@
             border: 1px solid #cbd5e1;
             border-radius: 0.5rem;
             outline: none;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background-color: #ffffff;
             color: #0f172a;
         }
         .input-field:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* TÍNH NĂNG MỚI: Hiệu ứng bắt mắt khi dùng Mic cho ô cụ thể */
+        .voice-active-field {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15) !important;
+            background-color: #fef2f2 !important;
+            color: #991b1b !important;
         }
         
         /* Hiệu ứng chế độ ẩn phần đã điền */
@@ -70,27 +90,57 @@
         }
         .hide-filled-mode .step-content.all-filled .empty-step-msg {
             display: block;
+            animation: fadeIn 0.3s ease-out;
         }
 
         /* Loading Overlay */
         #loading-overlay {
             backdrop-filter: blur(4px);
         }
+
+        /* Mic Button Pulse Animation */
+        .mic-recording {
+            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* Toast Animations */
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out forwards;
+        }
+        .toast-leave {
+            animation: fadeOut 0.3s ease-in forwards;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 pb-20">
+<body class="min-h-screen text-slate-800 pb-20 relative">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Thanh Top Bar Quản lý Dữ liệu -->
-    <div class="bg-slate-800 text-white sticky top-0 z-50 shadow-md">
+    <div class="bg-slate-800 text-white sticky top-0 z-50 shadow-lg">
         <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
-            <div class="font-bold text-lg flex items-center">
+            <div class="font-bold text-lg flex items-center tracking-wide">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 Hệ Thống DS-260 Pro
             </div>
             <div class="flex items-center space-x-2 md:space-x-4 text-sm">
                 <!-- Nút Upload File Word Cũ -->
                 <input type="file" id="file-upload" accept=".docx" class="hidden" onchange="loadWordFile(event)">
-                <button onclick="document.getElementById('file-upload').click()" class="flex items-center bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition font-medium shadow-sm border border-blue-500">
+                <button onclick="document.getElementById('file-upload').click()" class="flex items-center bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition-colors font-medium shadow-sm border border-blue-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     Nạp lại file Word (.docx)
                 </button>
@@ -99,33 +149,40 @@
     </div>
 
     <!-- Vùng điều khiển thông minh -->
-    <div class="max-w-4xl mx-auto mt-6 mb-4 px-4 flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 gap-4">
+    <div class="max-w-4xl mx-auto mt-6 mb-4 px-4 flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 gap-4 transition-all">
         <div class="flex items-center justify-between w-full md:w-auto gap-4">
-            <div class="text-slate-600 font-medium">Đã điền: <span id="progress-text" class="text-blue-600 font-bold text-lg">0/0</span> mục</div>
-            <button onclick="openProgressModal()" class="text-sm bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2.5 rounded-lg font-bold transition border border-indigo-200 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
-                Bảng kiểm tra lỗi
-            </button>
+            <div class="text-slate-600 font-medium bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
+                Đã điền: <span id="progress-text" class="text-blue-600 font-bold text-lg">0/0</span> mục
+            </div>
+            <div class="flex gap-2">
+                <button onclick="openProgressModal()" class="text-sm bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2.5 rounded-lg font-bold transition-colors border border-indigo-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                    Kiểm tra lỗi
+                </button>
+                <button onclick="fillTestData()" class="text-sm bg-amber-50 text-amber-700 hover:bg-amber-100 px-4 py-2.5 rounded-lg font-bold transition-colors border border-amber-200 flex items-center" title="Tự động điền dữ liệu mẫu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    Test Auto
+                </button>
+            </div>
         </div>
         
         <!-- Công tắc bật/tắt: Chỉ hiện chưa điền -->
-        <label class="flex items-center cursor-pointer bg-slate-50 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-100 transition">
+        <label class="flex items-center cursor-pointer bg-slate-50 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors">
             <div class="relative">
                 <input type="checkbox" id="toggle-hide-filled" class="sr-only" onchange="toggleHideFilled()">
-                <div class="block bg-slate-300 w-12 h-7 rounded-full transition" id="toggle-bg"></div>
-                <div class="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition transform shadow-sm" id="toggle-dot"></div>
+                <div class="block bg-slate-300 w-12 h-7 rounded-full transition-colors duration-300" id="toggle-bg"></div>
+                <div class="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition-transform duration-300 transform shadow-sm" id="toggle-dot"></div>
             </div>
-            <div class="ml-3 text-sm font-bold text-slate-700">Lọc mục bỏ trống (Chưa điền)</div>
+            <div class="ml-3 text-sm font-bold text-slate-700">Lọc mục bỏ trống</div>
         </label>
     </div>
 
     <!-- Vùng Form Chính -->
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden relative">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden relative transition-all">
         
-        <!-- Loading Overlay (Dùng khi đang nạp file) -->
-        <div id="loading-overlay" class="absolute inset-0 bg-white/80 z-40 hidden flex-col items-center justify-center">
+        <div id="loading-overlay" class="absolute inset-0 bg-white/90 z-40 hidden flex-col items-center justify-center transition-opacity">
             <svg class="animate-spin h-10 w-10 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            <span class="font-bold text-slate-700 text-lg">Đang trích xuất dữ liệu từ File Word...</span>
+            <span class="font-bold text-slate-700 text-lg">Đang xử lý dữ liệu...</span>
         </div>
 
         <!-- Header & Progress Steps -->
@@ -133,17 +190,17 @@
             <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
             <div class="relative z-10 flex justify-between items-center text-sm font-medium mt-2">
                 <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1.5 bg-blue-800/40 z-0 rounded-full"></div>
-                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-green-400 z-0 rounded-full transition-all duration-500 ease-out" id="progress-bar" style="width: 0%;"></div>
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-green-400 z-0 rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(74,222,128,0.5)]" id="progress-bar" style="width: 0%;"></div>
                 
-                <div class="z-10 bg-blue-600 w-9 h-9 flex items-center justify-center rounded-full border-2 border-white step-indicator shadow-md cursor-pointer text-base" id="ind-1" onclick="jumpToStep(1)">1</div>
-                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-2" onclick="jumpToStep(2)">2</div>
-                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-3" onclick="jumpToStep(3)">3</div>
-                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-4" onclick="jumpToStep(4)">4</div>
-                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-5" onclick="jumpToStep(5)">5</div>
+                <div class="z-10 bg-blue-600 w-9 h-9 flex items-center justify-center rounded-full border-2 border-white step-indicator shadow-md cursor-pointer text-base transition-colors" id="ind-1" onclick="jumpToStep(1)">1</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base transition-colors hover:bg-blue-700" id="ind-2" onclick="jumpToStep(2)">2</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base transition-colors hover:bg-blue-700" id="ind-3" onclick="jumpToStep(3)">3</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base transition-colors hover:bg-blue-700" id="ind-4" onclick="jumpToStep(4)">4</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base transition-colors hover:bg-blue-700" id="ind-5" onclick="jumpToStep(5)">5</div>
             </div>
         </div>
 
-        <!-- Form Content -->
+        <!-- Form Content (FULL 86 ITEMS) -->
         <div class="p-6 md:p-10" id="main-form-container">
             <form id="ds260-form" onsubmit="return false;">
                 
@@ -151,7 +208,6 @@
                 <div class="step-content active" id="step-1">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">1. Thông tin cá nhân cơ bản</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -184,7 +240,6 @@
                 <div class="step-content" id="step-2">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">2. Liên hệ & Hộ chiếu</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -210,7 +265,6 @@
                 <div class="step-content" id="step-3">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">3. Thông tin Gia đình</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
                     </div>
                     <div class="space-y-6">
@@ -305,7 +359,6 @@
                 <div class="step-content" id="step-4">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">4. Học vấn & Công việc</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
                     </div>
                     <div class="space-y-6">
@@ -369,7 +422,6 @@
                 <div class="step-content" id="step-5">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">5. Di trú & Người bảo lãnh</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
                     </div>
                     <div class="space-y-6">
@@ -412,20 +464,20 @@
                     </div>
                 </div>
 
-                <!-- Navigation Buttons -->
+                <!-- Navigation Buttons - Tối ưu mượt mà -->
                 <div class="mt-8 flex justify-between items-center border-t border-slate-200 pt-6">
-                    <button type="button" id="btn-prev" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 hidden transition font-bold shadow-sm" onclick="changeStep(-1)">
+                    <button type="button" id="btn-prev" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 hidden transition-all font-bold shadow-sm" onclick="changeStep(-1)">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                         Quay lại
                     </button>
                     <div class="flex-grow"></div>
-                    <button type="button" id="btn-next" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold shadow-lg shadow-blue-500/40" onclick="changeStep(1)">
+                    <button type="button" id="btn-next" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-bold shadow-lg shadow-blue-500/40 hover:-translate-y-1" onclick="changeStep(1)">
                         Tiếp tục
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                     </button>
-                    <button type="button" id="btn-export" class="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 hidden transition font-bold shadow-lg shadow-emerald-500/40 flex items-center" onclick="exportWord()">
+                    <button type="button" id="btn-export" class="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 hidden transition-all font-bold shadow-lg shadow-emerald-500/40 flex items-center hover:-translate-y-1" onclick="exportWord()">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                        Tải & Xuất File Word (Zalo)
+                        Tải & Xuất File Word
                     </button>
                 </div>
             </form>
@@ -433,11 +485,11 @@
     </div>
 
     <!-- Modal Tiến Độ -->
-    <div id="progress-modal" class="fixed inset-0 bg-slate-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+    <div id="progress-modal" class="fixed inset-0 bg-slate-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
             <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
                 <h3 class="text-lg font-bold text-slate-800">Bảng Kiểm Tra: <span id="modal-score" class="text-blue-600 ml-1"></span></h3>
-                <button onclick="closeProgressModal()" class="text-slate-400 hover:text-slate-600 transition">
+                <button onclick="closeProgressModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -445,46 +497,57 @@
                 <!-- Nội dung list tiến độ -->
             </div>
             <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
-                <button onclick="closeProgressModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold transition shadow-sm">Đóng bảng</button>
+                <button onclick="closeProgressModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold transition-colors shadow-sm">Đóng bảng</button>
             </div>
         </div>
     </div>
+
+    <!-- NÚT MICROPHONE (VOICE ASSISTANT) -->
+    <button id="voice-btn" onclick="toggleVoice()" class="fixed bottom-8 right-8 w-14 h-14 bg-red-500 text-white rounded-full shadow-[0_4px_15px_rgba(239,68,68,0.5)] flex items-center justify-center hover:bg-red-600 transition-all z-50 group" title="Bấm để đọc thông tin">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+        </svg>
+        <span class="absolute -top-10 right-0 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Đọc tự động</span>
+    </button>
 
     <script>
         let currentStep = 1;
         const totalSteps = 5;
 
-        // Xử lý chuyển bước UI
+        // TÍNH NĂNG MỚI: TRACKING Ô ĐANG CHỌN ĐỂ ĐIỀN VOICE
+        let lastActiveField = null;
+
         function changeStep(n) {
             document.getElementById(`step-${currentStep}`).classList.remove('active');
             updateStepIndicator(currentStep, false);
 
             currentStep += n;
 
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-            let progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            
-            updateStepIndicator(currentStep, true);
+            setTimeout(() => {
+                document.getElementById(`step-${currentStep}`).classList.add('active');
+                let progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                document.getElementById('progress-bar').style.width = `${progress}%`;
+                
+                updateStepIndicator(currentStep, true);
 
-            document.getElementById('btn-prev').style.display = currentStep === 1 ? 'none' : 'block';
-            
-            if (currentStep === totalSteps) {
-                document.getElementById('btn-next').style.display = 'none';
-                document.getElementById('btn-export').style.display = 'flex';
-            } else {
-                document.getElementById('btn-next').style.display = 'block';
-                document.getElementById('btn-export').style.display = 'none';
-            }
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            checkAllStepsEmptyState();
+                document.getElementById('btn-prev').style.display = currentStep === 1 ? 'none' : 'block';
+                
+                if (currentStep === totalSteps) {
+                    document.getElementById('btn-next').style.display = 'none';
+                    document.getElementById('btn-export').style.display = 'flex';
+                } else {
+                    document.getElementById('btn-next').style.display = 'block';
+                    document.getElementById('btn-export').style.display = 'none';
+                }
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                checkAllStepsEmptyState();
+            }, 50);
         }
 
         function jumpToStep(target) {
             if (target === currentStep) return;
-            const diff = target - currentStep;
-            changeStep(diff);
+            changeStep(target - currentStep);
         }
 
         function updateStepIndicator(step, isActive) {
@@ -500,9 +563,6 @@
             }
         }
 
-        // ==========================================
-        // THEO DÕI VÀ LỌC CÁC MỤC ĐÃ ĐIỀN
-        // ==========================================
         const allInputs = document.querySelectorAll('.input-field');
         
         function trackInputChanges() {
@@ -547,6 +607,15 @@
         allInputs.forEach(input => {
             input.addEventListener('input', trackInputChanges);
             input.addEventListener('change', trackInputChanges);
+            
+            // Ghi nhận ô cuối cùng mà người dùng thao tác
+            input.addEventListener('focus', () => {
+                // Xóa highlight ô cũ
+                if(lastActiveField) {
+                    lastActiveField.classList.remove('voice-active-field');
+                }
+                lastActiveField = input;
+            });
         });
 
         function toggleHideFilled() {
@@ -596,6 +665,250 @@
         }
 
         // ==========================================
+        // TÍNH NĂNG TRỢ LÝ ẢO (VOICE TO TEXT AI) - FIX LỖI ABORTED & NO-SPEECH
+        // ==========================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bgColor = type === 'success' ? 'bg-green-500' : (type === 'error' ? 'bg-red-500' : (type === 'info' ? 'bg-blue-500' : 'bg-slate-700'));
+            const icon = type === 'success' ? 'M5 13l4 4L19 7' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
+            
+            toast.className = `flex items-center w-full max-w-xs p-4 text-white ${bgColor} rounded-lg shadow-lg toast-enter pointer-events-auto`;
+            toast.innerHTML = `
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-white/20 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${icon}"></path></svg>
+                </div>
+                <div class="ml-3 text-sm font-medium">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-leave');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition;
+        let isRecording = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.continuous = false; 
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isRecording = true;
+                document.getElementById('voice-btn').classList.add('mic-recording');
+                
+                // HIGHLIGHT Ô ĐANG ĐƯỢC CHỌN CHO NGƯỜI DÙNG DỄ NHÌN
+                if(lastActiveField) {
+                    lastActiveField.classList.add('voice-active-field');
+                    showToast('Cứ đọc tự do nội dung vào ô Đỏ đang chọn.', 'info');
+                } else {
+                    showToast('Đang nghe... Đọc theo dạng "Tên trường + là + Giá trị"', 'info');
+                }
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                processVoiceNLP(transcript);
+            };
+
+            recognition.onerror = (event) => {
+                // XỬ LÝ ẨN NHỮNG LỖI HIỂU LẦM TỪ TRÌNH DUYỆT (CHỦ YẾU Ở IOS/ANDROID)
+                if (event.error === 'aborted') {
+                    // Do người dùng tắt ngang hoặc trình duyệt tự ngắt -> Không làm gì cả
+                    console.log('Voice stopped by user/browser');
+                } else if (event.error === 'no-speech') {
+                    // Cảnh báo nhẹ nhàng thay vì quăng bảng lỗi đỏ
+                    showToast('Không nghe thấy âm thanh, đã tự động tắt Mic.', 'info');
+                } else {
+                    showToast('Lỗi Mic: ' + event.error, 'error');
+                }
+                stopVoice();
+            };
+
+            recognition.onend = () => {
+                stopVoice();
+            };
+        }
+
+        function toggleVoice() {
+            if (!SpeechRecognition) {
+                alert("Trình duyệt của bạn không hỗ trợ tính năng Voice (Khuyên dùng Chrome/Edge/Safari mới nhất).");
+                return;
+            }
+            if (isRecording) {
+                recognition.stop(); // Sẽ kích hoạt onerror('aborted') - đã được bắt ẩn phía trên
+            } else {
+                try {
+                    recognition.start();
+                } catch(e) {
+                    console.log('Mic already starting...');
+                }
+            }
+        }
+
+        function stopVoice() {
+            isRecording = false;
+            document.getElementById('voice-btn').classList.remove('mic-recording');
+            
+            // Xóa Highlight khi tắt mic
+            if(lastActiveField) {
+                setTimeout(() => {
+                    lastActiveField.classList.remove('voice-active-field');
+                }, 500); // Trì hoãn 1 chút để thấy text điền xong
+            }
+        }
+
+        const voiceDict = [
+            { id: 'ho_ten', keys: ['họ và tên', 'họ tên', 'tên là'] },
+            { id: 'so_ho_so', keys: ['số hồ sơ', 'case number'] },
+            { id: 'invoice_id', keys: ['mã hóa đơn', 'invoice id'] },
+            { id: 'ngay_sinh', keys: ['ngày sinh', 'sinh ngày', 'ngày tháng năm sinh'] },
+            { id: 'gioi_tinh', keys: ['giới tính'] },
+            { id: 'hon_nhan', keys: ['hôn nhân', 'tình trạng hôn nhân'] },
+            { id: 'noi_sinh', keys: ['nơi sinh', 'sinh tại'] },
+            { id: 'quoc_tich', keys: ['quốc tịch'] },
+            { id: 'sdt', keys: ['số điện thoại', 'điện thoại'] },
+            { id: 'email', keys: ['địa chỉ email', 'email'] },
+            { id: 'so_ho_chieu', keys: ['số hộ chiếu', 'hộ chiếu'] },
+            { id: 'noi_cap_hc', keys: ['nơi cấp hộ chiếu', 'nơi cấp'] },
+            { id: 'cha_ten', keys: ['tên cha', 'họ tên cha'] },
+            { id: 'me_ten', keys: ['tên mẹ', 'họ tên mẹ'] }
+        ];
+
+        function processVoiceNLP(text) {
+            let foundFields = [];
+            let isDictatedDirectly = false;
+            
+            // BƯỚC 1: KIỂM TRA ĐỌC THEO TỪ KHÓA (Cho phép điền nhiều trường ngắn một lúc)
+            voiceDict.forEach(field => {
+                field.keys.forEach(key => {
+                    const regex = new RegExp(`${key}(?:\\s+là|\\s+điền)?\\s+([^,.;(giới|họ|số|ngày|nơi|tên)]+)`, 'i');
+                    const match = text.match(regex);
+                    
+                    if (match && match[1]) {
+                        let value = match[1].trim();
+                        voiceDict.forEach(otherField => {
+                            otherField.keys.forEach(k => {
+                                if(value.toLowerCase().includes(k)) {
+                                    value = value.toLowerCase().split(k)[0].trim();
+                                }
+                            });
+                        });
+
+                        if (['ho_ten', 'cha_ten', 'me_ten', 'noi_sinh'].includes(field.id)) {
+                            value = value.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                        }
+                        
+                        const inputEl = document.getElementById(field.id);
+                        if(inputEl && value.length > 0) {
+                            inputEl.value = value;
+                            foundFields.push(document.querySelector(`[data-name] [id="${field.id}"]`).closest('.input-group').getAttribute('data-name'));
+                        }
+                    }
+                });
+            });
+
+            // BƯỚC 2: NẾU KHÔNG CÓ TỪ KHÓA NÀO KHỚP -> ĐIỀN CHỮ VÀO Ô ĐANG CHỌN (TAP & DICTATE)
+            if (foundFields.length === 0 && lastActiveField) {
+                let currentVal = lastActiveField.value;
+                let formattedText = text.trim();
+                formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
+
+                // Nếu là Textarea (Nội dung dài): Chèn thêm vào, tự động gạch đầu dòng cho đẹp
+                if (lastActiveField.tagName.toLowerCase() === 'textarea') {
+                    if (currentVal.trim() === '') {
+                        lastActiveField.value = "- " + formattedText;
+                    } else {
+                        lastActiveField.value = currentVal.trimRight() + "\n- " + formattedText;
+                    }
+                } 
+                // Nếu là Input thường: Nối tiếp bằng dấu phẩy hoặc dấu cách (Ví dụ đọc tách 2 lần: "Phường 15", "Quận 10")
+                else {
+                    if (currentVal.trim() === '') {
+                        lastActiveField.value = formattedText;
+                    } else {
+                        lastActiveField.value = currentVal.trim() + " " + formattedText;
+                    }
+                }
+                
+                isDictatedDirectly = true;
+                const fieldName = lastActiveField.closest('.input-group').getAttribute('data-name') || "Ô dữ liệu";
+                showToast(`Đã tự động điền vào: ${fieldName}`);
+            }
+
+            // BƯỚC 3: KẾT LUẬN & HIỂN THỊ TRẠNG THÁI
+            if (foundFields.length > 0) {
+                showToast(`Đã nhận diện từ khóa: ${foundFields.join(', ')}`);
+                trackInputChanges();
+            } else if (isDictatedDirectly) {
+                trackInputChanges();
+            } else {
+                showToast('Bạn hãy chạm tay vào 1 ô trống, sau đó bật Mic và đọc nội dung nhé!', 'error');
+            }
+        }
+
+        // ==========================================
+        // AUTO FILL TEST DATA CHUẨN GỐC
+        // ==========================================
+        function fillTestData() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.add('flex');
+            
+            setTimeout(() => {
+                const testData = {
+                    "so_ho_so": "HCM2024123456", "invoice_id": "IVC98765432", "ho_ten": "NGUYỄN VĂN A", "ten_khac": "Không có", 
+                    "ngay_sinh": "01/01/1980", "gioi_tinh": "Nam", "hon_nhan": "Đã kết hôn", "noi_sinh": "Thành phố Hồ Chí Minh", 
+                    "quoc_tich": "Việt Nam", "quoc_tich_khac": "Không có", "an_tich": "Không có", "ngoai_ngu": "Tiếng Anh, Tiếng Pháp", 
+                    "dang_vien": "Không", "sdt": "0901234567", "sdt_khac": "Không có", "email": "nguyenvana@gmail.com", 
+                    "email_khac": "Không có", "mang_xa_hoi": "https://www.facebook.com/nguyenvana1980", "so_ho_chieu": "C1234567", 
+                    "noi_cap_hc": "Cục Quản lý Xuất nhập cảnh", "ngay_cap_hc": "10/10/2020", "ngay_het_han_hc": "10/10/2030", 
+                    "dia_chi_qua_khu": "- Từ 01/1996 đến 12/2010: 123 Lê Lợi, Quận 1, TP.HCM\n- Từ 01/2011 đến nay: 456 Nguyễn Huệ, Quận 1, TP.HCM", 
+                    "dia_chi_the_xanh": "Họ tên người nhận: Nguyen Van B\nSĐT: +1 714 123 4567\nĐịa chỉ: 789 Bolsa Ave, Westminster, CA 92683, USA", 
+                    "cha_ten": "Nguyễn Văn C", "cha_ns": "01/01/1950", "cha_noisinh": "Hà Nội", "cha_diachi": "Đã mất năm 2010", 
+                    "me_ten": "Trần Thị D", "me_ns": "02/02/1955", "me_noisinh": "Huế", "me_diachi": "456 Nguyễn Huệ, Quận 1, TP.HCM", 
+                    "vc_ten": "Lê Thị E", "vc_ns": "03/03/1985", "vc_noisinh": "Đà Nẵng", "vc_job": "Kế toán trưởng", 
+                    "vc_diachi": "456 Nguyễn Huệ, Quận 1, TP.HCM", "vc_ngaykh": "15/05/2010", "vc_noikh": "TP.HCM", 
+                    "vccu_ten": "Không có", "vccu_ns": "", "vccu_ngaykh": "", "vccu_noikh": "", "vccu_ngaylh": "", "vccu_noilh": "", 
+                    "con1_ten": "Nguyễn Văn F", "con1_ns": "10/10/2012", "con1_noisinh": "TP.HCM", "con1_diachi": "456 Nguyễn Huệ, Quận 1, TP.HCM", 
+                    "con2_ten": "Nguyễn Thị G", "con2_ns": "11/11/2015", "con2_noisinh": "TP.HCM", "con2_diachi": "456 Nguyễn Huệ, Quận 1, TP.HCM", 
+                    "con3_ten": "Không có", "con3_ns": "", "con3_noisinh": "", "con3_diachi": "", 
+                    "job_now_title": "Giám đốc Kinh doanh", "job_now_company": "Công ty TNHH ABC", "job_now_address": "111 Pasteur, Quận 3, TP.HCM", 
+                    "job_old_title": "Trưởng nhóm Bán hàng", "job_old_company": "Công ty XYZ", "job_old_address": "222 Lý Tự Trọng, Quận 1, TP.HCM", 
+                    "job_old_manager": "Ông Trần Văn H (Giám đốc)", "job_old_phone": "0283123456", "job_old_from": "01/2010", "job_old_to": "12/2015", 
+                    "edu_c2_name": "THCS Lê Quý Đôn", "edu_c2_time": "09/1991 đến 05/1995", "edu_c2_address": "Quận 3, TP.HCM", 
+                    "edu_c3_name": "THPT Nguyễn Thị Minh Khai", "edu_c3_time": "09/1995 đến 05/1998", "edu_c3_address": "Quận 3, TP.HCM", 
+                    "edu_uni_name": "Đại học Kinh tế TP.HCM", "edu_uni_time": "09/1998 đến 06/2002", "edu_uni_address": "59C Nguyễn Đình Chiểu, Quận 3, TP.HCM", 
+                    "history_us_visa": "Đã từng phỏng vấn visa du lịch B1/B2 vào tháng 10/2018 và được cấp.\n- Đi Mỹ 1 lần từ ngày 20/12/2018 đến 05/01/2019.", 
+                    "history_refused": "Chưa từng bị từ chối.", 
+                    "history_visa_details": "V12345678 | Cấp: 10/2018 - Hết hạn: 10/2019 | Đi: 20/12/2018 | Tổng cộng 15 ngày\nV98765432 | Cấp: 11/2015 - Hết hạn: 11/2016 | Đi: 01/01/2016 | 7 ngày", 
+                    "history_travel": "Thái Lan (2019), Singapore (2022), Nhật Bản (2023)", 
+                    "sponsor_type": "F4 (Anh chị em bảo lãnh)", "sponsor_name": "Nguyễn Văn B", "sponsor_phone": "+1 714 123 4567", 
+                    "sponsor_address": "789 Bolsa Ave, Westminster, CA 92683, USA", "sponsor_job": "Kỹ sư phần mềm", "sponsor_email": "nguyenvanb@email.com"
+                };
+
+                for (let id in testData) {
+                    if (document.getElementById(id)) {
+                        document.getElementById(id).value = testData[id];
+                    }
+                }
+                
+                trackInputChanges();
+                
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('loading-overlay').classList.remove('flex');
+                
+                showToast('Đã điền tự động dữ liệu Test', 'success');
+            }, 500);
+        }
+
+        // ==========================================
         // CÔNG NGHỆ NẠP FILE WORD (TRÍCH XUẤT MÃ NGẦM)
         // ==========================================
         function loadWordFile(event) {
@@ -608,12 +921,9 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const arrayBuffer = e.target.result;
-                
-                // Sử dụng mammoth quét toàn bộ chữ trong file Word
                 mammoth.extractRawText({arrayBuffer: arrayBuffer})
                     .then(function(result) {
                         const text = result.value;
-                        // Tìm chuỗi dữ liệu tàng hình
                         const match = text.match(/\[DS260_DATA_START\](.*?)\[DS260_DATA_END\]/);
                         
                         document.getElementById('loading-overlay').classList.add('hidden');
@@ -621,7 +931,6 @@
 
                         if (match && match[1]) {
                             try {
-                                // Giải mã Base64 chuẩn UTF-8 (Fix lỗi Tiếng Việt có dấu)
                                 const jsonStr = decodeURIComponent(atob(match[1]));
                                 const data = JSON.parse(jsonStr);
                                 
@@ -631,12 +940,12 @@
                                     }
                                 });
                                 trackInputChanges();
-                                alert("Thành công! Toàn bộ dữ liệu từ File Word đã được khôi phục vào form.");
+                                showToast("Khôi phục dữ liệu từ File Word thành công!", "success");
                             } catch(err) {
-                                alert("Rất tiếc, đoạn mã bảo mật trong file Word đã bị hỏng do quá trình chỉnh sửa thủ công: " + err.message);
+                                alert("Đoạn mã bảo mật trong file Word đã bị hỏng do chỉnh sửa: " + err.message);
                             }
                         } else {
-                            alert("Không tìm thấy mã nhận diện trong file này.\nHãy đảm bảo bạn đang tải lên file .docx được TẢI XUỐNG TỪ CHÍNH HỆ THỐNG NÀY.");
+                            alert("Không tìm thấy mã nhận diện. Hãy tải lên file .docx được tạo ra từ hệ thống này.");
                         }
                     })
                     .catch(function(err) {
@@ -646,22 +955,15 @@
                     });
             };
             reader.readAsArrayBuffer(file);
-            event.target.value = ''; // Reset
+            event.target.value = '';
         }
 
         // ==========================================
         // XUẤT FILE DOCX CHUẨN ZALO VÀ NHÚNG MÃ TÀNG HÌNH
         // ==========================================
-        function val(id, defaultString) {
+        function val(id) {
             const el = document.getElementById(id);
-            if (!el || !el.value.trim()) return defaultString;
-            return el.value.trim();
-        }
-
-        function selectVal(id, defaultString) {
-            const el = document.getElementById(id);
-            if (!el || el.value === "") return defaultString;
-            return el.value;
+            return (el && el.value.trim()) ? el.value.trim() : null;
         }
 
         function exportWord() {
@@ -671,50 +973,72 @@
             btn.disabled = true;
 
             try {
-                // Thu thập toàn bộ dữ liệu đang có trên form
                 const formData = {};
                 allInputs.forEach(input => { if(input.id) formData[input.id] = input.value; });
                 
-                // Mã hóa toàn bộ dữ liệu thành Base64 (Chuẩn Unicode cho Tiếng Việt)
                 const encodedData = btoa(encodeURIComponent(JSON.stringify(formData)));
                 const secretPayload = `[DS260_DATA_START]${encodedData}[DS260_DATA_END]`;
 
-                const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle } = docx;
+                const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType, VerticalAlign, TableLayoutType } = docx;
 
-                const p = (text) => new Paragraph({
-                    children: [new TextRun({ text: text, font: "Times New Roman", size: 28 })],
-                    spacing: { after: 100 }
-                });
+                const tr = (text, options = {}) => new TextRun({ text: text, font: "Times New Roman", size: options.size || 28, bold: options.bold || false });
+                const p = (content, options = {}) => new Paragraph({ children: Array.isArray(content) ? content : [tr(content)], spacing: { after: 120, ...options.spacing }, indent: options.indent || {}, alignment: options.alignment || AlignmentType.LEFT });
+                const sectionTitle = (text) => p([tr(text, { bold: true })], { spacing: { before: 240, after: 120 } });
+                const line = (label, value, dots) => value ? p([tr(label + " "), tr(value, { bold: true })]) : p([tr(label + " " + dots)]);
 
-                const multiP = (id, defaultString) => {
-                    const el = document.getElementById(id);
-                    let text = (!el || !el.value.trim()) ? defaultString : el.value.trim();
-                    if (!text) return [p("")];
-                    return text.split('\n').map(line => p(line));
+                const multiLine = (label, value, dots) => {
+                    const result = [p([tr(label)])];
+                    if (value) {
+                        value.split('\n').forEach(v => result.push(p([tr(v, { bold: true })], { indent: { left: 400 } })));
+                    } else {
+                        dots.split('\n').forEach(d => result.push(p([tr(d)])));
+                    }
+                    return result;
                 };
 
+                const visaText = val('history_visa_details');
+                const visaRows = [];
+                const cellOptions = { margins: { top: 100, bottom: 100, left: 100, right: 100 }, verticalAlign: VerticalAlign.CENTER };
+                const colWidthsDXA = [2000, 3000, 2000, 2500]; 
+
+                const createCell = (text, widthIndex, colSpan = 1) => {
+                    const cellConfig = { children: [p([tr(text || '', { size: 24, bold: true })])], ...cellOptions };
+                    if (colSpan > 1) {
+                        cellConfig.columnSpan = colSpan;
+                        cellConfig.width = { size: 9500, type: WidthType.DXA };
+                    } else if (widthIndex !== null) {
+                        cellConfig.width = { size: colWidthsDXA[widthIndex], type: WidthType.DXA };
+                    }
+                    return new TableCell(cellConfig);
+                };
+
+                visaRows.push(new TableRow({ children: [createCell("Số hiệu visa", 0), createCell("Ngày cấp, ngày hết hạn", 1), createCell("Thời gian đi", 2), createCell("Tổng thời gian ở Mỹ", 3)] }));
+
+                if (visaText) {
+                    visaText.split('\n').forEach(lineStr => {
+                        if (lineStr.trim()) {
+                            const cols = lineStr.split('|').map(s => s.trim());
+                            if (cols.length === 1) {
+                                visaRows.push(new TableRow({ children: [createCell(cols[0], null, 4)] }));
+                            } else {
+                                visaRows.push(new TableRow({ children: [createCell(cols[0], 0), createCell(cols[1], 1), createCell(cols[2], 2), createCell(cols[3], 3)] }));
+                            }
+                        }
+                    });
+                } else {
+                    visaRows.push(new TableRow({ children: [createCell("", 0), createCell("", 1), createCell("", 2), createCell("", 3)] }));
+                }
+
                 const visaTable = new Table({
-                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    width: { size: 9500, type: WidthType.DXA },
+                    columnWidths: colWidthsDXA, 
+                    layout: TableLayoutType.FIXED,
                     borders: {
-                        top: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                        left: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
-                        insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+                        top: { style: BorderStyle.SINGLE, size: 1 }, bottom: { style: BorderStyle.SINGLE, size: 1 },
+                        left: { style: BorderStyle.SINGLE, size: 1 }, right: { style: BorderStyle.SINGLE, size: 1 },
+                        insideHorizontal: { style: BorderStyle.SINGLE, size: 1 }, insideVertical: { style: BorderStyle.SINGLE, size: 1 },
                     },
-                    rows: [
-                        new TableRow({
-                            children: [
-                                new TableCell({ children: [p("Số hiệu visa")], width: { size: 25, type: WidthType.PERCENTAGE } }),
-                                new TableCell({ children: [p("Ngày cấp, ngày hết hạn")], width: { size: 25, type: WidthType.PERCENTAGE } }),
-                                new TableCell({ children: [p("Thời gian đi")], width: { size: 25, type: WidthType.PERCENTAGE } }),
-                                new TableCell({ children: [p("Tổng thời gian ở Mỹ bao nhiêu ngày ( hoặc tuần, tháng)")], width: { size: 25, type: WidthType.PERCENTAGE } }),
-                            ]
-                        }),
-                        new TableRow({
-                            children: [
-                                new TableCell({ children: multiP('history_visa_details', ' '), columnSpan: 4, margins: { top: 100, bottom: 100, left: 100, right: 100 } })
-                            ]
-                        })
-                    ]
+                    rows: visaRows
                 });
 
                 const doc = new Document({
@@ -722,117 +1046,156 @@
                     sections: [{
                         properties: {},
                         children: [
-                            p("Những thông tin cần thiết để điền ds260"), p(""),
-                            p("Số hồ sơ : " + val('so_ho_so', '')),
-                            p("Invoice ID :  " + val('invoice_id', '')), p(""),
-                            p("Họ tên : " + val('ho_ten', '………………………………………………………………………………..……..')),
-                            p("Có tên khác không ?" + val('ten_khac', '………………………………………………………………………….')),
-                            p("Ngày, tháng, năm sinh : " + val('ngay_sinh', '……………………………………………………………….……..')),
-                            p("Nam/ Nữ :" + val('gioi_tinh', '…………………………………………………………………………………….')),
-                            p("Tình trạng hôn nhân :" + selectVal('hon_nhan', '………………………………………………………………………..')),
-                            p("Nơi sinh  (tỉnh, thành phố): " + val('noi_sinh', '…………………………………………………………………..')),
-                            p("Quốc tịch ? " + val('quoc_tich', '……………………………………………………………………………………')),
-                            p("Có quốc tịch khác không ?" + val('quoc_tich_khac', '……………………………………………………………………')),
-                            p("Số điện thoại : " + val('sdt', '………………………………………………………………………………..')),
-                            p("Có số điện thoại nào khác dùng trong 5 năm gần đây :" + val('sdt_khac', '……………………………………...')),
-                            p("Thông tin về hộ chiếu : "),
-                            p("Số hộ chiếu :" + val('so_ho_chieu', '………………………………………………………………')),
-                            p("Ngày cấp : " + val('ngay_cap_hc', '…………………………..') + "  -  Ngày hết hạn : " + val('ngay_het_han_hc', '…………………')),
-                            p("Tên tỉnh thành phố nào cấp hộ chiếu này " + val('noi_cap_hc', '…………………………………')),
-                            p("Địa chỉ email: "),
-                            p("Có email nào khác dùng trong 5 năm gần đây :" + val('email_khac', '……………………………………………..')),
-                            p("Địa chỉ chi tiết (Từ năm 16 tuổi đến nay, ghi rõ từ tháng…năm… đến tháng…năm…):"),
-                            ...multiP('dia_chi_qua_khu', '...............................................................................................................................................….\n.............................................................................................................................................…...'),
-                            p("Có án tích không : " + val('an_tich', '………………………………………………………………………..…..')),
-                            p("Có biết ngoại ngữ không?" + val('ngoai_ngu', '……………………………………………………………………..')),
-                            p("Cung cấp link Facebook, Tiktok, WhatsApp, Youtube  ............…"),
-                            ...multiP('mang_xa_hoi', '….……………………………………………………………………………………………'),
-                            p("Có tham gia sinh hoạt Đảng không?" + val('dang_vien', '.........................................................…………………..')),
-                            p("Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận"),
-                            ...multiP('dia_chi_the_xanh', '……………………………………………………………………………..'),
-                            p("Cha :"),
-                            p("Họ tên : " + val('cha_ten', '…………………………………………………………………………………')),
-                            p("Ngày tháng năm sinh : " + val('cha_ns', '………………………………………………………………….')),
-                            p("Nơi sinh (tỉnh, thành phố): " + val('cha_noisinh', '……………………………………………………………..')),
-                            p("Địa chỉ : " + val('cha_diachi', '……………………………………………………………………………….')),
-                            p("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào" + (val('cha_diachi') ? '' : '…………………………….')),
-                            p("Mẹ :"),
-                            p("Họ tên : " + val('me_ten', '………………………………………………………………………………..')),
-                            p("Ngày tháng năm sinh :" + val('me_ns', '………………………………………………………………..')),
-                            p("Nơi sinh( tỉnh, thành phố) :" + val('me_noisinh', '…………………………………………………………..')),
-                            p("Địa chỉ : " + val('me_diachi', '………………………………………………………………………………')),
-                            p("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào" + (val('me_diachi') ? '' : '……………………………')),
-                            p("Vợ (Chồng) hiện tại:"),
-                            p("Họ tên  : " + val('vc_ten', '………………………………………………………………………………')),
-                            p("Ngày tháng năm sinh:" + val('vc_ns', '………………………………………………………………..')),
-                            p("Nơi sinh: " + val('vc_noisinh', '……………………………………………………………………..………')),
-                            p("Địa chỉ : " + val('vc_diachi', '………………………………………………………………………………')),
-                            p("Kết hôn ngày, tháng, năm: " + val('vc_ngaykh', '…………………………………………………………..')),
-                            p("Nơi kết hôn : " + val('vc_noikh', '…………………………………………………………………………')),
-                            p("Công việc hiện tại :  " + val('vc_job', '…………………………………………………………………')),
-                            p("Vợ (Chồng) cũ:"),
-                            p("Họ tên  : " + val('vccu_ten', '............................................................................................................................')),
-                            p("Ngày tháng năm sinh " + val('vccu_ns', '........................................…………………..................................')),
-                            p("Kết hôn ngày, tháng, năm " + val('vccu_ngaykh', '..............………………………………………....................') + "  Nơi kết hôn : " + val('vccu_noikh', '...............................………………………………………………………..')),
-                            p("Ngày ly hôn:" + val('vccu_ngaylh', '..............................................………………………………………......') + " .. Nơi ly hôn :" + val('vccu_noilh', '...............……………………………………………………….....................')),
-                            p("Thông tin về các con :"),
-                            p("Con 1 :"),
-                            p("Họ tên  :  " + val('con1_ten', '………………………………………………………………………….…..…')),
-                            p("Ngày, tháng, năm sinh :" + val('con1_ns', '…………………………………………………………….……')),
-                            p("Nơi sinh (tỉnh, thành phố) :" + val('con1_noisinh', '……………………………………………………….….….')),
-                            p("Địa chỉ : " + val('con1_diachi', '……………………………………………………………………………...…..')),
-                            p("Con 2 : "),
-                            p("Họ tên  : " + val('con2_ten', '…………………………………………………………………….……....…..')),
-                            p("Ngày, tháng, năm sinh : " + val('con2_ns', '…………………………………………………….…….….…')),
-                            p("Nơi sinh (tỉnh, thành phố): " + val('con2_noisinh', '……………………………………………………….…….')),
-                            p("Địa chỉ : " + val('con2_diachi', '………………………….……………………………………………….……')),
-                            p("Con 3 : "),
-                            p("Họ tên  :   " + val('con3_ten', '………………………………………………………………………….……')),
-                            p("Ngày, tháng, năm sinh : " + val('con3_ns', '………………………………………………………….…….')),
-                            p("Nơi sinh (tỉnh, thành phố): " + val('con3_noisinh', '………………………………………………………….….-')),
-                            p("Địa chỉ:" + val('con3_diachi', '…………………………..…………………………………………………….')),
-                            p("Thông tin về công việc hiện tại  :"),
-                            p("- Tên công việc  :" + val('job_now_title', '……………………………………………………………………………..')),
-                            p("- Tên công ty  :" + val('job_now_company', '……………………………………………………………………………….-')),
-                            p("- Địa chỉ công ty :" + val('job_now_address', '…………………………………………………………………………….')),
-                            p("Thông tin về công việc trước đó (Kê khai trong vòng 10 năm gần nhất) :"),
-                            p("- Tên công việc :" + val('job_old_title', '………………………………………………………………………………')),
-                            p("- Tên công ty :" + val('job_old_company', '………………………………………………………………………………..')),
-                            p("- Địa chỉ công ty :" + val('job_old_address', '…………………………………………………………………………….')),
-                            p("- Tên người quản lý mình hoặc tên giám đốc công ty :" + val('job_old_manager', '………………………………………')),
-                            p("- Số điện thoại nơi làm việc :" + val('job_old_phone', '…………………………………………………………………')),
-                            p("- Thời gian làm từ tháng" + val('job_old_from', '……….') + "năm" + (val('job_old_from')?'':'……...') + " đến …….. tháng" + val('job_old_to', '…..…') + " năm" + (val('job_old_to')?'':'……………..…....')), p(""),
-                            p("Quá trình học vấn (Cấp 2, cấp 3, cao đẳng, đại học) GHI ĐẦY ĐỦ TÊN , ĐỊA CHỈ VÀ KHÓA HỌC: "),
-                            p("Cấp 2 : -Tên trường :" + val('edu_c2_name', '……………………………………………………………………..')),
-                            p("- Địa chỉ trường :" + val('edu_c2_address', '……………………………………………………………………')),
-                            p("- Học từ tháng" + val('edu_c2_time', '…năm…. đến tháng….năm ………………………………………')),
-                            p("Cấp 3 : -Tên trường" + val('edu_c3_name', '………………………………………………………………………..')),
-                            p("- Địa chỉ trường" + val('edu_c3_address', '……………………………………………………………………..')),
-                            p("- Học từ tháng" + val('edu_c3_time', '…năm…. đến tháng….năm ……………………………………')),
-                            p("Đại học, cao đẳng: "),
-                            p("-Tên trường" + val('edu_uni_name', '…………………………………………………………………………')),
-                            p("- Địa chỉ trường" + val('edu_uni_address', '…………………………………………………………………….')),
-                            p("- Học từ tháng" + val('edu_uni_time', '……..năm……... đến tháng……...năm ………………………….....')), p(""),
-                            ...("Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Du lịch, du học, định cư), đính kèm visa nếu đã được cấp, (Ghi rõ số lần sang Mỹ, đi từ ngày….tháng…năm…….. đến ngày… tháng…năm….) : \n" + val('history_us_visa', '………………………………………………………………………….')).split('\n').map(line => p(line)), p(""),
-                            p("Đã bao giờ phỏng vấn Mỹ bị từ chối chưa?"),
-                            ...multiP('history_refused', ''), p(""),
-                            visaTable, p(""),
-                            p("Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không? (Nếu có kể tên nước đã đi)" + val('history_travel', '……………………………………………………………………………………….')), p(""),
-                            p("Người bảo lãnh : (Diện : " + val('sponsor_type', '.....') + " )"),
-                            p("Họ tên : " + val('sponsor_name', '…………………………………………………………………………………')),
-                            p("Địa chỉ : " + val('sponsor_address', '………………………………………………………………………….………………..')),
-                            p("Số điện thoại : " + val('sponsor_phone', '………………………………………………………………………….')),
-                            p("Người bảo lãnh làm nghề gì?" + val('sponsor_job', '…………………………………………………………..')),
-                            p("EMAIL (NẾU CÓ) :" + val('sponsor_email', '……………………………………………………………………')),
+                            p([tr("Những thông tin cần thiết để điền ds260", { bold: true, size: 32 })], { alignment: AlignmentType.CENTER, spacing: { after: 300 } }),
+
+                            line("Số hồ sơ :", val('so_ho_so'), "…………………………………………"),
+                            line("Invoice ID :", val('invoice_id'), "…………………………………………"),
+                            line("Họ tên :", val('ho_ten'), "………………………………………………………………………………..…….."),
+                            line("Có tên khác không ?", val('ten_khac'), "…………………………………………………………………………."),
+                            line("Ngày, tháng, năm sinh :", val('ngay_sinh'), "……………………………………………………………….…….."),
+                            line("Nam/ Nữ :", val('gioi_tinh'), "……………………………………………………………………………………."),
+                            line("Tình trạng hôn nhân :", val('hon_nhan'), "……………………………………………………………………….."),
+                            line("Nơi sinh (tỉnh, thành phố):", val('noi_sinh'), "………………………………………………………………….."),
+                            line("Quốc tịch ?", val('quoc_tich'), "……………………………………………………………………………………"),
+                            line("Có quốc tịch khác không ?", val('quoc_tich_khac'), "……………………………………………………………………"),
+                            line("Số điện thoại :", val('sdt'), "……………………………………………………………………………….."),
+                            line("Có số điện thoại nào khác dùng trong 5 năm gần đây :", val('sdt_khac'), "……………………………………..."),
                             
-                            // ---- THUẬT TOÁN TÀNG HÌNH (GẮN MÃ PHỤC HỒI DỮ LIỆU) ----
+                            sectionTitle("Thông tin về hộ chiếu :"),
+                            line("Số hộ chiếu :", val('so_ho_chieu'), "………………………………………………………………"),
+                            p([
+                                tr("Ngày cấp : "),
+                                val('ngay_cap_hc') ? tr(val('ngay_cap_hc'), { bold: true }) : tr("………………………….."),
+                                tr("  -  Ngày hết hạn : "),
+                                val('ngay_het_han_hc') ? tr(val('ngay_het_han_hc'), { bold: true }) : tr("…………………")
+                            ]),
+                            line("Tên tỉnh thành phố nào cấp hộ chiếu này", val('noi_cap_hc'), "…………………………………"),
+                            
+                            sectionTitle("Địa chỉ email:"),
+                            line("Có email nào khác dùng trong 5 năm gần đây :", val('email_khac'), "…………………………………………….."),
+                            ...multiLine("Địa chỉ chi tiết (Từ năm 16 tuổi đến nay, ghi rõ từ tháng…năm… đến tháng…năm…):", val('dia_chi_qua_khu'), "...............................................................................................................................................….\n.............................................................................................................................................…..."),
+                            
+                            line("Có án tích không :", val('an_tich'), "………………………………………………………………………..….."),
+                            line("Có biết ngoại ngữ không?", val('ngoai_ngu'), "…………………………………………………………………….."),
+                            ...multiLine("Cung cấp link Facebook, Tiktok, WhatsApp, Youtube  ............…", val('mang_xa_hoi'), "….……………………………………………………………………………………………"),
+                            line("Có tham gia sinh hoạt Đảng không?", val('dang_vien'), ".........................................................………………….."),
+                            
+                            ...multiLine("Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận", val('dia_chi_the_xanh'), "…………………………………………………………………………….."),
+                            
+                            sectionTitle("Cha :"),
+                            line("Họ tên :", val('cha_ten'), "…………………………………………………………………………………"),
+                            line("Ngày tháng năm sinh :", val('cha_ns'), "…………………………………………………………………."),
+                            line("Nơi sinh (tỉnh, thành phố):", val('cha_noisinh'), "…………………………………………………………….."),
+                            line("Địa chỉ :", val('cha_diachi'), "………………………………………………………………………………."),
+                            (!val('cha_diachi')) ? p([tr("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào…………………………….")]) : p([]),
+                            
+                            sectionTitle("Mẹ :"),
+                            line("Họ tên :", val('me_ten'), "……………………………………………………………………………….."),
+                            line("Ngày tháng năm sinh :", val('me_ns'), "……………………………………………………………….."),
+                            line("Nơi sinh( tỉnh, thành phố) :", val('me_noisinh'), "………………………………………………………….."),
+                            line("Địa chỉ :", val('me_diachi'), "………………………………………………………………………………"),
+                            (!val('me_diachi')) ? p([tr("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào…………………………….")]) : p([]),
+                            
+                            sectionTitle("Vợ (Chồng) hiện tại:"),
+                            line("Họ tên :", val('vc_ten'), "………………………………………………………………………………"),
+                            line("Ngày tháng năm sinh:", val('vc_ns'), "……………………………………………………………….."),
+                            line("Nơi sinh:", val('vc_noisinh'), "……………………………………………………………………..………"),
+                            line("Địa chỉ :", val('vc_diachi'), "………………………………………………………………………………"),
+                            line("Kết hôn ngày, tháng, năm:", val('vc_ngaykh'), "………………………………………………………….."),
+                            line("Nơi kết hôn :", val('vc_noikh'), "…………………………………………………………………………"),
+                            line("Công việc hiện tại :", val('vc_job'), "…………………………………………………………………"),
+                            
+                            sectionTitle("Vợ (Chồng) cũ:"),
+                            line("Họ tên :", val('vccu_ten'), "............................................................................................................................"),
+                            line("Ngày tháng năm sinh", val('vccu_ns'), "........................................………………….................................."),
+                            p([
+                                tr("Kết hôn ngày, tháng, năm "),
+                                val('vccu_ngaykh') ? tr(val('vccu_ngaykh'), { bold: true }) : tr("..............………………………………………...................."),
+                                tr("  Nơi kết hôn : "),
+                                val('vccu_noikh') ? tr(val('vccu_noikh'), { bold: true }) : tr("...............................………………………………………………………..")
+                            ]),
+                            p([
+                                tr("Ngày ly hôn:"),
+                                val('vccu_ngaylh') ? tr(val('vccu_ngaylh'), { bold: true }) : tr("..............................................………………………………………......"),
+                                tr(" .. Nơi ly hôn :"),
+                                val('vccu_noilh') ? tr(val('vccu_noilh'), { bold: true }) : tr("...............……………………………………………………….....................")
+                            ]),
+                            
+                            sectionTitle("Thông tin về các con :"),
+                            p([tr("Con 1 :", { bold: true })]),
+                            line("Họ tên :", val('con1_ten'), "………………………………………………………………………….…..…"),
+                            line("Ngày, tháng, năm sinh :", val('con1_ns'), "…………………………………………………………….……"),
+                            line("Nơi sinh (tỉnh, thành phố) :", val('con1_noisinh'), "……………………………………………………….….…."),
+                            line("Địa chỉ :", val('con1_diachi'), "……………………………………………………………………………...….."),
+                            
+                            p([tr("Con 2 :", { bold: true })]),
+                            line("Họ tên :", val('con2_ten'), "…………………………………………………………………….……....….."),
+                            line("Ngày, tháng, năm sinh :", val('con2_ns'), "…………………………………………………….…….….…"),
+                            line("Nơi sinh (tỉnh, thành phố):", val('con2_noisinh'), "……………………………………………………….……."),
+                            line("Địa chỉ :", val('con2_diachi'), "………………………….……………………………………………….……"),
+                            
+                            p([tr("Con 3 :", { bold: true })]),
+                            line("Họ tên :", val('con3_ten'), "………………………………………………………………………….……"),
+                            line("Ngày, tháng, năm sinh :", val('con3_ns'), "………………………………………………………….……."),
+                            line("Nơi sinh (tỉnh, thành phố):", val('con3_noisinh'), "………………………………………………………….….-"),
+                            line("Địa chỉ:", val('con3_diachi'), "…………………………..……………………………………………………."),
+                            
+                            sectionTitle("Thông tin về công việc hiện tại :"),
+                            line("- Tên công việc :", val('job_now_title'), "…………………………………………………………………………….."),
+                            line("- Tên công ty :", val('job_now_company'), "……………………………………………………………………………….-"),
+                            line("- Địa chỉ công ty :", val('job_now_address'), "……………………………………………………………………………."),
+                            
+                            sectionTitle("Thông tin về công việc trước đó (Kê khai trong vòng 10 năm gần nhất) :"),
+                            line("- Tên công việc :", val('job_old_title'), "………………………………………………………………………………"),
+                            line("- Tên công ty :", val('job_old_company'), "……………………………………………………………………………….."),
+                            line("- Địa chỉ công ty :", val('job_old_address'), "……………………………………………………………………………."),
+                            line("- Tên người quản lý mình hoặc tên giám đốc công ty :", val('job_old_manager'), "………………………………………"),
+                            line("- Số điện thoại nơi làm việc :", val('job_old_phone'), "…………………………………………………………………"),
+                            p([
+                                tr("- Thời gian làm từ "),
+                                val('job_old_from') ? tr(val('job_old_from'), { bold: true }) : tr("tháng……….năm……..."),
+                                tr(" đến "),
+                                val('job_old_to') ? tr(val('job_old_to'), { bold: true }) : tr("tháng…..… năm……………..…....")
+                            ]),
+                            
+                            sectionTitle("Quá trình học vấn (Cấp 2, cấp 3, cao đẳng, đại học) GHI ĐẦY ĐỦ TÊN , ĐỊA CHỈ VÀ KHÓA HỌC:"),
+                            p([tr("Cấp 2 :", { bold: true })]),
+                            line("- Tên trường :", val('edu_c2_name'), "…………………………………………………………………….."),
+                            line("- Địa chỉ trường :", val('edu_c2_address'), "……………………………………………………………………"),
+                            line("- Học từ tháng", val('edu_c2_time'), "…năm…. đến tháng….năm ………………………………………"),
+                            
+                            p([tr("Cấp 3 :", { bold: true })]),
+                            line("- Tên trường", val('edu_c3_name'), "……………………………………………………………………….."),
+                            line("- Địa chỉ trường", val('edu_c3_address'), "…………………………………………………………………….."),
+                            line("- Học từ tháng", val('edu_c3_time'), "…năm…. đến tháng….năm ……………………………………"),
+                            
+                            p([tr("Đại học, cao đẳng:", { bold: true })]),
+                            line("- Tên trường", val('edu_uni_name'), "…………………………………………………………………………"),
+                            line("- Địa chỉ trường", val('edu_uni_address'), "……………………………………………………………………."),
+                            line("- Học từ tháng", val('edu_uni_time'), "……..năm……... đến tháng……...năm …………………………....."),
+                            
+                            p([]),
+                            ...multiLine("Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Du lịch, du học, định cư), đính kèm visa nếu đã được cấp, (Ghi rõ số lần sang Mỹ, đi từ ngày….tháng…năm…….. đến ngày… tháng…năm….) :", val('history_us_visa'), "…………………………………………………………………………."),
+                            
+                            p([]),
+                            ...multiLine("Đã bao giờ phỏng vấn Mỹ bị từ chối chưa?", val('history_refused'), "…………………………………………………………………………."),
+                            
+                            p([]),
+                            visaTable,
+                            p([]),
+                            
+                            line("Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không? (Nếu có kể tên nước đã đi)", val('history_travel'), "………………………………………………………………………………………."),
+                            
+                            sectionTitle("Người bảo lãnh :"),
+                            line("(Diện :", val('sponsor_type'), "..... )"),
+                            line("Họ tên :", val('sponsor_name'), "…………………………………………………………………………………"),
+                            line("Địa chỉ :", val('sponsor_address'), "………………………………………………………………………….……………….."),
+                            line("Số điện thoại :", val('sponsor_phone'), "…………………………………………………………………………."),
+                            line("Người bảo lãnh làm nghề gì?", val('sponsor_job'), "………………………………………………………….."),
+                            line("EMAIL (NẾU CÓ) :", val('sponsor_email'), "……………………………………………………………………"),
+                            
                             new Paragraph({
-                                children: [
-                                    new TextRun({ 
-                                        text: secretPayload,
-                                        font: "Times New Roman", size: 1, color: "FFFFFF" // Size 1 (siêu bé) và màu trắng (ẩn vào nền)
-                                    })
-                                ],
+                                children: [ new TextRun({ text: secretPayload, font: "Times New Roman", size: 1, color: "FFFFFF" }) ],
                                 spacing: { before: 0, after: 0 }
                             })
                         ]
@@ -840,7 +1203,7 @@
                 });
 
                 Packer.toBlob(doc).then(blob => {
-                    saveAs(blob, "DS260_mau_Da_Dien.docx");
+                    saveAs(blob, "DS260_Pro_Export.docx");
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }).catch(err => {
@@ -858,10 +1221,10 @@
             }
         }
         
-        // Khởi tạo trạng thái ban đầu
         trackInputChanges();
     </script>
 </body>
 </html>
+
 
 
