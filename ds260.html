@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Điền DS-260 Tự Động & Voice AI (Full)</title>
+    <title>Hệ Thống Điền DS-260 Tự Động</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,14 +72,6 @@
             box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
             transform: translateY(-1px);
         }
-
-        /* TÍNH NĂNG MỚI: Hiệu ứng bắt mắt khi dùng Mic cho ô cụ thể */
-        .voice-active-field {
-            border-color: #ef4444 !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15) !important;
-            background-color: #fef2f2 !important;
-            color: #991b1b !important;
-        }
         
         /* Hiệu ứng chế độ ẩn phần đã điền */
         .hide-filled-mode .input-group.is-filled {
@@ -96,16 +88,6 @@
         /* Loading Overlay */
         #loading-overlay {
             backdrop-filter: blur(4px);
-        }
-
-        /* Mic Button Pulse Animation */
-        .mic-recording {
-            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         /* Toast Animations */
@@ -502,20 +484,9 @@
         </div>
     </div>
 
-    <!-- NÚT MICROPHONE (VOICE ASSISTANT) -->
-    <button id="voice-btn" onclick="toggleVoice()" class="fixed bottom-8 right-8 w-14 h-14 bg-red-500 text-white rounded-full shadow-[0_4px_15px_rgba(239,68,68,0.5)] flex items-center justify-center hover:bg-red-600 transition-all z-50 group" title="Bấm để đọc thông tin">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
-        <span class="absolute -top-10 right-0 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Đọc tự động</span>
-    </button>
-
     <script>
         let currentStep = 1;
         const totalSteps = 5;
-
-        // TÍNH NĂNG MỚI: TRACKING Ô ĐANG CHỌN ĐỂ ĐIỀN VOICE
-        let lastActiveField = null;
 
         function changeStep(n) {
             document.getElementById(`step-${currentStep}`).classList.remove('active');
@@ -607,15 +578,6 @@
         allInputs.forEach(input => {
             input.addEventListener('input', trackInputChanges);
             input.addEventListener('change', trackInputChanges);
-            
-            // Ghi nhận ô cuối cùng mà người dùng thao tác
-            input.addEventListener('focus', () => {
-                // Xóa highlight ô cũ
-                if(lastActiveField) {
-                    lastActiveField.classList.remove('voice-active-field');
-                }
-                lastActiveField = input;
-            });
         });
 
         function toggleHideFilled() {
@@ -665,7 +627,7 @@
         }
 
         // ==========================================
-        // TÍNH NĂNG TRỢ LÝ ẢO (VOICE TO TEXT AI) - FIX LỖI ABORTED & NO-SPEECH
+        // HÀM HIỂN THỊ THÔNG BÁO (TOAST)
         // ==========================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -688,170 +650,6 @@
                 toast.classList.replace('toast-enter', 'toast-leave');
                 setTimeout(() => toast.remove(), 300);
             }, 3500);
-        }
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        let recognition;
-        let isRecording = false;
-
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.lang = 'vi-VN';
-            recognition.continuous = false; 
-            recognition.interimResults = false;
-
-            recognition.onstart = () => {
-                isRecording = true;
-                document.getElementById('voice-btn').classList.add('mic-recording');
-                
-                // HIGHLIGHT Ô ĐANG ĐƯỢC CHỌN CHO NGƯỜI DÙNG DỄ NHÌN
-                if(lastActiveField) {
-                    lastActiveField.classList.add('voice-active-field');
-                    showToast('Cứ đọc tự do nội dung vào ô Đỏ đang chọn.', 'info');
-                } else {
-                    showToast('Đang nghe... Đọc theo dạng "Tên trường + là + Giá trị"', 'info');
-                }
-            };
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                processVoiceNLP(transcript);
-            };
-
-            recognition.onerror = (event) => {
-                // XỬ LÝ ẨN NHỮNG LỖI HIỂU LẦM TỪ TRÌNH DUYỆT (CHỦ YẾU Ở IOS/ANDROID)
-                if (event.error === 'aborted') {
-                    // Do người dùng tắt ngang hoặc trình duyệt tự ngắt -> Không làm gì cả
-                    console.log('Voice stopped by user/browser');
-                } else if (event.error === 'no-speech') {
-                    // Cảnh báo nhẹ nhàng thay vì quăng bảng lỗi đỏ
-                    showToast('Không nghe thấy âm thanh, đã tự động tắt Mic.', 'info');
-                } else {
-                    showToast('Lỗi Mic: ' + event.error, 'error');
-                }
-                stopVoice();
-            };
-
-            recognition.onend = () => {
-                stopVoice();
-            };
-        }
-
-        function toggleVoice() {
-            if (!SpeechRecognition) {
-                alert("Trình duyệt của bạn không hỗ trợ tính năng Voice (Khuyên dùng Chrome/Edge/Safari mới nhất).");
-                return;
-            }
-            if (isRecording) {
-                recognition.stop(); // Sẽ kích hoạt onerror('aborted') - đã được bắt ẩn phía trên
-            } else {
-                try {
-                    recognition.start();
-                } catch(e) {
-                    console.log('Mic already starting...');
-                }
-            }
-        }
-
-        function stopVoice() {
-            isRecording = false;
-            document.getElementById('voice-btn').classList.remove('mic-recording');
-            
-            // Xóa Highlight khi tắt mic
-            if(lastActiveField) {
-                setTimeout(() => {
-                    lastActiveField.classList.remove('voice-active-field');
-                }, 500); // Trì hoãn 1 chút để thấy text điền xong
-            }
-        }
-
-        const voiceDict = [
-            { id: 'ho_ten', keys: ['họ và tên', 'họ tên', 'tên là'] },
-            { id: 'so_ho_so', keys: ['số hồ sơ', 'case number'] },
-            { id: 'invoice_id', keys: ['mã hóa đơn', 'invoice id'] },
-            { id: 'ngay_sinh', keys: ['ngày sinh', 'sinh ngày', 'ngày tháng năm sinh'] },
-            { id: 'gioi_tinh', keys: ['giới tính'] },
-            { id: 'hon_nhan', keys: ['hôn nhân', 'tình trạng hôn nhân'] },
-            { id: 'noi_sinh', keys: ['nơi sinh', 'sinh tại'] },
-            { id: 'quoc_tich', keys: ['quốc tịch'] },
-            { id: 'sdt', keys: ['số điện thoại', 'điện thoại'] },
-            { id: 'email', keys: ['địa chỉ email', 'email'] },
-            { id: 'so_ho_chieu', keys: ['số hộ chiếu', 'hộ chiếu'] },
-            { id: 'noi_cap_hc', keys: ['nơi cấp hộ chiếu', 'nơi cấp'] },
-            { id: 'cha_ten', keys: ['tên cha', 'họ tên cha'] },
-            { id: 'me_ten', keys: ['tên mẹ', 'họ tên mẹ'] }
-        ];
-
-        function processVoiceNLP(text) {
-            let foundFields = [];
-            let isDictatedDirectly = false;
-            
-            // BƯỚC 1: KIỂM TRA ĐỌC THEO TỪ KHÓA (Cho phép điền nhiều trường ngắn một lúc)
-            voiceDict.forEach(field => {
-                field.keys.forEach(key => {
-                    const regex = new RegExp(`${key}(?:\\s+là|\\s+điền)?\\s+([^,.;(giới|họ|số|ngày|nơi|tên)]+)`, 'i');
-                    const match = text.match(regex);
-                    
-                    if (match && match[1]) {
-                        let value = match[1].trim();
-                        voiceDict.forEach(otherField => {
-                            otherField.keys.forEach(k => {
-                                if(value.toLowerCase().includes(k)) {
-                                    value = value.toLowerCase().split(k)[0].trim();
-                                }
-                            });
-                        });
-
-                        if (['ho_ten', 'cha_ten', 'me_ten', 'noi_sinh'].includes(field.id)) {
-                            value = value.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                        }
-                        
-                        const inputEl = document.getElementById(field.id);
-                        if(inputEl && value.length > 0) {
-                            inputEl.value = value;
-                            foundFields.push(document.querySelector(`[data-name] [id="${field.id}"]`).closest('.input-group').getAttribute('data-name'));
-                        }
-                    }
-                });
-            });
-
-            // BƯỚC 2: NẾU KHÔNG CÓ TỪ KHÓA NÀO KHỚP -> ĐIỀN CHỮ VÀO Ô ĐANG CHỌN (TAP & DICTATE)
-            if (foundFields.length === 0 && lastActiveField) {
-                let currentVal = lastActiveField.value;
-                let formattedText = text.trim();
-                formattedText = formattedText.charAt(0).toUpperCase() + formattedText.slice(1);
-
-                // Nếu là Textarea (Nội dung dài): Chèn thêm vào, tự động gạch đầu dòng cho đẹp
-                if (lastActiveField.tagName.toLowerCase() === 'textarea') {
-                    if (currentVal.trim() === '') {
-                        lastActiveField.value = "- " + formattedText;
-                    } else {
-                        lastActiveField.value = currentVal.trimRight() + "\n- " + formattedText;
-                    }
-                } 
-                // Nếu là Input thường: Nối tiếp bằng dấu phẩy hoặc dấu cách (Ví dụ đọc tách 2 lần: "Phường 15", "Quận 10")
-                else {
-                    if (currentVal.trim() === '') {
-                        lastActiveField.value = formattedText;
-                    } else {
-                        lastActiveField.value = currentVal.trim() + " " + formattedText;
-                    }
-                }
-                
-                isDictatedDirectly = true;
-                const fieldName = lastActiveField.closest('.input-group').getAttribute('data-name') || "Ô dữ liệu";
-                showToast(`Đã tự động điền vào: ${fieldName}`);
-            }
-
-            // BƯỚC 3: KẾT LUẬN & HIỂN THỊ TRẠNG THÁI
-            if (foundFields.length > 0) {
-                showToast(`Đã nhận diện từ khóa: ${foundFields.join(', ')}`);
-                trackInputChanges();
-            } else if (isDictatedDirectly) {
-                trackInputChanges();
-            } else {
-                showToast('Bạn hãy chạm tay vào 1 ô trống, sau đó bật Mic và đọc nội dung nhé!', 'error');
-            }
         }
 
         // ==========================================
@@ -1121,7 +919,7 @@
                                 val('vccu_noilh') ? tr(val('vccu_noilh'), { bold: true }) : tr("...............……………………………………………………….....................")
                             ]),
                             
-                            sectionTitle("Thông tin về các con :"),
+                            sectionTitle("Thông vị về các con :"),
                             p([tr("Con 1 :", { bold: true })]),
                             line("Họ tên :", val('con1_ten'), "………………………………………………………………………….…..…"),
                             line("Ngày, tháng, năm sinh :", val('con1_ns'), "…………………………………………………………….……"),
@@ -1225,6 +1023,5 @@
     </script>
 </body>
 </html>
-
 
 
