@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cứu Vợ - Chiến Dịch Contra (Layout Fixed)</title>
+    <title>Cứu Vợ - Chiến Dịch Contra (Bản Sửa Lỗi)</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
             margin: 0; padding: 0; background-color: #020617;
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; width: 100vw; font-family: 'Pixelify Sans', sans-serif;
+            /* Sửa lỗi thanh địa chỉ che khuất trên trình duyệt Mobile */
+            height: 100vh; height: 100dvh; 
+            width: 100vw; font-family: 'Pixelify Sans', sans-serif;
             overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
         }
 
@@ -89,11 +91,9 @@
             border: 2px solid #6ee7b7; box-shadow: 0 8px 0 #064e3b, 0 15px 25px rgba(0,0,0,0.6);
         }
 
-        /* Nút điều khiển giờ nằm hoàn toàn trong khu vực lòng đất (không đè lên nền trời nữa) */
         #controls-layer {
             position: absolute; 
-            /* Căn chuẩn sát mép dưới, ăn khớp với vùng vẽ lòng đất trong canvas */
-            bottom: max(25px, env(safe-area-inset-bottom)); 
+            bottom: 25px; bottom: max(25px, env(safe-area-inset-bottom)); 
             left: 0; right: 0;
             display: none; justify-content: space-between; padding: 0 25px;
             z-index: 40; pointer-events: none;
@@ -111,6 +111,12 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.5), inset 0 2px 6px rgba(255,255,255,0.2);
             transition: all 0.1s; cursor: pointer;
         }
+        
+        /* Chống lỗi chạm lệch màng loa icon trên mobile */
+        .ctrl-btn svg, .ctrl-btn path, .ctrl-btn circle {
+            pointer-events: none;
+        }
+
         .ctrl-btn svg {
             width: 34px; height: 34px; stroke: #ffffff;
             filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
@@ -171,9 +177,6 @@
 
         const GW = 400; 
         const GH = 700;
-        
-        // CẬP NHẬT QUAN TRỌNG: Kéo mặt đất lên cao hơn để mở rộng không gian chơi (480 thay vì 600)
-        // Phần từ 480 đến 700 (220px) sẽ đóng vai trò là Lòng đất (Nơi chứa phím bấm)
         const GROUND_Y = 480; 
 
         canvas.width = GW;
@@ -181,8 +184,8 @@
 
         const COLORS = {
             skyTop: '#0f172a', skyBot: '#1e293b',
-            groundTop: '#15803d', groundBot: '#14532d', // Cỏ
-            dirtTop: '#451a03', dirtBot: '#1c0a00',     // Lòng đất
+            groundTop: '#15803d', groundBot: '#14532d', 
+            dirtTop: '#451a03', dirtBot: '#1c0a00',     
             mountBack: '#1e293b', mountFront: '#334155',
             playerSkin: '#fde047', playerShirt: '#ef4444', playerPants: '#2563eb',
             bulletPlayer: '#fef08a', bulletEnemy: '#f43f5e',
@@ -208,12 +211,17 @@
         bindButton('btn-jump', 'jump');
         bindButton('btn-shoot', 'shoot');
 
+        // Ngăn chặn lỗi cuộn trang của trình duyệt khi bấm Space/Mũi tên trên Máy tính
         window.addEventListener('keydown', e => {
+            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+                e.preventDefault();
+            }
             if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
             if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
             if (e.code === 'Space' || e.code === 'ArrowUp') keys.jump = true;
             if (e.code === 'KeyX' || e.code === 'Enter') keys.shoot = true;
-        });
+        }, {passive: false});
+
         window.addEventListener('keyup', e => {
             if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
             if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
@@ -268,8 +276,9 @@
                 this.isGrounded = false;
                 let onPlatform = false;
 
+                // Tối ưu thuật toán check va chạm Platform không bị lọt thỏm
                 for (let p of Game.platforms) {
-                    if (this.vy >= 0 && prevY + this.h <= p.y + 10 && this.x + this.w > p.x && this.x < p.x + p.w) {
+                    if (this.vy >= 0 && prevY + this.h <= p.y + 20 && this.x + this.w > p.x && this.x < p.x + p.w) {
                         if (this.y + this.h >= p.y) {
                             this.y = p.y - this.h;
                             this.vy = 0;
@@ -394,7 +403,6 @@
                     this.hp = 1; this.score = 5; this.vx = -2.5 - Math.random();
                     this.shootTimer = Math.floor(Math.random() * 60 + 50);
                 } else if (type === 'plane') {
-                    // Update plane height based on new ground
                     this.y = Math.random() * 60 + 300; 
                     this.w = 40; this.h = 25;
                     this.hp = 2; this.score = 10; this.vx = -4 - Math.random()*2; this.baseY = this.y;
@@ -448,12 +456,10 @@
                     this.hp = 100; this.maxHp = 100; this.score = 100;
                 } else if (type === 'heli') {
                     this.w = 100; this.h = 60; 
-                    // Update heli height
                     this.y = 300; this.baseY = 300;
                     this.hp = 250; this.maxHp = 250; this.score = 200;
                 } else if (type === 'dragon') {
                     this.w = 100; this.h = 100; 
-                    // Update dragon height
                     this.y = 260; this.baseY = 260;
                     this.hp = 600; this.maxHp = 600; this.score = 500;
                 }
@@ -475,7 +481,6 @@
                             Game.bullets.push(new Bullet(this.x, this.y + 50, -8, 0, 1, 10, 4, '#f59e0b', false));
                         }
                         if (this.timer % 120 === 0) {
-                            // Cập nhật vị trí platform cho xe tăng
                             Game.platforms.push(new Platform(GW + 50, GROUND_Y - 80, 100));
                         }
                     } else if (this.type === 'heli') {
@@ -598,7 +603,7 @@
                 Game.player.x = -50; 
                 
                 Game.csGirlX = GW/2 + 30;
-                Game.csGirlY = GROUND_Y - 45; // Update relative to new ground
+                Game.csGirlY = GROUND_Y - 45; 
                 
                 Game.csDragonX = GW + 50;
                 Game.csDragonY = -150; 
@@ -609,7 +614,11 @@
             startGame() {
                 Game.state = 'PLAY';
                 Game.score = 0; Game.frameCount = 0;
-                Game.bullets = []; Game.enemies = []; Game.items = []; Game.particles = []; Game.texts = []; Game.platforms = [];
+                Game.bullets = []; Game.enemies = []; Game.particles = []; Game.texts = []; Game.platforms = [];
+                // Sửa lỗi: Cấp súng Máy mặc định tại vị trí người chơi ngay khi Game bắt đầu!
+                Game.items = [];
+                Game.items.push(new Item(80 + 50, GROUND_Y - 30, 'M'));
+                
                 Game.currentBoss = null;
                 Game.bossStages.forEach(b => b.done = false);
                 Game.player = new Player(); 
@@ -654,40 +663,33 @@
                         if (Game.csTimer === 90) Game.spawnText("Vâng! ♥", Game.csGirlX + 15, Game.csGirlY - 20, '#f472b6');
                         if (Game.csTimer === 170) { Game.csPhase = 2; Game.csTimer = 0; }
                     } else if (Game.csPhase === 2) {
-                        Game.csDragonX -= 7;
-                        Game.csDragonY += 8;
-                        if (Game.csDragonX <= Game.csGirlX - 40 && Game.csDragonY >= Game.csGirlY - 60) {
-                            Game.csDragonX = Game.csGirlX - 40;
-                            Game.csDragonY = Game.csGirlY - 60;
+                        // FIX: Thuật toán nội suy đường bay mượt mà, chống giật lác (snapping)
+                        let targetX = Game.csGirlX - 40;
+                        let targetY = Game.csGirlY - 60;
+                        let dx = targetX - Game.csDragonX;
+                        let dy = targetY - Game.csDragonY;
+                        let dist = Math.hypot(dx, dy);
+                        
+                        if (dist < 12) {
+                            Game.csDragonX = targetX; Game.csDragonY = targetY;
                             Game.shake = 30; 
-                            Game.spawnParticles(Game.csDragonX + 50, GROUND_Y, '#475569', 20, 4); 
+                            Game.spawnParticles(Game.csDragonX + 50, GROUND_Y, '#475569', 25, 4); 
                             Game.spawnText("CỨU EM!!!", Game.csGirlX + 15, Game.csGirlY - 30, '#ef4444');
                             Game.csPhase = 3; Game.csTimer = 0;
+                        } else {
+                            Game.csDragonX += (dx / dist) * 11;
+                            Game.csDragonY += (dy / dist) * 11;
                         }
                     } else if (Game.csPhase === 3) {
-                        if (Game.csTimer > 30) { 
-                            Game.csDragonX += 5;
-                            Game.csDragonY -= 6;
-                            Game.csGirlX = Game.csDragonX + 20; 
-                            Game.csGirlY = Game.csDragonY + 60;
+                        if (Game.csTimer > 25) { 
+                            Game.csDragonX += 5; Game.csDragonY -= 6;
+                            Game.csGirlX = Game.csDragonX + 20; Game.csGirlY = Game.csDragonY + 60;
                         }
-                        if (Game.csTimer === 40) {
-                            Game.items.push(new Item(Game.player.x + 50, -50, 'M')); 
-                        }
-                        if (Game.csTimer === 70) {
-                            Game.spawnText("TRẢ VỢ CHO TAAA!", Game.player.x + 15, Game.player.y - 20, 'red');
-                        }
-                        if (Game.csDragonY < -150) {
-                            Game.csPhase = 4; Game.csTimer = 0;
-                        }
+                        if (Game.csTimer === 70) Game.spawnText("TRẢ VỢ CHO TAAA!", Game.player.x + 15, Game.player.y - 20, 'red');
+                        if (Game.csDragonY < -150) { Game.csPhase = 4; Game.csTimer = 0; }
                     } else if (Game.csPhase === 4) {
-                        if (Game.csTimer === 60) Game.startGame();
+                        if (Game.csTimer === 30) Game.startGame();
                     }
-                    
-                    Game.items.forEach(it => { 
-                        it.vy += 0.5; it.y += it.vy; 
-                        if (it.y > GROUND_Y - 30) { it.y = GROUND_Y - 30; it.vy = 0; } 
-                    });
                     
                     Game.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
                     Game.particles = Game.particles.filter(p => p.life > 0);
@@ -702,7 +704,6 @@
                 Game.bgScroll += 1.5; 
                 Game.player.update();
 
-                // Nền tảng ngẫu nhiên bay lơ lửng để tạo chỗ đứng
                 if (!Game.currentBoss && Game.frameCount % 180 === 0 && Math.random() > 0.3) {
                     Game.platforms.push(new Platform(GW, GROUND_Y - 80 - Math.random() * 30, 80 + Math.random() * 40));
                 }
@@ -840,7 +841,6 @@
                 ctx.save();
                 if (Game.shake > 0) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
 
-                // Vẽ nền trời
                 let grad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
                 grad.addColorStop(0, COLORS.skyTop); grad.addColorStop(1, COLORS.skyBot);
                 ctx.fillStyle = grad; ctx.fillRect(0, 0, GW, GH);
@@ -850,7 +850,6 @@
                     ctx.fillRect((i * 73) % GW, (i * 91) % GROUND_Y, 2, 2);
                 }
 
-                // Vẽ núi (căn theo GROUND_Y mới)
                 ctx.fillStyle = COLORS.mountBack;
                 let offBack = -(Game.bgScroll * 0.15 % 400);
                 for(let i=-1; i<3; i++) {
@@ -863,7 +862,6 @@
                     ctx.beginPath(); ctx.moveTo(offFront + i*250, GROUND_Y); ctx.lineTo(offFront + i*250 + 125, GROUND_Y - 120); ctx.lineTo(offFront + i*250 + 250, GROUND_Y); ctx.fill();
                 }
 
-                // VẼ LỚP CỎ (Lớp mỏng bên trên)
                 let grassGrad = ctx.createLinearGradient(0, GROUND_Y, 0, GROUND_Y + 40);
                 grassGrad.addColorStop(0, COLORS.groundTop); grassGrad.addColorStop(1, COLORS.groundBot);
                 ctx.fillStyle = grassGrad; ctx.fillRect(0, GROUND_Y, GW, 40);
@@ -872,12 +870,10 @@
                 let grassOffset = -(Game.bgScroll % 40);
                 for(let i=0; i<GW+40; i+=40) { ctx.fillRect(grassOffset + i, GROUND_Y, 20, 5); }
 
-                // VẼ LÒNG ĐẤT - Khu vực chứa Gamepad ảo
                 let dirtGrad = ctx.createLinearGradient(0, GROUND_Y + 40, 0, GH);
                 dirtGrad.addColorStop(0, COLORS.dirtTop); dirtGrad.addColorStop(1, COLORS.dirtBot);
                 ctx.fillStyle = dirtGrad; ctx.fillRect(0, GROUND_Y + 40, GW, GH - (GROUND_Y + 40));
 
-                // VẼ HOẠT CẢNH VÀ THỰC THỂ
                 if (Game.state === 'CUTSCENE') {
                     ctx.save(); ctx.translate(Game.csGirlX, Game.csGirlY);
                     ctx.fillStyle = '#f472b6'; ctx.beginPath(); ctx.moveTo(15, 20); ctx.lineTo(0, 45); ctx.lineTo(30, 45); ctx.fill();
@@ -893,7 +889,6 @@
                     ctx.fillStyle = 'black'; ctx.beginPath(); ctx.arc(8, 20, 2, 0, Math.PI*2); ctx.fill();
                     ctx.restore();
 
-                    Game.items.forEach(it => it.draw(ctx)); 
                     Game.player.draw(ctx);
                 } 
                 else if (Game.state === 'PLAY' || Game.state === 'WIN' || Game.state === 'GAMEOVER') {
@@ -919,7 +914,6 @@
                     ctx.fillText(t.txt, t.x, ty);
                 });
 
-                // GIAO DIỆN HUD (MÁU, ĐIỂM, VŨ KHÍ)
                 if (Game.state === 'PLAY' || Game.state === 'WIN') {
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; ctx.fillRect(0, 0, GW, 60);
 
