@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cứu Vợ - Chiến Dịch Contra 2.0 (Masterpiece Logic)</title>
+    <title>Cứu Vợ - Auto Shoot Runner</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             margin: 0; padding: 0; background-color: #020617;
             display: flex; justify-content: center; align-items: center;
@@ -21,17 +21,16 @@
             width: 100%; height: 100%;
             max-width: 500px;
             background-color: #000;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1), 0 0 25px rgba(56, 189, 248, 0.4);
             overflow: hidden;
         }
         
         @media (min-width: 501px) {
-            #game-container { border-radius: 20px; height: 95vh; border: 1px solid #1e293b; }
+            #game-container { border-radius: 20px; height: 95vh; border: 1px solid #1e293b; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
         }
 
         canvas {
             display: block; width: 100%; height: 100%;
-            object-fit: contain;
+            object-fit: contain; image-rendering: pixelated;
         }
 
         #ui-layer {
@@ -46,124 +45,80 @@
         }
 
         .panel {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 2px solid rgba(56, 189, 248, 0.6);
-            border-radius: 24px; padding: 40px 30px;
+            background: #0f172a;
+            border: 2px solid #fff;
+            padding: 30px 20px;
             text-align: center; color: white;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(56, 189, 248, 0.15);
-            pointer-events: auto; width: 85%;
+            pointer-events: auto; width: 85%; max-width: 380px;
             display: none;
         }
         .panel.show {
             display: block;
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.3s ease-out forwards;
         }
 
         .game-title { 
-            margin: 0 0 15px 0; font-size: 42px; color: #facc15; 
-            text-shadow: 3px 3px 0 #b45309, 0 0 20px rgba(250, 204, 21, 0.4); 
-            line-height: 1.1; letter-spacing: 2px; text-transform: uppercase;
+            margin: 0 0 15px 0; font-size: 38px; color: #facc15; 
+            text-shadow: 2px 2px 0 #b45309; 
+            letter-spacing: 2px; text-transform: uppercase;
         }
-        .desc { font-size: 18px; margin: 0 0 25px 0; color: #cbd5e1; line-height: 1.5; }
+        .desc { font-size: 18px; margin: 0 0 25px 0; color: #cbd5e1; }
         
         .score-box {
-            background: rgba(0,0,0,0.7); border: 2px solid #facc15;
-            color: #facc15; font-size: 30px; font-weight: bold;
-            padding: 12px 30px; border-radius: 14px; margin: 0 auto 30px auto;
-            display: inline-block; box-shadow: 0 0 20px rgba(250,204,21,0.25);
+            color: #facc15; font-size: 26px; font-weight: bold;
+            margin: 0 auto 30px auto;
         }
         
         .btn {
-            border-radius: 14px; padding: 18px 36px; font-family: inherit; font-size: 24px;
-            color: white; font-weight: bold; cursor: pointer; letter-spacing: 2px;
-            transition: all 0.15s ease; width: 100%; text-transform: uppercase;
+            padding: 15px 30px; font-family: inherit; font-size: 22px;
+            color: white; font-weight: bold; cursor: pointer; letter-spacing: 1px;
+            width: 100%; text-transform: uppercase; border: 2px solid #fff;
+            transition: transform 0.1s;
         }
-        .btn:active { transform: translateY(6px); box-shadow: 0 0px 0 transparent !important; }
+        .btn:active { transform: scale(0.95); }
         
-        .btn-primary {
-            background: linear-gradient(to bottom, #ef4444, #b91c1c);
-            border: 2px solid #fca5a5; box-shadow: 0 8px 0 #7f1d1d, 0 15px 25px rgba(0,0,0,0.6);
-        }
-        .btn-success {
-            background: linear-gradient(to bottom, #10b981, #047857);
-            border: 2px solid #6ee7b7; box-shadow: 0 8px 0 #064e3b, 0 15px 25px rgba(0,0,0,0.6);
+        .btn-primary { background-color: #ef4444; }
+        .btn-success { background-color: #10b981; }
+
+        .hint-text {
+            position: absolute; bottom: 30px; width: 100%; text-align: center;
+            color: rgba(255, 255, 255, 0.7); font-size: 18px; font-weight: bold;
+            pointer-events: none; text-shadow: 2px 2px 0 #000;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
         }
 
-        #controls-layer {
-            position: absolute; 
-            bottom: 30px; bottom: max(30px, env(safe-area-inset-bottom)); 
-            left: 30px; right: 0;
-            display: none; justify-content: flex-start;
-            z-index: 40; pointer-events: none;
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
-
-        .ctrl-group { display: flex; gap: 25px; pointer-events: auto; }
-
-        .ctrl-btn {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.3);
-            transition: all 0.1s; cursor: pointer;
-        }
-        
-        .ctrl-btn svg, .ctrl-btn path, .ctrl-btn circle {
-            pointer-events: none;
-        }
-
-        .ctrl-btn svg {
-            width: 42px; height: 42px; stroke: #ffffff; stroke-width: 3;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
-        }
-        .ctrl-btn.active { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 100%);
-            transform: scale(0.92) translateY(5px); 
-            box-shadow: 0 0px 5px rgba(0,0,0,0.6), inset 0 6px 15px rgba(0,0,0,0.5);
-            border-color: rgba(255, 255, 255, 0.9);
-        }
-        .ctrl-btn.active svg { stroke: #facc15; }
     </style>
 </head>
 <body>
 
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
-
+        <div class="hint-text" id="hint">CHẠM MÀN HÌNH ĐỂ NHẢY / XOAY VÒNG</div>
         <div id="ui-layer">
             <div id="game-over-menu" class="panel">
-                <h1 class="game-title" style="color: #ef4444; text-shadow: 3px 3px 0 #7f1d1d;">TỬ TRẬN!</h1>
-                <p class="desc">Nhiệm vụ thất bại. Vợ bạn vẫn đang chờ!</p>
-                <div class="score-box">ĐIỂM: <span id="final-score">0</span></div>
-                <button class="btn btn-primary" onclick="Game.resetGame()">THỬ LẠI</button>
+                <h1 class="game-title" style="color: #ef4444; text-shadow: 2px 2px 0 #7f1d1d;">GAME OVER</h1>
+                <p class="desc">Vợ bạn vẫn đang bị giam giữ!</p>
+                <div class="score-box">Điểm của bạn: <span id="final-score">0</span></div>
+                <button class="btn btn-primary" onclick="Game.resetGame()">CHƠI LẠI</button>
             </div>
 
             <div id="victory-menu" class="panel">
-                <h1 class="game-title" style="color: #4ade80; text-shadow: 3px 3px 0 #14532d;">THẮNG LỢI!</h1>
-                <p class="desc">Anh hùng cứu mỹ nhân! ♥</p>
-                <div class="score-box">ĐIỂM: <span id="win-score">0</span></div>
+                <h1 class="game-title" style="color: #4ade80; text-shadow: 2px 2px 0 #14532d;">THẮNG LỢI!</h1>
+                <p class="desc">Anh hùng cứu mỹ nhân thành công! ♥</p>
+                <div class="score-box">Điểm của bạn: <span id="win-score">0</span></div>
                 <button class="btn btn-success" onclick="Game.resetGame()">CHƠI LẠI</button>
-            </div>
-        </div>
-
-        <div id="controls-layer">
-            <div class="ctrl-group">
-                <div class="ctrl-btn" id="btn-left">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                </div>
-                <div class="ctrl-btn" id="btn-right">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </div>
             </div>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false }); 
         const container = document.getElementById('game-container');
 
         const GW = 400; 
@@ -183,74 +138,128 @@
             blood: '#dc2626', spark: '#fef08a'
         };
 
-        const keys = { left: false, right: false, jump: false };
-
-        function bindButton(id, keyName) {
-            const btn = document.getElementById(id);
-            if (!btn) return;
-            const press = (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = true; btn.classList.add('active'); };
-            const release = (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = false; btn.classList.remove('active'); };
-            
-            btn.addEventListener('touchstart', press, {passive: false});
-            btn.addEventListener('touchend', release, {passive: false});
-            btn.addEventListener('mousedown', press);
-            btn.addEventListener('mouseup', release);
-            btn.addEventListener('mouseleave', release);
-        }
-
-        bindButton('btn-left', 'left');
-        bindButton('btn-right', 'right');
-
-        // CHẠM BẤT KỲ ĐÂU ĐỂ NHẢY (TINH TẾ HƠN)
-        const handleJump = (e) => {
-            // Không nhảy nếu chạm trúng vùng của cụm nút hoặc Menu
-            if (e.target.closest('.ctrl-group') || e.target.closest('.panel')) return;
-            e.preventDefault();
-            keys.jump = true;
-        };
-        const handleJumpRelease = (e) => {
-            if (e.target.closest('.ctrl-group') || e.target.closest('.panel')) return;
-            e.preventDefault();
-            keys.jump = false;
-        };
-
-        container.addEventListener('touchstart', handleJump, {passive: false});
-        container.addEventListener('touchend', handleJumpRelease, {passive: false});
-        container.addEventListener('mousedown', handleJump);
-        container.addEventListener('mouseup', handleJumpRelease);
-
-        window.addEventListener('keydown', e => {
-            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
-                e.preventDefault();
-            }
-            if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
-            if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
-            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') keys.jump = true;
-        }, {passive: false});
-
-        window.addEventListener('keyup', e => {
-            if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
-            if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
-            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') keys.jump = false;
-        });
-
         function checkAABB(r1, r2) {
             return r1.x < r2.x + r2.w && r1.x + r1.w > r2.x && r1.y < r2.y + r2.h && r1.y + r1.h > r2.y;
         }
 
         // ==========================================
-        // CLASSES
+        // SỰ KIỆN 1 CHẠM TRÊN TOÀN MÀN HÌNH
         // ==========================================
+        canvas.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            if (Game.state !== 'PLAY') {
+                if (Game.state === 'CUTSCENE' && Game.csPhase > 0) {
+                    Game.csTimer += 35; // Tua nhanh Cutscene khi chạm
+                }
+                return;
+            }
+            // Chạm bất kỳ đâu cũng nhảy!
+            Game.player.doJump();
+        });
+
+        // Hỗ trợ cả phím Space/ArrowUp trên máy tính
+        window.addEventListener('keydown', e => {
+            if (['Space', 'ArrowUp', 'KeyW'].includes(e.code)) {
+                e.preventDefault();
+                if (Game.state === 'PLAY') {
+                    Game.player.doJump();
+                }
+            }
+        });
+
+        // ==========================================
+        // CÁC ĐỐI TƯỢNG TRONG GAME
+        // ==========================================
+
+        class Pet {
+            constructor(player) {
+                this.player = player;
+                this.x = player.x; this.y = player.y - 30;
+                this.w = 16; this.h = 16;
+                this.cooldown = 0;
+            }
+            update() {
+                let targetX = this.player.x - 25;
+                let targetY = this.player.y - 25 + Math.sin(Game.frameCount * 0.1) * 6;
+                this.x += (targetX - this.x) * 0.15;
+                this.y += (targetY - this.y) * 0.15;
+                
+                if (this.cooldown > 0) this.cooldown--;
+                
+                // Pet tự động bắn mục tiêu gần nhất
+                if (this.cooldown <= 0 && Game.state === 'PLAY' && Game.frameCount % 60 === 0) {
+                    let target = Game.findNearestTarget(this.x, this.y);
+                    if (target) {
+                        this.cooldown = 30;
+                        let dx = target.x + target.w/2 - this.x; 
+                        let dy = target.y + target.h/2 - this.y;
+                        let dist = Math.hypot(dx, dy) || 1;
+                        Game.bullets.push(new Bullet(this.x, this.y, (dx/dist)*12, (dy/dist)*12, 0.5, 10, 3, '#38bdf8', true));
+                        Game.spawnParticles(this.x + 8, this.y + 8, '#38bdf8', 4, 1);
+                    }
+                }
+            }
+            draw(ctx) {
+                ctx.save(); ctx.translate(this.x, this.y);
+                ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(8, 8, 8, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#0ea5e9';
+                ctx.beginPath(); ctx.arc(12, 8, 3, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                let bladeW = (Game.frameCount % 4 < 2) ? 20 : 4;
+                ctx.fillRect(8 - bladeW/2, -2, bladeW, 2);
+                ctx.restore();
+            }
+        }
+
+        class SupplyBird {
+            constructor() {
+                this.w = 44; this.h = 24;
+                this.x = GW + 50; this.y = Math.random() * 80 + 180; 
+                this.vx = -3.5; this.active = true;
+            }
+            update() {
+                this.x += this.vx; this.y += Math.sin(Game.frameCount * 0.1) * 2;
+                if (this.x < -100) this.active = false;
+            }
+            draw(ctx) {
+                ctx.save(); ctx.translate(this.x, this.y);
+                ctx.fillStyle = '#b45309'; ctx.fillRect(8, 6, 26, 12);
+                ctx.fillStyle = '#fde047'; ctx.fillRect(0, 10, 8, 4);
+                let wingY = (Game.frameCount % 16 < 8) ? -10 : 10;
+                ctx.fillStyle = '#92400e'; ctx.beginPath(); ctx.moveTo(14, 12); ctx.lineTo(24, wingY + 12); ctx.lineTo(34, 12); ctx.fill();
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(16, 20, 10, 10);
+                ctx.strokeStyle = 'white'; ctx.strokeRect(16, 20, 10, 10);
+                ctx.fillStyle = '#000'; ctx.font = 'bold 16px "Pixelify Sans"'; ctx.textAlign = 'center';
+                ctx.fillText("TIẾP TẾ!", this.w/2 + 1, -14);
+                ctx.fillStyle = '#38bdf8'; ctx.fillText("TIẾP TẾ!", this.w/2, -15);
+                ctx.restore();
+            }
+        }
+
+        class RainDrop {
+            constructor() {
+                this.x = Math.random() * (GW + 200);
+                this.y = Math.random() * -100;
+                this.vy = Math.random() * 8 + 12; this.vx = -3;
+                this.len = Math.random() * 10 + 10;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.y > GH) { this.y = -20; this.x = Math.random() * (GW + 200); }
+            }
+            draw(ctx) {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(this.x, this.y); ctx.lineTo(this.x - this.vx, this.y - this.len); ctx.stroke();
+            }
+        }
 
         class Platform {
             constructor(x, y, w) {
                 this.x = x; this.y = y; this.w = w; this.h = 16;
-                this.vx = -1.5; 
-                this.active = true;
+                this.vx = -2.2; this.active = true;
             }
             update() {
-                this.x += this.vx;
-                if (this.x < -this.w) this.active = false;
+                this.x += this.vx; if (this.x < -this.w) this.active = false;
             }
             draw(ctx) {
                 ctx.fillStyle = '#334155'; ctx.fillRect(this.x, this.y, this.w, this.h);
@@ -265,130 +274,157 @@
             constructor() {
                 this.w = 30; this.h = 45;
                 this.x = 80; this.y = GROUND_Y - this.h;
-                this.vx = 0; this.vy = 0;
-                this.speed = 4.8; this.jumpPower = -14;
-                this.isGrounded = true;
+                this.vy = 0;
+                this.jumpPower = -13.5;
+                
+                this.isGrounded = true; this.jumpCount = 0;
+                this.rollAngle = 0;
+                
                 this.lives = 3; this.weapon = 'N';
                 this.cooldown = 0; this.invuln = 0;
-                this.facing = 1; 
+                this.gunAngle = 0;
             }
 
             update() {
                 let prevY = this.y;
-                
-                this.vy += 0.8; // Trọng lực tăng nhẹ để game đầm hơn
-                this.y += this.vy;
-                
-                this.isGrounded = false;
-                let onPlatform = false;
+                this.vy += 0.8; this.y += this.vy;
+                this.isGrounded = false; let onPlatform = false;
 
                 for (let p of Game.platforms) {
                     if (this.vy >= 0 && prevY + this.h <= p.y + 20 && this.x + this.w > p.x && this.x < p.x + p.w) {
                         if (this.y + this.h >= p.y) {
-                            this.y = p.y - this.h;
-                            this.vy = 0;
-                            this.isGrounded = true;
-                            onPlatform = true;
-                            this.x += p.vx; 
+                            this.y = p.y - this.h; this.vy = 0;
+                            this.isGrounded = true; this.jumpCount = 0; onPlatform = true; this.x += p.vx; 
                             break;
                         }
                     }
                 }
-
                 if (!onPlatform && this.y >= GROUND_Y - this.h) {
-                    this.y = GROUND_Y - this.h;
-                    this.vy = 0; 
-                    this.isGrounded = true;
+                    this.y = GROUND_Y - this.h; this.vy = 0; 
+                    this.isGrounded = true; this.jumpCount = 0;
                 }
 
-                if (keys.left) { this.x -= this.speed; this.facing = -1; }
-                if (keys.right) { this.x += this.speed; this.facing = 1; }
-                if (this.x < 0) this.x = 0;
-                if (this.x > GW - this.w) this.x = GW - this.w;
-
-                if (keys.jump && this.isGrounded) {
-                    this.vy = this.jumpPower;
-                    this.isGrounded = false;
-                    Game.spawnParticles(this.x + this.w/2, this.y + this.h, ['#e2e8f0', '#cbd5e1'], 8, 3);
+                // Giữ vị trí người chơi chạy dọc mượt mà
+                if (Game.state === 'PLAY') {
+                    if (this.x < 80) this.x += 1.5;
+                    if (this.x > 80) this.x -= 1;
                 }
 
                 if (this.cooldown > 0) this.cooldown--;
-                // TỰ ĐỘNG BẮN
-                if (this.cooldown <= 0 && Game.state === 'PLAY') {
-                    this.shoot();
-                }
-                
                 if (this.invuln > 0) this.invuln--;
+                
+                // TỰ ĐỘNG DÒ TÌM VÀ BẮN QUÁI VẬT
+                if (this.cooldown <= 0 && Game.state === 'PLAY') {
+                    let px = this.x + this.w; let py = this.y + 15;
+                    let target = Game.findNearestTarget(px, py);
+                    
+                    if (target) {
+                        this.shootAt(target.x + target.w/2, target.y + target.h/2);
+                    } else {
+                        // Nếu không có quái, tự động bắn thẳng về phía trước để dọn đường
+                        this.shootAt(px + 200, py);
+                    }
+                }
             }
 
-            shoot() {
-                let dir = this.facing;
-                let py = this.y + 15;
-                
-                if (this.weapon === 'M') { 
-                    this.cooldown = 8;
-                    let px = dir === 1 ? this.x + this.w : this.x - 14;
-                    Game.bullets.push(new Bullet(px, py + (Math.random()*6-3), 16*dir, 0, 1, 14, 4, '#4ade80', true));
-                } else if (this.weapon === 'S') { 
-                    this.cooldown = 20;
-                    let px = dir === 1 ? this.x + this.w : this.x - 10;
-                    Game.bullets.push(new Bullet(px, py, 14*dir, -2.5, 1, 12, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 14*dir, 0, 1, 12, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 14*dir, 2.5, 1, 12, 10, '#f97316', true));
-                } else if (this.weapon === 'L') { 
-                    this.cooldown = 25;
-                    let px = dir === 1 ? this.x + this.w : this.x - 60;
-                    Game.bullets.push(new Bullet(px, py, 22*dir, 0, 2, 60, 6, '#22d3ee', true, true));
-                } else if (this.weapon === 'F') { 
-                    this.cooldown = 15;
-                    let px = dir === 1 ? this.x + this.w : this.x - 14;
-                    Game.bullets.push(new Bullet(px, py, 11*dir, 0, 2, 16, 16, '#facc15', true, false, true));
-                } else { 
-                    this.cooldown = 14;
-                    let px = dir === 1 ? this.x + this.w : this.x - 10;
-                    Game.bullets.push(new Bullet(px, py, 14*dir, 0, 1, 12, 4, COLORS.bulletPlayer, true));
+            doJump() {
+                if (this.isGrounded || this.jumpCount === 0) {
+                    this.vy = this.jumpPower; this.isGrounded = false; this.jumpCount = 1;
+                    Game.spawnParticles(this.x + this.w/2, this.y + this.h, ['#e2e8f0', '#cbd5e1'], 6, 3);
+                } else if (this.jumpCount === 1) { 
+                    this.vy = this.jumpPower * 0.9; this.jumpCount = 2; this.rollAngle = 0; 
+                    Game.spawnParticles(this.x + this.w/2, this.y + this.h, ['#60a5fa', '#38bdf8'], 10, 4);
                 }
-                Game.spawnParticles(dir === 1 ? this.x + this.w : this.x, py + 2, '#fbbf24', 2, 1);
+            }
+
+            shootAt(tx, ty) {
+                let px = this.x + this.w; let py = this.y + 15;
+                let dx = tx - px; let dy = ty - py;
+                let dist = Math.hypot(dx, dy) || 1;
+
+                this.gunAngle = Math.atan2(dy, dx); // Xoay tay cầm súng hướng về phía quái
+
+                let isCrit = Math.random() < 0.15;
+                let mulDmg = isCrit ? 2.5 : 1; let critColor = isCrit ? '#ef4444' : null;
+                
+                let speed = 18;
+                let vx = (dx/dist) * speed; let vy = (dy/dist) * speed;
+
+                if (this.weapon === 'M') { 
+                    this.cooldown = 6;
+                    let c = critColor || '#4ade80';
+                    let w = isCrit ? 20 : 14; let h = isCrit ? 8 : 4;
+                    let spreadY = vy + (Math.random()*2-1);
+                    Game.bullets.push(new Bullet(px, py, vx, spreadY, 1 * mulDmg, w, h, c, true));
+                } else if (this.weapon === 'S') { 
+                    this.cooldown = 16;
+                    let c = critColor || '#f97316'; let sz = isCrit ? 16 : 10;
+                    let baseAngle = this.gunAngle;
+                    for(let i = -1; i <= 1; i++) {
+                        let ang = baseAngle + (i * 0.22);
+                        Game.bullets.push(new Bullet(px, py, Math.cos(ang)*15, Math.sin(ang)*15, 1 * mulDmg, 12, sz, c, true));
+                    }
+                } else if (this.weapon === 'L') { 
+                    this.cooldown = 22;
+                    let c = critColor || '#22d3ee'; let h = isCrit ? 12 : 6;
+                    Game.bullets.push(new Bullet(px, py, vx*1.5, vy*1.5, 2 * mulDmg, 45, h, c, true, true));
+                } else if (this.weapon === 'F') { 
+                    this.cooldown = 14;
+                    let c = critColor || '#facc15'; let sz = isCrit ? 22 : 16;
+                    Game.bullets.push(new Bullet(px, py, vx * 0.75, vy * 0.75, 2 * mulDmg, sz, sz, c, true, false, true));
+                } else { 
+                    this.cooldown = 11;
+                    let c = critColor || COLORS.bulletPlayer;
+                    let w = isCrit ? 18 : 12; let h = isCrit ? 8 : 4;
+                    Game.bullets.push(new Bullet(px, py, vx, vy, 1 * mulDmg, w, h, c, true));
+                }
+                Game.spawnParticles(px, py, isCrit ? '#ef4444' : '#fbbf24', isCrit ? 5 : 2, isCrit ? 3 : 1);
             }
 
             draw(ctx) {
-                if (this.invuln > 0 && Game.frameCount % 10 < 5) return;
+                if (this.invuln > 0 && this.invuln <= 120 && Game.frameCount % 10 < 5) return;
+
+                if (this.invuln > 120) {
+                    ctx.save(); ctx.translate(this.x + this.w/2, this.y + this.h/2);
+                    ctx.beginPath(); ctx.arc(0, 0, 32 + Math.sin(Game.frameCount*0.2)*4, 0, Math.PI*2);
+                    ctx.fillStyle = 'rgba(56, 189, 248, 0.25)'; ctx.fill();
+                    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]);
+                    ctx.rotate(Game.frameCount * 0.05); ctx.stroke();
+                    ctx.restore();
+                }
 
                 ctx.save();
-                if (this.facing === -1) {
-                    ctx.translate(this.x + this.w, this.y);
-                    ctx.scale(-1, 1);
-                } else {
-                    ctx.translate(this.x, this.y);
+                if (this.jumpCount === 2) {
+                    this.rollAngle += 0.45;
+                    ctx.translate(this.x + this.w/2, this.y + this.h/2);
+                    ctx.rotate(this.rollAngle);
+                    ctx.translate(-(this.x + this.w/2), -(this.y + this.h/2));
                 }
+
+                ctx.translate(this.x, this.y);
                 
                 let walkOffset = 0;
-                if (Game.state === 'CUTSCENE' && Game.csPhase === 0) {
-                    walkOffset = Math.sin(Game.frameCount * 0.6) * 6;
-                } else {
-                    walkOffset = (this.isGrounded && (keys.left || keys.right)) ? Math.sin(Game.frameCount * 0.5) * 6 : 0;
-                }
+                if (Game.state === 'CUTSCENE' && Game.csPhase === 0) walkOffset = Math.sin(Game.frameCount * 0.6) * 6;
+                else walkOffset = (this.isGrounded && Game.state === 'PLAY') ? Math.sin(Game.frameCount * 0.6) * 6 : 0;
                 
-                ctx.fillStyle = COLORS.playerPants;
-                ctx.fillRect(4 + walkOffset, 30, 8, 15);
-                ctx.fillRect(18 - walkOffset, 30, 8, 15);
+                // Vẽ thân dưới và chân
+                ctx.fillStyle = COLORS.playerPants; ctx.fillRect(4 + walkOffset, 30, 8, 15); ctx.fillRect(18 - walkOffset, 30, 8, 15);
+                // Vẽ áo
+                ctx.fillStyle = COLORS.playerShirt; ctx.fillRect(5, 15, 20, 18);
+                // Đầu
+                ctx.fillStyle = COLORS.playerSkin; ctx.beginPath(); ctx.arc(15, 8, 12, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#b91c1c'; ctx.fillRect(3, 2, 24, 4); // Băng đô đỏ
+                ctx.fillStyle = 'black'; ctx.fillRect(18, 5, 3, 3); // Mắt
                 
-                ctx.fillStyle = COLORS.playerShirt;
-                ctx.fillRect(5, 15, 20, 18);
-                
-                ctx.fillStyle = COLORS.playerSkin;
-                ctx.beginPath(); ctx.arc(15, 8, 12, 0, Math.PI*2); ctx.fill();
-                
-                ctx.fillStyle = '#b91c1c';
-                ctx.fillRect(3, 2, 24, 4);
-
-                ctx.fillStyle = 'black';
-                ctx.fillRect(18, 5, 3, 3);
-                
-                ctx.fillStyle = '#475569';
+                // Cánh tay cầm súng (xoay mượt theo hướng ngắm quái hiện tại)
+                ctx.save();
+                ctx.translate(15, 21);
+                ctx.rotate(this.gunAngle);
                 let recoil = this.cooldown > Math.max(0, this.cooldown - 4) ? -3 : 0;
-                ctx.fillRect(15 + recoil, 18, 22, 6);
-                
+                ctx.fillStyle = '#475569';
+                ctx.fillRect(recoil, -3, 22, 6);
+                ctx.restore();
+
                 ctx.restore();
             }
         }
@@ -400,94 +436,91 @@
                 this.color = color; this.isPlayer = isPlayer;
                 this.isPiercing = isPiercing; this.hasGravity = hasGravity;
                 this.bounces = 0; this.active = true;
+                this.angle = Math.atan2(vy, vx);
             }
             update() {
-                if (this.hasGravity) this.vy += 0.4;
+                if (this.hasGravity) {
+                    this.vy += 0.4;
+                    this.angle = Math.atan2(this.vy, this.vx);
+                }
                 this.x += this.vx; this.y += this.vy;
                 
                 if (this.hasGravity && this.y > GROUND_Y - this.h) {
-                    this.y = GROUND_Y - this.h;
-                    this.vy = -6; 
-                    this.bounces++;
+                    this.y = GROUND_Y - this.h; this.vy = -6; this.bounces++;
                     if (this.bounces > 2) this.active = false;
                 }
-
                 if (this.x < -100 || this.x > GW + 100 || this.y < -100 || this.y > GH + 100) this.active = false;
             }
             draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x + this.w/2, this.y + this.h/2);
+                ctx.rotate(this.angle);
+
                 ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10; ctx.shadowColor = this.color;
                 if (this.hasGravity) {
-                    ctx.beginPath(); ctx.arc(this.x + this.w/2, this.y + this.h/2, this.w/2, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(this.x + this.w/2, this.y + this.h/2, this.w/4, 0, Math.PI*2); ctx.fill();
+                    ctx.globalAlpha = 0.4;
+                    ctx.beginPath(); ctx.arc(0, 0, this.w/2 + 4, 0, Math.PI*2); ctx.fill();
+                    ctx.globalAlpha = 1.0;
+                    ctx.beginPath(); ctx.arc(0, 0, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(0, 0, this.w/4, 0, Math.PI*2); ctx.fill();
                 } else {
-                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillRect(-this.w/2 - 2, -this.h/2 - 2, this.w + 4, this.h + 4);
+                    ctx.globalAlpha = 1.0;
+                    ctx.fillRect(-this.w/2, -this.h/2, this.w, this.h);
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                    ctx.fillRect(this.x + 1, this.y + 1, this.w - 2, this.h - 2);
+                    ctx.fillRect(-this.w/2 + 1, -this.h/2 + 1, this.w - 2, this.h - 2);
                 }
-                ctx.shadowBlur = 0;
+                ctx.restore();
             }
         }
 
         class Enemy {
             constructor(type, dir = 1) {
-                this.type = type; 
-                this.active = true;
-                this.dir = dir; 
-                this.x = dir === 1 ? GW + 20 : -40; 
-                this.flash = 0;
+                this.type = type; this.active = true; this.dir = dir; 
+                this.x = dir === 1 ? GW + 20 : -40; this.flash = 0;
                 
                 if (type === 'soldier') {
                     this.y = GROUND_Y - 30; this.w = 20; this.h = 30;
                     this.hp = 2; this.score = 5; 
-                    this.vx = (-2.5 - Math.random()) * dir;
-                    this.shootTimer = Math.floor(Math.random() * 60 + 40);
+                    this.vx = (-2 - Math.random()) * dir;
+                    this.shootTimer = Math.floor(Math.random() * 60 + 50);
                 } else if (type === 'plane') {
-                    this.y = Math.random() * 60 + 300; 
-                    this.w = 40; this.h = 25;
+                    this.y = Math.random() * 80 + 280; this.w = 40; this.h = 25;
                     this.hp = 3; this.score = 10; 
-                    this.vx = (-4 - Math.random()*2) * dir; 
-                    this.baseY = this.y;
+                    this.vx = (-3 - Math.random()*2) * dir; this.baseY = this.y;
                 } else if (type === 'drone') {
-                    this.y = Math.random() * 50 + 150;
-                    this.w = 30; this.h = 20;
+                    this.y = Math.random() * 50 + 150; this.w = 30; this.h = 20;
                     this.hp = 4; this.score = 15;
-                    this.vx = (-2.5 - Math.random()) * dir;
+                    this.vx = (-2 - Math.random()) * dir;
                     this.shootTimer = Math.floor(Math.random() * 50 + 50);
                 }
             }
             update() {
                 this.x += this.vx;
-                
-                if (this.type === 'plane') {
-                    this.y = this.baseY + Math.sin(Game.frameCount * 0.05) * 30;
-                } else if (this.type === 'soldier') {
+                if (this.type === 'plane') { this.y = this.baseY + Math.sin(Game.frameCount * 0.05) * 30; } 
+                else if (this.type === 'soldier') {
                     this.shootTimer--;
                     if (this.shootTimer <= 0) {
                         let px = this.dir === 1 ? this.x - 10 : this.x + this.w;
-                        Game.bullets.push(new Bullet(px, this.y + 10, -5 * this.dir, 0, 1, 10, 4, '#f59e0b', false));
-                        this.shootTimer = Math.floor(Math.random() * 60 + 60); 
+                        Game.bullets.push(new Bullet(px, this.y + 10, -5.5 * this.dir, 0, 1, 10, 4, '#f59e0b', false));
+                        this.shootTimer = Math.floor(Math.random() * 60 + 70); 
                     }
                 } else if (this.type === 'drone') {
                     this.shootTimer--;
                     if (this.shootTimer <= 0) {
-                        Game.bullets.push(new Bullet(this.x + this.w/2, this.y + this.h, 0, 2, 1, 14, 14, '#ef4444', false, false, true));
-                        this.shootTimer = Math.floor(Math.random() * 80 + 60);
+                        Game.bullets.push(new Bullet(this.x + this.w/2, this.y + this.h, 0, 2.5, 1, 14, 14, '#ef4444', false, false, true));
+                        this.shootTimer = Math.floor(Math.random() * 80 + 70);
                     }
                 }
-
                 if (this.dir === 1 && this.x < -100) this.active = false;
                 if (this.dir === -1 && this.x > GW + 100) this.active = false;
                 if (this.flash > 0) this.flash--;
             }
             draw(ctx) {
                 ctx.save(); 
-                if (this.dir === -1) {
-                    ctx.translate(this.x + this.w, this.y);
-                    ctx.scale(-1, 1);
-                } else {
-                    ctx.translate(this.x, this.y);
-                }
+                if (this.dir === -1) { ctx.translate(this.x + this.w, this.y); ctx.scale(-1, 1); } 
+                else { ctx.translate(this.x, this.y); }
                 
                 if (this.flash > 0) {
                     ctx.fillStyle = 'white'; ctx.fillRect(0, 0, this.w, this.h);
@@ -505,8 +538,7 @@
                         ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(30, 10); ctx.lineTo(15, 20); ctx.lineTo(0, 10); ctx.fill();
                         ctx.fillStyle = '#1e3a8a'; ctx.beginPath(); ctx.arc(15, 10, 6, 0, Math.PI*2); ctx.fill();
                         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                        let rw = (Game.frameCount % 2 === 0) ? 30 : 10;
-                        ctx.fillRect(15 - rw/2, -5, rw, 3);
+                        let rw = (Game.frameCount % 2 === 0) ? 30 : 10; ctx.fillRect(15 - rw/2, -5, rw, 3);
                     }
                 }
                 ctx.restore();
@@ -522,12 +554,10 @@
                     this.w = 140; this.h = 110; this.y = GROUND_Y - this.h;
                     this.hp = 250; this.maxHp = 250; this.score = 100;
                 } else if (type === 'heli') {
-                    this.w = 100; this.h = 60; 
-                    this.y = 280; this.baseY = 280;
+                    this.w = 100; this.h = 60; this.y = 280; this.baseY = 280;
                     this.hp = 400; this.maxHp = 400; this.score = 200;
                 } else if (type === 'dragon') {
-                    this.w = 100; this.h = 100; 
-                    this.y = 260; this.baseY = 260;
+                    this.w = 100; this.h = 100; this.y = 260; this.baseY = 260;
                     this.hp = 800; this.maxHp = 800; this.score = 500;
                 }
             }
@@ -536,12 +566,9 @@
                 if (this.flash > 0) this.flash--;
 
                 if (this.state === 'enter') {
-                    this.x -= 2;
-                    if (this.x <= GW - this.w - 20) this.state = 'attack';
+                    this.x -= 2; if (this.x <= GW - this.w - 20) this.state = 'attack';
                 } else if (this.state === 'attack') {
-                    if (this.timer % 90 === 0) {
-                        Game.platforms.push(new Platform(GW + 50, GROUND_Y - 70, 90));
-                    }
+                    if (this.timer % 90 === 0) Game.platforms.push(new Platform(GW + 50, GROUND_Y - 70, 90));
 
                     if (this.type === 'tank') {
                         if (this.timer % 80 === 0) { 
@@ -553,34 +580,32 @@
                         }
                     } else if (this.type === 'heli') {
                         this.y = this.baseY + Math.sin(this.timer * 0.04) * 40; 
-                        if (this.timer % 60 === 0) { 
-                            let dx = (Game.player.x + Game.player.w/2) - (this.x);
-                            let dy = (Game.player.y + Game.player.h/2) - (this.y + this.h);
+                        if (this.timer % 200 > 150 && this.timer % 5 === 0) {
+                             Game.bullets.push(new Bullet(this.x + 20, this.y + this.h, -4 - Math.random()*2, 6, 1, 8, 8, '#22d3ee', false));
+                        } else if (this.timer % 60 === 0) { 
+                            let dx = (Game.player.x + Game.player.w/2) - (this.x); let dy = (Game.player.y + Game.player.h/2) - (this.y + this.h);
                             let dist = Math.hypot(dx, dy);
                             Game.bullets.push(new Bullet(this.x, this.y + this.h, (dx/dist)*6, (dy/dist)*6, 1, 12, 12, '#a855f7', false));
                         }
                         if (this.timer % 150 === 0) {
-                            let d = new Enemy('drone', 1);
-                            d.x = this.x; d.y = this.y + this.h;
+                            let d = new Enemy('drone', 1); d.x = this.x; d.y = this.y + this.h;
                             Game.enemies.push(d);
                         }
                     } else if (this.type === 'dragon') {
                         this.y = this.baseY + Math.sin(this.timer * 0.05) * 60; 
-                        if (this.timer % 60 === 0) { 
-                            for(let i=-3; i<=3; i+=3) {
-                                Game.bullets.push(new Bullet(this.x, this.y + 40, -6, i, 1, 16, 16, '#f97316', false));
-                            }
+                        if (this.timer % 120 > 80 && this.timer % 5 === 0) {
+                             Game.bullets.push(new Bullet(this.x, this.y + 40, -8 - Math.random()*3, Math.random()*4 - 1, 1, 14, 14, '#ef4444', false));
+                             Game.spawnParticles(this.x, this.y+40, '#f97316', 3, 4);
+                        } else if (this.timer % 60 === 0) { 
+                            for(let i=-4; i<=4; i+=4) Game.bullets.push(new Bullet(this.x, this.y + 40, -6, i, 1, 16, 16, '#facc15', false));
                         }
                         if (this.timer % 300 === 0) { 
-                            this.state = 'dash';
-                            Game.spawnText("CẨN THẬN!", GW/2, GH/2, '#ef4444', 60);
+                            this.state = 'dash'; Game.spawnText("RỒNG CUỒNG NỘ!", GW/2, GH/2, '#ef4444', 60);
                         }
                     }
                 } else if (this.state === 'dash') {
-                    this.x -= 15;
-                    if (this.x < -this.w) {
-                        this.x = GW + 50; this.state = 'enter';
-                    }
+                    this.x -= 18;
+                    if (this.x < -this.w) { this.x = GW + 50; this.state = 'enter'; }
                 }
             }
             draw(ctx) {
@@ -591,8 +616,7 @@
                     if (this.type === 'tank') {
                         ctx.fillStyle = '#475569'; ctx.fillRect(0, 50, this.w, 60); 
                         ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.arc(this.w/2, 50, 50, Math.PI, 0); ctx.fill(); 
-                        ctx.fillStyle = '#1e293b'; ctx.fillRect(-30, 25, 70, 15); 
-                        ctx.fillRect(-10, 80, 20, 8); 
+                        ctx.fillStyle = '#1e293b'; ctx.fillRect(-30, 25, 70, 15); ctx.fillRect(-10, 80, 20, 8); 
                     } else if (this.type === 'heli') {
                         ctx.fillStyle = '#0f766e'; ctx.beginPath(); ctx.ellipse(this.w/2, this.h/2, this.w/2, this.h/2, 0, 0, Math.PI*2); ctx.fill();
                         ctx.fillStyle = '#cbd5e1'; ctx.fillRect(-20, this.h/2 - 5, 20, 10); 
@@ -606,7 +630,6 @@
                         ctx.fillStyle = 'black'; ctx.beginPath(); ctx.arc(8, 20, 2, 0, Math.PI*2); ctx.fill();
                     }
                 }
-                
                 if (this.state !== 'enter') {
                     let hpRatio = Math.max(0, this.hp/this.maxHp);
                     ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, -25, this.w, 12);
@@ -621,41 +644,32 @@
         class Item {
             constructor(x, y, type) {
                 this.x = x; this.y = y; this.w = 30; this.h = 30;
-                this.type = type; this.active = true;
-                this.vy = -5;
+                this.type = type; this.active = true; this.vy = -5;
             }
             update() {
-                this.x -= 2;
-                this.vy += 0.4; this.y += this.vy;
-                if (this.y > GROUND_Y - 40) { 
-                    this.y = GROUND_Y - 40; 
-                    this.vy = -6; 
-                }
+                this.x -= 2; this.vy += 0.4; this.y += this.vy;
+                if (this.y > GROUND_Y - 40) { this.y = GROUND_Y - 40; this.vy = -6; }
                 if (this.x < -50) this.active = false;
             }
             draw(ctx) {
-                ctx.shadowColor = '#facc15'; ctx.shadowBlur = 10;
+                ctx.fillStyle = 'rgba(250, 204, 21, 0.4)'; ctx.fillRect(this.x - 4, this.y - 4, this.w + 8, this.h + 8);
                 ctx.fillStyle = '#b45309'; ctx.fillRect(this.x, this.y, this.w, this.h);
                 ctx.fillStyle = '#78350f'; 
                 ctx.fillRect(this.x, this.y, this.w, 4); ctx.fillRect(this.x, this.y + this.h - 4, this.w, 4);
                 ctx.fillRect(this.x, this.y, 4, this.h); ctx.fillRect(this.x + this.w - 4, this.y, 4, this.h);
                 
-                ctx.fillStyle = '#fef08a'; ctx.font = 'bold 22px "Pixelify Sans"'; ctx.textAlign = 'center';
-                ctx.shadowColor = 'black'; ctx.shadowBlur = 4;
-                ctx.fillText(this.type, this.x + this.w/2, this.y + 24);
-                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#000'; ctx.font = 'bold 22px "Pixelify Sans"'; ctx.textAlign = 'center';
+                ctx.fillText(this.type, this.x + this.w/2 + 2, this.y + 26);
+                ctx.fillStyle = '#fef08a'; ctx.fillText(this.type, this.x + this.w/2, this.y + 24);
             }
         }
-
-        // ==========================================
-        // MAIN GAME ENGINE
-        // ==========================================
 
         const Game = {
             state: 'CUTSCENE',
             frameCount: 0, score: 0, bgScroll: 0, shake: 0,
             
-            player: null, bullets: [], enemies: [], items: [], particles: [], texts: [], platforms: [],
+            player: null, pet: null, bullets: [], enemies: [], items: [], particles: [], texts: [], platforms: [],
+            birds: [], raindrops: [], weather: 'clear',
             currentBoss: null,
             bossStages: [
                 { score: 100, type: 'tank', done: false },
@@ -666,53 +680,95 @@
             csPhase: 0, csTimer: 0, csGirlX: 0, csGirlY: 0, csDragonX: 0, csDragonY: 0,
 
             init() { 
-                Game.startCutscene();
-                requestAnimationFrame(() => Game.loop()); 
+                this.startCutscene();
+                requestAnimationFrame(() => this.loop()); 
+            },
+
+            // Thuật toán dò tìm mục tiêu tối ưu để auto bắn
+            findNearestTarget(fromX, fromY) {
+                let target = null;
+                let minDist = 380; // Tầm bắn xa tối đa để tránh bắn quá tầm màn hình
+
+                // 1. Dò tìm boss
+                if (this.currentBoss && this.currentBoss.state !== 'enter') {
+                    let d = Math.hypot((this.currentBoss.x + this.currentBoss.w/2) - fromX, (this.currentBoss.y + this.currentBoss.h/2) - fromY);
+                    if (d < minDist) {
+                        minDist = d;
+                        target = this.currentBoss;
+                    }
+                }
+
+                // 2. Dò tìm lính/quái
+                for (let e of this.enemies) {
+                    if (e.x > 0 && e.x < GW + 50) { // Chỉ ngắm quái đang ở trên màn hình
+                        let d = Math.hypot((e.x + e.w/2) - fromX, (e.y + e.h/2) - fromY);
+                        if (d < minDist) {
+                            minDist = d;
+                            target = e;
+                        }
+                    }
+                }
+
+                // 3. Dò tìm chim tiếp tế
+                for (let b of this.birds) {
+                    if (b.x > 0 && b.x < GW + 50) {
+                        let d = Math.hypot((b.x + b.w/2) - fromX, (b.y + b.h/2) - fromY);
+                        if (d < minDist) {
+                            minDist = d;
+                            target = b;
+                        }
+                    }
+                }
+
+                // 4. Dò tìm hộp đạn (để tự bắn tự ăn vật phẩm)
+                for (let it of this.items) {
+                    if (it.x > 0 && it.x < GW + 50) {
+                        let d = Math.hypot((it.x + it.w/2) - fromX, (it.y + it.h/2) - fromY);
+                        if (d < minDist) {
+                            minDist = d;
+                            target = it;
+                        }
+                    }
+                }
+
+                return target;
             },
 
             startCutscene() {
-                document.getElementById('controls-layer').style.display = 'none';
-                
-                Game.state = 'CUTSCENE'; 
-                Game.csPhase = 0; Game.csTimer = 0;
-                
-                Game.player = new Player();
-                Game.player.x = -50; 
-                
-                Game.csGirlX = GW/2 + 30;
-                Game.csGirlY = GROUND_Y - 45; 
-                
-                Game.csDragonX = GW + 50;
-                Game.csDragonY = -150; 
-                
-                Game.texts = []; Game.items = []; Game.platforms = [];
+                document.getElementById('hint').style.display = 'none';
+                this.state = 'CUTSCENE'; this.csPhase = 0; this.csTimer = 0;
+                this.player = new Player(); this.player.x = -50; 
+                this.csGirlX = GW/2 + 30; this.csGirlY = GROUND_Y - 45; 
+                this.csDragonX = GW + 50; this.csDragonY = -150; 
+                this.texts = []; this.items = []; this.platforms = []; this.birds = []; this.raindrops = [];
+                this.weather = 'clear';
             },
 
             startGame() {
-                Game.state = 'PLAY';
-                Game.score = 0; Game.frameCount = 0;
-                Game.bullets = []; Game.enemies = []; Game.particles = []; Game.texts = []; Game.platforms = [];
-                Game.items = [];
-                Game.items.push(new Item(80 + 50, GROUND_Y - 30, 'M'));
+                document.getElementById('hint').style.display = 'block';
+                this.state = 'PLAY'; this.score = 0; this.frameCount = 0;
+                this.bullets = []; this.enemies = []; this.particles = []; this.texts = []; this.platforms = [];
+                this.birds = []; this.raindrops = []; this.weather = 'clear';
+                this.items = []; this.items.push(new Item(250, GROUND_Y - 30, 'M'));
                 
-                Game.currentBoss = null;
-                Game.bossStages.forEach(b => b.done = false);
-                Game.player = new Player(); 
-                document.getElementById('controls-layer').style.display = 'flex';
-                
-                Game.spawnText("CHẠM ĐỂ NHẢY - TỰ ĐỘNG BẮN", GW/2, GH/2 + 50, '#4ade80', 160);
+                this.currentBoss = null; this.bossStages.forEach(b => b.done = false);
+                this.player = new Player(); this.pet = new Pet(this.player); 
+
+                this.spawnText("CHẠM BẤT KỲ ĐÂU ĐỂ NÉ!", GW/2, GH/2 + 50, '#4ade80', 160);
+                setTimeout(() => { document.getElementById('hint').style.display = 'none'; }, 6000);
             },
 
             resetGame() {
                 document.getElementById('game-over-menu').classList.remove('show');
                 document.getElementById('victory-menu').classList.remove('show');
-                Game.startGame();
+                this.startGame();
             },
 
             spawnParticles(x, y, color, count, size) {
-                for(let i=0; i<count; i++) {
+                let maxP = (window.innerWidth < 600) ? Math.min(count, 10) : count;
+                for(let i=0; i<maxP; i++) {
                     let col = Array.isArray(color) ? color[Math.floor(Math.random()*color.length)] : color;
-                    Game.particles.push({
+                    this.particles.push({
                         x: x, y: y,
                         vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 0.5) * 10 - 2,
                         life: 1.0, color: col, size: Math.random() * size + size
@@ -721,227 +777,251 @@
             },
 
             spawnText(txt, x, y, color, life = 60) {
-                Game.texts.push({ txt, x, y, life: life, maxLife: life, color });
+                this.texts.push({ txt, x, y, life: life, maxLife: life, color });
             },
 
             update() {
-                Game.frameCount++;
-                if (Game.shake > 0) Game.shake--;
+                this.frameCount++;
+                if (this.shake > 0) this.shake--;
 
-                if (Game.state === 'CUTSCENE') {
-                    Game.csTimer++;
-                    if (Game.csPhase === 0) {
-                        Game.player.x += 2.5;
-                        if (Game.player.x >= GW/2 - 50) {
-                            Game.player.x = GW/2 - 50;
-                            Game.csPhase = 1; Game.csTimer = 0;
-                        }
-                    } else if (Game.csPhase === 1) {
-                        if (Game.csTimer === 20) Game.spawnText("Làm vợ anh nhé!", Game.player.x + 15, Game.player.y - 20, 'white');
-                        if (Game.csTimer === 90) Game.spawnText("Vâng! ♥", Game.csGirlX + 15, Game.csGirlY - 20, '#f472b6');
-                        if (Game.csTimer === 170) { Game.csPhase = 2; Game.csTimer = 0; }
-                    } else if (Game.csPhase === 2) {
-                        let targetX = Game.csGirlX - 40;
-                        let targetY = Game.csGirlY - 60;
-                        let dx = targetX - Game.csDragonX;
-                        let dy = targetY - Game.csDragonY;
+                if (this.weather === 'rain') {
+                    if (this.raindrops.length < 80) this.raindrops.push(new RainDrop());
+                    this.raindrops.forEach(r => r.update());
+                }
+
+                if (this.state === 'CUTSCENE') {
+                    this.csTimer++;
+                    if (this.csPhase === 0) {
+                        this.player.x += 2.5;
+                        if (this.player.x >= GW/2 - 50) { this.player.x = GW/2 - 50; this.csPhase = 1; this.csTimer = 0; }
+                    } else if (this.csPhase === 1) {
+                        if (this.csTimer === 20) this.spawnText("Làm vợ anh nhé!", this.player.x + 15, this.player.y - 20, 'white');
+                        if (this.csTimer === 90) this.spawnText("Vâng! ♥", this.csGirlX + 15, this.csGirlY - 20, '#f472b6');
+                        if (this.csTimer === 170) { this.csPhase = 2; this.csTimer = 0; }
+                    } else if (this.csPhase === 2) {
+                        let targetX = this.csGirlX - 40; let targetY = this.csGirlY - 60;
+                        let dx = targetX - this.csDragonX; let dy = targetY - this.csDragonY;
                         let dist = Math.hypot(dx, dy);
-                        
                         if (dist < 12) {
-                            Game.csDragonX = targetX; Game.csDragonY = targetY;
-                            Game.shake = 30; 
-                            Game.spawnParticles(Game.csDragonX + 50, GROUND_Y, '#475569', 25, 4); 
-                            Game.spawnText("CỨU EM!!!", Game.csGirlX + 15, Game.csGirlY - 30, '#ef4444');
-                            Game.csPhase = 3; Game.csTimer = 0;
+                            this.csDragonX = targetX; this.csDragonY = targetY; this.shake = 30; 
+                            this.spawnParticles(this.csDragonX + 50, GROUND_Y, '#475569', 25, 4); 
+                            this.spawnText("CỨU EM!!!", this.csGirlX + 15, this.csGirlY - 30, '#ef4444');
+                            this.csPhase = 3; this.csTimer = 0;
                         } else {
-                            Game.csDragonX += (dx / dist) * 11;
-                            Game.csDragonY += (dy / dist) * 11;
+                            this.csDragonX += (dx / dist) * 11; this.csDragonY += (dy / dist) * 11;
                         }
-                    } else if (Game.csPhase === 3) {
-                        if (Game.csTimer > 25) { 
-                            Game.csDragonX += 5; Game.csDragonY -= 6;
-                            Game.csGirlX = Game.csDragonX + 20; Game.csGirlY = Game.csDragonY + 60;
+                    } else if (this.csPhase === 3) {
+                        if (this.csTimer > 25) { 
+                            this.csDragonX += 5; this.csDragonY -= 6;
+                            this.csGirlX = this.csDragonX + 20; this.csGirlY = this.csDragonY + 60;
                         }
-                        if (Game.csTimer === 70) Game.spawnText("TRẢ VỢ CHO TAAA!", Game.player.x + 15, Game.player.y - 20, 'red');
-                        if (Game.csDragonY < -150) { Game.csPhase = 4; Game.csTimer = 0; }
-                    } else if (Game.csPhase === 4) {
-                        if (Game.csTimer === 30) Game.startGame();
+                        if (this.csTimer === 70) this.spawnText("ĐỨNG LẠI TÊN KIA!", this.player.x + 15, this.player.y - 20, 'red');
+                        if (this.csDragonY < -150) { this.csPhase = 4; this.csTimer = 0; }
+                    } else if (this.csPhase === 4) {
+                        if (this.csTimer > 30) this.startGame();
                     }
                     
-                    Game.items.forEach(it => it.update());
-                    Game.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
-                    Game.particles = Game.particles.filter(p => p.life > 0);
-                    Game.texts.forEach(t => t.life--);
-                    Game.texts = Game.texts.filter(t => t.life > 0);
+                    this.items.forEach(it => it.update());
+                    this.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
+                    this.particles = this.particles.filter(p => p.life > 0);
+                    this.texts.forEach(t => t.life--); this.texts = this.texts.filter(t => t.life > 0);
                     return; 
                 }
 
-                if (Game.state === 'WIN') return;
-                if (Game.state !== 'PLAY') return;
+                if (this.state === 'WIN') return;
+                if (this.state !== 'PLAY') return;
 
-                Game.bgScroll += 1.5; 
-                Game.player.update();
+                this.bgScroll += 2.2; // Tốc độ chạy nhanh hơn kích thích cảm giác né tránh kịch tính
+                this.player.update();
+                this.pet.update(); 
 
-                if (!Game.currentBoss && Game.frameCount % 120 === 0 && Math.random() > 0.3) {
-                    let pY = GROUND_Y - 60 - Math.random() * 40;
-                    Game.platforms.push(new Platform(GW + 50, pY, 90 + Math.random()*40));
+                if (this.frameCount > 0 && this.frameCount % 900 === 0) this.birds.push(new SupplyBird());
+                this.birds.forEach(b => b.update()); this.birds = this.birds.filter(b => b.active);
+
+                if (!this.currentBoss && this.frameCount % 120 === 0 && Math.random() > 0.3) {
+                    this.platforms.push(new Platform(GW + 50, GROUND_Y - 60 - Math.random() * 40, 90 + Math.random()*40));
                 }
+                this.platforms.forEach(p => p.update()); this.platforms = this.platforms.filter(p => p.active);
 
-                Game.platforms.forEach(p => p.update());
-                Game.platforms = Game.platforms.filter(p => p.active);
-
-                if (!Game.currentBoss) {
-                    if (Game.frameCount % 10 === 0) Game.score++; 
+                if (!this.currentBoss) {
+                    if (this.frameCount % 10 === 0) this.score++; 
                     
-                    let nextBoss = Game.bossStages.find(b => !b.done && Game.score >= b.score);
+                    let nextBoss = this.bossStages.find(b => !b.done && this.score >= b.score);
                     if (nextBoss) {
-                        Game.currentBoss = new Boss(nextBoss.type);
-                        Game.spawnText("WARNING BOSS!", GW/2, GH/2, '#ef4444');
-                        Game.shake = 20;
+                        this.currentBoss = new Boss(nextBoss.type);
+                        this.spawnText("CẢNH BÁO BOSS!", GW/2, GH/2, '#ef4444');
+                        this.shake = 20;
+                        if (nextBoss.type === 'heli' || nextBoss.type === 'dragon') this.weather = 'rain';
                     } else {
-                        let spawnRate = Math.max(25, 75 - Math.floor(Game.score/5));
-                        if (Game.frameCount % spawnRate === 0) {
+                        this.weather = 'clear'; this.raindrops = [];
+                        let spawnRate = Math.max(30, 80 - Math.floor(this.score/5));
+                        if (this.frameCount % spawnRate === 0) {
                             let typeRnd = Math.random();
                             let type = typeRnd > 0.8 ? 'drone' : (typeRnd > 0.4 ? 'plane' : 'soldier');
-                            let dir = Math.random() > 0.5 ? 1 : -1;
-                            Game.enemies.push(new Enemy(type, dir));
+                            this.enemies.push(new Enemy(type, Math.random() > 0.6 ? 1 : -1));
                         }
-                        
-                        if (Game.frameCount % 250 === 0 && Math.random() > 0.3) {
+                        if (this.frameCount % 250 === 0 && Math.random() > 0.3) {
                             let types = ['M', 'S', 'L', 'F'];
-                            Game.items.push(new Item(GW, -50, types[Math.floor(Math.random()*types.length)]));
+                            this.items.push(new Item(GW, -50, types[Math.floor(Math.random()*types.length)]));
                         }
                     }
                 } else {
-                    Game.currentBoss.update();
-                    if (!Game.currentBoss.active) {
-                        let bStage = Game.bossStages.find(b => b.type === Game.currentBoss.type);
+                    this.currentBoss.update();
+                    if (!this.currentBoss.active) {
+                        let bStage = this.bossStages.find(b => b.type === this.currentBoss.type);
                         if (bStage) bStage.done = true;
                         
-                        if (Game.currentBoss.type === 'dragon') {
-                            Game.state = 'WIN';
-                            document.getElementById('controls-layer').style.display = 'none';
+                        if (this.currentBoss.type === 'dragon') {
+                            this.state = 'WIN';
                             document.getElementById('victory-menu').classList.add('show');
-                            document.getElementById('win-score').innerText = Game.score;
-                            Game.spawnParticles(GW/2, GH/2, ['#facc15', '#f472b6', '#38bdf8'], 200, 6);
+                            document.getElementById('win-score').innerText = this.score;
+                            this.spawnParticles(GW/2, GH/2, ['#facc15', '#f472b6', '#38bdf8'], 150, 6);
                         }
-                        Game.currentBoss = null;
+                        this.currentBoss = null; this.weather = 'clear'; 
                     }
                 }
 
-                Game.bullets.forEach(b => b.update());
-                Game.bullets = Game.bullets.filter(b => b.active);
-                Game.enemies.forEach(e => e.update());
-                Game.enemies = Game.enemies.filter(e => e.active);
-                Game.items.forEach(i => i.update());
-                Game.items = Game.items.filter(i => i.active);
+                this.bullets.forEach(b => b.update()); this.bullets = this.bullets.filter(b => b.active);
+                this.enemies.forEach(e => e.update()); this.enemies = this.enemies.filter(e => e.active);
+                this.items.forEach(i => i.update()); this.items = this.items.filter(i => i.active);
 
-                let pRect = { x: Game.player.x + 5, y: Game.player.y + 5, w: Game.player.w - 10, h: Game.player.h - 10 };
-
-                for (let i = 0; i < Game.bullets.length; i++) {
-                    let b = Game.bullets[i];
+                // Kiểm tra va chạm đạn của người chơi với quái và vật phẩm
+                for (let i = 0; i < this.bullets.length; i++) {
+                    let b = this.bullets[i];
                     if (!b.isPlayer || !b.active) continue;
                     let bRect = { x: b.x, y: b.y, w: b.w, h: b.h };
                     let hitSomething = false;
 
-                    if (Game.currentBoss && Game.currentBoss.state !== 'enter') {
-                        let boss = Game.currentBoss;
+                    // 1. Trúng Boss
+                    if (this.currentBoss && this.currentBoss.state !== 'enter') {
+                        let boss = this.currentBoss;
                         if (checkAABB(bRect, { x: boss.x, y: boss.y, w: boss.w, h: boss.h })) {
                             boss.hp -= b.damage; boss.flash = 3; hitSomething = true;
-                            Game.spawnParticles(b.x, b.y, COLORS.spark, 3, 2);
+                            this.spawnParticles(b.x, b.y, b.damage >= 2 ? '#ef4444' : COLORS.spark, 4, b.damage >= 2 ? 3 : 2);
                             if (boss.hp <= 0) {
-                                Game.score += boss.score; boss.active = false; Game.shake = 30;
-                                Game.spawnParticles(boss.x + boss.w/2, boss.y + boss.h/2, ['#ef4444', '#facc15'], 80, 6);
+                                this.score += boss.score; boss.active = false; this.shake = 30;
+                                this.spawnParticles(boss.x + boss.w/2, boss.y + boss.h/2, ['#ef4444', '#facc15'], 80, 6);
                             }
                         }
                     }
 
+                    // 2. Trúng lính
                     if (!hitSomething) {
-                        for (let j = 0; j < Game.enemies.length; j++) {
-                            let e = Game.enemies[j];
+                        for (let j = 0; j < this.enemies.length; j++) {
+                            let e = this.enemies[j];
                             if (checkAABB(bRect, { x: e.x, y: e.y, w: e.w, h: e.h })) {
                                 e.hp -= b.damage; e.flash = 3; hitSomething = true;
-                                Game.spawnParticles(b.x, b.y, COLORS.spark, 3, 2);
+                                this.spawnParticles(b.x, b.y, b.damage >= 2 ? '#ef4444' : COLORS.spark, 3, 2);
                                 if (e.hp <= 0) {
-                                    Game.score += e.score; e.active = false;
-                                    Game.spawnParticles(e.x + e.w/2, e.y + e.h/2, '#ef4444', 10, 3);
+                                    this.score += e.score; e.active = false;
+                                    this.spawnParticles(e.x + e.w/2, e.y + e.h/2, '#ef4444', 10, 3);
                                 }
                                 break;
                             }
                         }
                     }
+                    
+                    // 3. Đạn bắn trúng chim (Tự ăn khiên)
+                    if (!hitSomething) {
+                        for (let j = 0; j < this.birds.length; j++) {
+                            let bird = this.birds[j];
+                            if (checkAABB(bRect, { x: bird.x, y: bird.y, w: bird.w, h: bird.h })) {
+                                this.player.invuln = 1800; 
+                                this.spawnText("KHIÊN ÁNH SÁNG 30S!", this.player.x, this.player.y - 40, '#38bdf8', 120);
+                                this.shake = 10;
+                                this.spawnParticles(bird.x + 20, bird.y + 10, ['#38bdf8', '#ffffff'], 40, 6);
+                                bird.active = false; hitSomething = true; break;
+                            }
+                        }
+                    }
+
+                    // 4. Đạn bắn trúng Hộp Đạn (Tự nâng cấp vũ khí)
+                    if (!hitSomething) {
+                        for (let j = 0; j < this.items.length; j++) {
+                            let it = this.items[j];
+                            if (checkAABB(bRect, { x: it.x, y: it.y, w: it.w, h: it.h })) {
+                                this.player.weapon = it.type;
+                                let wName = it.type === 'M' ? 'SÚNG MÁY' : (it.type === 'S' ? 'ĐẠN TỎA' : (it.type === 'L' ? 'LASER' : 'ĐẠN LỬA'));
+                                this.spawnText("TRANG BỊ " + wName, this.player.x, this.player.y - 20, '#4ade80');
+                                this.shake = 3; this.spawnParticles(it.x + 15, it.y + 15, '#facc15', 20, 4);
+                                it.active = false; hitSomething = true; break;
+                            }
+                        }
+                    }
+
                     if (hitSomething && !b.isPiercing) b.active = false;
                 }
 
-                if (Game.player.invuln <= 0) {
+                // Va chạm trực tiếp giữa Người chơi với Chướng ngại vật / Quái vật / Đạn địch
+                let pRect = { x: this.player.x + 5, y: this.player.y + 5, w: this.player.w - 10, h: this.player.h - 10 };
+                
+                // Người chơi chạm trực tiếp ăn hộp đạn (phòng hờ)
+                for (let it of this.items) {
+                    if (checkAABB(pRect, { x: it.x, y: it.y, w: it.w, h: it.h })) {
+                        this.player.weapon = it.type;
+                        let wName = it.type === 'M' ? 'SÚNG MÁY' : (it.type === 'S' ? 'ĐẠN TỎA' : (it.type === 'L' ? 'LASER' : 'ĐẠN LỬA'));
+                        this.spawnText("TRANG BỊ " + wName, this.player.x, this.player.y - 20, '#4ade80');
+                        this.shake = 3; this.spawnParticles(it.x + 15, it.y + 15, '#facc15', 20, 4);
+                        it.active = false;
+                    }
+                }
+
+                if (this.player.invuln <= 0) {
                     let isHit = false;
-                    for (let b of Game.bullets) {
+                    for (let b of this.bullets) {
                         if (!b.isPlayer && b.active && checkAABB(pRect, { x: b.x, y: b.y, w: b.w, h: b.h })) {
                             isHit = true; b.active = false; break;
                         }
                     }
                     if (!isHit) {
-                        for (let e of Game.enemies) {
+                        for (let e of this.enemies) {
                             if (checkAABB(pRect, { x: e.x, y: e.y, w: e.w, h: e.h })) { isHit = true; break; }
                         }
                     }
-                    if (!isHit && Game.currentBoss) {
-                        let boss = Game.currentBoss;
+                    if (!isHit && this.currentBoss) {
+                        let boss = this.currentBoss;
                         if (checkAABB(pRect, { x: boss.x, y: boss.y, w: boss.w, h: boss.h })) isHit = true;
                     }
 
                     if (isHit) {
-                        Game.player.lives--;
-                        Game.player.invuln = 120;
-                        Game.player.weapon = 'N'; 
-                        Game.shake = 15;
-                        Game.spawnParticles(Game.player.x + 15, Game.player.y + 20, COLORS.blood, 20, 4);
+                        this.player.lives--; this.player.invuln = 120; this.player.weapon = 'N'; 
+                        this.shake = 15; this.spawnParticles(this.player.x + 15, this.player.y + 20, COLORS.blood, 20, 4);
 
-                        if (Game.player.lives <= 0) {
-                            Game.state = 'GAMEOVER';
-                            document.getElementById('controls-layer').style.display = 'none';
+                        if (this.player.lives <= 0) {
+                            this.state = 'GAMEOVER';
                             document.getElementById('game-over-menu').classList.add('show');
-                            document.getElementById('final-score').innerText = Game.score;
+                            document.getElementById('final-score').innerText = this.score;
                         }
                     }
                 }
 
-                for (let i = 0; i < Game.items.length; i++) {
-                    let it = Game.items[i];
-                    if (checkAABB(pRect, { x: it.x, y: it.y, w: it.w, h: it.h })) {
-                        Game.player.weapon = it.type;
-                        let wName = it.type === 'M' ? 'SÚNG MÁY' : (it.type === 'S' ? 'ĐẠN TỎA' : (it.type === 'L' ? 'LASER' : 'ĐẠN LỬA'));
-                        Game.spawnText("NHẶT " + wName, Game.player.x, Game.player.y - 20, '#4ade80');
-                        Game.shake = 3;
-                        Game.spawnParticles(Game.player.x + 15, Game.player.y + 15, '#facc15', 20, 4);
-                        it.active = false;
-                    }
-                }
-
-                Game.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
-                Game.particles = Game.particles.filter(p => p.life > 0);
-                Game.texts.forEach(t => t.life--);
-                Game.texts = Game.texts.filter(t => t.life > 0);
+                this.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
+                this.particles = this.particles.filter(p => p.life > 0);
+                this.texts.forEach(t => t.life--); this.texts = this.texts.filter(t => t.life > 0);
             },
 
             draw() {
                 ctx.save();
-                if (Game.shake > 0) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
+                if (this.shake > 0) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
 
-                // Background
                 let grad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
-                grad.addColorStop(0, COLORS.skyTop); grad.addColorStop(1, COLORS.skyBot);
+                let sTop = this.weather === 'rain' ? '#020617' : COLORS.skyTop;
+                let sBot = this.weather === 'rain' ? '#0f172a' : COLORS.skyBot;
+                grad.addColorStop(0, sTop); grad.addColorStop(1, sBot);
                 ctx.fillStyle = grad; ctx.fillRect(0, 0, GW, GH);
 
-                // Sun
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 50, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 35, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(GW - 80, 120, 20, 0, Math.PI*2); ctx.fill();
+                if (this.weather === 'clear') {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 50, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 35, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(GW - 80, 120, 20, 0, Math.PI*2); ctx.fill();
+                } else {
+                    ctx.fillStyle = 'rgba(239, 68, 68, 0.05)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 50, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#dc2626'; ctx.beginPath(); ctx.arc(GW - 80, 120, 20, 0, Math.PI*2); ctx.fill();
+                }
 
-                // Clouds
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.fillStyle = this.weather === 'rain' ? 'rgba(51, 65, 85, 0.4)' : 'rgba(255, 255, 255, 0.15)';
                 for(let i=0; i<4; i++) {
-                    let cx = (GW + 200 - ((Game.bgScroll * 0.2) + i * 150) % (GW + 300)) - 50;
+                    let cx = (GW + 200 - ((this.bgScroll * 0.2) + i * 150) % (GW + 300)) - 50;
                     let cy = 60 + (i % 2) * 50;
                     ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.arc(cx + 20, cy - 15, 30, 0, Math.PI*2); ctx.fill();
@@ -949,20 +1029,19 @@
                     ctx.fillRect(cx, cy - 5, 40, 25); 
                 }
 
-                // Stars
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                for(let i=0; i<30; i++) {
-                    ctx.fillRect((i * 73 - Game.bgScroll * 0.05) % GW, (i * 91) % (GROUND_Y - 150), 2, 2);
+                if (this.weather === 'clear') {
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                    for(let i=0; i<30; i++) { ctx.fillRect((i * 73 - this.bgScroll * 0.05) % GW, (i * 91) % (GROUND_Y - 150), 2, 2); }
                 }
 
-                ctx.fillStyle = COLORS.mountBack;
-                let offBack = -(Game.bgScroll * 0.15 % 400);
+                ctx.fillStyle = this.weather === 'rain' ? '#0f172a' : COLORS.mountBack;
+                let offBack = -(this.bgScroll * 0.15 % 400);
                 for(let i=-1; i<3; i++) {
                     ctx.beginPath(); ctx.moveTo(offBack + i*300, GROUND_Y); ctx.lineTo(offBack + i*300 + 150, GROUND_Y - 200); ctx.lineTo(offBack + i*300 + 300, GROUND_Y); ctx.fill();
                 }
                 
-                ctx.fillStyle = COLORS.mountFront;
-                let offFront = -(Game.bgScroll * 0.3 % 400);
+                ctx.fillStyle = this.weather === 'rain' ? '#1e293b' : COLORS.mountFront;
+                let offFront = -(this.bgScroll * 0.3 % 400);
                 for(let i=-1; i<3; i++) {
                     ctx.beginPath(); ctx.moveTo(offFront + i*250, GROUND_Y); ctx.lineTo(offFront + i*250 + 125, GROUND_Y - 120); ctx.lineTo(offFront + i*250 + 250, GROUND_Y); ctx.fill();
                 }
@@ -972,21 +1051,21 @@
                 ctx.fillStyle = grassGrad; ctx.fillRect(0, GROUND_Y, GW, 40);
                 
                 ctx.fillStyle = '#22c55e'; 
-                let grassOffset = -(Game.bgScroll % 40);
+                let grassOffset = -(this.bgScroll % 40);
                 for(let i=0; i<GW+40; i+=40) { ctx.fillRect(grassOffset + i, GROUND_Y, 20, 5); }
 
                 let dirtGrad = ctx.createLinearGradient(0, GROUND_Y + 40, 0, GH);
                 dirtGrad.addColorStop(0, COLORS.dirtTop); dirtGrad.addColorStop(1, COLORS.dirtBot);
                 ctx.fillStyle = dirtGrad; ctx.fillRect(0, GROUND_Y + 40, GW, GH - (GROUND_Y + 40));
 
-                if (Game.state === 'CUTSCENE') {
-                    ctx.save(); ctx.translate(Game.csGirlX, Game.csGirlY);
+                if (this.state === 'CUTSCENE') {
+                    ctx.save(); ctx.translate(this.csGirlX, this.csGirlY);
                     ctx.fillStyle = '#f472b6'; ctx.beginPath(); ctx.moveTo(15, 20); ctx.lineTo(0, 45); ctx.lineTo(30, 45); ctx.fill();
                     ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(15, 10, 10, 0, Math.PI*2); ctx.fill(); 
                     ctx.fillStyle = '#e879f9'; ctx.beginPath(); ctx.arc(15, 8, 12, Math.PI, 0); ctx.fill(); 
                     ctx.restore();
 
-                    ctx.save(); ctx.translate(Game.csDragonX, Game.csDragonY);
+                    ctx.save(); ctx.translate(this.csDragonX, this.csDragonY);
                     ctx.fillStyle = '#16a34a'; ctx.beginPath(); ctx.ellipse(50, 70, 50, 30, 0, 0, Math.PI*2); ctx.fill();
                     ctx.beginPath(); ctx.arc(20, 30, 30, 0, Math.PI*2); ctx.fill(); 
                     ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(50, 50); ctx.lineTo(120, -20); ctx.lineTo(140, 50); ctx.fill(); 
@@ -994,72 +1073,82 @@
                     ctx.fillStyle = 'black'; ctx.beginPath(); ctx.arc(8, 20, 2, 0, Math.PI*2); ctx.fill();
                     ctx.restore();
 
-                    Game.player.draw(ctx);
+                    this.player.draw(ctx);
                 } 
-                else if (Game.state === 'PLAY' || Game.state === 'WIN' || Game.state === 'GAMEOVER') {
-                    Game.platforms.forEach(p => p.draw(ctx)); 
-                    Game.items.forEach(it => it.draw(ctx));
-                    Game.enemies.forEach(e => e.draw(ctx));
-                    if (Game.currentBoss) Game.currentBoss.draw(ctx);
-                    if (Game.state !== 'GAMEOVER') Game.player.draw(ctx);
-                    Game.bullets.forEach(b => b.draw(ctx));
+                else if (this.state === 'PLAY' || this.state === 'WIN' || this.state === 'GAMEOVER') {
+                    this.platforms.forEach(p => p.draw(ctx)); 
+                    this.items.forEach(it => it.draw(ctx));
+                    this.birds.forEach(b => b.draw(ctx)); 
+                    this.enemies.forEach(e => e.draw(ctx));
+                    
+                    if (this.state !== 'GAMEOVER') {
+                        this.player.draw(ctx);
+                        if(this.pet) this.pet.draw(ctx);
+                    }
+                    if (this.currentBoss) this.currentBoss.draw(ctx);
+                    this.bullets.forEach(b => b.draw(ctx));
+                    
+                    if (this.weather === 'rain') {
+                        this.raindrops.forEach(r => r.draw(ctx));
+                    }
                 }
 
-                Game.particles.forEach(p => {
-                    ctx.globalAlpha = p.life; ctx.fillStyle = p.color;
+                this.particles.forEach(p => {
+                    ctx.globalAlpha = Math.max(0, p.life); ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, p.size, p.size);
                 });
                 ctx.globalAlpha = 1;
 
-                Game.texts.forEach(t => {
+                this.texts.forEach(t => {
                     ctx.save();
-                    let alpha = t.life / t.maxLife;
-                    ctx.globalAlpha = alpha;
+                    ctx.globalAlpha = Math.max(0, t.life / t.maxLife);
                     ctx.fillStyle = t.color; ctx.font = 'bold 26px "Pixelify Sans"'; ctx.textAlign = 'center';
                     let ty = t.y - (t.maxLife - t.life)*0.5;
                     ctx.strokeStyle = 'black'; ctx.lineWidth = 4;
-                    ctx.strokeText(t.txt, t.x, ty);
-                    ctx.fillText(t.txt, t.x, ty);
+                    ctx.strokeText(t.txt, t.x, ty); ctx.fillText(t.txt, t.x, ty);
                     ctx.restore();
                 });
 
-                if (Game.state === 'PLAY' || Game.state === 'WIN') {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'; ctx.fillRect(0, 0, GW, 60);
-
+                if (this.state === 'PLAY' || this.state === 'WIN') {
+                    // Trái tim góc Trái trên cùng
                     for (let i = 0; i < 3; i++) {
-                        let cx = 35 + i * 35; let cy = 25;
-                        ctx.fillStyle = i < Game.player.lives ? '#ef4444' : '#475569';
-                        ctx.strokeStyle = i < Game.player.lives ? '#f87171' : '#334155';
-                        ctx.lineWidth = 2;
-                        
+                        let cx = 35 + i * 32; let cy = 25;
+                        ctx.fillStyle = i < this.player.lives ? '#ef4444' : '#475569';
                         ctx.beginPath();
                         ctx.moveTo(cx, cy + 5);
                         ctx.bezierCurveTo(cx - 12, cy - 8, cx - 20, cy + 6, cx, cy + 15);
                         ctx.bezierCurveTo(cx + 20, cy + 6, cx + 12, cy - 8, cx, cy + 5);
-                        ctx.fill(); ctx.stroke();
+                        ctx.fill();
                     }
                     
-                    let wpx = 10, wpy = 70;
-                    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fillRect(wpx, wpy, 130, 30);
-                    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.strokeRect(wpx, wpy, 130, 30);
-                    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 18px "Pixelify Sans"'; ctx.textAlign = 'center';
-                    let wName = Game.player.weapon === 'M' ? 'SÚNG MÁY' : (Game.player.weapon === 'S' ? 'ĐẠN TỎA' : (Game.player.weapon === 'L' ? 'LASER' : (Game.player.weapon === 'F' ? 'ĐẠN LỬA' : 'SÚNG LỤC')));
-                    ctx.fillText(wName, wpx + 65, wpy + 22);
+                    let wpx = 15, wpy = 55;
+                    ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fillRect(wpx, wpy, 120, 26);
+                    ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.strokeRect(wpx, wpy, 120, 26);
                     
-                    ctx.textAlign = 'right'; ctx.font = 'bold 34px "Pixelify Sans"';
-                    ctx.lineWidth = 4; ctx.strokeStyle = 'black';
-                    ctx.strokeText("ĐIỂM: " + Game.score, GW - 15, 42);
-                    ctx.fillStyle = '#facc15';
-                    ctx.fillText("ĐIỂM: " + Game.score, GW - 15, 42);
+                    ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 16px "Pixelify Sans"'; 
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    let wName = this.player.weapon === 'M' ? 'SÚNG MÁY' : (this.player.weapon === 'S' ? 'ĐẠN TỎA' : (this.player.weapon === 'L' ? 'LASER' : (this.player.weapon === 'F' ? 'ĐẠN LỬA' : 'SÚNG LỤC')));
+                    ctx.fillText(wName, wpx + 60, wpy + 14);
+                    
+                    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; 
+                    ctx.font = 'bold 32px "Pixelify Sans"';
+                    ctx.fillStyle = '#000'; ctx.fillText("ĐIỂM: " + this.score, GW - 12, 18);
+                    ctx.fillStyle = '#facc15'; ctx.fillText("ĐIỂM: " + this.score, GW - 15, 15);
+
+                    if (this.player.invuln > 120) {
+                        let secs = Math.ceil((this.player.invuln - 120) / 60);
+                        ctx.textAlign = 'center'; ctx.font = 'bold 24px "Pixelify Sans"';
+                        ctx.fillStyle = '#000'; ctx.fillText("BẢO VỆ: " + secs + "s", GW/2 + 2, 52);
+                        ctx.fillStyle = '#38bdf8'; ctx.fillText("BẢO VỆ: " + secs + "s", GW/2, 50);
+                    }
                 }
 
                 ctx.restore();
             },
 
             loop() {
-                Game.update();
-                Game.draw();
-                requestAnimationFrame(() => Game.loop());
+                this.update(); this.draw();
+                requestAnimationFrame(() => this.loop());
             }
         };
 
