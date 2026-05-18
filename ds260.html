@@ -170,7 +170,7 @@
                     </div>
                 </div>
 
-                <!-- STEP 2: Thông tin liên hệ & Hộ chiếu -->
+                <!-- STEP 2: Thông liên hệ & Hộ chiếu -->
                 <div class="step-content" id="step-2">
                     <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">2. Liên hệ & Hộ chiếu</h2>
                     <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.</div>
@@ -432,7 +432,6 @@
         const totalSteps = 5;
         const allInputs = document.querySelectorAll('.input-field');
 
-        // Hàm Đồng bộ Diện Bảo Lãnh
         function syncSponsorType() {
             const val = document.getElementById('dien_ho_so').value;
             const textSelect = document.getElementById('dien_ho_so').options[document.getElementById('dien_ho_so').selectedIndex].text;
@@ -541,9 +540,6 @@
             checkAllStepsEmptyState();
         }
 
-        // =========================================================
-        // HỆ THỐNG XÁC THỰC LỖI DI TRÚ THÔNG MINH
-        // =========================================================
         function validateImmigrationRules() {
             const errors = { critical: [], format: [], missing: [] };
             const dien = document.getElementById('dien_ho_so').value;
@@ -588,7 +584,6 @@
                 }
             });
 
-            // Logic Di trú
             if (['F1', 'F2B'].includes(dien)) {
                 if (honNhan === 'Đã kết hôn') {
                     errors.critical.push(`<b>CẢNH BÁO RỚT HỒ SƠ:</b> Diện ${dien} dành cho người <b>ĐỘC THÂN / LY HÔN / GÓA</b>. Trạng thái 'Đã kết hôn' của bạn sẽ làm hồ sơ bị từ chối ngay lập tức!`);
@@ -735,7 +730,7 @@
                     }
                 }
                 
-                syncSponsorType(); // Cập nhật Diện cho Bảng cuối
+                syncSponsorType(); 
                 
                 document.getElementById('loading-overlay').classList.add('hidden');
                 document.getElementById('loading-overlay').classList.remove('flex');
@@ -744,9 +739,6 @@
             }, 500);
         }
 
-        // ==========================================
-        // CÔNG NGHỆ NẠP FILE WORD
-        // ==========================================
         function loadWordFile(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -770,7 +762,6 @@
                                 const jsonStr = decodeURIComponent(atob(match[1]));
                                 const data = JSON.parse(jsonStr);
                                 
-                                // Nếu có diện hồ sơ, khôi phục luôn ô select ở Bước 1
                                 if (data['dien_ho_so'] && document.getElementById('dien_ho_so')) {
                                     document.getElementById('dien_ho_so').value = data['dien_ho_so'];
                                 }
@@ -799,11 +790,6 @@
             event.target.value = '';
         }
 
-        // ==========================================
-        // XUẤT FILE DOCX CHUẨN GỐC TỪ NGƯỜI DÙNG
-        // Đã xóa toàn bộ bôi đen/gạch chân.
-        // Đã khóa Line Spacing để form không bị nhảy dòng.
-        // ==========================================
         function val(id) {
             const el = document.getElementById(id);
             return (el && el.value.trim()) ? el.value.trim() : null;
@@ -828,7 +814,7 @@
 
                 const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle, AlignmentType, VerticalAlign, TableLayoutType } = docx;
 
-                // TRẢ VỀ CHUẨN GỐC: Size 28 (14pt), font Times New Roman, text trơn.
+                // TRẢ VỀ CHUẨN GỐC: Size 28 (14pt), font Times New Roman, KHÔNG BÔI ĐEN, KHÔNG GẠCH CHÂN.
                 const tr = (text, options = {}) => new TextRun({ 
                     text: text, 
                     font: "Times New Roman", 
@@ -836,29 +822,30 @@
                     bold: options.bold || false
                 });
 
-                // TRẢ VỀ CHUẨN GỐC: Khoảng cách dòng 1.15 (line: 276)
+                // TĂNG KHOẢNG CÁCH DÒNG (line: 300 ~ 1.25 spacing) ĐỂ FORM CÓ ĐỘ "THỞ", NHÌN MƯỢT MÀ NHƯ BẢN GỐC
                 const p = (content, options = {}) => new Paragraph({ 
                     children: Array.isArray(content) ? content : [tr(content)], 
-                    spacing: { before: options.before || 0, after: options.after || 120, line: 276 }, 
+                    spacing: { before: options.before || 0, after: options.after || 120, line: 300 }, 
                     indent: options.indent || {}, 
                     alignment: options.alignment || AlignmentType.LEFT 
                 });
 
                 const sectionTitle = (text) => p([tr(text, { bold: true })], { before: 240, after: 120 });
                 
-                // NẾU CÓ DỮ LIỆU: Điền chữ text trơn. NẾU KHÔNG CÓ: Giữ lại dấu chấm.
+                // GIẢI QUYẾT LỖI DÍNH LIỀN: Dùng 6 khoảng trắng cứng (\u00A0) để ép đẩy câu trả lời ra xa câu hỏi.
                 const line = (label, value, dots) => {
                     if (value) {
-                        return p([tr(label + " " + value)]);
+                        return p([tr(label + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + value)]);
                     } else {
                         return p([tr(label + " " + dots)]);
                     }
                 };
 
+                // GIẢI QUYẾT LỖI DÍNH LIỀN NHIỀU DÒNG: Thụt lề (indent) thẳng hàng đẹp mắt.
                 const multiLine = (label, value, dots) => {
                     const result = [p([tr(label)])];
                     if (value) {
-                        value.split('\n').forEach(v => result.push(p([tr(v)], { indent: { left: 400 } })));
+                        value.split('\n').forEach(v => result.push(p([tr("\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + v)], { indent: { left: 360 } })));
                     } else {
                         dots.split('\n').forEach(d => result.push(p([tr(d)])));
                     }
@@ -871,7 +858,7 @@
                 const colWidthsDXA = [2000, 3000, 2000, 2500]; 
 
                 const createCell = (text, widthIndex, colSpan = 1) => {
-                    const cellConfig = { children: [p([tr(text || '', { size: 24 })])], ...cellOptions };
+                    const cellConfig = { children: [p([tr(text || '', { size: 24 })], {after: 0})], ...cellOptions };
                     if (colSpan > 1) {
                         cellConfig.columnSpan = colSpan;
                         cellConfig.width = { size: 9500, type: WidthType.DXA };
@@ -882,10 +869,10 @@
                 };
 
                 visaRows.push(new TableRow({ children: [
-                    new TableCell({ children: [p([tr("Số hiệu visa", { size: 24 })])], ...cellOptions, width: { size: colWidthsDXA[0], type: WidthType.DXA } }), 
-                    new TableCell({ children: [p([tr("Ngày cấp, ngày hết hạn", { size: 24 })])], ...cellOptions, width: { size: colWidthsDXA[1], type: WidthType.DXA } }), 
-                    new TableCell({ children: [p([tr("Thời gian đi", { size: 24 })])], ...cellOptions, width: { size: colWidthsDXA[2], type: WidthType.DXA } }), 
-                    new TableCell({ children: [p([tr("Tổng thời gian ở Mỹ bao nhiêu ngày ( hoặc tuần, tháng)", { size: 24 })])], ...cellOptions, width: { size: colWidthsDXA[3], type: WidthType.DXA } })
+                    new TableCell({ children: [p([tr("Số hiệu visa", { size: 24, bold: true })], {after: 0})], ...cellOptions, width: { size: colWidthsDXA[0], type: WidthType.DXA } }), 
+                    new TableCell({ children: [p([tr("Ngày cấp, ngày hết hạn", { size: 24, bold: true })], {after: 0})], ...cellOptions, width: { size: colWidthsDXA[1], type: WidthType.DXA } }), 
+                    new TableCell({ children: [p([tr("Thời gian đi", { size: 24, bold: true })], {after: 0})], ...cellOptions, width: { size: colWidthsDXA[2], type: WidthType.DXA } }), 
+                    new TableCell({ children: [p([tr("Tổng thời gian ở Mỹ bao nhiêu ngày", { size: 24, bold: true })], {after: 0})], ...cellOptions, width: { size: colWidthsDXA[3], type: WidthType.DXA } })
                 ]}));
 
                 if (visaText) {
@@ -939,9 +926,9 @@
                             line("Số hộ chiếu :", val('so_ho_chieu'), "………………………………………………………………"),
                             p([
                                 tr("Ngày cấp : "),
-                                val('ngay_cap_hc') ? tr(val('ngay_cap_hc')) : tr("………………………….."),
-                                tr("  -  Ngày hết hạn : "),
-                                val('ngay_het_han_hc') ? tr(val('ngay_het_han_hc')) : tr("…………………")
+                                val('ngay_cap_hc') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('ngay_cap_hc') + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0") : tr("…………………………..  "),
+                                tr("-  Ngày hết hạn : "),
+                                val('ngay_het_han_hc') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('ngay_het_han_hc')) : tr("…………………")
                             ]),
                             line("Tên tỉnh thành phố nào cấp hộ chiếu này", val('noi_cap_hc'), "…………………………………"),
                             
@@ -951,10 +938,10 @@
                             
                             line("Có án tích không :", val('an_tich'), "………………………………………………………………………..….."),
                             line("Có biết ngoại ngữ không?", val('ngoai_ngu'), "…………………………………………………………………….."),
-                            ...multiLine("Cung cấp link Facebook, Tiktok, WhatsApp, Youtube  ............…", val('mang_xa_hoi'), "….……………………………………………………………………………………………"),
+                            ...multiLine("Cung cấp link Facebook, Tiktok, WhatsApp, Youtube :", val('mang_xa_hoi'), "….……………………………………………………………………………………………"),
                             line("Có tham gia sinh hoạt Đảng không?", val('dang_vien'), ".........................................................………………….."),
                             
-                            ...multiLine("Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận", val('dia_chi_the_xanh'), "…………………………………………………………………………….."),
+                            ...multiLine("Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận:", val('dia_chi_the_xanh'), "…………………………………………………………………………….."),
                             
                             sectionTitle("Cha :"),
                             line("Họ tên :", val('cha_ten'), "…………………………………………………………………………………"),
@@ -981,34 +968,34 @@
                             
                             sectionTitle("Vợ (Chồng) cũ:"),
                             line("Họ tên  :", val('vccu_ten'), "............................................................................................................................"),
-                            line("Ngày tháng năm sinh", val('vccu_ns'), "........................................………………….................................."),
+                            line("Ngày tháng năm sinh :", val('vccu_ns'), "........................................………………….................................."),
                             p([
                                 tr("Kết hôn ngày, tháng, năm "),
-                                val('vccu_ngaykh') ? tr(val('vccu_ngaykh')) : tr("..............………………………………………...................."),
-                                tr("  Nơi kết hôn : "),
-                                val('vccu_noikh') ? tr(val('vccu_noikh')) : tr("...............................………………………………………………………..")
+                                val('vccu_ngaykh') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('vccu_ngaykh') + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0") : tr("..............………………………………………....................  "),
+                                tr("Nơi kết hôn : "),
+                                val('vccu_noikh') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('vccu_noikh')) : tr("...............................………………………………………………………..")
                             ]),
                             p([
-                                tr("Ngày ly hôn:"),
-                                val('vccu_ngaylh') ? tr(val('vccu_ngaylh')) : tr("..............................................………………………………………......"),
-                                tr(" .. Nơi ly hôn :"),
-                                val('vccu_noilh') ? tr(val('vccu_noilh')) : tr("...............……………………………………………………….....................")
+                                tr("Ngày ly hôn: "),
+                                val('vccu_ngaylh') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('vccu_ngaylh') + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0") : tr("..............................................………………………………………......  "),
+                                tr("Nơi ly hôn : "),
+                                val('vccu_noilh') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('vccu_noilh')) : tr("...............……………………………………………………….....................")
                             ]),
                             
                             sectionTitle("Thông tin về các con :"),
-                            p([tr("Con 1 :")]),
+                            p([tr("Con 1 :", { bold: true })]),
                             line("Họ tên  :", val('con1_ten'), "………………………………………………………………………….…..…"),
                             line("Ngày, tháng, năm sinh :", val('con1_ns'), "…………………………………………………………….……"),
                             line("Nơi sinh (tỉnh, thành phố) :", val('con1_noisinh'), "……………………………………………………….….…."),
                             line("Địa chỉ :", val('con1_diachi'), "……………………………………………………………………………...….."),
                             
-                            p([tr("Con 2 :")]),
+                            p([tr("Con 2 :", { bold: true })]),
                             line("Họ tên  :", val('con2_ten'), "…………………………………………………………………….……....….."),
                             line("Ngày, tháng, năm sinh :", val('con2_ns'), "…………………………………………………….…….….…"),
                             line("Nơi sinh (tỉnh, thành phố):", val('con2_noisinh'), "……………………………………………………….……."),
                             line("Địa chỉ :", val('con2_diachi'), "………………………….……………………………………………….……"),
                             
-                            p([tr("Con 3 :")]),
+                            p([tr("Con 3 :", { bold: true })]),
                             line("Họ tên  :", val('con3_ten'), "………………………………………………………………………….……"),
                             line("Ngày, tháng, năm sinh :", val('con3_ns'), "………………………………………………………….……."),
                             line("Nơi sinh (tỉnh, thành phố):", val('con3_noisinh'), "………………………………………………………….….-"),
@@ -1027,29 +1014,29 @@
                             line("- Số điện thoại nơi làm việc :", val('job_old_phone'), "…………………………………………………………………"),
                             p([
                                 tr("- Thời gian làm từ "),
-                                val('job_old_from') ? tr(val('job_old_from')) : tr("tháng……….năm……..."),
-                                tr(" đến "),
-                                val('job_old_to') ? tr(val('job_old_to')) : tr("tháng…..… năm……………..…....")
+                                val('job_old_from') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('job_old_from') + "\u00A0\u00A0\u00A0\u00A0") : tr("tháng……….năm……...  "),
+                                tr("đến "),
+                                val('job_old_to') ? tr("\u00A0\u00A0\u00A0\u00A0" + val('job_old_to')) : tr("tháng…..… năm……………..…....")
                             ]),
                             
-                            sectionTitle("Quá trình học vấn (Cấp 2, cấp 3, cao đẳng, đại học) GHI ĐẦY ĐỦ TÊN , ĐỊA CHỈ VÀ KHÓA HỌC:"),
-                            p([tr("Cấp 2 :")]),
-                            line("-Tên trường :", val('edu_c2_name'), "…………………………………………………………………….."),
+                            sectionTitle("Quá trình học vấn (Cấp 2, cấp 3, cao đẳng, đại học):"),
+                            p([tr("Cấp 2 :", { bold: true })]),
+                            line("- Tên trường :", val('edu_c2_name'), "…………………………………………………………………….."),
                             line("- Địa chỉ trường :", val('edu_c2_address'), "……………………………………………………………………"),
                             line("- Học từ tháng", val('edu_c2_time'), "…năm…. đến tháng….năm ………………………………………"),
                             
-                            p([tr("Cấp 3 :")]),
-                            line("-Tên trường", val('edu_c3_name'), "……………………………………………………………………….."),
-                            line("- Địa chỉ trường", val('edu_c3_address'), "…………………………………………………………………….."),
+                            p([tr("Cấp 3 :", { bold: true })]),
+                            line("- Tên trường :", val('edu_c3_name'), "……………………………………………………………………….."),
+                            line("- Địa chỉ trường :", val('edu_c3_address'), "…………………………………………………………………….."),
                             line("- Học từ tháng", val('edu_c3_time'), "…năm…. đến tháng….năm ……………………………………"),
                             
-                            p([tr("Đại học, cao đẳng:")]),
-                            line("-Tên trường", val('edu_uni_name'), "…………………………………………………………………………"),
-                            line("- Địa chỉ trường", val('edu_uni_address'), "……………………………………………………………………."),
+                            p([tr("Đại học, cao đẳng:", { bold: true })]),
+                            line("- Tên trường :", val('edu_uni_name'), "…………………………………………………………………………"),
+                            line("- Địa chỉ trường :", val('edu_uni_address'), "……………………………………………………………………."),
                             line("- Học từ tháng", val('edu_uni_time'), "……..năm……... đến tháng……...năm …………………………....."),
                             
                             p([]),
-                            ...multiLine("Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Du lịch, du học, định cư), đính kèm visa nếu đã được cấp, (Ghi rõ số lần sang Mỹ, đi từ ngày….tháng…năm…….. đến ngày… tháng…năm….) :", val('history_us_visa'), "…………………………………………………………………………."),
+                            ...multiLine("Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Đính kèm visa nếu đã được cấp) :", val('history_us_visa'), "…………………………………………………………………………."),
                             
                             p([]),
                             ...multiLine("Đã bao giờ phỏng vấn Mỹ bị từ chối chưa?", val('history_refused'), "…………………………………………………………………………."),
@@ -1058,7 +1045,7 @@
                             visaTable,
                             p([]),
                             
-                            line("Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không? (Nếu có kể tên nước đã đi)", val('history_travel'), "………………………………………………………………………………………."),
+                            line("Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không?", val('history_travel'), "………………………………………………………………………………………."),
                             
                             sectionTitle("Người bảo lãnh :"),
                             line("(Diện :", val('sponsor_type'), "..... )"),
@@ -1077,7 +1064,7 @@
                 });
 
                 Packer.toBlob(doc).then(blob => {
-                    saveAs(blob, "DS260_Kiem_Tra_Export.docx");
+                    saveAs(blob, "DS260_Ho_So_Chuan.docx");
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                 }).catch(err => {
@@ -1099,5 +1086,4 @@
     </script>
 </body>
 </html>
-
 
