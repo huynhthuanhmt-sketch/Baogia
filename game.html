@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cứu Vợ - Chiến Dịch Contra (Bản Sửa Lỗi)</title>
+    <title>Cứu Vợ - Chiến Dịch Contra (Masterpiece Logic)</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
             margin: 0; padding: 0; background-color: #020617;
             display: flex; justify-content: center; align-items: center;
-            /* Sửa lỗi thanh địa chỉ che khuất trên trình duyệt Mobile */
             height: 100vh; height: 100dvh; 
             width: 100vw; font-family: 'Pixelify Sans', sans-serif;
             overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
@@ -112,7 +111,6 @@
             transition: all 0.1s; cursor: pointer;
         }
         
-        /* Chống lỗi chạm lệch màng loa icon trên mobile */
         .ctrl-btn svg, .ctrl-btn path, .ctrl-btn circle {
             pointer-events: none;
         }
@@ -211,7 +209,6 @@
         bindButton('btn-jump', 'jump');
         bindButton('btn-shoot', 'shoot');
 
-        // Ngăn chặn lỗi cuộn trang của trình duyệt khi bấm Space/Mũi tên trên Máy tính
         window.addEventListener('keydown', e => {
             if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
                 e.preventDefault();
@@ -265,6 +262,7 @@
                 this.isGrounded = true;
                 this.lives = 3; this.weapon = 'N';
                 this.cooldown = 0; this.invuln = 0;
+                this.facing = 1; // 1: Nhìn sang phải, -1: Nhìn sang trái
             }
 
             update() {
@@ -276,7 +274,6 @@
                 this.isGrounded = false;
                 let onPlatform = false;
 
-                // Tối ưu thuật toán check va chạm Platform không bị lọt thỏm
                 for (let p of Game.platforms) {
                     if (this.vy >= 0 && prevY + this.h <= p.y + 20 && this.x + this.w > p.x && this.x < p.x + p.w) {
                         if (this.y + this.h >= p.y) {
@@ -296,8 +293,8 @@
                     this.isGrounded = true;
                 }
 
-                if (keys.left) this.x -= this.speed;
-                if (keys.right) this.x += this.speed;
+                if (keys.left) { this.x -= this.speed; this.facing = -1; }
+                if (keys.right) { this.x += this.speed; this.facing = 1; }
                 if (this.x < 0) this.x = 0;
                 if (this.x > GW - this.w) this.x = GW - this.w;
 
@@ -313,32 +310,43 @@
             }
 
             shoot() {
-                let px = this.x + this.w;
+                let dir = this.facing;
                 let py = this.y + 15;
                 
                 if (this.weapon === 'M') { 
                     this.cooldown = 6;
-                    Game.bullets.push(new Bullet(px, py + (Math.random()*6-3), 16, 0, 1, 14, 4, '#4ade80', true));
+                    let px = dir === 1 ? this.x + this.w : this.x - 14;
+                    Game.bullets.push(new Bullet(px, py + (Math.random()*6-3), 16*dir, 0, 1, 14, 4, '#4ade80', true));
                 } else if (this.weapon === 'S') { 
                     this.cooldown = 15;
-                    Game.bullets.push(new Bullet(px, py, 12, -2, 1, 10, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 12, 0, 1, 10, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 12, 2, 1, 10, 10, '#f97316', true));
+                    let px = dir === 1 ? this.x + this.w : this.x - 10;
+                    Game.bullets.push(new Bullet(px, py, 12*dir, -2.5, 1, 10, 10, '#f97316', true));
+                    Game.bullets.push(new Bullet(px, py, 12*dir, 0, 1, 10, 10, '#f97316', true));
+                    Game.bullets.push(new Bullet(px, py, 12*dir, 2.5, 1, 10, 10, '#f97316', true));
                 } else if (this.weapon === 'L') { 
                     this.cooldown = 20;
-                    Game.bullets.push(new Bullet(px, py, 20, 0, 2, 60, 6, '#22d3ee', true, true));
+                    let px = dir === 1 ? this.x + this.w : this.x - 60;
+                    Game.bullets.push(new Bullet(px, py, 20*dir, 0, 2, 60, 6, '#22d3ee', true, true));
                 } else { 
                     this.cooldown = 12;
-                    Game.bullets.push(new Bullet(px, py, 12, 0, 1, 10, 4, COLORS.bulletPlayer, true));
+                    let px = dir === 1 ? this.x + this.w : this.x - 10;
+                    Game.bullets.push(new Bullet(px, py, 12*dir, 0, 1, 10, 4, COLORS.bulletPlayer, true));
                 }
-                Game.spawnParticles(px, py + 2, '#fbbf24', 2, 1);
+                Game.spawnParticles(dir === 1 ? this.x + this.w : this.x, py + 2, '#fbbf24', 2, 1);
             }
 
             draw(ctx) {
                 if (this.invuln > 0 && Game.frameCount % 10 < 5) return;
 
                 ctx.save();
-                ctx.translate(this.x, this.y);
+                
+                // Lật nhân vật tương ứng hướng nhìn
+                if (this.facing === -1) {
+                    ctx.translate(this.x + this.w, this.y);
+                    ctx.scale(-1, 1);
+                } else {
+                    ctx.translate(this.x, this.y);
+                }
                 
                 let walkOffset = 0;
                 if (Game.state === 'CUTSCENE' && Game.csPhase === 0) {
@@ -394,18 +402,24 @@
         }
 
         class Enemy {
-            constructor(type) {
-                this.type = type; this.active = true;
-                this.x = GW + 20; this.flash = 0;
+            constructor(type, dir = 1) {
+                this.type = type; 
+                this.active = true;
+                this.dir = dir; // 1: Sinh bên phải chạy sang trái, -1: Sinh bên trái chạy sang phải
+                this.x = dir === 1 ? GW + 20 : -40; 
+                this.flash = 0;
                 
                 if (type === 'soldier') {
                     this.y = GROUND_Y - 30; this.w = 20; this.h = 30;
-                    this.hp = 1; this.score = 5; this.vx = -2.5 - Math.random();
-                    this.shootTimer = Math.floor(Math.random() * 60 + 50);
+                    this.hp = 1; this.score = 5; 
+                    this.vx = (-2.5 - Math.random()) * dir;
+                    this.shootTimer = Math.floor(Math.random() * 60 + 40);
                 } else if (type === 'plane') {
                     this.y = Math.random() * 60 + 300; 
                     this.w = 40; this.h = 25;
-                    this.hp = 2; this.score = 10; this.vx = -4 - Math.random()*2; this.baseY = this.y;
+                    this.hp = 2; this.score = 10; 
+                    this.vx = (-4 - Math.random()*2) * dir; 
+                    this.baseY = this.y;
                 }
             }
             update() {
@@ -416,16 +430,25 @@
                 } else if (this.type === 'soldier') {
                     this.shootTimer--;
                     if (this.shootTimer <= 0) {
-                        Game.bullets.push(new Bullet(this.x, this.y + 10, -5, 0, 1, 10, 4, '#f59e0b', false));
-                        this.shootTimer = Math.floor(Math.random() * 80 + 80); 
+                        let px = this.dir === 1 ? this.x - 10 : this.x + this.w;
+                        Game.bullets.push(new Bullet(px, this.y + 10, -5 * this.dir, 0, 1, 10, 4, '#f59e0b', false));
+                        this.shootTimer = Math.floor(Math.random() * 60 + 60); 
                     }
                 }
 
-                if (this.x < -100) this.active = false;
+                if (this.dir === 1 && this.x < -100) this.active = false;
+                if (this.dir === -1 && this.x > GW + 100) this.active = false;
                 if (this.flash > 0) this.flash--;
             }
             draw(ctx) {
-                ctx.save(); ctx.translate(this.x, this.y);
+                ctx.save(); 
+                if (this.dir === -1) {
+                    ctx.translate(this.x + this.w, this.y);
+                    ctx.scale(-1, 1);
+                } else {
+                    ctx.translate(this.x, this.y);
+                }
+                
                 if (this.flash > 0) {
                     ctx.fillStyle = 'white'; ctx.fillRect(0, 0, this.w, this.h);
                 } else {
@@ -452,8 +475,9 @@
                 this.x = GW + 100; this.state = 'enter'; this.timer = 0; this.flash = 0;
                 
                 if (type === 'tank') {
-                    this.w = 120; this.h = 70; this.y = GROUND_Y - this.h;
-                    this.hp = 100; this.maxHp = 100; this.score = 100;
+                    // Logic chuẩn: Tăng chiều cao Boss để nằm vừa vặn từ đất lên ngang bục
+                    this.w = 140; this.h = 110; this.y = GROUND_Y - this.h;
+                    this.hp = 150; this.maxHp = 150; this.score = 100;
                 } else if (type === 'heli') {
                     this.w = 100; this.h = 60; 
                     this.y = 300; this.baseY = 300;
@@ -472,16 +496,20 @@
                     this.x -= 2;
                     if (this.x <= GW - this.w - 20) this.state = 'attack';
                 } else if (this.state === 'attack') {
+                    // Liên tục ra bục để người chơi có chỗ đáp nhảy bắn Boss
+                    if (this.timer % 90 === 0) {
+                        Game.platforms.push(new Platform(GW + 50, GROUND_Y - 70, 90));
+                    }
+
                     if (this.type === 'tank') {
+                        // Pháo bự - bắn thẳng vào người đứng trên bục
                         if (this.timer % 80 === 0) { 
-                            Game.bullets.push(new Bullet(this.x, this.y + 20, -6, 0, 1, 20, 20, '#ef4444', false));
-                            Game.shake = 10;
+                            Game.bullets.push(new Bullet(this.x - 20, this.y + 25, -7, 0, 1, 20, 20, '#ef4444', false));
+                            Game.shake = 5;
                         }
-                        if (this.timer % 120 > 90 && this.timer % 10 === 0) { 
-                            Game.bullets.push(new Bullet(this.x, this.y + 50, -8, 0, 1, 10, 4, '#f59e0b', false));
-                        }
-                        if (this.timer % 120 === 0) {
-                            Game.platforms.push(new Platform(GW + 50, GROUND_Y - 80, 100));
+                        // Súng máy nhỏ - quét dưới mặt đất
+                        if (this.timer % 100 > 70 && this.timer % 10 === 0) { 
+                            Game.bullets.push(new Bullet(this.x - 10, this.y + 85, -8, 0, 1, 10, 4, '#f59e0b', false));
                         }
                     } else if (this.type === 'heli') {
                         this.y = this.baseY + Math.sin(this.timer * 0.04) * 40; 
@@ -516,10 +544,10 @@
                     ctx.fillStyle = 'white'; ctx.fillRect(0, 0, this.w, this.h);
                 } else {
                     if (this.type === 'tank') {
-                        ctx.fillStyle = '#475569'; ctx.fillRect(0, 30, this.w, 40); 
-                        ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.arc(this.w/2, 30, 40, Math.PI, 0); ctx.fill(); 
-                        ctx.fillStyle = '#1e293b'; ctx.fillRect(-30, 15, 60, 10); 
-                        ctx.fillRect(-10, 45, 20, 6); 
+                        ctx.fillStyle = '#475569'; ctx.fillRect(0, 50, this.w, 60); 
+                        ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.arc(this.w/2, 50, 50, Math.PI, 0); ctx.fill(); 
+                        ctx.fillStyle = '#1e293b'; ctx.fillRect(-30, 25, 70, 15); 
+                        ctx.fillRect(-10, 80, 20, 8); 
                     } else if (this.type === 'heli') {
                         ctx.fillStyle = '#0f766e'; ctx.beginPath(); ctx.ellipse(this.w/2, this.h/2, this.w/2, this.h/2, 0, 0, Math.PI*2); ctx.fill();
                         ctx.fillStyle = '#cbd5e1'; ctx.fillRect(-20, this.h/2 - 5, 20, 10); 
@@ -615,7 +643,6 @@
                 Game.state = 'PLAY';
                 Game.score = 0; Game.frameCount = 0;
                 Game.bullets = []; Game.enemies = []; Game.particles = []; Game.texts = []; Game.platforms = [];
-                // Sửa lỗi: Cấp súng Máy mặc định tại vị trí người chơi ngay khi Game bắt đầu!
                 Game.items = [];
                 Game.items.push(new Item(80 + 50, GROUND_Y - 30, 'M'));
                 
@@ -663,7 +690,6 @@
                         if (Game.csTimer === 90) Game.spawnText("Vâng! ♥", Game.csGirlX + 15, Game.csGirlY - 20, '#f472b6');
                         if (Game.csTimer === 170) { Game.csPhase = 2; Game.csTimer = 0; }
                     } else if (Game.csPhase === 2) {
-                        // FIX: Thuật toán nội suy đường bay mượt mà, chống giật lác (snapping)
                         let targetX = Game.csGirlX - 40;
                         let targetY = Game.csGirlY - 60;
                         let dx = targetX - Game.csDragonX;
@@ -691,6 +717,11 @@
                         if (Game.csTimer === 30) Game.startGame();
                     }
                     
+                    Game.items.forEach(it => { 
+                        it.vy += 0.5; it.y += it.vy; 
+                        if (it.y > GROUND_Y - 30) { it.y = GROUND_Y - 30; it.vy = 0; } 
+                    });
+                    
                     Game.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
                     Game.particles = Game.particles.filter(p => p.life > 0);
                     Game.texts.forEach(t => t.life--);
@@ -704,8 +735,9 @@
                 Game.bgScroll += 1.5; 
                 Game.player.update();
 
-                if (!Game.currentBoss && Game.frameCount % 180 === 0 && Math.random() > 0.3) {
-                    Game.platforms.push(new Platform(GW, GROUND_Y - 80 - Math.random() * 30, 80 + Math.random() * 40));
+                // Lính thường vẫn ra bục để đa dạng lối đi
+                if (!Game.currentBoss && Game.frameCount % 150 === 0 && Math.random() > 0.3) {
+                    Game.platforms.push(new Platform(GW, GROUND_Y - 70, 90));
                 }
 
                 Game.platforms.forEach(p => p.update());
@@ -720,9 +752,15 @@
                         Game.spawnText("WARNING BOSS!", GW/2, GH/2, '#ef4444');
                         Game.shake = 20;
                     } else {
-                        let spawnRate = Math.max(30, 90 - Math.floor(Game.score/10));
-                        if (Game.frameCount % spawnRate === 0) Game.enemies.push(new Enemy(Math.random() > 0.5 ? 'soldier' : 'plane'));
-                        if (Game.frameCount % 300 === 0 && Math.random() > 0.3) {
+                        // LOGIC LÍNH: Sinh đông hơn, và xuất hiện từ cả 2 phía để bọc lót
+                        let spawnRate = Math.max(30, 80 - Math.floor(Game.score/6));
+                        if (Game.frameCount % spawnRate === 0) {
+                            let type = Math.random() > 0.7 ? 'plane' : 'soldier';
+                            let dir = Math.random() > 0.5 ? 1 : -1; // 1 = bên phải, -1 = bên trái
+                            Game.enemies.push(new Enemy(type, dir));
+                        }
+                        
+                        if (Game.frameCount % 250 === 0 && Math.random() > 0.3) {
                             let types = ['M', 'S', 'L'];
                             Game.items.push(new Item(GW, -50, types[Math.floor(Math.random()*3)]));
                         }
@@ -958,6 +996,5 @@
     </script>
 </body>
 </html>
-
 
 
