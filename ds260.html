@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Điền DS-260 Tự Động Nhận Diện Word</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Thư viện tạo file DOCX chuẩn -->
+    <script src="https://unpkg.com/docx@7.8.2/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <!-- Thư viện đọc file DOCX (Mammoth) để nhận diện dữ liệu cũ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
+        }
+        .step-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .step-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom Input Styles */
+        .input-group label {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #334155;
+            margin-bottom: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+        .input-field:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        
+        /* Hiệu ứng chế độ ẩn phần đã điền */
+        .hide-filled-mode .input-group.is-filled {
+            display: none !important;
+        }
+        .empty-step-msg {
+            display: none;
+        }
+        .hide-filled-mode .step-content.all-filled .empty-step-msg {
+            display: block;
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-20">
+
+    <!-- Thanh Top Bar Quản lý Dữ liệu -->
+    <div class="bg-slate-800 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+            <div class="font-bold text-lg flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                Hệ Thống DS-260 Pro
+            </div>
+            <div class="flex items-center space-x-2 md:space-x-4 text-sm">
+                <!-- Nút Upload File Word Cũ -->
+                <input type="file" id="file-upload" accept=".docx" class="hidden" onchange="loadWordFile(event)">
+                <button onclick="document.getElementById('file-upload').click()" class="flex items-center bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg transition font-medium shadow-sm border border-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    Nạp lại file Word (.docx)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vùng điều khiển thông minh -->
+    <div class="max-w-4xl mx-auto mt-6 mb-4 px-4 flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200 gap-4">
+        <div class="flex items-center justify-between w-full md:w-auto gap-4">
+            <div class="text-slate-600 font-medium">Đã điền: <span id="progress-text" class="text-blue-600 font-bold text-lg">0/0</span> mục</div>
+            <button onclick="openProgressModal()" class="text-sm bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-4 py-2.5 rounded-lg font-bold transition border border-indigo-200 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                Bảng kiểm tra lỗi
+            </button>
+        </div>
+        
+        <!-- Công tắc bật/tắt: Chỉ hiện chưa điền -->
+        <label class="flex items-center cursor-pointer bg-slate-50 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-100 transition">
+            <div class="relative">
+                <input type="checkbox" id="toggle-hide-filled" class="sr-only" onchange="toggleHideFilled()">
+                <div class="block bg-slate-300 w-12 h-7 rounded-full transition" id="toggle-bg"></div>
+                <div class="dot absolute left-1 top-1 bg-white w-5 h-5 rounded-full transition transform shadow-sm" id="toggle-dot"></div>
+            </div>
+            <div class="ml-3 text-sm font-bold text-slate-700">Lọc mục bỏ trống (Chưa điền)</div>
+        </label>
+    </div>
+
+    <!-- Vùng Form Chính -->
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden relative">
+        
+        <!-- Loading Overlay (Dùng khi đang nạp file) -->
+        <div id="loading-overlay" class="absolute inset-0 bg-white/80 z-40 hidden flex-col items-center justify-center">
+            <svg class="animate-spin h-10 w-10 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <span class="font-bold text-slate-700 text-lg">Đang trích xuất dữ liệu từ File Word...</span>
+        </div>
+
+        <!-- Header & Progress Steps -->
+        <div class="bg-blue-600 text-white p-6 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+            <div class="relative z-10 flex justify-between items-center text-sm font-medium mt-2">
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-1.5 bg-blue-800/40 z-0 rounded-full"></div>
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 h-1.5 bg-green-400 z-0 rounded-full transition-all duration-500 ease-out" id="progress-bar" style="width: 0%;"></div>
+                
+                <div class="z-10 bg-blue-600 w-9 h-9 flex items-center justify-center rounded-full border-2 border-white step-indicator shadow-md cursor-pointer text-base" id="ind-1" onclick="jumpToStep(1)">1</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-2" onclick="jumpToStep(2)">2</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-3" onclick="jumpToStep(3)">3</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-4" onclick="jumpToStep(4)">4</div>
+                <div class="z-10 bg-blue-800/50 w-9 h-9 flex items-center justify-center rounded-full border-2 border-transparent step-indicator cursor-pointer text-base" id="ind-5" onclick="jumpToStep(5)">5</div>
+            </div>
+        </div>
+
+        <!-- Form Content -->
+        <div class="p-6 md:p-10" id="main-form-container">
+            <form id="ds260-form" onsubmit="return false;">
+                
+                <!-- STEP 1: Thông tin cá nhân cơ bản -->
+                <div class="step-content active" id="step-1">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">1. Thông tin cá nhân cơ bản</h2>
+                    <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="input-group" data-name="Số hồ sơ"><label>Số hồ sơ (Case Number)</label><input type="text" id="so_ho_so" class="input-field" placeholder="Nhập số hồ sơ..."></div>
+                        <div class="input-group" data-name="Invoice ID"><label>Invoice ID</label><input type="text" id="invoice_id" class="input-field" placeholder="Nhập Invoice ID..."></div>
+                        <div class="input-group" data-name="Họ và Tên"><label>Họ và Tên</label><input type="text" id="ho_ten" class="input-field" placeholder="Ví dụ: NGUYEN VAN A"></div>
+                        <div class="input-group" data-name="Tên khác"><label>Có tên khác không?</label><input type="text" id="ten_khac" class="input-field" placeholder="Nếu có, ghi rõ. Nếu không để trống"></div>
+                        <div class="input-group" data-name="Ngày sinh"><label>Ngày, tháng, năm sinh</label><input type="text" id="ngay_sinh" class="input-field" placeholder="DD/MM/YYYY"></div>
+                        <div class="input-group" data-name="Giới tính"><label>Giới tính (Nam / Nữ)</label><input type="text" id="gioi_tinh" class="input-field" placeholder="Nam hoặc Nữ"></div>
+                        <div class="input-group" data-name="Hôn nhân"><label>Tình trạng hôn nhân</label>
+                            <select id="hon_nhan" class="input-field">
+                                <option value="">-- Chọn tình trạng --</option>
+                                <option value="Độc thân">Độc thân</option>
+                                <option value="Đã kết hôn">Đã kết hôn</option>
+                                <option value="Ly hôn">Ly hôn</option>
+                                <option value="Góa">Góa</option>
+                                <option value="Khác">Khác</option>
+                            </select>
+                        </div>
+                        <div class="input-group" data-name="Nơi sinh"><label>Nơi sinh (Tỉnh/Thành phố)</label><input type="text" id="noi_sinh" class="input-field" placeholder="Nhập nơi sinh..."></div>
+                        <div class="input-group" data-name="Quốc tịch"><label>Quốc tịch</label><input type="text" id="quoc_tich" class="input-field" placeholder="Ví dụ: Việt Nam"></div>
+                        <div class="input-group" data-name="Quốc tịch khác"><label>Có quốc tịch khác không?</label><input type="text" id="quoc_tich_khac" class="input-field" placeholder="Để trống nếu không có"></div>
+                        <div class="input-group" data-name="Án tích"><label>Có án tích không?</label><input type="text" id="an_tich" class="input-field" placeholder="Có/Không - Ghi rõ chi tiết"></div>
+                        <div class="input-group" data-name="Ngoại ngữ"><label>Có biết ngoại ngữ không?</label><input type="text" id="ngoai_ngu" class="input-field" placeholder="Ghi rõ ngôn ngữ"></div>
+                        <div class="input-group md:col-span-2" data-name="Đảng viên"><label>Có tham gia sinh hoạt Đảng không?</label><input type="text" id="dang_vien" class="input-field" placeholder="Có/Không - Ghi rõ thông tin nếu có"></div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Thông tin liên hệ & Hộ chiếu -->
+                <div class="step-content" id="step-2">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">2. Liên hệ & Hộ chiếu</h2>
+                    <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="input-group" data-name="SĐT"><label>Số điện thoại hiện tại</label><input type="text" id="sdt" class="input-field" placeholder="Nhập số điện thoại..."></div>
+                        <div class="input-group" data-name="SĐT khác"><label>SĐT khác dùng trong 5 năm gần đây</label><input type="text" id="sdt_khac" class="input-field" placeholder="Nếu không có thì để trống"></div>
+                        <div class="input-group" data-name="Email"><label>Địa chỉ Email</label><input type="text" id="email" class="input-field" placeholder="Nhập email..."></div>
+                        <div class="input-group" data-name="Email khác"><label>Email khác dùng trong 5 năm gần đây</label><input type="text" id="email_khac" class="input-field" placeholder="Nếu không có thì để trống"></div>
+                        <div class="input-group md:col-span-2" data-name="Mạng xã hội"><label>Cung cấp link Facebook, Tiktok, WhatsApp, Youtube</label><textarea id="mang_xa_hoi" class="input-field" rows="2" placeholder="Copy link dán vào đây..."></textarea></div>
+                        
+                        <div class="col-span-1 md:col-span-2 mt-4"><h3 class="font-semibold text-slate-700 text-lg">Thông tin Hộ chiếu</h3></div>
+                        
+                        <div class="input-group" data-name="Số Hộ chiếu"><label>Số hộ chiếu</label><input type="text" id="so_ho_chieu" class="input-field" placeholder="Nhập số hộ chiếu..."></div>
+                        <div class="input-group" data-name="Nơi cấp HC"><label>Tên tỉnh thành phố nào cấp hộ chiếu này</label><input type="text" id="noi_cap_hc" class="input-field" placeholder="Nhập nơi cấp..."></div>
+                        <div class="input-group" data-name="Ngày cấp HC"><label>Ngày cấp</label><input type="text" id="ngay_cap_hc" class="input-field" placeholder="DD/MM/YYYY"></div>
+                        <div class="input-group" data-name="Ngày hết hạn HC"><label>Ngày hết hạn</label><input type="text" id="ngay_het_han_hc" class="input-field" placeholder="DD/MM/YYYY"></div>
+                        
+                        <div class="input-group md:col-span-2 mt-4" data-name="Địa chỉ quá khứ"><label>Địa chỉ chi tiết (Từ năm 16 tuổi đến nay, ghi rõ từ tháng…năm… đến tháng…năm…)</label><textarea id="dia_chi_qua_khu" class="input-field" rows="3" placeholder="- Từ 01/2010 đến 05/2015: Địa chỉ A...&#10;- Từ 06/2015 đến nay: Địa chỉ B..."></textarea></div>
+                        <div class="input-group md:col-span-2 mt-2" data-name="Địa chỉ nhận thẻ xanh"><label>Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận</label><textarea id="dia_chi_the_xanh" class="input-field" rows="3" placeholder="Họ tên người nhận: ...&#10;SĐT: ...&#10;Địa chỉ: ..."></textarea></div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Thông tin Gia đình -->
+                <div class="step-content" id="step-3">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">3. Thông tin Gia đình</h2>
+                    <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
+                    </div>
+                    <div class="space-y-6">
+                        <!-- Cha -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Cha</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Tên Cha"><label>Họ tên</label><input type="text" id="cha_ten" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày sinh Cha"><label>Ngày tháng năm sinh</label><input type="text" id="cha_ns" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi sinh Cha"><label>Nơi sinh (tỉnh, thành phố)</label><input type="text" id="cha_noisinh" class="input-field"></div>
+                                <div class="input-group" data-name="Địa chỉ Cha"><label>Địa chỉ (Nếu đã mất ghi năm mất)</label><input type="text" id="cha_diachi" class="input-field"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mẹ -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Mẹ</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Tên Mẹ"><label>Họ tên</label><input type="text" id="me_ten" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày sinh Mẹ"><label>Ngày tháng năm sinh</label><input type="text" id="me_ns" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi sinh Mẹ"><label>Nơi sinh( tỉnh, thành phố)</label><input type="text" id="me_noisinh" class="input-field"></div>
+                                <div class="input-group" data-name="Địa chỉ Mẹ"><label>Địa chỉ (Nếu đã mất ghi năm mất)</label><input type="text" id="me_diachi" class="input-field"></div>
+                            </div>
+                        </div>
+
+                        <!-- Vợ/Chồng hiện tại -->
+                        <div class="bg-blue-50/50 p-5 rounded-xl border border-blue-100">
+                            <h3 class="font-bold mb-4 text-blue-800">Vợ (Chồng) hiện tại</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Tên Vợ/Chồng"><label>Họ tên</label><input type="text" id="vc_ten" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày sinh Vợ/Chồng"><label>Ngày tháng năm sinh</label><input type="text" id="vc_ns" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi sinh Vợ/Chồng"><label>Nơi sinh</label><input type="text" id="vc_noisinh" class="input-field"></div>
+                                <div class="input-group" data-name="Việc làm Vợ/Chồng"><label>Công việc hiện tại</label><input type="text" id="vc_job" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="Địa chỉ Vợ/Chồng"><label>Địa chỉ</label><input type="text" id="vc_diachi" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày kết hôn"><label>Kết hôn ngày, tháng, năm</label><input type="text" id="vc_ngaykh" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi kết hôn"><label>Nơi kết hôn</label><input type="text" id="vc_noikh" class="input-field"></div>
+                            </div>
+                        </div>
+
+                        <!-- Vợ/Chồng cũ -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Vợ (Chồng) cũ (Nếu có)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Tên Vợ/Chồng cũ"><label>Họ tên</label><input type="text" id="vccu_ten" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày sinh Vợ/Chồng cũ"><label>Ngày tháng năm sinh</label><input type="text" id="vccu_ns" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày kết hôn cũ"><label>Kết hôn ngày, tháng, năm</label><input type="text" id="vccu_ngaykh" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi kết hôn cũ"><label>Nơi kết hôn</label><input type="text" id="vccu_noikh" class="input-field"></div>
+                                <div class="input-group" data-name="Ngày ly hôn"><label>Ngày ly hôn</label><input type="text" id="vccu_ngaylh" class="input-field"></div>
+                                <div class="input-group" data-name="Nơi ly hôn"><label>Nơi ly hôn</label><input type="text" id="vccu_noilh" class="input-field"></div>
+                            </div>
+                        </div>
+
+                        <!-- Các con -->
+                        <div>
+                            <h3 class="font-bold mb-4 text-slate-700">Thông tin về các con</h3>
+                            <!-- Con 1 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                                <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider">Con 1</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="input-group" data-name="Tên Con 1"><label>Họ tên</label><input type="text" id="con1_ten" class="input-field"></div>
+                                    <div class="input-group" data-name="NS Con 1"><label>Ngày, tháng, năm sinh</label><input type="text" id="con1_ns" class="input-field"></div>
+                                    <div class="input-group" data-name="Nơi sinh Con 1"><label>Nơi sinh (tỉnh, thành phố)</label><input type="text" id="con1_noisinh" class="input-field"></div>
+                                    <div class="input-group" data-name="Địa chỉ Con 1"><label>Địa chỉ</label><input type="text" id="con1_diachi" class="input-field"></div>
+                                </div>
+                            </div>
+                            <!-- Con 2 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4">
+                                <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider">Con 2 (Nếu có)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="input-group" data-name="Tên Con 2"><label>Họ tên</label><input type="text" id="con2_ten" class="input-field"></div>
+                                    <div class="input-group" data-name="NS Con 2"><label>Ngày, tháng, năm sinh</label><input type="text" id="con2_ns" class="input-field"></div>
+                                    <div class="input-group" data-name="Nơi sinh Con 2"><label>Nơi sinh (tỉnh, thành phố)</label><input type="text" id="con2_noisinh" class="input-field"></div>
+                                    <div class="input-group" data-name="Địa chỉ Con 2"><label>Địa chỉ</label><input type="text" id="con2_diachi" class="input-field"></div>
+                                </div>
+                            </div>
+                            <!-- Con 3 -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider">Con 3 (Nếu có)</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="input-group" data-name="Tên Con 3"><label>Họ tên</label><input type="text" id="con3_ten" class="input-field"></div>
+                                    <div class="input-group" data-name="NS Con 3"><label>Ngày, tháng, năm sinh</label><input type="text" id="con3_ns" class="input-field"></div>
+                                    <div class="input-group" data-name="Nơi sinh Con 3"><label>Nơi sinh (tỉnh, thành phố)</label><input type="text" id="con3_noisinh" class="input-field"></div>
+                                    <div class="input-group" data-name="Địa chỉ Con 3"><label>Địa chỉ</label><input type="text" id="con3_diachi" class="input-field"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- STEP 4: Học vấn & Công việc -->
+                <div class="step-content" id="step-4">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">4. Học vấn & Công việc</h2>
+                    <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
+                    </div>
+                    <div class="space-y-6">
+                        
+                        <div class="bg-emerald-50/50 p-5 rounded-xl border border-emerald-100">
+                            <h3 class="font-bold mb-4 text-emerald-800">Công việc hiện tại</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Công việc hiện tại"><label>Tên công việc</label><input type="text" id="job_now_title" class="input-field"></div>
+                                <div class="input-group" data-name="Công ty hiện tại"><label>Tên công ty</label><input type="text" id="job_now_company" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC Cty hiện tại"><label>Địa chỉ công ty</label><input type="text" id="job_now_address" class="input-field"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Công việc trước đó (10 năm gần nhất)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Công việc cũ"><label>Tên công việc</label><input type="text" id="job_old_title" class="input-field"></div>
+                                <div class="input-group" data-name="Công ty cũ"><label>Tên công ty</label><input type="text" id="job_old_company" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC Cty cũ"><label>Địa chỉ công ty</label><input type="text" id="job_old_address" class="input-field"></div>
+                                <div class="input-group" data-name="Người quản lý cũ"><label>Tên người quản lý / giám đốc</label><input type="text" id="job_old_manager" class="input-field"></div>
+                                <div class="input-group" data-name="SĐT Cty cũ"><label>Số điện thoại nơi làm việc</label><input type="text" id="job_old_phone" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="Thời gian làm cũ">
+                                    <label>Thời gian làm (từ tháng...năm... đến tháng...năm...)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="text" id="job_old_from" class="input-field text-center" placeholder="Tháng/Năm Bắt đầu">
+                                        <span class="text-slate-500 font-medium">đến</span>
+                                        <input type="text" id="job_old_to" class="input-field text-center" placeholder="Tháng/Năm Kết thúc">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="font-bold mb-4 text-slate-700">Quá trình học vấn GHI ĐẦY ĐỦ TÊN, ĐỊA CHỈ, KHÓA HỌC</h3>
+                            
+                            <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider">Cấp 2</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="input-group" data-name="Trường C2"><label>Tên trường</label><input type="text" id="edu_c2_name" class="input-field"></div>
+                                <div class="input-group" data-name="TG Học C2"><label>Học từ tháng…năm…. đến tháng….năm</label><input type="text" id="edu_c2_time" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC Trường C2"><label>Địa chỉ trường</label><input type="text" id="edu_c2_address" class="input-field"></div>
+                            </div>
+                            
+                            <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider border-t border-slate-200 pt-4">Cấp 3</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="input-group" data-name="Trường C3"><label>Tên trường</label><input type="text" id="edu_c3_name" class="input-field"></div>
+                                <div class="input-group" data-name="TG Học C3"><label>Học từ tháng…năm…. đến tháng….năm</label><input type="text" id="edu_c3_time" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC Trường C3"><label>Địa chỉ trường</label><input type="text" id="edu_c3_address" class="input-field"></div>
+                            </div>
+
+                            <h4 class="font-semibold text-sm mb-3 text-slate-600 uppercase tracking-wider border-t border-slate-200 pt-4">Đại học, cao đẳng</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group" data-name="Trường ĐH"><label>Tên trường</label><input type="text" id="edu_uni_name" class="input-field"></div>
+                                <div class="input-group" data-name="TG Học ĐH"><label>Học từ tháng……..năm……... đến tháng……...năm</label><input type="text" id="edu_uni_time" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC Trường ĐH"><label>Địa chỉ trường</label><input type="text" id="edu_uni_address" class="input-field"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Lịch sử di trú & Bảo lãnh -->
+                <div class="step-content" id="step-5">
+                    <h2 class="text-2xl font-bold mb-6 text-slate-800 border-b pb-3 border-slate-200">5. Di trú & Người bảo lãnh</h2>
+                    <div class="empty-step-msg bg-green-50 text-green-700 p-6 rounded-xl border border-green-200 text-center font-medium my-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Tuyệt vời! Toàn bộ thông tin ở trang này đã được điền.
+                    </div>
+                    <div class="space-y-6">
+                        
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <div class="input-group mb-4" data-name="Phỏng vấn Visa Mỹ">
+                                <label>Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Ghi rõ số lần, thời gian...)</label>
+                                <textarea id="history_us_visa" class="input-field" rows="3"></textarea>
+                            </div>
+                            <div class="input-group mb-4" data-name="Bị từ chối Visa">
+                                <label>Đã bao giờ phỏng vấn Mỹ bị từ chối chưa?</label>
+                                <textarea id="history_refused" class="input-field" rows="2"></textarea>
+                            </div>
+                            <div class="input-group mb-4" data-name="Bảng Visa Mỹ">
+                                <label>Bảng Lịch Sử Visa (Nhập nếu có)</label>
+                                <p class="text-xs text-slate-500 mb-1">Ghi: Số hiệu Visa | Ngày cấp, hết hạn | Thời gian đi | Tổng thời gian ở Mỹ</p>
+                                <textarea id="history_visa_details" class="input-field" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <div class="input-group" data-name="Lịch sử du lịch">
+                                <label>Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không?</label>
+                                <textarea id="history_travel" class="input-field" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50/50 p-5 rounded-xl border border-amber-200">
+                            <h3 class="font-bold mb-4 text-amber-800">Người bảo lãnh</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group md:col-span-2" data-name="Diện bảo lãnh"><label>Diện</label><input type="text" id="sponsor_type" class="input-field"></div>
+                                <div class="input-group" data-name="Tên người bảo lãnh"><label>Họ tên</label><input type="text" id="sponsor_name" class="input-field"></div>
+                                <div class="input-group" data-name="SĐT người bảo lãnh"><label>Số điện thoại</label><input type="text" id="sponsor_phone" class="input-field"></div>
+                                <div class="input-group md:col-span-2" data-name="ĐC người bảo lãnh"><label>Địa chỉ</label><input type="text" id="sponsor_address" class="input-field"></div>
+                                <div class="input-group" data-name="Nghề nghiệp người BL"><label>Người bảo lãnh làm nghề gì?</label><input type="text" id="sponsor_job" class="input-field"></div>
+                                <div class="input-group" data-name="Email người BL"><label>EMAIL (NẾU CÓ)</label><input type="text" id="sponsor_email" class="input-field"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-8 flex justify-between items-center border-t border-slate-200 pt-6">
+                    <button type="button" id="btn-prev" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 hidden transition font-bold shadow-sm" onclick="changeStep(-1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                        Quay lại
+                    </button>
+                    <div class="flex-grow"></div>
+                    <button type="button" id="btn-next" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold shadow-lg shadow-blue-500/40" onclick="changeStep(1)">
+                        Tiếp tục
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                    <button type="button" id="btn-export" class="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 hidden transition font-bold shadow-lg shadow-emerald-500/40 flex items-center" onclick="exportWord()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        Tải & Xuất File Word (Zalo)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tiến Độ -->
+    <div id="progress-modal" class="fixed inset-0 bg-slate-900/60 z-[100] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800">Bảng Kiểm Tra: <span id="modal-score" class="text-blue-600 ml-1"></span></h3>
+                <button onclick="closeProgressModal()" class="text-slate-400 hover:text-slate-600 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-grow bg-white" id="modal-list-container">
+                <!-- Nội dung list tiến độ -->
+            </div>
+            <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+                <button onclick="closeProgressModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold transition shadow-sm">Đóng bảng</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // Xử lý chuyển bước UI
+        function changeStep(n) {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            updateStepIndicator(currentStep, false);
+
+            currentStep += n;
+
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            let progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+            
+            updateStepIndicator(currentStep, true);
+
+            document.getElementById('btn-prev').style.display = currentStep === 1 ? 'none' : 'block';
+            
+            if (currentStep === totalSteps) {
+                document.getElementById('btn-next').style.display = 'none';
+                document.getElementById('btn-export').style.display = 'flex';
+            } else {
+                document.getElementById('btn-next').style.display = 'block';
+                document.getElementById('btn-export').style.display = 'none';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            checkAllStepsEmptyState();
+        }
+
+        function jumpToStep(target) {
+            if (target === currentStep) return;
+            const diff = target - currentStep;
+            changeStep(diff);
+        }
+
+        function updateStepIndicator(step, isActive) {
+            const ind = document.getElementById(`ind-${step}`);
+            if (isActive) {
+                ind.classList.replace('bg-blue-800/50', 'bg-blue-600');
+                ind.classList.replace('border-transparent', 'border-white');
+                ind.classList.add('shadow-md');
+            } else {
+                ind.classList.replace('bg-blue-600', 'bg-blue-800/50');
+                ind.classList.replace('border-white', 'border-transparent');
+                ind.classList.remove('shadow-md');
+            }
+        }
+
+        // ==========================================
+        // THEO DÕI VÀ LỌC CÁC MỤC ĐÃ ĐIỀN
+        // ==========================================
+        const allInputs = document.querySelectorAll('.input-field');
+        
+        function trackInputChanges() {
+            let filledCount = 0;
+            let totalCount = allInputs.length;
+            
+            allInputs.forEach(input => {
+                const group = input.closest('.input-group');
+                if(!group) return;
+                
+                const val = input.value.trim();
+                if (val !== '') {
+                    filledCount++;
+                    group.classList.add('is-filled');
+                } else {
+                    group.classList.remove('is-filled');
+                }
+            });
+
+            document.getElementById('progress-text').innerText = `${filledCount}/${totalCount}`;
+            document.getElementById('modal-score').innerText = `${filledCount}/${totalCount} Mục`;
+            checkAllStepsEmptyState();
+        }
+
+        function checkAllStepsEmptyState() {
+            const isHideMode = document.getElementById('toggle-hide-filled').checked;
+            for(let i=1; i<=totalSteps; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                if (!stepEl) continue;
+                
+                const groups = stepEl.querySelectorAll('.input-group');
+                const filledGroups = stepEl.querySelectorAll('.input-group.is-filled');
+                
+                if (isHideMode && groups.length > 0 && groups.length === filledGroups.length) {
+                    stepEl.classList.add('all-filled');
+                } else {
+                    stepEl.classList.remove('all-filled');
+                }
+            }
+        }
+
+        allInputs.forEach(input => {
+            input.addEventListener('input', trackInputChanges);
+            input.addEventListener('change', trackInputChanges);
+        });
+
+        function toggleHideFilled() {
+            const isChecked = document.getElementById('toggle-hide-filled').checked;
+            const bg = document.getElementById('toggle-bg');
+            const dot = document.getElementById('toggle-dot');
+            const container = document.getElementById('main-form-container');
+
+            if (isChecked) {
+                bg.classList.replace('bg-slate-300', 'bg-blue-500');
+                dot.classList.add('translate-x-7');
+                container.classList.add('hide-filled-mode');
+            } else {
+                bg.classList.replace('bg-blue-500', 'bg-slate-300');
+                dot.classList.remove('translate-x-7');
+                container.classList.remove('hide-filled-mode');
+            }
+            checkAllStepsEmptyState();
+        }
+
+        function openProgressModal() {
+            document.getElementById('progress-modal').classList.remove('hidden');
+            let html = '';
+            for(let i=1; i<=totalSteps; i++) {
+                const stepEl = document.getElementById(`step-${i}`);
+                const stepTitle = stepEl.querySelector('h2').innerText;
+                const inputs = stepEl.querySelectorAll('.input-group');
+                
+                html += `<div class="mb-6"><h4 class="font-bold text-slate-800 bg-slate-100 p-3 rounded-lg">${stepTitle}</h4><div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">`;
+                
+                inputs.forEach(group => {
+                    const name = group.getAttribute('data-name') || group.querySelector('label').innerText;
+                    const isFilled = group.classList.contains('is-filled');
+                    const icon = isFilled 
+                        ? `<svg class="w-5 h-5 text-green-500 flex-shrink-0 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`
+                        : `<svg class="w-5 h-5 text-red-500 flex-shrink-0 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                    const textColor = isFilled ? 'text-slate-600' : 'text-red-600 font-bold bg-red-50 rounded';
+                    html += `<div class="flex items-center text-sm ${textColor} p-2 border border-slate-100 rounded">${icon} <span class="truncate">${name}</span></div>`;
+                });
+                html += `</div></div>`;
+            }
+            document.getElementById('modal-list-container').innerHTML = html;
+        }
+
+        function closeProgressModal() {
+            document.getElementById('progress-modal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // CÔNG NGHỆ NẠP FILE WORD (TRÍCH XUẤT MÃ NGẦM)
+        // ==========================================
+        function loadWordFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.getElementById('loading-overlay').classList.add('flex');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                
+                // Sử dụng mammoth quét toàn bộ chữ trong file Word
+                mammoth.extractRawText({arrayBuffer: arrayBuffer})
+                    .then(function(result) {
+                        const text = result.value;
+                        // Tìm chuỗi dữ liệu tàng hình
+                        const match = text.match(/\[DS260_DATA_START\](.*?)\[DS260_DATA_END\]/);
+                        
+                        document.getElementById('loading-overlay').classList.add('hidden');
+                        document.getElementById('loading-overlay').classList.remove('flex');
+
+                        if (match && match[1]) {
+                            try {
+                                // Giải mã Base64 chuẩn UTF-8 (Fix lỗi Tiếng Việt có dấu)
+                                const jsonStr = decodeURIComponent(atob(match[1]));
+                                const data = JSON.parse(jsonStr);
+                                
+                                allInputs.forEach(input => {
+                                    if (input.id && data[input.id] !== undefined) {
+                                        input.value = data[input.id];
+                                    }
+                                });
+                                trackInputChanges();
+                                alert("Thành công! Toàn bộ dữ liệu từ File Word đã được khôi phục vào form.");
+                            } catch(err) {
+                                alert("Rất tiếc, đoạn mã bảo mật trong file Word đã bị hỏng do quá trình chỉnh sửa thủ công: " + err.message);
+                            }
+                        } else {
+                            alert("Không tìm thấy mã nhận diện trong file này.\nHãy đảm bảo bạn đang tải lên file .docx được TẢI XUỐNG TỪ CHÍNH HỆ THỐNG NÀY.");
+                        }
+                    })
+                    .catch(function(err) {
+                        document.getElementById('loading-overlay').classList.add('hidden');
+                        document.getElementById('loading-overlay').classList.remove('flex');
+                        alert("Lỗi khi đọc file Word: " + err.message);
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+            event.target.value = ''; // Reset
+        }
+
+        // ==========================================
+        // XUẤT FILE DOCX CHUẨN ZALO VÀ NHÚNG MÃ TÀNG HÌNH
+        // ==========================================
+        function val(id, defaultString) {
+            const el = document.getElementById(id);
+            if (!el || !el.value.trim()) return defaultString;
+            return el.value.trim();
+        }
+
+        function selectVal(id, defaultString) {
+            const el = document.getElementById(id);
+            if (!el || el.value === "") return defaultString;
+            return el.value;
+        }
+
+        function exportWord() {
+            const btn = document.getElementById('btn-export');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Đang tạo DOCX...";
+            btn.disabled = true;
+
+            try {
+                // Thu thập toàn bộ dữ liệu đang có trên form
+                const formData = {};
+                allInputs.forEach(input => { if(input.id) formData[input.id] = input.value; });
+                
+                // Mã hóa toàn bộ dữ liệu thành Base64 (Chuẩn Unicode cho Tiếng Việt)
+                const encodedData = btoa(encodeURIComponent(JSON.stringify(formData)));
+                const secretPayload = `[DS260_DATA_START]${encodedData}[DS260_DATA_END]`;
+
+                const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle } = docx;
+
+                const p = (text) => new Paragraph({
+                    children: [new TextRun({ text: text, font: "Times New Roman", size: 28 })],
+                    spacing: { after: 100 }
+                });
+
+                const multiP = (id, defaultString) => {
+                    const el = document.getElementById(id);
+                    let text = (!el || !el.value.trim()) ? defaultString : el.value.trim();
+                    if (!text) return [p("")];
+                    return text.split('\n').map(line => p(line));
+                };
+
+                const visaTable = new Table({
+                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    borders: {
+                        top: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, bottom: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+                        left: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, right: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+                        insideHorizontal: { style: BorderStyle.SINGLE, size: 1, color: "000000" }, insideVertical: { style: BorderStyle.SINGLE, size: 1, color: "000000" },
+                    },
+                    rows: [
+                        new TableRow({
+                            children: [
+                                new TableCell({ children: [p("Số hiệu visa")], width: { size: 25, type: WidthType.PERCENTAGE } }),
+                                new TableCell({ children: [p("Ngày cấp, ngày hết hạn")], width: { size: 25, type: WidthType.PERCENTAGE } }),
+                                new TableCell({ children: [p("Thời gian đi")], width: { size: 25, type: WidthType.PERCENTAGE } }),
+                                new TableCell({ children: [p("Tổng thời gian ở Mỹ bao nhiêu ngày ( hoặc tuần, tháng)")], width: { size: 25, type: WidthType.PERCENTAGE } }),
+                            ]
+                        }),
+                        new TableRow({
+                            children: [
+                                new TableCell({ children: multiP('history_visa_details', ' '), columnSpan: 4, margins: { top: 100, bottom: 100, left: 100, right: 100 } })
+                            ]
+                        })
+                    ]
+                });
+
+                const doc = new Document({
+                    creator: "DS260 Form Builder", title: "DS260 Mau",
+                    sections: [{
+                        properties: {},
+                        children: [
+                            p("Những thông tin cần thiết để điền ds260"), p(""),
+                            p("Số hồ sơ : " + val('so_ho_so', '')),
+                            p("Invoice ID :  " + val('invoice_id', '')), p(""),
+                            p("Họ tên : " + val('ho_ten', '………………………………………………………………………………..……..')),
+                            p("Có tên khác không ?" + val('ten_khac', '………………………………………………………………………….')),
+                            p("Ngày, tháng, năm sinh : " + val('ngay_sinh', '……………………………………………………………….……..')),
+                            p("Nam/ Nữ :" + val('gioi_tinh', '…………………………………………………………………………………….')),
+                            p("Tình trạng hôn nhân :" + selectVal('hon_nhan', '………………………………………………………………………..')),
+                            p("Nơi sinh  (tỉnh, thành phố): " + val('noi_sinh', '…………………………………………………………………..')),
+                            p("Quốc tịch ? " + val('quoc_tich', '……………………………………………………………………………………')),
+                            p("Có quốc tịch khác không ?" + val('quoc_tich_khac', '……………………………………………………………………')),
+                            p("Số điện thoại : " + val('sdt', '………………………………………………………………………………..')),
+                            p("Có số điện thoại nào khác dùng trong 5 năm gần đây :" + val('sdt_khac', '……………………………………...')),
+                            p("Thông tin về hộ chiếu : "),
+                            p("Số hộ chiếu :" + val('so_ho_chieu', '………………………………………………………………')),
+                            p("Ngày cấp : " + val('ngay_cap_hc', '…………………………..') + "  -  Ngày hết hạn : " + val('ngay_het_han_hc', '…………………')),
+                            p("Tên tỉnh thành phố nào cấp hộ chiếu này " + val('noi_cap_hc', '…………………………………')),
+                            p("Địa chỉ email: "),
+                            p("Có email nào khác dùng trong 5 năm gần đây :" + val('email_khac', '……………………………………………..')),
+                            p("Địa chỉ chi tiết (Từ năm 16 tuổi đến nay, ghi rõ từ tháng…năm… đến tháng…năm…):"),
+                            ...multiP('dia_chi_qua_khu', '...............................................................................................................................................….\n.............................................................................................................................................…...'),
+                            p("Có án tích không : " + val('an_tich', '………………………………………………………………………..…..')),
+                            p("Có biết ngoại ngữ không?" + val('ngoai_ngu', '……………………………………………………………………..')),
+                            p("Cung cấp link Facebook, Tiktok, WhatsApp, Youtube  ............…"),
+                            ...multiP('mang_xa_hoi', '….……………………………………………………………………………………………'),
+                            p("Có tham gia sinh hoạt Đảng không?" + val('dang_vien', '.........................................................…………………..')),
+                            p("Khi sang Mỹ, sở di trú sẽ chuyển thẻ xanh về địa chỉ nào ? Ghi rõ họ tên, địa chỉ, số điện thoại người nhận"),
+                            ...multiP('dia_chi_the_xanh', '……………………………………………………………………………..'),
+                            p("Cha :"),
+                            p("Họ tên : " + val('cha_ten', '…………………………………………………………………………………')),
+                            p("Ngày tháng năm sinh : " + val('cha_ns', '………………………………………………………………….')),
+                            p("Nơi sinh (tỉnh, thành phố): " + val('cha_noisinh', '……………………………………………………………..')),
+                            p("Địa chỉ : " + val('cha_diachi', '……………………………………………………………………………….')),
+                            p("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào" + (val('cha_diachi') ? '' : '…………………………….')),
+                            p("Mẹ :"),
+                            p("Họ tên : " + val('me_ten', '………………………………………………………………………………..')),
+                            p("Ngày tháng năm sinh :" + val('me_ns', '………………………………………………………………..')),
+                            p("Nơi sinh( tỉnh, thành phố) :" + val('me_noisinh', '…………………………………………………………..')),
+                            p("Địa chỉ : " + val('me_diachi', '………………………………………………………………………………')),
+                            p("Nếu đã mất thì không ghi địa chỉ mà chỉ ghi mất năm nào" + (val('me_diachi') ? '' : '……………………………')),
+                            p("Vợ (Chồng) hiện tại:"),
+                            p("Họ tên  : " + val('vc_ten', '………………………………………………………………………………')),
+                            p("Ngày tháng năm sinh:" + val('vc_ns', '………………………………………………………………..')),
+                            p("Nơi sinh: " + val('vc_noisinh', '……………………………………………………………………..………')),
+                            p("Địa chỉ : " + val('vc_diachi', '………………………………………………………………………………')),
+                            p("Kết hôn ngày, tháng, năm: " + val('vc_ngaykh', '…………………………………………………………..')),
+                            p("Nơi kết hôn : " + val('vc_noikh', '…………………………………………………………………………')),
+                            p("Công việc hiện tại :  " + val('vc_job', '…………………………………………………………………')),
+                            p("Vợ (Chồng) cũ:"),
+                            p("Họ tên  : " + val('vccu_ten', '............................................................................................................................')),
+                            p("Ngày tháng năm sinh " + val('vccu_ns', '........................................…………………..................................')),
+                            p("Kết hôn ngày, tháng, năm " + val('vccu_ngaykh', '..............………………………………………....................') + "  Nơi kết hôn : " + val('vccu_noikh', '...............................………………………………………………………..')),
+                            p("Ngày ly hôn:" + val('vccu_ngaylh', '..............................................………………………………………......') + " .. Nơi ly hôn :" + val('vccu_noilh', '...............……………………………………………………….....................')),
+                            p("Thông tin về các con :"),
+                            p("Con 1 :"),
+                            p("Họ tên  :  " + val('con1_ten', '………………………………………………………………………….…..…')),
+                            p("Ngày, tháng, năm sinh :" + val('con1_ns', '…………………………………………………………….……')),
+                            p("Nơi sinh (tỉnh, thành phố) :" + val('con1_noisinh', '……………………………………………………….….….')),
+                            p("Địa chỉ : " + val('con1_diachi', '……………………………………………………………………………...…..')),
+                            p("Con 2 : "),
+                            p("Họ tên  : " + val('con2_ten', '…………………………………………………………………….……....…..')),
+                            p("Ngày, tháng, năm sinh : " + val('con2_ns', '…………………………………………………….…….….…')),
+                            p("Nơi sinh (tỉnh, thành phố): " + val('con2_noisinh', '……………………………………………………….…….')),
+                            p("Địa chỉ : " + val('con2_diachi', '………………………….……………………………………………….……')),
+                            p("Con 3 : "),
+                            p("Họ tên  :   " + val('con3_ten', '………………………………………………………………………….……')),
+                            p("Ngày, tháng, năm sinh : " + val('con3_ns', '………………………………………………………….…….')),
+                            p("Nơi sinh (tỉnh, thành phố): " + val('con3_noisinh', '………………………………………………………….….-')),
+                            p("Địa chỉ:" + val('con3_diachi', '…………………………..…………………………………………………….')),
+                            p("Thông tin về công việc hiện tại  :"),
+                            p("- Tên công việc  :" + val('job_now_title', '……………………………………………………………………………..')),
+                            p("- Tên công ty  :" + val('job_now_company', '……………………………………………………………………………….-')),
+                            p("- Địa chỉ công ty :" + val('job_now_address', '…………………………………………………………………………….')),
+                            p("Thông tin về công việc trước đó (Kê khai trong vòng 10 năm gần nhất) :"),
+                            p("- Tên công việc :" + val('job_old_title', '………………………………………………………………………………')),
+                            p("- Tên công ty :" + val('job_old_company', '………………………………………………………………………………..')),
+                            p("- Địa chỉ công ty :" + val('job_old_address', '…………………………………………………………………………….')),
+                            p("- Tên người quản lý mình hoặc tên giám đốc công ty :" + val('job_old_manager', '………………………………………')),
+                            p("- Số điện thoại nơi làm việc :" + val('job_old_phone', '…………………………………………………………………')),
+                            p("- Thời gian làm từ tháng" + val('job_old_from', '……….') + "năm" + (val('job_old_from')?'':'……...') + " đến …….. tháng" + val('job_old_to', '…..…') + " năm" + (val('job_old_to')?'':'……………..…....')), p(""),
+                            p("Quá trình học vấn (Cấp 2, cấp 3, cao đẳng, đại học) GHI ĐẦY ĐỦ TÊN , ĐỊA CHỈ VÀ KHÓA HỌC: "),
+                            p("Cấp 2 : -Tên trường :" + val('edu_c2_name', '……………………………………………………………………..')),
+                            p("- Địa chỉ trường :" + val('edu_c2_address', '……………………………………………………………………')),
+                            p("- Học từ tháng" + val('edu_c2_time', '…năm…. đến tháng….năm ………………………………………')),
+                            p("Cấp 3 : -Tên trường" + val('edu_c3_name', '………………………………………………………………………..')),
+                            p("- Địa chỉ trường" + val('edu_c3_address', '……………………………………………………………………..')),
+                            p("- Học từ tháng" + val('edu_c3_time', '…năm…. đến tháng….năm ……………………………………')),
+                            p("Đại học, cao đẳng: "),
+                            p("-Tên trường" + val('edu_uni_name', '…………………………………………………………………………')),
+                            p("- Địa chỉ trường" + val('edu_uni_address', '…………………………………………………………………….')),
+                            p("- Học từ tháng" + val('edu_uni_time', '……..năm……... đến tháng……...năm ………………………….....')), p(""),
+                            ...("Bạn đã bao giờ phỏng vấn xin visa đi mỹ chưa? (Du lịch, du học, định cư), đính kèm visa nếu đã được cấp, (Ghi rõ số lần sang Mỹ, đi từ ngày….tháng…năm…….. đến ngày… tháng…năm….) : \n" + val('history_us_visa', '………………………………………………………………………….')).split('\n').map(line => p(line)), p(""),
+                            p("Đã bao giờ phỏng vấn Mỹ bị từ chối chưa?"),
+                            ...multiP('history_refused', ''), p(""),
+                            visaTable, p(""),
+                            p("Đã từng đi du lịch nước nào trong vòng 5 năm gần nhất đây không? (Nếu có kể tên nước đã đi)" + val('history_travel', '……………………………………………………………………………………….')), p(""),
+                            p("Người bảo lãnh : (Diện : " + val('sponsor_type', '.....') + " )"),
+                            p("Họ tên : " + val('sponsor_name', '…………………………………………………………………………………')),
+                            p("Địa chỉ : " + val('sponsor_address', '………………………………………………………………………….………………..')),
+                            p("Số điện thoại : " + val('sponsor_phone', '………………………………………………………………………….')),
+                            p("Người bảo lãnh làm nghề gì?" + val('sponsor_job', '…………………………………………………………..')),
+                            p("EMAIL (NẾU CÓ) :" + val('sponsor_email', '……………………………………………………………………')),
+                            
+                            // ---- THUẬT TOÁN TÀNG HÌNH (GẮN MÃ PHỤC HỒI DỮ LIỆU) ----
+                            new Paragraph({
+                                children: [
+                                    new TextRun({ 
+                                        text: secretPayload,
+                                        font: "Times New Roman", size: 1, color: "FFFFFF" // Size 1 (siêu bé) và màu trắng (ẩn vào nền)
+                                    })
+                                ],
+                                spacing: { before: 0, after: 0 }
+                            })
+                        ]
+                    }]
+                });
+
+                Packer.toBlob(doc).then(blob => {
+                    saveAs(blob, "DS260_mau_Da_Dien.docx");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error(err);
+                    alert("Lỗi khi tạo file DOCX: " + err.message);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                });
+
+            } catch (error) {
+                console.error(error);
+                alert("Đã xảy ra lỗi khởi tạo hệ thống Word: " + error.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+        
+        // Khởi tạo trạng thái ban đầu
+        trackInputChanges();
+    </script>
+</body>
+</html>
+
+
