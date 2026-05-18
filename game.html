@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Cứu Vợ - Chiến Dịch Contra (Masterpiece Logic)</title>
+    <title>Cứu Vợ - Chiến Dịch Contra 2.0 (Masterpiece Logic)</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
@@ -92,22 +92,22 @@
 
         #controls-layer {
             position: absolute; 
-            bottom: 25px; bottom: max(25px, env(safe-area-inset-bottom)); 
-            left: 0; right: 0;
-            display: none; justify-content: space-between; padding: 0 25px;
+            bottom: 30px; bottom: max(30px, env(safe-area-inset-bottom)); 
+            left: 30px; right: 0;
+            display: none; justify-content: flex-start;
             z-index: 40; pointer-events: none;
         }
 
-        .ctrl-group { display: flex; gap: 18px; pointer-events: auto; }
+        .ctrl-group { display: flex; gap: 25px; pointer-events: auto; }
 
         .ctrl-btn {
-            width: 70px; height: 70px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.02) 100%);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
+            border: 3px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%; 
             display: flex; justify-content: center; align-items: center;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.5), inset 0 2px 6px rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.3);
             transition: all 0.1s; cursor: pointer;
         }
         
@@ -116,14 +116,14 @@
         }
 
         .ctrl-btn svg {
-            width: 34px; height: 34px; stroke: #ffffff;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
+            width: 42px; height: 42px; stroke: #ffffff; stroke-width: 3;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
         .ctrl-btn.active { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
-            transform: scale(0.9) translateY(4px); 
-            box-shadow: 0 0px 5px rgba(0,0,0,0.5), inset 0 4px 10px rgba(0,0,0,0.4);
-            border-color: rgba(255, 255, 255, 0.8);
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 100%);
+            transform: scale(0.92) translateY(5px); 
+            box-shadow: 0 0px 5px rgba(0,0,0,0.6), inset 0 6px 15px rgba(0,0,0,0.5);
+            border-color: rgba(255, 255, 255, 0.9);
         }
         .ctrl-btn.active svg { stroke: #facc15; }
     </style>
@@ -152,18 +152,10 @@
         <div id="controls-layer">
             <div class="ctrl-group">
                 <div class="ctrl-btn" id="btn-left">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                 </div>
                 <div class="ctrl-btn" id="btn-right">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                </div>
-            </div>
-            <div class="ctrl-group">
-                <div class="ctrl-btn" id="btn-jump">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
-                </div>
-                <div class="ctrl-btn" id="btn-shoot">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </div>
             </div>
         </div>
@@ -172,6 +164,7 @@
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
+        const container = document.getElementById('game-container');
 
         const GW = 400; 
         const GH = 700;
@@ -190,12 +183,13 @@
             blood: '#dc2626', spark: '#fef08a'
         };
 
-        const keys = { left: false, right: false, jump: false, shoot: false };
+        const keys = { left: false, right: false, jump: false };
 
         function bindButton(id, keyName) {
             const btn = document.getElementById(id);
-            const press = (e) => { e.preventDefault(); keys[keyName] = true; btn.classList.add('active'); };
-            const release = (e) => { e.preventDefault(); keys[keyName] = false; btn.classList.remove('active'); };
+            if (!btn) return;
+            const press = (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = true; btn.classList.add('active'); };
+            const release = (e) => { e.preventDefault(); e.stopPropagation(); keys[keyName] = false; btn.classList.remove('active'); };
             
             btn.addEventListener('touchstart', press, {passive: false});
             btn.addEventListener('touchend', release, {passive: false});
@@ -206,8 +200,24 @@
 
         bindButton('btn-left', 'left');
         bindButton('btn-right', 'right');
-        bindButton('btn-jump', 'jump');
-        bindButton('btn-shoot', 'shoot');
+
+        // CHẠM BẤT KỲ ĐÂU ĐỂ NHẢY (TINH TẾ HƠN)
+        const handleJump = (e) => {
+            // Không nhảy nếu chạm trúng vùng của cụm nút hoặc Menu
+            if (e.target.closest('.ctrl-group') || e.target.closest('.panel')) return;
+            e.preventDefault();
+            keys.jump = true;
+        };
+        const handleJumpRelease = (e) => {
+            if (e.target.closest('.ctrl-group') || e.target.closest('.panel')) return;
+            e.preventDefault();
+            keys.jump = false;
+        };
+
+        container.addEventListener('touchstart', handleJump, {passive: false});
+        container.addEventListener('touchend', handleJumpRelease, {passive: false});
+        container.addEventListener('mousedown', handleJump);
+        container.addEventListener('mouseup', handleJumpRelease);
 
         window.addEventListener('keydown', e => {
             if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
@@ -215,15 +225,13 @@
             }
             if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
             if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
-            if (e.code === 'Space' || e.code === 'ArrowUp') keys.jump = true;
-            if (e.code === 'KeyX' || e.code === 'Enter') keys.shoot = true;
+            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') keys.jump = true;
         }, {passive: false});
 
         window.addEventListener('keyup', e => {
             if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
             if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
-            if (e.code === 'Space' || e.code === 'ArrowUp') keys.jump = false;
-            if (e.code === 'KeyX' || e.code === 'Enter') keys.shoot = false;
+            if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') keys.jump = false;
         });
 
         function checkAABB(r1, r2) {
@@ -258,17 +266,17 @@
                 this.w = 30; this.h = 45;
                 this.x = 80; this.y = GROUND_Y - this.h;
                 this.vx = 0; this.vy = 0;
-                this.speed = 4.5; this.jumpPower = -12.5;
+                this.speed = 4.8; this.jumpPower = -14;
                 this.isGrounded = true;
                 this.lives = 3; this.weapon = 'N';
                 this.cooldown = 0; this.invuln = 0;
-                this.facing = 1; // 1: Nhìn sang phải, -1: Nhìn sang trái
+                this.facing = 1; 
             }
 
             update() {
                 let prevY = this.y;
                 
-                this.vy += 0.65; 
+                this.vy += 0.8; // Trọng lực tăng nhẹ để game đầm hơn
                 this.y += this.vy;
                 
                 this.isGrounded = false;
@@ -301,11 +309,15 @@
                 if (keys.jump && this.isGrounded) {
                     this.vy = this.jumpPower;
                     this.isGrounded = false;
-                    Game.spawnParticles(this.x + this.w/2, this.y + this.h, '#94a3b8', 6, 2.5);
+                    Game.spawnParticles(this.x + this.w/2, this.y + this.h, ['#e2e8f0', '#cbd5e1'], 8, 3);
                 }
 
                 if (this.cooldown > 0) this.cooldown--;
-                if (keys.shoot && this.cooldown <= 0) this.shoot();
+                // TỰ ĐỘNG BẮN
+                if (this.cooldown <= 0 && Game.state === 'PLAY') {
+                    this.shoot();
+                }
+                
                 if (this.invuln > 0) this.invuln--;
             }
 
@@ -314,23 +326,27 @@
                 let py = this.y + 15;
                 
                 if (this.weapon === 'M') { 
-                    this.cooldown = 6;
+                    this.cooldown = 8;
                     let px = dir === 1 ? this.x + this.w : this.x - 14;
                     Game.bullets.push(new Bullet(px, py + (Math.random()*6-3), 16*dir, 0, 1, 14, 4, '#4ade80', true));
                 } else if (this.weapon === 'S') { 
-                    this.cooldown = 15;
-                    let px = dir === 1 ? this.x + this.w : this.x - 10;
-                    Game.bullets.push(new Bullet(px, py, 12*dir, -2.5, 1, 10, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 12*dir, 0, 1, 10, 10, '#f97316', true));
-                    Game.bullets.push(new Bullet(px, py, 12*dir, 2.5, 1, 10, 10, '#f97316', true));
-                } else if (this.weapon === 'L') { 
                     this.cooldown = 20;
-                    let px = dir === 1 ? this.x + this.w : this.x - 60;
-                    Game.bullets.push(new Bullet(px, py, 20*dir, 0, 2, 60, 6, '#22d3ee', true, true));
-                } else { 
-                    this.cooldown = 12;
                     let px = dir === 1 ? this.x + this.w : this.x - 10;
-                    Game.bullets.push(new Bullet(px, py, 12*dir, 0, 1, 10, 4, COLORS.bulletPlayer, true));
+                    Game.bullets.push(new Bullet(px, py, 14*dir, -2.5, 1, 12, 10, '#f97316', true));
+                    Game.bullets.push(new Bullet(px, py, 14*dir, 0, 1, 12, 10, '#f97316', true));
+                    Game.bullets.push(new Bullet(px, py, 14*dir, 2.5, 1, 12, 10, '#f97316', true));
+                } else if (this.weapon === 'L') { 
+                    this.cooldown = 25;
+                    let px = dir === 1 ? this.x + this.w : this.x - 60;
+                    Game.bullets.push(new Bullet(px, py, 22*dir, 0, 2, 60, 6, '#22d3ee', true, true));
+                } else if (this.weapon === 'F') { 
+                    this.cooldown = 15;
+                    let px = dir === 1 ? this.x + this.w : this.x - 14;
+                    Game.bullets.push(new Bullet(px, py, 11*dir, 0, 2, 16, 16, '#facc15', true, false, true));
+                } else { 
+                    this.cooldown = 14;
+                    let px = dir === 1 ? this.x + this.w : this.x - 10;
+                    Game.bullets.push(new Bullet(px, py, 14*dir, 0, 1, 12, 4, COLORS.bulletPlayer, true));
                 }
                 Game.spawnParticles(dir === 1 ? this.x + this.w : this.x, py + 2, '#fbbf24', 2, 1);
             }
@@ -339,8 +355,6 @@
                 if (this.invuln > 0 && Game.frameCount % 10 < 5) return;
 
                 ctx.save();
-                
-                // Lật nhân vật tương ứng hướng nhìn
                 if (this.facing === -1) {
                     ctx.translate(this.x + this.w, this.y);
                     ctx.scale(-1, 1);
@@ -372,7 +386,7 @@
                 ctx.fillRect(18, 5, 3, 3);
                 
                 ctx.fillStyle = '#475569';
-                let recoil = this.cooldown > Math.max(0, this.cooldown - 3) ? -3 : 0;
+                let recoil = this.cooldown > Math.max(0, this.cooldown - 4) ? -3 : 0;
                 ctx.fillRect(15 + recoil, 18, 22, 6);
                 
                 ctx.restore();
@@ -380,23 +394,37 @@
         }
 
         class Bullet {
-            constructor(x, y, vx, vy, damage, w, h, color, isPlayer, isPiercing = false) {
+            constructor(x, y, vx, vy, damage, w, h, color, isPlayer, isPiercing = false, hasGravity = false) {
                 this.x = x; this.y = y; this.vx = vx; this.vy = vy;
                 this.damage = damage; this.w = w; this.h = h;
                 this.color = color; this.isPlayer = isPlayer;
-                this.isPiercing = isPiercing;
-                this.active = true;
+                this.isPiercing = isPiercing; this.hasGravity = hasGravity;
+                this.bounces = 0; this.active = true;
             }
             update() {
+                if (this.hasGravity) this.vy += 0.4;
                 this.x += this.vx; this.y += this.vy;
+                
+                if (this.hasGravity && this.y > GROUND_Y - this.h) {
+                    this.y = GROUND_Y - this.h;
+                    this.vy = -6; 
+                    this.bounces++;
+                    if (this.bounces > 2) this.active = false;
+                }
+
                 if (this.x < -100 || this.x > GW + 100 || this.y < -100 || this.y > GH + 100) this.active = false;
             }
             draw(ctx) {
                 ctx.fillStyle = this.color;
                 ctx.shadowBlur = 10; ctx.shadowColor = this.color;
-                ctx.fillRect(this.x, this.y, this.w, this.h);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                ctx.fillRect(this.x + 1, this.y + 1, this.w - 2, this.h - 2);
+                if (this.hasGravity) {
+                    ctx.beginPath(); ctx.arc(this.x + this.w/2, this.y + this.h/2, this.w/2, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(this.x + this.w/2, this.y + this.h/2, this.w/4, 0, Math.PI*2); ctx.fill();
+                } else {
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                    ctx.fillRect(this.x + 1, this.y + 1, this.w - 2, this.h - 2);
+                }
                 ctx.shadowBlur = 0;
             }
         }
@@ -405,34 +433,46 @@
             constructor(type, dir = 1) {
                 this.type = type; 
                 this.active = true;
-                this.dir = dir; // 1: Sinh bên phải chạy sang trái, -1: Sinh bên trái chạy sang phải
+                this.dir = dir; 
                 this.x = dir === 1 ? GW + 20 : -40; 
                 this.flash = 0;
                 
                 if (type === 'soldier') {
                     this.y = GROUND_Y - 30; this.w = 20; this.h = 30;
-                    this.hp = 1; this.score = 5; 
+                    this.hp = 2; this.score = 5; 
                     this.vx = (-2.5 - Math.random()) * dir;
                     this.shootTimer = Math.floor(Math.random() * 60 + 40);
                 } else if (type === 'plane') {
                     this.y = Math.random() * 60 + 300; 
                     this.w = 40; this.h = 25;
-                    this.hp = 2; this.score = 10; 
+                    this.hp = 3; this.score = 10; 
                     this.vx = (-4 - Math.random()*2) * dir; 
                     this.baseY = this.y;
+                } else if (type === 'drone') {
+                    this.y = Math.random() * 50 + 150;
+                    this.w = 30; this.h = 20;
+                    this.hp = 4; this.score = 15;
+                    this.vx = (-2.5 - Math.random()) * dir;
+                    this.shootTimer = Math.floor(Math.random() * 50 + 50);
                 }
             }
             update() {
                 this.x += this.vx;
                 
                 if (this.type === 'plane') {
-                    this.y = this.baseY + Math.sin(Game.frameCount * 0.05) * 20;
+                    this.y = this.baseY + Math.sin(Game.frameCount * 0.05) * 30;
                 } else if (this.type === 'soldier') {
                     this.shootTimer--;
                     if (this.shootTimer <= 0) {
                         let px = this.dir === 1 ? this.x - 10 : this.x + this.w;
                         Game.bullets.push(new Bullet(px, this.y + 10, -5 * this.dir, 0, 1, 10, 4, '#f59e0b', false));
                         this.shootTimer = Math.floor(Math.random() * 60 + 60); 
+                    }
+                } else if (this.type === 'drone') {
+                    this.shootTimer--;
+                    if (this.shootTimer <= 0) {
+                        Game.bullets.push(new Bullet(this.x + this.w/2, this.y + this.h, 0, 2, 1, 14, 14, '#ef4444', false, false, true));
+                        this.shootTimer = Math.floor(Math.random() * 80 + 60);
                     }
                 }
 
@@ -459,10 +499,14 @@
                     } else if (this.type === 'plane') {
                         ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.ellipse(20, 12, 20, 12, 0, 0, Math.PI*2); ctx.fill();
                         ctx.fillStyle = '#ef4444'; ctx.fillRect(5, 5, 15, 8); 
-                        
-                        let rH = (Game.frameCount % 4 < 2) ? 25 : 8;
-                        let rY = (Game.frameCount % 4 < 2) ? 0 : 8;
+                        let rH = (Game.frameCount % 4 < 2) ? 25 : 8; let rY = (Game.frameCount % 4 < 2) ? 0 : 8;
                         ctx.fillStyle = '#334155'; ctx.fillRect(30, rY, 8, rH); 
+                    } else if (this.type === 'drone') {
+                        ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(30, 10); ctx.lineTo(15, 20); ctx.lineTo(0, 10); ctx.fill();
+                        ctx.fillStyle = '#1e3a8a'; ctx.beginPath(); ctx.arc(15, 10, 6, 0, Math.PI*2); ctx.fill();
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                        let rw = (Game.frameCount % 2 === 0) ? 30 : 10;
+                        ctx.fillRect(15 - rw/2, -5, rw, 3);
                     }
                 }
                 ctx.restore();
@@ -475,17 +519,16 @@
                 this.x = GW + 100; this.state = 'enter'; this.timer = 0; this.flash = 0;
                 
                 if (type === 'tank') {
-                    // Logic chuẩn: Tăng chiều cao Boss để nằm vừa vặn từ đất lên ngang bục
                     this.w = 140; this.h = 110; this.y = GROUND_Y - this.h;
-                    this.hp = 150; this.maxHp = 150; this.score = 100;
+                    this.hp = 250; this.maxHp = 250; this.score = 100;
                 } else if (type === 'heli') {
                     this.w = 100; this.h = 60; 
-                    this.y = 300; this.baseY = 300;
-                    this.hp = 250; this.maxHp = 250; this.score = 200;
+                    this.y = 280; this.baseY = 280;
+                    this.hp = 400; this.maxHp = 400; this.score = 200;
                 } else if (type === 'dragon') {
                     this.w = 100; this.h = 100; 
                     this.y = 260; this.baseY = 260;
-                    this.hp = 600; this.maxHp = 600; this.score = 500;
+                    this.hp = 800; this.maxHp = 800; this.score = 500;
                 }
             }
             update() {
@@ -496,39 +539,41 @@
                     this.x -= 2;
                     if (this.x <= GW - this.w - 20) this.state = 'attack';
                 } else if (this.state === 'attack') {
-                    // Liên tục ra bục để người chơi có chỗ đáp nhảy bắn Boss
                     if (this.timer % 90 === 0) {
                         Game.platforms.push(new Platform(GW + 50, GROUND_Y - 70, 90));
                     }
 
                     if (this.type === 'tank') {
-                        // Pháo bự - bắn thẳng vào người đứng trên bục
                         if (this.timer % 80 === 0) { 
-                            Game.bullets.push(new Bullet(this.x - 20, this.y + 25, -7, 0, 1, 20, 20, '#ef4444', false));
-                            Game.shake = 5;
+                            Game.bullets.push(new Bullet(this.x - 20, this.y + 25, -7, -4, 1, 20, 20, '#ef4444', false, false, true));
+                            Game.shake = 6;
                         }
-                        // Súng máy nhỏ - quét dưới mặt đất
                         if (this.timer % 100 > 70 && this.timer % 10 === 0) { 
                             Game.bullets.push(new Bullet(this.x - 10, this.y + 85, -8, 0, 1, 10, 4, '#f59e0b', false));
                         }
                     } else if (this.type === 'heli') {
                         this.y = this.baseY + Math.sin(this.timer * 0.04) * 40; 
-                        if (this.timer % 50 === 0) { 
+                        if (this.timer % 60 === 0) { 
                             let dx = (Game.player.x + Game.player.w/2) - (this.x);
                             let dy = (Game.player.y + Game.player.h/2) - (this.y + this.h);
                             let dist = Math.hypot(dx, dy);
                             Game.bullets.push(new Bullet(this.x, this.y + this.h, (dx/dist)*6, (dy/dist)*6, 1, 12, 12, '#a855f7', false));
                         }
+                        if (this.timer % 150 === 0) {
+                            let d = new Enemy('drone', 1);
+                            d.x = this.x; d.y = this.y + this.h;
+                            Game.enemies.push(d);
+                        }
                     } else if (this.type === 'dragon') {
                         this.y = this.baseY + Math.sin(this.timer * 0.05) * 60; 
                         if (this.timer % 60 === 0) { 
-                            for(let i=-2; i<=2; i+=2) {
-                                Game.bullets.push(new Bullet(this.x, this.y + 40, -5, i, 1, 16, 16, '#f97316', false));
+                            for(let i=-3; i<=3; i+=3) {
+                                Game.bullets.push(new Bullet(this.x, this.y + 40, -6, i, 1, 16, 16, '#f97316', false));
                             }
                         }
                         if (this.timer % 300 === 0) { 
                             this.state = 'dash';
-                            Game.spawnText("CẨN THẬN!", GW/2, GH/2, '#ef4444');
+                            Game.spawnText("CẨN THẬN!", GW/2, GH/2, '#ef4444', 60);
                         }
                     }
                 } else if (this.state === 'dash') {
@@ -581,11 +626,15 @@
             }
             update() {
                 this.x -= 2;
-                this.vy += 0.5; this.y += this.vy;
-                if (this.y > GROUND_Y - this.h) { this.y = GROUND_Y - this.h; this.vy = 0; }
+                this.vy += 0.4; this.y += this.vy;
+                if (this.y > GROUND_Y - 40) { 
+                    this.y = GROUND_Y - 40; 
+                    this.vy = -6; 
+                }
                 if (this.x < -50) this.active = false;
             }
             draw(ctx) {
+                ctx.shadowColor = '#facc15'; ctx.shadowBlur = 10;
                 ctx.fillStyle = '#b45309'; ctx.fillRect(this.x, this.y, this.w, this.h);
                 ctx.fillStyle = '#78350f'; 
                 ctx.fillRect(this.x, this.y, this.w, 4); ctx.fillRect(this.x, this.y + this.h - 4, this.w, 4);
@@ -650,6 +699,8 @@
                 Game.bossStages.forEach(b => b.done = false);
                 Game.player = new Player(); 
                 document.getElementById('controls-layer').style.display = 'flex';
+                
+                Game.spawnText("CHẠM ĐỂ NHẢY - TỰ ĐỘNG BẮN", GW/2, GH/2 + 50, '#4ade80', 160);
             },
 
             resetGame() {
@@ -669,8 +720,8 @@
                 }
             },
 
-            spawnText(txt, x, y, color) {
-                Game.texts.push({ txt, x, y, life: 60, color });
+            spawnText(txt, x, y, color, life = 60) {
+                Game.texts.push({ txt, x, y, life: life, maxLife: life, color });
             },
 
             update() {
@@ -717,11 +768,7 @@
                         if (Game.csTimer === 30) Game.startGame();
                     }
                     
-                    Game.items.forEach(it => { 
-                        it.vy += 0.5; it.y += it.vy; 
-                        if (it.y > GROUND_Y - 30) { it.y = GROUND_Y - 30; it.vy = 0; } 
-                    });
-                    
+                    Game.items.forEach(it => it.update());
                     Game.particles.forEach(p => { p.x += p.vx; p.y += p.vy; p.life -= 0.04; });
                     Game.particles = Game.particles.filter(p => p.life > 0);
                     Game.texts.forEach(t => t.life--);
@@ -735,9 +782,9 @@
                 Game.bgScroll += 1.5; 
                 Game.player.update();
 
-                // Lính thường vẫn ra bục để đa dạng lối đi
-                if (!Game.currentBoss && Game.frameCount % 150 === 0 && Math.random() > 0.3) {
-                    Game.platforms.push(new Platform(GW, GROUND_Y - 70, 90));
+                if (!Game.currentBoss && Game.frameCount % 120 === 0 && Math.random() > 0.3) {
+                    let pY = GROUND_Y - 60 - Math.random() * 40;
+                    Game.platforms.push(new Platform(GW + 50, pY, 90 + Math.random()*40));
                 }
 
                 Game.platforms.forEach(p => p.update());
@@ -752,17 +799,17 @@
                         Game.spawnText("WARNING BOSS!", GW/2, GH/2, '#ef4444');
                         Game.shake = 20;
                     } else {
-                        // LOGIC LÍNH: Sinh đông hơn, và xuất hiện từ cả 2 phía để bọc lót
-                        let spawnRate = Math.max(30, 80 - Math.floor(Game.score/6));
+                        let spawnRate = Math.max(25, 75 - Math.floor(Game.score/5));
                         if (Game.frameCount % spawnRate === 0) {
-                            let type = Math.random() > 0.7 ? 'plane' : 'soldier';
-                            let dir = Math.random() > 0.5 ? 1 : -1; // 1 = bên phải, -1 = bên trái
+                            let typeRnd = Math.random();
+                            let type = typeRnd > 0.8 ? 'drone' : (typeRnd > 0.4 ? 'plane' : 'soldier');
+                            let dir = Math.random() > 0.5 ? 1 : -1;
                             Game.enemies.push(new Enemy(type, dir));
                         }
                         
                         if (Game.frameCount % 250 === 0 && Math.random() > 0.3) {
-                            let types = ['M', 'S', 'L'];
-                            Game.items.push(new Item(GW, -50, types[Math.floor(Math.random()*3)]));
+                            let types = ['M', 'S', 'L', 'F'];
+                            Game.items.push(new Item(GW, -50, types[Math.floor(Math.random()*types.length)]));
                         }
                     }
                 } else {
@@ -863,8 +910,10 @@
                     let it = Game.items[i];
                     if (checkAABB(pRect, { x: it.x, y: it.y, w: it.w, h: it.h })) {
                         Game.player.weapon = it.type;
-                        let wName = it.type === 'M' ? 'SÚNG MÁY' : (it.type === 'S' ? 'ĐẠN TỎA' : 'LASER');
+                        let wName = it.type === 'M' ? 'SÚNG MÁY' : (it.type === 'S' ? 'ĐẠN TỎA' : (it.type === 'L' ? 'LASER' : 'ĐẠN LỬA'));
                         Game.spawnText("NHẶT " + wName, Game.player.x, Game.player.y - 20, '#4ade80');
+                        Game.shake = 3;
+                        Game.spawnParticles(Game.player.x + 15, Game.player.y + 15, '#facc15', 20, 4);
                         it.active = false;
                     }
                 }
@@ -879,13 +928,31 @@
                 ctx.save();
                 if (Game.shake > 0) ctx.translate((Math.random()-0.5)*10, (Math.random()-0.5)*10);
 
+                // Background
                 let grad = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
                 grad.addColorStop(0, COLORS.skyTop); grad.addColorStop(1, COLORS.skyBot);
                 ctx.fillStyle = grad; ctx.fillRect(0, 0, GW, GH);
 
+                // Sun
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.05)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 50, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.beginPath(); ctx.arc(GW - 80, 120, 35, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(GW - 80, 120, 20, 0, Math.PI*2); ctx.fill();
+
+                // Clouds
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                for(let i=0; i<4; i++) {
+                    let cx = (GW + 200 - ((Game.bgScroll * 0.2) + i * 150) % (GW + 300)) - 50;
+                    let cy = 60 + (i % 2) * 50;
+                    ctx.beginPath(); ctx.arc(cx, cy, 20, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(cx + 20, cy - 15, 30, 0, Math.PI*2); ctx.fill();
+                    ctx.beginPath(); ctx.arc(cx + 40, cy, 20, 0, Math.PI*2); ctx.fill();
+                    ctx.fillRect(cx, cy - 5, 40, 25); 
+                }
+
+                // Stars
                 ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
                 for(let i=0; i<30; i++) {
-                    ctx.fillRect((i * 73) % GW, (i * 91) % GROUND_Y, 2, 2);
+                    ctx.fillRect((i * 73 - Game.bgScroll * 0.05) % GW, (i * 91) % (GROUND_Y - 150), 2, 2);
                 }
 
                 ctx.fillStyle = COLORS.mountBack;
@@ -945,11 +1012,15 @@
                 ctx.globalAlpha = 1;
 
                 Game.texts.forEach(t => {
+                    ctx.save();
+                    let alpha = t.life / t.maxLife;
+                    ctx.globalAlpha = alpha;
                     ctx.fillStyle = t.color; ctx.font = 'bold 26px "Pixelify Sans"'; ctx.textAlign = 'center';
-                    let ty = t.y - (60 - t.life)*0.8;
+                    let ty = t.y - (t.maxLife - t.life)*0.5;
                     ctx.strokeStyle = 'black'; ctx.lineWidth = 4;
                     ctx.strokeText(t.txt, t.x, ty);
                     ctx.fillText(t.txt, t.x, ty);
+                    ctx.restore();
                 });
 
                 if (Game.state === 'PLAY' || Game.state === 'WIN') {
@@ -972,7 +1043,7 @@
                     ctx.fillStyle = 'rgba(15, 23, 42, 0.8)'; ctx.fillRect(wpx, wpy, 130, 30);
                     ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.strokeRect(wpx, wpy, 130, 30);
                     ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 18px "Pixelify Sans"'; ctx.textAlign = 'center';
-                    let wName = Game.player.weapon === 'M' ? 'SÚNG MÁY' : (Game.player.weapon === 'S' ? 'ĐẠN TỎA' : (Game.player.weapon === 'L' ? 'LASER' : 'SÚNG LỤC'));
+                    let wName = Game.player.weapon === 'M' ? 'SÚNG MÁY' : (Game.player.weapon === 'S' ? 'ĐẠN TỎA' : (Game.player.weapon === 'L' ? 'LASER' : (Game.player.weapon === 'F' ? 'ĐẠN LỬA' : 'SÚNG LỤC')));
                     ctx.fillText(wName, wpx + 65, wpy + 22);
                     
                     ctx.textAlign = 'right'; ctx.font = 'bold 34px "Pixelify Sans"';
