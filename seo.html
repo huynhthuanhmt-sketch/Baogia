@@ -4,37 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuyên Gia Đánh Giá SEO Bằng AI</title>
+    <title>AI SEO Checker Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .score-circle {
-            background: conic-gradient(var(--score-color) var(--score-pct), #e2e8f0 0deg);
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f4f7fb; 
+        }
+        
+        /* Cấu hình UI Vòng tròn điểm số giống ảnh mẫu */
+        .score-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
+            background: conic-gradient(var(--score-color) var(--score-pct), #edf2f7 0deg);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: background 1s ease-out;
         }
-        .score-circle::before {
-            content: "";
+        .score-inner {
             position: absolute;
-            inset: 8px;
-            background: white;
+            inset: 16px; /* Độ dày của viền vòng tròn */
+            background-color: white;
             border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
         }
-        .score-text { position: relative; z-index: 10; }
-        
-        /* Markdown Styles cho phần AI Response */
-        .prose h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; color: #1e293b; }
-        .prose p { margin-top: 0.5rem; margin-bottom: 0.5rem; color: #475569; line-height: 1.6; }
-        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem; color: #475569; }
-        .prose li { margin-bottom: 0.25rem; }
-        .prose strong { color: #0f172a; }
-        
+
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3b82f6;
@@ -44,144 +49,148 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Custom Scrollbar cho mượt */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Markdown Style */
+        .prose h3 { font-size: 1.15rem; font-weight: 700; color: #1e293b; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .prose p { margin-bottom: 0.75rem; color: #475569; line-height: 1.6; }
+        .prose ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 1rem; color: #475569; }
+        .prose li { margin-bottom: 0.25rem; }
+        .prose strong { color: #0f172a; }
     </style>
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-blue-600 text-white p-2 rounded-lg">
-                    <i class="fa-solid fa-magnifying-glass-chart"></i>
-                </div>
-                <h1 class="text-xl font-bold text-slate-900">AI SEO Checker</h1>
+    <!-- Header Mobile Style -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-2xl mx-auto px-4 py-4 flex items-center gap-4">
+            <div class="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-magnifying-glass-chart text-lg"></i>
             </div>
+            <h1 class="text-xl font-bold text-slate-900 tracking-tight">AI SEO Checker</h1>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-6xl mx-auto w-full px-4 py-8">
+    <main class="flex-grow max-w-2xl mx-auto w-full px-4 py-6 space-y-6 pb-20">
         
-        <!-- Search Section -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-10 text-center mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-4">Phân tích & Tối ưu hóa Website của bạn</h2>
-            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">Nhập URL trang web của bạn để hệ thống quét dữ liệu và sử dụng Trí tuệ nhân tạo (AI) đánh giá toàn diện các yếu tố chuẩn SEO.</p>
+        <!-- Input Section -->
+        <div class="bg-white rounded-[24px] shadow-sm p-6 md:p-8 text-center">
+            <h2 class="text-2xl font-bold text-slate-900 mb-3 tracking-tight">Phân tích & Tối ưu hóa<br>Website của bạn</h2>
+            <p class="text-slate-500 mb-8 text-sm leading-relaxed">Nhập URL trang web của bạn để hệ thống quét dữ liệu và sử dụng Trí tuệ nhân tạo (AI) đánh giá toàn diện các yếu tố chuẩn SEO.</p>
             
-            <form id="seo-form" class="max-w-3xl mx-auto flex flex-col md:flex-row gap-3">
-                <div class="relative flex-grow">
+            <form id="seo-form" class="space-y-4">
+                <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-link text-slate-400"></i>
+                        <i class="fa-solid fa-link text-slate-400 group-focus-within:text-blue-500 transition-colors"></i>
                     </div>
-                    <input type="url" id="url-input" required placeholder="https://example.com" 
-                        class="w-full pl-11 pr-4 py-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-lg"
-                        pattern="https?://.*">
+                    <input type="text" id="url-input" required placeholder="Ví dụ: thuanstore.com" 
+                        class="w-full pl-11 pr-4 py-4 rounded-xl border-2 border-slate-100 bg-slate-50 focus:bg-white focus:ring-0 focus:border-blue-500 outline-none transition-all font-medium text-slate-700">
                 </div>
-                <button type="submit" id="analyze-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-colors flex items-center justify-center gap-2 whitespace-nowrap text-lg">
+                <button type="submit" id="analyze-btn" class="w-full bg-[#254ee8] hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30">
                     <span>Phân Tích</span>
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </form>
-            <div id="error-message" class="text-red-500 mt-4 hidden text-sm font-medium"></div>
+            <div id="error-message" class="text-red-500 mt-4 hidden text-sm font-semibold bg-red-50 p-3 rounded-lg border border-red-100"></div>
         </div>
 
         <!-- Loading State -->
-        <div id="loading-state" class="hidden flex-col items-center justify-center py-12">
-            <div class="loader mb-6"></div>
-            <h3 class="text-xl font-semibold text-slate-800 mb-2" id="loading-text">Đang quét dữ liệu trang web...</h3>
-            <p class="text-slate-500 text-sm">Quá trình này có thể mất vài giây tùy thuộc vào tốc độ phản hồi của trang.</p>
+        <div id="loading-state" class="hidden bg-white rounded-[24px] shadow-sm p-10 flex-col items-center justify-center text-center">
+            <div class="loader mb-4"></div>
+            <h3 class="text-lg font-bold text-slate-800 mb-1" id="loading-text">Đang quét mã nguồn website...</h3>
+            <p class="text-slate-500 text-sm">Hệ thống đang vượt tường lửa lấy dữ liệu HTML.</p>
         </div>
 
-        <!-- Results Section -->
+        <!-- Kết Quả Section -->
         <div id="results-section" class="hidden space-y-6">
             
-            <!-- Top Dashboard -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Score Card -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col items-center justify-center text-center">
-                    <h3 class="text-slate-500 font-medium mb-4">Điểm SEO Kỹ Thuật</h3>
-                    <div id="score-ring" class="score-circle w-32 h-32 mb-4" style="--score-pct: 0%; --score-color: #e2e8f0;">
-                        <span id="score-value" class="score-text text-4xl font-bold text-slate-800">0</span>
+            <!-- Dashboard Điểm Số (Clone UI Mới) -->
+            <div class="bg-white rounded-[24px] shadow-sm p-6 flex flex-col items-center">
+                <h3 class="text-slate-500 font-bold text-sm tracking-wider uppercase mb-6">ĐIỂM SEO TỔNG QUAN</h3>
+                
+                <!-- Circle UI -->
+                <div id="score-wrapper" class="score-wrapper mb-8" style="--score-pct: 0%; --score-color: #3b82f6;">
+                    <div class="score-inner">
+                        <span id="score-value" class="text-6xl font-black text-slate-900 tracking-tighter">0</span>
+                        <span id="score-evaluation" class="font-bold text-sm mt-1">ĐANG TÍNH</span>
                     </div>
-                    <p id="score-evaluation" class="font-semibold text-lg"></p>
                 </div>
 
-                <!-- Basic Info Card -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:col-span-2">
-                    <h3 class="text-slate-800 font-bold text-lg mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-blue-500"></i> Thông tin tổng quan
-                    </h3>
-                    <div class="space-y-4">
-                        <div>
-                            <span class="text-sm font-semibold text-slate-500 uppercase">Tiêu đề (Title)</span>
-                            <p id="meta-title" class="text-slate-800 font-medium break-words mt-1">-</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span id="title-length" class="text-xs px-2 py-1 bg-slate-100 rounded text-slate-600">0 ký tự</span>
-                                <span id="title-status" class="text-xs font-medium"></span>
-                            </div>
-                        </div>
-                        <div class="border-t border-slate-100 pt-3">
-                            <span class="text-sm font-semibold text-slate-500 uppercase">Mô tả (Meta Description)</span>
-                            <p id="meta-desc" class="text-slate-800 text-sm break-words mt-1">-</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span id="desc-length" class="text-xs px-2 py-1 bg-slate-100 rounded text-slate-600">0 ký tự</span>
-                                <span id="desc-status" class="text-xs font-medium"></span>
-                            </div>
-                        </div>
+                <!-- Thống kê nhỏ -->
+                <div class="flex gap-4 w-full mb-6">
+                    <div class="flex-1 bg-slate-50 border border-slate-100 rounded-2xl p-4 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-black text-slate-800">1</span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase mt-1 tracking-wider">TRANG QUÉT</span>
                     </div>
+                    <div class="flex-1 bg-red-50 border border-red-100 rounded-2xl p-4 flex flex-col items-center justify-center">
+                        <span id="issues-count" class="text-2xl font-black text-red-500">0</span>
+                        <span class="text-[10px] font-bold text-red-400 uppercase mt-1 tracking-wider">CẦN XỬ LÝ</span>
+                    </div>
+                </div>
+
+                <!-- Button xem chi tiết -->
+                <button onclick="document.getElementById('detail-data').scrollIntoView({behavior: 'smooth'})" 
+                        class="w-full bg-[#111827] hover:bg-black text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-file-lines"></i>
+                    <span>XEM CHI TIẾT DỮ LIỆU</span>
+                </button>
+            </div>
+
+            <!-- Top Hành Động Ưu Tiên -->
+            <div class="bg-white rounded-[24px] shadow-sm p-6 border-t-4 border-red-500">
+                <h3 class="font-bold text-red-600 flex items-center gap-2 mb-4 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Top hành động ưu tiên
+                </h3>
+                <div id="priority-actions" class="space-y-3">
+                    <!-- Sẽ inject HTML vào đây -->
                 </div>
             </div>
 
-            <!-- AI Analysis Card -->
-            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl shadow-sm border border-indigo-100 p-6 md:p-8">
-                <div class="flex items-center gap-3 mb-6 border-b border-indigo-200 pb-4">
-                    <div class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-2.5 rounded-xl shadow-sm">
-                        <i class="fa-solid fa-robot text-xl"></i>
+            <!-- AI Đánh Giá Chi Tiết -->
+            <div id="detail-data" class="bg-white rounded-[24px] shadow-sm p-6 border border-slate-100">
+                <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
+                    <div class="bg-blue-600 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-robot"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-900">AI Đánh Giá & Đề Xuất Khắc Phục</h3>
-                        <p class="text-sm text-indigo-700">Được phân tích bởi Gemini AI</p>
+                        <h3 class="font-bold text-slate-900">Chuyên gia AI Đánh Giá</h3>
+                        <p class="text-xs text-blue-600 font-medium">Báo cáo bởi Google Gemini</p>
                     </div>
                 </div>
                 
-                <div id="ai-loading" class="flex flex-col items-center justify-center py-8">
-                    <i class="fa-solid fa-microchip fa-bounce text-indigo-400 text-3xl mb-3"></i>
-                    <p class="text-indigo-800 font-medium">AI đang suy nghĩ và viết báo cáo chuyên sâu...</p>
+                <div id="ai-loading" class="flex flex-col items-center justify-center py-6">
+                    <i class="fa-solid fa-microchip fa-bounce text-blue-500 text-2xl mb-3"></i>
+                    <p class="text-slate-600 text-sm font-medium">AI đang đọc dữ liệu để viết báo cáo...</p>
                 </div>
 
-                <div id="ai-content" class="prose max-w-none hidden">
-                    <!-- AI response injects here -->
+                <div id="ai-content" class="prose max-w-none hidden text-sm">
+                    <!-- Báo cáo AI sẽ hiển thị ở đây -->
                 </div>
             </div>
 
-            <!-- Detailed Technical Checks -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                <h3 class="text-slate-800 font-bold text-lg mb-6 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-green-500"></i> Kiểm tra Kỹ thuật Chi tiết
+            <!-- Data Kỹ Thuật (Raw) -->
+            <div class="bg-white rounded-[24px] shadow-sm p-6">
+                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-code text-slate-400"></i> Thông số quét được
                 </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="detailed-checks">
-                    <!-- Dynamic check items will be injected here -->
+                <div class="space-y-3 text-sm" id="technical-data">
+                    <!-- Data inject -->
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-8">
-        <div class="max-w-6xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p>&copy; 2026 Hệ Thống Kiểm Tra SEO AI. Hoạt động trên môi trường giả lập proxy.</p>
-        </div>
-    </footer>
-
     <script>
-        // --- CẤU HÌNH API ---
-        const apiKey = ""; // API key được tiêm tại runtime theo yêu cầu
-        // Sử dụng AllOrigins làm CORS proxy để lấy HTML của các trang web khác
-        const CORS_PROXY = "https://api.allorigins.win/get?url=";
-
-        // --- DOM ELEMENTS ---
+        // --- CẤU HÌNH HỆ THỐNG ---
+        const apiKey = ""; // Được điền tự động khi chạy
+        
+        // DOM Elements
         const form = document.getElementById('seo-form');
         const urlInput = document.getElementById('url-input');
         const analyzeBtn = document.getElementById('analyze-btn');
@@ -192,295 +201,232 @@
         const aiLoading = document.getElementById('ai-loading');
         const aiContent = document.getElementById('ai-content');
 
-        // --- HÀM TIỆN ÍCH ---
-        const delay = ms => new Promise(res => setTimeout(res, ms));
+        // --- CƠ CHẾ FETCH MULTI-PROXY (Chống Block) ---
+        async function fetchWebsiteHTML(inputUrl) {
+            // Chuẩn hóa URL (thêm http:// nếu người dùng quên)
+            let targetUrl = inputUrl.trim();
+            if (!/^https?:\/\//i.test(targetUrl)) {
+                targetUrl = 'http://' + targetUrl; 
+            }
 
-        // Hàm gọi API Gemini với Exponential Backoff (Retry mechanism)
-        async function fetchAIWithRetry(payload, retries = 5) {
-            const delays = [1000, 2000, 4000, 8000, 16000];
+            // Danh sách các cổng Proxy mạnh mẽ nhất để vượt lỗi CORS/Bot blocker
+            const proxies = [
+                // Proxy 1: CodeTabs (Rất mạnh, trả về HTML thô)
+                { url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}`, isJson: false },
+                // Proxy 2: AllOrigins (Trả về dạng JSON, ổn định)
+                { url: `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`, isJson: true },
+                // Proxy 3: Corsproxy.io
+                { url: `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`, isJson: false }
+            ];
+
+            let lastError = "";
+
+            // Thử lần lượt từng Proxy, nếu cái nào pass thì lấy luôn
+            for (let i = 0; i < proxies.length; i++) {
+                try {
+                    console.log(`Đang thử Proxy ${i + 1}...`);
+                    const response = await fetch(proxies[i].url);
+                    
+                    if (!response.ok) throw new Error(`Status HTTP: ${response.status}`);
+                    
+                    if (proxies[i].isJson) {
+                        const data = await response.json();
+                        if (data.contents) return data.contents;
+                    } else {
+                        const text = await response.text();
+                        if (text && text.length > 100) return text;
+                    }
+                } catch (err) {
+                    console.warn(`Proxy ${i + 1} thất bại. Chuyển sang proxy tiếp theo...`);
+                    lastError = err.message;
+                }
+            }
+            
+            throw new Error("Không thể quét được Website này. Vui lòng kiểm tra lại URL hoặc website đang có hệ thống chống Bot rất mạnh.");
+        }
+
+        // --- PHÂN TÍCH HEURISTIC SEO ---
+        function analyzeHTML(htmlString, url) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlString, 'text/html');
+
+            const data = {
+                url: url,
+                title: doc.title ? doc.title.trim() : "",
+                description: (doc.querySelector('meta[name="description"]') || {}).content || "",
+                h1Count: doc.querySelectorAll('h1').length,
+                h2Count: doc.querySelectorAll('h2').length,
+                imgTotal: doc.querySelectorAll('img').length,
+                imgMissingAlt: Array.from(doc.querySelectorAll('img')).filter(img => !img.getAttribute('alt')).length,
+                hasViewport: !!doc.querySelector('meta[name="viewport"]'),
+                hasSchema: htmlString.includes('application/ld+json'),
+                checks: [], // Danh sách Pass/Fail
+                issues: [] // Danh sách Lỗi ưu tiên (Fail)
+            };
+
+            let score = 100;
+
+            const addCheck = (name, isPass, detail, pointDeduct = 0) => {
+                data.checks.push({ name, isPass, detail });
+                if (!isPass) {
+                    score -= pointDeduct;
+                    data.issues.push({ name, detail });
+                }
+            };
+
+            // 1. Title
+            if (!data.title) addCheck("Thẻ Title (Tiêu đề)", false, "Trang web không có thẻ tiêu đề.", 15);
+            else if (data.title.length < 30 || data.title.length > 65) addCheck("Độ dài thẻ Title", false, `Tiêu đề ${data.title.length} ký tự (Khuyến nghị: 30-65 ký tự).`, 5);
+            else addCheck("Thẻ Title", true, "Tối ưu tốt.", 0);
+
+            // 2. Description
+            if (!data.description) addCheck("Meta Description", false, "Thiếu thẻ mô tả tìm kiếm.", 15);
+            else if (data.description.length < 70 || data.description.length > 160) addCheck("Độ dài Meta Description", false, `Mô tả ${data.description.length} ký tự (Khuyến nghị: 70-160).`, 5);
+            else addCheck("Meta Description", true, "Tối ưu tốt.", 0);
+
+            // 3. Headings
+            if (data.h1Count === 0) addCheck("Thẻ H1", false, "Trang không có thẻ H1 (Rất quan trọng cho SEO).", 15);
+            else if (data.h1Count > 1) addCheck("Thẻ H1", false, "Có nhiều hơn 1 thẻ H1 (Chỉ nên có 1).", 5);
+            else addCheck("Thẻ H1", true, "Có đúng 1 thẻ H1.", 0);
+
+            if (data.h2Count === 0) addCheck("Thẻ H2", false, "Thiếu thẻ H2 phân cấp nội dung.", 5);
+
+            // 4. Images
+            if (data.imgTotal > 0 && data.imgMissingAlt > 0) {
+                addCheck("Thuộc tính Alt Ảnh", false, `${data.imgMissingAlt}/${data.imgTotal} ảnh bị thiếu thẻ ALT (Mô tả ảnh cho Googlebot).`, 10);
+            }
+
+            // 5. Tech
+            if (!data.hasViewport) addCheck("Tối ưu Mobile (Viewport)", false, "Thiếu thẻ khai báo giao diện Mobile.", 10);
+            if (!data.hasSchema) addCheck("Schema (Structured Data)", false, "Chưa cài đặt Schema JSON-LD để hiển thị Rich Snippets.", 5);
+
+            data.score = Math.max(0, score);
+            return data;
+        }
+
+        // --- CẬP NHẬT GIAO DIỆN (UI UPDATE) ---
+        function updateUI(data) {
+            // 1. Update Circle Score
+            const wrapper = document.getElementById('score-wrapper');
+            const scoreVal = document.getElementById('score-value');
+            const scoreEval = document.getElementById('score-evaluation');
+            const issuesCount = document.getElementById('issues-count');
+            
+            // Animation chạy số
+            let currentNum = 0;
+            const targetNum = data.score;
+            const duration = 1000;
+            const interval = 20;
+            const step = targetNum / (duration / interval);
+            
+            // Logic Màu & Text đánh giá
+            let color = "#ef4444"; // KÉM (Đỏ)
+            let text = "KÉM";
+            let textColor = "text-red-500";
+
+            if (targetNum >= 90) { color = "#10b981"; text = "RẤT TỐT"; textColor = "text-emerald-500"; }
+            else if (targetNum >= 80) { color = "#3b82f6"; text = "KHÁ"; textColor = "text-blue-500"; }
+            else if (targetNum >= 50) { color = "#f59e0b"; text = "TRUNG BÌNH"; textColor = "text-amber-500"; }
+
+            scoreEval.textContent = text;
+            scoreEval.className = `font-black text-sm mt-1 tracking-wider ${textColor}`;
+            
+            const timer = setInterval(() => {
+                currentNum += step;
+                if (currentNum >= targetNum) {
+                    currentNum = targetNum;
+                    clearInterval(timer);
+                }
+                scoreVal.textContent = Math.floor(currentNum);
+                wrapper.style.setProperty('--score-pct', `${currentNum}%`);
+                wrapper.style.setProperty('--score-color', color);
+            }, interval);
+
+            // 2. Update Issues Count
+            issuesCount.textContent = data.issues.length;
+
+            // 3. Render Top Hành động ưu tiên
+            const priorityBox = document.getElementById('priority-actions');
+            priorityBox.innerHTML = '';
+            if (data.issues.length === 0) {
+                priorityBox.innerHTML = `<div class="p-3 bg-green-50 rounded-xl text-green-700 font-medium flex items-center gap-2"><i class="fa-solid fa-circle-check"></i> Tuyệt vời! Không phát hiện lỗi nghiêm trọng.</div>`;
+            } else {
+                data.issues.forEach(issue => {
+                    priorityBox.innerHTML += `
+                        <div class="flex items-start gap-3 p-4 bg-red-50/50 border border-red-100 rounded-2xl">
+                            <div class="mt-0.5 bg-red-100 text-red-500 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-xmark"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">${issue.name}</h4>
+                                <p class="text-sm text-slate-600 mt-1">${issue.detail}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // 4. Render Tech Data thô
+            const techBox = document.getElementById('technical-data');
+            techBox.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block mb-1 uppercase font-bold">Thẻ Title</span>
+                        <div class="font-medium truncate" title="${data.title}">${data.title || "Trống"}</div>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="text-xs text-slate-500 block mb-1 uppercase font-bold">Thẻ H1</span>
+                        <div class="font-medium">Tìm thấy ${data.h1Count} thẻ</div>
+                    </div>
+                </div>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <span class="text-xs text-slate-500 block mb-1 uppercase font-bold">Meta Description</span>
+                    <div class="font-medium line-clamp-2" title="${data.description}">${data.description || "Trống"}</div>
+                </div>
+            `;
+        }
+
+        // --- GỌI GEMINI AI ---
+        async function fetchAIWithRetry(payload, retries = 3) {
+            const delays = [1000, 2000, 4000];
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             for (let i = 0; i < retries; i++) {
                 try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+                    const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    if (!response.ok) throw new Error("API Lỗi");
                     return await response.json();
                 } catch (error) {
-                    if (i === retries - 1) throw error; // Lỗi ở lần thử cuối cùng
-                    await delay(delays[i]); // Đợi trước khi thử lại
+                    if (i === retries - 1) throw error;
+                    await new Promise(r => setTimeout(r, delays[i]));
                 }
             }
         }
 
-        // --- LÕI PHÂN TÍCH SEO ---
-        
-        // 1. Lấy dữ liệu HTML qua Proxy
-        async function fetchWebsiteHTML(targetUrl) {
-            try {
-                const response = await fetch(`${CORS_PROXY}${encodeURIComponent(targetUrl)}`);
-                if (!response.ok) throw new Error("Không thể kết nối đến proxy.");
-                const data = await response.json();
-                if (!data.contents) throw new Error("Trang web phản hồi rỗng hoặc chặn truy cập.");
-                return data.contents;
-            } catch (error) {
-                console.error("Lỗi Fetch URL:", error);
-                throw new Error("Không thể lấy dữ liệu trang. Có thể trang web chặn bot/proxy hoặc URL không hợp lệ.");
-            }
-        }
-
-        // 2. Bóc tách và phân tích các yếu tố SEO từ chuỗi HTML
-        function analyzeHTML(htmlString, url) {
-            // Sử dụng DOMParser để biến chuỗi HTML thành tài liệu ảo, không thực thi script
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlString, 'text/html');
-
-            const seoData = {
-                url: url,
-                title: doc.title ? doc.title.trim() : "",
-                description: "",
-                headings: { h1: 0, h2: 0, h3: 0, h4: 0, h5: 0, h6: 0 },
-                images: { total: 0, withoutAlt: 0 },
-                links: { total: 0, internal: 0, external: 0 },
-                wordCount: 0,
-                hasFavicon: false,
-                hasViewport: false,
-                hasCanonical: false,
-                checks: [] // Lưu kết quả Pass/Fail chi tiết
-            };
-
-            // Lấy Meta Description
-            const metaDesc = doc.querySelector('meta[name="description"]');
-            if (metaDesc) seoData.description = metaDesc.getAttribute('content') || "";
-
-            // Đếm thẻ Heading
-            for (let i = 1; i <= 6; i++) {
-                seoData.headings[`h${i}`] = doc.querySelectorAll(`h${i}`).length;
-            }
-
-            // Phân tích Ảnh
-            const images = doc.querySelectorAll('img');
-            seoData.images.total = images.length;
-            images.forEach(img => {
-                const alt = img.getAttribute('alt');
-                if (!alt || alt.trim() === "") seoData.images.withoutAlt++;
-            });
-
-            // Phân tích Links
-            const domain = new URL(url).hostname;
-            const links = doc.querySelectorAll('a[href]');
-            seoData.links.total = links.length;
-            links.forEach(a => {
-                const href = a.getAttribute('href');
-                if (href && (href.startsWith('http') || href.startsWith('//'))) {
-                    if (href.includes(domain)) seoData.links.internal++;
-                    else seoData.links.external++;
-                } else if (href && !href.startsWith('javascript:')) {
-                    seoData.links.internal++; // Links tương đối
-                }
-            });
-
-            // Ước tính số từ (chỉ lấy text trong body, bỏ qua script/style)
-            const bodyClone = doc.body ? doc.body.cloneNode(true) : null;
-            if (bodyClone) {
-                const scriptsAndStyles = bodyClone.querySelectorAll('script, style, noscript');
-                scriptsAndStyles.forEach(el => el.remove());
-                const text = bodyClone.innerText || bodyClone.textContent;
-                const words = text.replace(/\s+/g, ' ').trim().split(' ');
-                seoData.wordCount = words[0] === "" ? 0 : words.length;
-            }
-
-            // Các thẻ Meta khác
-            seoData.hasViewport = !!doc.querySelector('meta[name="viewport"]');
-            seoData.hasCanonical = !!doc.querySelector('link[rel="canonical"]');
-            seoData.hasFavicon = !!doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
-
-            return calculateScore(seoData);
-        }
-
-        // 3. Chấm điểm kỹ thuật dựa trên quy tắc (Heuristic)
-        function calculateScore(data) {
-            let score = 100;
-            const checks = [];
-
-            const addCheck = (name, passed, detail, pointsToDeduct = 0) => {
-                checks.push({ name, passed, detail });
-                if (!passed) score -= pointsToDeduct;
-            };
-
-            // Title Check
-            const titleLen = data.title.length;
-            if (titleLen === 0) addCheck("Thẻ Title", false, "Thiếu thẻ tiêu đề (Title).", 15);
-            else if (titleLen < 30) addCheck("Thẻ Title", false, `Quá ngắn (${titleLen} ký tự). Tốt nhất: 30-60.`, 5);
-            else if (titleLen > 65) addCheck("Thẻ Title", false, `Quá dài (${titleLen} ký tự). Tốt nhất: 30-60.`, 5);
-            else addCheck("Thẻ Title", true, `Tốt (${titleLen} ký tự).`, 0);
-
-            // Description Check
-            const descLen = data.description.length;
-            if (descLen === 0) addCheck("Meta Description", false, "Thiếu thẻ mô tả.", 10);
-            else if (descLen < 70) addCheck("Meta Description", false, `Quá ngắn (${descLen} ký tự). Tốt nhất: 70-155.`, 5);
-            else if (descLen > 160) addCheck("Meta Description", false, `Quá dài (${descLen} ký tự). Tốt nhất: 70-155.`, 5);
-            else addCheck("Meta Description", true, `Tốt (${descLen} ký tự).`, 0);
-
-            // H1 Check
-            if (data.headings.h1 === 0) addCheck("Thẻ H1", false, "Không tìm thấy thẻ H1 nào.", 10);
-            else if (data.headings.h1 > 1) addCheck("Thẻ H1", false, `Có quá nhiều thẻ H1 (${data.headings.h1}). Chỉ nên có 1.`, 5);
-            else addCheck("Thẻ H1", true, "Đã có đúng 1 thẻ H1.", 0);
-
-            // H2, H3 Check
-            if (data.headings.h2 === 0) addCheck("Thẻ H2", false, "Không có thẻ H2 nào. Nên chia nhỏ nội dung.", 5);
-            else addCheck("Thẻ H2/H3", true, `Tìm thấy ${data.headings.h2} thẻ H2 và ${data.headings.h3} thẻ H3.`, 0);
-
-            // Images Alt
-            if (data.images.total > 0) {
-                if (data.images.withoutAlt > 0) addCheck("Thuộc tính Alt Ảnh", false, `${data.images.withoutAlt}/${data.images.total} ảnh thiếu thuộc tính Alt.`, 10);
-                else addCheck("Thuộc tính Alt Ảnh", true, `Tất cả ${data.images.total} ảnh đều có Alt.`, 0);
-            } else {
-                addCheck("Hình ảnh", true, "Không có hình ảnh nào trên trang.", 0);
-            }
-
-            // Content length
-            if (data.wordCount < 300) addCheck("Lượng nội dung", false, `Nội dung quá mỏng (~${data.wordCount} từ). Nên > 300 từ.`, 5);
-            else addCheck("Lượng nội dung", true, `Nội dung phong phú (~${data.wordCount} từ).`, 0);
-
-            // Meta tags
-            if (!data.hasViewport) addCheck("Mobile Viewport", false, "Thiếu thẻ meta viewport (Không tối ưu mobile).", 10);
-            else addCheck("Mobile Viewport", true, "Đã cấu hình thẻ viewport.", 0);
-
-            if (!data.hasCanonical) addCheck("Canonical Tag", false, "Thiếu link Canonical.", 5);
-            else addCheck("Canonical Tag", true, "Đã có thẻ Canonical.", 0);
-
-            data.score = Math.max(0, score);
-            data.checks = checks;
-            return data;
-        }
-
-        // 4. Gọi AI để lấy báo cáo chuyên sâu
-        async function getAIReport(seoData) {
-            const systemPrompt = `Bạn là một chuyên gia tư vấn SEO cao cấp. 
-            Nhiệm vụ của bạn là phân tích dữ liệu kỹ thuật của một trang web và cung cấp một báo cáo dễ hiểu, chi tiết, mang tính hành động cho người dùng. 
-            Dữ liệu đầu vào sẽ là định dạng JSON chứa các thông số. 
-            Giọng văn chuyên nghiệp, khích lệ và rõ ràng. 
-            Sử dụng định dạng Markdown.
-            Tuyệt đối không hiển thị lại JSON.
-            Cấu trúc báo cáo đề xuất:
-            1. Tóm tắt nhanh trạng thái SEO.
-            2. Điểm mạnh (những gì họ đã làm tốt).
-            3. Các vấn đề cần ưu tiên khắc phục (Giải thích TẠI SAO nó quan trọng và CÁCH sửa).
-            4. Lời khuyên tối ưu hóa nội dung/chiến lược.`;
-
-            const userPrompt = `Hãy phân tích trang web này: ${seoData.url}.
-            Dưới đây là thông số kỹ thuật vừa quét được:
-            ${JSON.stringify({
-                Title: seoData.title,
-                MetaDescription: seoData.description,
-                Headings: seoData.headings,
-                ImagesTotal: seoData.images.total,
-                ImagesMissingAlt: seoData.images.withoutAlt,
-                WordCount: seoData.wordCount,
-                HasViewport: seoData.hasViewport,
-                HasCanonical: seoData.hasCanonical,
-                Score: seoData.score + "/100"
-            }, null, 2)}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] }
-            };
+        async function getAIReport(data) {
+            const prompt = `Phân tích SEO kỹ thuật cho URL: ${data.url}.
+            Điểm quét: ${data.score}/100.
+            Số lỗi cần xử lý: ${data.issues.length}.
+            Danh sách lỗi: ${JSON.stringify(data.issues)}.
+            Hãy viết 1 đoạn đánh giá ngắn gọn gọn gàng bằng Markdown (dành cho người làm web). 
+            Không giải thích lan man, hãy nói thẳng: Website đang ở tình trạng nào, cần làm gì ngay lập tức.`;
 
             try {
-                const response = await fetchAIWithRetry(payload);
-                return response.candidates?.[0]?.content?.parts?.[0]?.text || "AI không thể tạo báo cáo lúc này.";
-            } catch (error) {
-                console.error("Gemini API Error:", error);
-                return "Đã xảy ra lỗi khi kết nối với hệ thống AI. Vui lòng thử lại sau. (Lưu ý: Yêu cầu môi trường cấp key API hợp lệ).";
+                const res = await fetchAIWithRetry({
+                    contents: [{ parts: [{ text: prompt }] }]
+                });
+                return res.candidates?.[0]?.content?.parts?.[0]?.text || "Không thể lấy nhận xét từ AI.";
+            } catch (e) {
+                return "*Hệ thống AI hiện đang bận hoặc quá tải. Vui lòng xem danh sách lỗi kỹ thuật ở trên để khắc phục trước.*";
             }
         }
 
-        // --- GIAO DIỆN & SỰ KIỆN ---
-
-        // Hàm cập nhật màu sắc và text trạng thái cho Title/Desc
-        function setStatusBadge(elementId, isValid, warningMsg, successMsg) {
-            const el = document.getElementById(elementId);
-            if (!isValid) {
-                el.textContent = warningMsg;
-                el.className = "text-xs font-medium px-2 py-1 bg-red-100 text-red-700 rounded";
-            } else {
-                el.textContent = successMsg;
-                el.className = "text-xs font-medium px-2 py-1 bg-green-100 text-green-700 rounded";
-            }
-        }
-
-        function renderResults(data) {
-            // Cập nhật Vòng tròn điểm số
-            const scoreRing = document.getElementById('score-ring');
-            const scoreValue = document.getElementById('score-value');
-            const scoreEval = document.getElementById('score-evaluation');
-            
-            scoreValue.textContent = data.score;
-            scoreRing.style.setProperty('--score-pct', `${data.score}%`);
-            
-            let color = "#ef4444"; // red
-            let evalText = "Cần Cải Thiện Nhiều";
-            let evalColor = "text-red-500";
-            
-            if (data.score >= 80) {
-                color = "#22c55e"; // green
-                evalText = "Rất Tốt!";
-                evalColor = "text-green-500";
-            } else if (data.score >= 50) {
-                color = "#f59e0b"; // yellow
-                evalText = "Trung Bình";
-                evalColor = "text-yellow-500";
-            }
-
-            scoreRing.style.setProperty('--score-color', color);
-            scoreEval.textContent = evalText;
-            scoreEval.className = `font-semibold text-lg mt-2 ${evalColor}`;
-
-            // Cập nhật Thông tin cơ bản
-            document.getElementById('meta-title').textContent = data.title || "[Không có tiêu đề]";
-            document.getElementById('title-length').textContent = `${data.title.length} ký tự`;
-            setStatusBadge('title-status', (data.title.length >= 30 && data.title.length <= 65), "Chưa Tối Ưu", "Tối Ưu");
-
-            document.getElementById('meta-desc').textContent = data.description || "[Không có thẻ mô tả]";
-            document.getElementById('desc-length').textContent = `${data.description.length} ký tự`;
-            setStatusBadge('desc-status', (data.description.length >= 70 && data.description.length <= 160), "Chưa Tối Ưu", "Tối Ưu");
-
-            // Render Danh sách Check chi tiết
-            const checksContainer = document.getElementById('detailed-checks');
-            checksContainer.innerHTML = '';
-            
-            data.checks.forEach(check => {
-                const icon = check.passed 
-                    ? '<div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 flex-shrink-0"><i class="fa-solid fa-check"></i></div>'
-                    : '<div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 flex-shrink-0"><i class="fa-solid fa-xmark"></i></div>';
-                
-                const html = `
-                    <div class="flex items-start gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
-                        ${icon}
-                        <div>
-                            <h4 class="font-semibold text-slate-800 text-sm">${check.name}</h4>
-                            <p class="text-slate-500 text-xs mt-1">${check.detail}</p>
-                        </div>
-                    </div>
-                `;
-                checksContainer.innerHTML += html;
-            });
-        }
-
-        // Xử lý sự kiện Submit
+        // --- MAIN SCRIPT ---
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const url = urlInput.value.trim();
+            const url = urlInput.value;
             
-            // Reset UI
+            // Reset & Show Loading
             errorMsg.classList.add('hidden');
             resultsSection.classList.add('hidden');
             aiContent.classList.add('hidden');
@@ -488,46 +434,42 @@
             loadingState.classList.remove('hidden');
             loadingState.classList.add('flex');
             analyzeBtn.disabled = true;
-            analyzeBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            analyzeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
 
             try {
-                // 1. Quét HTML
-                loadingText.textContent = "Đang quét mã nguồn website...";
+                // 1. Quét URL qua đa cổng Proxy
+                loadingText.textContent = "Đang lấy mã nguồn HTML...";
                 const html = await fetchWebsiteHTML(url);
                 
-                // 2. Phân tích Kỹ thuật
-                loadingText.textContent = "Đang phân tích cấu trúc SEO...";
+                // 2. Chấm điểm & Bóc tách
+                loadingText.textContent = "Đang chấm điểm SEO...";
                 const seoData = analyzeHTML(html, url);
                 
-                // Hiển thị phần UI cơ bản trước
-                renderResults(seoData);
+                // 3. Hiển thị UI ngay lập tức
+                updateUI(seoData);
+                
                 loadingState.classList.add('hidden');
                 loadingState.classList.remove('flex');
                 resultsSection.classList.remove('hidden');
-                aiLoading.classList.remove('hidden'); // Show AI loader
+                aiLoading.classList.remove('hidden');
 
-                // Cuộn xuống kết quả
-                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // 3. Gọi AI Phân tích chuyên sâu
-                const aiReportMarkdown = await getAIReport(seoData);
-                
-                // 4. Hiển thị kết quả AI
+                // 4. Lấy AI Nhận xét ngầm
+                const aiMarkdown = await getAIReport(seoData);
+                aiContent.innerHTML = marked.parse(aiMarkdown);
                 aiLoading.classList.add('hidden');
-                aiContent.innerHTML = marked.parse(aiReportMarkdown);
                 aiContent.classList.remove('hidden');
 
             } catch (err) {
                 loadingState.classList.add('hidden');
                 loadingState.classList.remove('flex');
-                errorMsg.textContent = err.message;
+                
+                errorMsg.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-1"></i> ${err.message}`;
                 errorMsg.classList.remove('hidden');
             } finally {
                 analyzeBtn.disabled = false;
-                analyzeBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                analyzeBtn.innerHTML = '<span>Phân Tích</span> <i class="fa-solid fa-arrow-right"></i>';
             }
         });
-
     </script>
 </body>
 </html>
