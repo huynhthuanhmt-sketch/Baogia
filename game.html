@@ -143,7 +143,6 @@
         <div id="btn-ult" onclick="Game.activateUltimate()">NỘ</div>
         
         <div id="ui-layer">
-            <!-- Menus (Shop, Minigame, GameOver, Victory) remain same as before -->
             <div id="shop-menu" class="panel">
                 <h2 class="game-title" style="color:#facc15; text-shadow: 2px 2px 0 #b45309;">THƯƠNG NHÂN</h2>
                 <p style="font-size: 22px;">Tiền: <span id="shop-coins" style="color:#facc15; font-weight:bold; font-size:26px;">0</span> 💰</p>
@@ -199,12 +198,13 @@
 
         const COLORS = {
             skyTop: '#0f172a', skyBot: '#1e293b',
-            skyTopEvil: '#450a0a', skyBotEvil: '#7f1d1d', // Blood sky
+            skyTopEvil: '#450a0a', skyBotEvil: '#7f1d1d',
             groundTop: '#15803d', groundBot: '#064e3b', 
             dirtTop: '#451a03', dirtBot: '#1c0a00',     
             mountBack: '#1e293b', mountFront: '#334155',
             playerSkin: '#fef08a', playerShirt: '#ef4444', playerPants: '#2563eb',
-            bulletPlayer: '#fef08a', spark: '#fef08a'
+            bulletPlayer: '#fef08a', spark: '#fef08a',
+            blood: ['#ef4444', '#991b1b'] // Đã thêm biến màu bị thiếu
         };
 
         function checkAABB(r1, r2) {
@@ -257,6 +257,61 @@
                 ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
                 ctx.strokeText(this.text, this.x, this.y); ctx.fillText(this.text, this.x, this.y);
+                ctx.restore();
+            }
+        }
+
+        // Đã bổ sung class Pet bị thiếu
+        class Pet {
+            constructor(player) {
+                this.player = player;
+                this.x = player.x - 30;
+                this.y = player.y - 20;
+            }
+            update() {
+                this.x += ((this.player.x - 30) - this.x) * 0.1;
+                this.y += ((this.player.y - 15 + Math.sin(Game.frameCount * 0.1) * 10) - this.y) * 0.1;
+            }
+            draw(ctx) {
+                ctx.fillStyle = '#facc15';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(this.x + 3, this.y - 2, 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x + 4, this.y - 2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Đã bổ sung class SupplyBird bị thiếu
+        class SupplyBird {
+            constructor() {
+                this.x = GW + 50;
+                this.y = 80 + Math.random() * 100;
+                this.w = 35; this.h = 25;
+                this.vx = -3;
+                this.active = true;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += Math.sin(Game.frameCount * 0.1) * 1.5;
+                if (this.x < -100) this.active = false;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, this.w, this.h);
+                let wingY = Math.sin(Game.frameCount * 0.4) * 15;
+                ctx.fillStyle = '#cbd5e1';
+                ctx.beginPath(); ctx.moveTo(this.w/2, 0); ctx.lineTo(-10, -10 + wingY); ctx.lineTo(this.w, -10 + wingY); ctx.fill();
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(5, 10, 25, 5); ctx.fillRect(15, 0, 5, 25); // Dấu cộng y tế xanh
                 ctx.restore();
             }
         }
@@ -1328,7 +1383,7 @@
                 this.platforms.forEach(p => p.update()); this.platforms = this.platforms.filter(p => p.active);
                 this.traps.forEach(t => t.update()); this.traps = this.traps.filter(t => t.active);
                 this.player.update();
-                this.pet.update(); 
+                if(this.pet) this.pet.update(); 
 
                 if (this.frameCount > 0 && this.frameCount % 1000 === 0 && !this.isTransitioning) this.birds.push(new SupplyBird());
                 this.birds.forEach(b => b.update()); this.birds = this.birds.filter(b => b.active);
@@ -1741,6 +1796,5 @@
     </script>
 </body>
 </html>
-
 
 
