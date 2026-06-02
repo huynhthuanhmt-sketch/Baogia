@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch Chăm Sóc Khách Hàng MPE</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
@@ -139,10 +143,14 @@
             const clearDataAndNew = () => { window.localforage.removeItem('routing_data_pro_v6'); setHasSavedData(false); setCustomers([]); setFullMonthSchedule(null); setHomeLocation(null); if (fileInputRef.current) fileInputRef.current.click(); };
             const goBack = () => { setSearchTerm(''); if (activeTab === 'schedule') setActiveTab('analysis'); else if (activeTab === 'analysis') setActiveTab('categorize'); else if (activeTab === 'categorize') setActiveTab('upload'); };
 
-            const processSingleSheetData = (data, fileName = "") => {
+            // ==============================================================================
+            // LÁ CHẮN 3 TẦNG: BẢO VỆ DOANH SỐ NGÀY
+            // ==============================================================================
+            const processSingleSheetData = (data, fileName = "", fileMonthFromSheet = null) => {
                 let parsed = []; let target = 0; let hasRestoredSales = false;
                 let headerIdx = -1; let sttIdx = -1, nameIdx = -1, phoneIdx = -1, xaIdx = -1, huyenIdx = -1;
                 let monthIndices = {}; let dayIndices = {}; let dailyStartIdx = -1;
+                let detectedFileMonth = fileMonthFromSheet; // Kế thừa Tầng 1 & Tầng 2
 
                 let fileYear = selectedYear; 
                 const fileNameMatch = String(fileName).match(/(?:20)\d{2}/);
@@ -175,6 +183,12 @@
                             if (str === 'huyen' || str === 'quan') huyenIdx = idx;
                             if (str.includes('hang ngay') || str.includes('hằng ngày')) dailyStartIdx = idx;
 
+                            // Tầng 3: Nhận diện tháng từ Header nếu các tầng trước thất bại
+                            if (!detectedFileMonth && (strRawLower.includes('ds tong thang') || strRawLower.includes('doanh so tong thang') || strRawLower.includes('lich tuyen t'))) {
+                                const mMatch = strRawLower.match(/\d+/);
+                                if (mMatch && parseInt(mMatch[0]) <= 12) detectedFileMonth = parseInt(mMatch[0]);
+                            }
+
                             for(let m=1; m<=12; m++) {
                                 const monthRegex = new RegExp(`(?:th[aá]ng|t)\\s*0?${m}(?:\\s*[.\\/-]\\s*((?:20)?\\d{2})|\\s+n[aă]m\\s+((?:20)?\\d{2})|$)`, 'i');
                                 const match = strRawLower.match(monthRegex);
@@ -199,9 +213,13 @@
                     }
                 }
 
-                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear };
+                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth };
 
-                if (dailyStartIdx !== -1 && fileYear === selectedYear) {
+                // CHỐT CHẶN BẢO VỆ: Nếu phát hiện file của tháng khác, XÓA TRẮNG mảng quét cột ngày
+                if (detectedFileMonth && detectedFileMonth !== selectedMonth) {
+                    dayIndices = {};
+                    dailyStartIdx = -1;
+                } else if (dailyStartIdx !== -1 && fileYear === selectedYear) {
                     for(let d=1; d<=31; d++) dayIndices[d] = dailyStartIdx + d - 1;
                 }
 
@@ -247,6 +265,7 @@
                         }
                     }
 
+                    // Vòng lặp này bị ngắt nếu phát hiện tháng cũ
                     for (let d = 1; d <= 31; d++) {
                         if (dayIndices[d] !== undefined) {
                             const val = extractNumber(row[dayIndices[d]]);
@@ -254,14 +273,14 @@
                         }
                     }
 
-                    if (rowHasData) hasRestoredSales = true;
+                    if (rowHasData && Object.keys(currentDailySales).length > 0) hasRestoredSales = true;
                     parsed.push({ name, phone, xa, huyen, monthlySales: currentSales, dailySales: currentDailySales });
                 }
 
-                return { parsed, target, hasRestoredSales, fileYear };
+                return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth };
             };
 
-            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, detectedOldYear) => {
+            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, detectedOldYear, detectedOldMonth) => {
                 const customerMap = new Map(); let idCounter = 1;
                 const oldCustomers = [...customers];
                 const cleanName = (name) => String(name).toLowerCase().replace(/\s+/g, '').trim();
@@ -293,10 +312,12 @@
                 if (foundTarget > 0) setTargetQuarter(foundTarget);
 
                 let successMsg = `Nạp thành công ${finalParsed.length} KH từ file.`;
-                if (hasRestoredSales) {
-                    successMsg += " (Đã quét và phục hồi Doanh số!)";
+                if (detectedOldMonth && detectedOldMonth !== selectedMonth) {
+                    successMsg += ` (Đã tự động LỌC BỎ DS Ngày của Tháng ${detectedOldMonth} cũ!)`;
+                } else if (hasRestoredSales) {
+                    successMsg += " (Đã quét và phục hồi Doanh số Ngày!)";
                 } else if (detectedOldYear && detectedOldYear !== selectedYear) {
-                    successMsg += ` (Đã làm sạch Doanh số cũ năm ${detectedOldYear} để nhập mới cho năm ${selectedYear})`;
+                    successMsg += ` (Đã làm sạch Doanh số cũ năm ${detectedOldYear})`;
                 }
                 
                 setActiveTab('categorize'); setStatus({ type: 'success', text: successMsg }); setFullMonthSchedule(null);
@@ -305,28 +326,44 @@
             const handleFileUpload = async (event) => {
                 const files = event.target.files; if (!files || files.length === 0) return;
                 if (!librariesReady || !window.XLSX) return setStatus({ type: 'error', text: 'Thư viện chưa sẵn sàng.' });
-                setStatus({ type: 'loading', text: 'Đang đọc phân tích dữ liệu đa thời gian...' });
+                setStatus({ type: 'loading', text: 'Đang đọc và phân tích dữ liệu đa tầng...' });
                 
                 try {
                     let allParsedCustomers = [];
                     let hasRestoredAnySales = false;
                     let foundTarget = 0;
                     let detectedOldYear = null;
+                    let detectedOldMonth = null;
 
                     for (let i = 0; i < files.length; i++) {
                         const buffer = await files[i].arrayBuffer(); 
                         const workbook = window.XLSX.read(buffer, { type: 'array' });
                         
+                        // Tầng 1: TÌM THÁNG TỪ TÊN SHEET (Độ chính xác tuyệt đối với file xuất từ hệ thống)
+                        let fileMonth = null;
+                        for (let sName of workbook.SheetNames) {
+                            const match = String(sName).match(/L[IỊ]CH TUY[EẾ]N T(\d+)/i);
+                            if (match && parseInt(match[1]) <= 12) { fileMonth = parseInt(match[1]); break; }
+                        }
+                        
+                        // Tầng 2: TÌM THÁNG TỪ TÊN FILE (Dự phòng cho file user tự đổi tên)
+                        if (!fileMonth) {
+                            const fNameLower = String(files[i].name).toLowerCase();
+                            const fMatch = fNameLower.match(/th[aá]ng\s*0?(\d+)/i) || fNameLower.match(/_t(\d+)_/i);
+                            if (fMatch && parseInt(fMatch[1]) <= 12) fileMonth = parseInt(fMatch[1]);
+                        }
+
                         for (let sName of workbook.SheetNames) {
                             const worksheet = workbook.Sheets[sName]; 
                             const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
                             
-                            const { parsed, target, hasRestoredSales, fileYear } = processSingleSheetData(jsonData, files[i].name);
+                            const { parsed, target, hasRestoredSales, fileYear, detectedFileMonth } = processSingleSheetData(jsonData, files[i].name, fileMonth);
                             if (parsed.length > 0) {
                                 allParsedCustomers = allParsedCustomers.concat(parsed);
                                 if (target > foundTarget) foundTarget = target;
                                 if (hasRestoredSales) hasRestoredAnySales = true;
                                 if (fileYear && fileYear !== selectedYear) detectedOldYear = fileYear;
+                                if (detectedFileMonth && detectedFileMonth !== selectedMonth) detectedOldMonth = detectedFileMonth;
                             }
                         }
                     }
@@ -334,7 +371,7 @@
                     if (allParsedCustomers.length === 0) {
                         setStatus({ type: 'error', text: 'Không tìm thấy bảng "TÊN KHÁCH HÀNG" trong file.' });
                     } else {
-                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, detectedOldYear);
+                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, detectedOldYear, detectedOldMonth);
                     }
                 } catch (err) { setStatus({ type: 'error', text: 'Lỗi đọc file: ' + err.message }); }
                 if (fileInputRef.current) fileInputRef.current.value = '';
@@ -921,7 +958,7 @@
 
                     <div className="max-w-7xl mx-auto space-y-4">
                         <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-                           <div className="p-4 flex flex-col md:flex-row justify-between items-center border-b border-slate-100">
+                            <div className="p-4 flex flex-col md:flex-row justify-between items-center border-b border-slate-100">
                                 <div className="text-center md:text-left w-full">
                                     <h1 className="text-2xl font-black text-blue-900 tracking-tight uppercase">Lịch Chăm Sóc Khách Hàng</h1>
                                     <p className="text-sm font-medium text-slate-500 mt-1">Quản lý Tuyến & Doanh số</p>
@@ -1121,7 +1158,7 @@
                                                 {kpiStatus === 'good' ? (
                                                     <span>Tiến độ <b>TỐI ƯU</b>. Đủ điều kiện đáp ứng KPI. Bấm Tạo lịch để triển khai.</span>
                                                 ) : kpiStatus === 'under' ? (
-                                                    <span>Hụt KPI. <b>Cần mở mới thêm KH</b> hoặc nâng lên Trọng Điểm/Duy Trì.</span>
+                                                    <span>Hụt KPI. <b>Cần mở mới thêm KH</b> hoặc nâng KH lên Trọng Điểm/Duy Trì.</span>
                                                 ) : (
                                                     <span>Quá tải. <b>Cần giảm tải</b>: Đổi bớt KH Trọng Điểm xuống Duy Trì/Tương Tác.</span>
                                                 )}
@@ -1232,7 +1269,15 @@
                                     <div className="flex flex-col gap-2 md:w-1/3">
                                         <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg font-bold text-slate-700 text-sm">
                                             <i className="fa-solid fa-calendar-days text-blue-600"></i><span>Tháng</span>
-                                            <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} className="bg-transparent outline-none cursor-pointer text-blue-700">
+                                            <select value={selectedMonth} onChange={e => {
+                                                const newM = Number(e.target.value);
+                                                if(newM !== selectedMonth) {
+                                                    setSelectedMonth(newM);
+                                                    setFullMonthSchedule(null);
+                                                    setCustomers(prev => prev.map(c => ({...c, dailySales: {}})));
+                                                    setStatus({ type: 'success', text: `Đã chuyển sang Tháng ${newM} và làm sạch DS Ngày cũ.` });
+                                                }
+                                            }} className="bg-transparent outline-none cursor-pointer text-blue-700">
                                                 {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <option key={m} value={m}>{m}</option>)}
                                             </select>
                                             <span className="mx-1">/</span>
