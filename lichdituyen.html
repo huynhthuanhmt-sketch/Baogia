@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch Chăm Sóc Khách Hàng MPE</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
@@ -30,43 +34,22 @@
         const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
             const R = 6371; const dLat = (lat2 - lat1) * (Math.PI / 180); const dLon = (lon2 - lon1) * (Math.PI / 180);
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); return Number((R * c).toFixed(1));
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); return (R * c).toFixed(1);
         };
 
         const formatVND = (amount) => new Intl.NumberFormat('vi-VN').format(amount || 0);
 
+        // Chuẩn hóa triệt để tiếng Việt, dấu cách
         const normalizeStr = (str) => {
             if (!str) return "";
             return String(str).toLowerCase().replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g,"a").replace(/[èéẹẻẽêềếệểễ]/g,"e").replace(/[ìíịỉĩ]/g,"i").replace(/[òóọỏõôồốộổỗơờớợởỡ]/g,"o").replace(/[ùúụủũưừứựửữ]/g,"u").replace(/[ỳýỵỷỹ]/g,"y").replace(/đ/g,"d").replace(/\s+/g, ' ').trim();
         };
 
+        // Hàm trích xuất 100% là số từ chuỗi tiền tệ
         const extractNumber = (val) => {
             if (val === undefined || val === null || val === '') return 0;
             const strVal = String(val).replace(/[^0-9]/g, '');
             return strVal ? Number(strVal) : 0;
-        };
-
-        const buildMonthCalendar = (year, month) => {
-            const weeks = {};
-            let weekNum = 1;
-            const daysInMonth = new Date(year, month, 0).getDate();
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const date = new Date(year, month - 1, d);
-                const dayOfWeek = date.getDay(); // 0 is Sun
-
-                if (dayOfWeek !== 0) { // Mon-Sat
-                    const dayKeys = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
-                    const dayStr = dayKeys[dayOfWeek];
-                    if (!weeks[weekNum]) weeks[weekNum] = {};
-                    weeks[weekNum][dayStr] = { date: d };
-                }
-
-                if (dayOfWeek === 0 && d !== daysInMonth) {
-                    if (weeks[weekNum]) weekNum++; 
-                }
-            }
-            return weeks;
         };
 
         function App() {
@@ -85,10 +68,7 @@
 
             const [showAddForm, setShowAddForm] = useState(false);
             const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', xa: '', huyen: '', type: 'DUY_TRI' });
-            
             const [expandedCustomer, setExpandedCustomer] = useState(null);
-            const [editingData, setEditingData] = useState(null);
-
             const [customerToDelete, setCustomerToDelete] = useState(null);
 
             const [activeTab, setActiveTab] = useState('upload'); 
@@ -108,7 +88,7 @@
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js")
                 ]).then(() => {
                     setLibrariesReady(true);
-                    window.localforage.getItem('routing_data_pro_v6').then(data => {
+                    window.localforage.getItem('routing_data_pro_v3').then(data => {
                         if(data && data.customers && data.customers.length > 0) { setHasSavedData(true); setStatus({ type: 'success', text: 'Phát hiện phiên làm việc cũ.' }); } 
                         else { setStatus({ type: 'success', text: 'Hệ thống đã sẵn sàng.' }); }
                     });
@@ -118,7 +98,7 @@
             useEffect(() => {
                 if (librariesReady && customers.length > 0) {
                     const timeoutId = setTimeout(() => {
-                        window.localforage.setItem('routing_data_pro_v6', { customers, fullMonthSchedule, selectedMonth, selectedYear, homeLocation, targetQuarter, targetYear });
+                        window.localforage.setItem('routing_data_pro_v3', { customers, fullMonthSchedule, selectedMonth, selectedYear, homeLocation, targetQuarter, targetYear });
                         setHasSavedData(true);
                     }, 500);
                     return () => clearTimeout(timeoutId);
@@ -127,7 +107,7 @@
 
             const restoreData = () => {
                 setStatus({ type: 'loading', text: 'Đang khôi phục dữ liệu...' });
-                window.localforage.getItem('routing_data_pro_v6').then(data => {
+                window.localforage.getItem('routing_data_pro_v3').then(data => {
                     if(data) {
                         setCustomers(data.customers || []); setFullMonthSchedule(data.fullMonthSchedule || null); setSelectedMonth(data.selectedMonth || selectedMonth); setSelectedYear(data.selectedYear || selectedYear); setHomeLocation(data.homeLocation || null);
                         if(data.targetQuarter) setTargetQuarter(data.targetQuarter); if(data.targetYear) setTargetYear(data.targetYear);
@@ -136,26 +116,15 @@
                 });
             };
 
-            const clearDataAndNew = () => { window.localforage.removeItem('routing_data_pro_v6'); setHasSavedData(false); setCustomers([]); setFullMonthSchedule(null); setHomeLocation(null); if (fileInputRef.current) fileInputRef.current.click(); };
+            const clearDataAndNew = () => { window.localforage.removeItem('routing_data_pro_v3'); setHasSavedData(false); setCustomers([]); setFullMonthSchedule(null); setHomeLocation(null); if (fileInputRef.current) fileInputRef.current.click(); };
             const goBack = () => { setSearchTerm(''); if (activeTab === 'schedule') setActiveTab('analysis'); else if (activeTab === 'analysis') setActiveTab('categorize'); else if (activeTab === 'categorize') setActiveTab('upload'); };
 
-            const processSingleSheetData = (data, fileName = "") => {
+            // HÀM LÕI MỚI: LÁ CHẮN 3 TẦNG BẢO VỆ DOANH SỐ NGÀY
+            const processSingleSheetData = (data, fileMonthFromSheet) => {
                 let parsed = []; let target = 0; let hasRestoredSales = false;
                 let headerIdx = -1; let sttIdx = -1, nameIdx = -1, phoneIdx = -1, xaIdx = -1, huyenIdx = -1;
                 let monthIndices = {}; let dayIndices = {}; let dailyStartIdx = -1;
-
-                let fileYear = selectedYear; 
-                const fileNameMatch = String(fileName).match(/(?:20)\d{2}/);
-                if (fileNameMatch) {
-                    fileYear = parseInt(fileNameMatch[0]);
-                } else {
-                    for (let i = 0; i < Math.min(data.length, 15); i++) {
-                        const row = data[i]; if (!row) continue;
-                        const rowStr = row.join(' ').toLowerCase();
-                        const yearMatch = rowStr.match(/n[aă]m\s*(20\d{2})/); 
-                        if (yearMatch) { fileYear = parseInt(yearMatch[1]); break; }
-                    }
-                }
+                let detectedFileMonth = fileMonthFromSheet; // Tầng 1 & 2 đã xử lý trước khi gọi hàm này
 
                 for (let i = 0; i < Math.min(data.length, 30); i++) {
                     const row = data[i]; if (!row) continue;
@@ -164,7 +133,7 @@
                     if (rowStr.includes('ten khach hang') || rowStr.includes('ten dai ly')) {
                         headerIdx = i;
                         row.forEach((cell, idx) => {
-                            if (cell === undefined || cell === null) return;
+                            if (!cell) return;
                             const str = normalizeStr(cell);
                             const strRawLower = String(cell).toLowerCase().trim();
 
@@ -175,23 +144,21 @@
                             if (str === 'huyen' || str === 'quan') huyenIdx = idx;
                             if (str.includes('hang ngay') || str.includes('hằng ngày')) dailyStartIdx = idx;
 
+                            // Tầng 3: Nhận diện tháng từ Header nếu các tầng trước thất bại
+                            if (!detectedFileMonth && (strRawLower.includes('ds tong thang') || strRawLower.includes('doanh so tong thang'))) {
+                                const mMatch = strRawLower.match(/\d+/);
+                                if (mMatch && parseInt(mMatch[0]) <= 12) detectedFileMonth = parseInt(mMatch[0]);
+                            }
+
                             for(let m=1; m<=12; m++) {
-                                const monthRegex = new RegExp(`(?:th[aá]ng|t)\\s*0?${m}(?:\\s*[.\\/-]\\s*((?:20)?\\d{2})|\\s+n[aă]m\\s+((?:20)?\\d{2})|$)`, 'i');
-                                const match = strRawLower.match(monthRegex);
-                                if (match) {
-                                    let yearInCol = match[1] || match[2];
-                                    if (yearInCol && yearInCol.length === 2) yearInCol = "20" + yearInCol; 
-                                    const colYear = yearInCol ? parseInt(yearInCol) : fileYear;
-                                    if (colYear === selectedYear) { monthIndices[m] = idx; }
-                                }
+                                const monthRegex = new RegExp(`(?:th[aá]ng|t)\\s*0?${m}(?:\\s*[.\\/-]\\s*(?:20)?\\d{2,4}|\\s+n[aă]m\\s+(?:20)?\\d{2,4}|$)`, 'i');
+                                if (monthRegex.test(strRawLower)) monthIndices[m] = idx;
                             }
                             
-                            if (fileYear === selectedYear) {
-                                for(let d=1; d<=31; d++) {
-                                    const dayRegex = new RegExp(`ng[aà]y\\s*0?${d}$`, 'i');
-                                    if (dayRegex.test(strRawLower) || ((strRawLower === `${d}` || strRawLower === `0${d}`) && idx > 10)) {
-                                        dayIndices[d] = idx;
-                                    }
+                            for(let d=1; d<=31; d++) {
+                                const dayRegex = new RegExp(`ng[aà]y\\s*0?${d}$`, 'i');
+                                if (dayRegex.test(strRawLower) || ((strRawLower === `${d}` || strRawLower === `0${d}`) && idx > 10)) {
+                                    dayIndices[d] = idx;
                                 }
                             }
                         });
@@ -199,19 +166,23 @@
                     }
                 }
 
-                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear };
+                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, detectedFileMonth };
 
-                if (dailyStartIdx !== -1 && fileYear === selectedYear) {
+                // CHỐT CHẶN BẢO VỆ DOANH SỐ NGÀY: Nếu phát hiện file của tháng khác, XÓA TRẮNG mảng quét cột ngày
+                if (detectedFileMonth && detectedFileMonth !== selectedMonth) {
+                    dayIndices = {};
+                    dailyStartIdx = -1;
+                } else if (dailyStartIdx !== -1) {
                     for(let d=1; d<=31; d++) dayIndices[d] = dailyStartIdx + d - 1;
                 }
 
-                if (fileYear === selectedYear) {
-                    for (let i = 0; i < headerIdx; i++) {
-                        const row = data[i]; if (!row) continue;
-                        const rowStr = row.map(c => normalizeStr(c)).join(' ');
-                        if (rowStr.includes('chi tieu')) {
-                            const nums = row.map(c => extractNumber(c)).filter(n => n > 1000);
-                            if (nums.length > 0) target = Math.max(...nums);
+                for (let i = 0; i < headerIdx; i++) {
+                    const row = data[i]; if (!row) continue;
+                    const rowStr = row.map(c => normalizeStr(c)).join(' ');
+                    if (rowStr.includes('chi tieu')) {
+                        const nums = row.map(c => extractNumber(c)).filter(n => n > 1000);
+                        if (nums.length > 0) {
+                            target = Math.max(...nums);
                         }
                     }
                 }
@@ -247,6 +218,7 @@
                         }
                     }
 
+                    // Vòng lặp này sẽ không được chạy nếu File bị phát hiện là tháng cũ (dayIndices đã bị xoá trắng)
                     for (let d = 1; d <= 31; d++) {
                         if (dayIndices[d] !== undefined) {
                             const val = extractNumber(row[dayIndices[d]]);
@@ -254,14 +226,14 @@
                         }
                     }
 
-                    if (rowHasData) hasRestoredSales = true;
+                    if (rowHasData && Object.keys(currentDailySales).length > 0) hasRestoredSales = true;
                     parsed.push({ name, phone, xa, huyen, monthlySales: currentSales, dailySales: currentDailySales });
                 }
 
-                return { parsed, target, hasRestoredSales, fileYear };
+                return { parsed, target, hasRestoredSales, detectedFileMonth };
             };
 
-            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, detectedOldYear) => {
+            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, detectedOldMonth) => {
                 const customerMap = new Map(); let idCounter = 1;
                 const oldCustomers = [...customers];
                 const cleanName = (name) => String(name).toLowerCase().replace(/\s+/g, '').trim();
@@ -282,7 +254,7 @@
                         customerMap.set(key, {
                             id: `MT1_${Date.now()}_${idCounter++}`,
                             name: item.name, phone: item.phone, xa: item.xa, huyen: item.huyen,
-                            type: 'DUY_TRI', subGroup: (idCounter % 4) + 1, location: null,
+                            type: 'DUY_TRI', subGroup: (idCounter % 2 === 0 ? 2 : 1), location: null,
                             monthlySales: item.monthlySales, dailySales: item.dailySales
                         });
                     }
@@ -293,10 +265,10 @@
                 if (foundTarget > 0) setTargetQuarter(foundTarget);
 
                 let successMsg = `Nạp thành công ${finalParsed.length} KH từ file.`;
-                if (hasRestoredSales) {
-                    successMsg += " (Đã quét và phục hồi Doanh số!)";
-                } else if (detectedOldYear && detectedOldYear !== selectedYear) {
-                    successMsg += ` (Đã làm sạch Doanh số cũ năm ${detectedOldYear} để nhập mới cho năm ${selectedYear})`;
+                if (detectedOldMonth && detectedOldMonth !== selectedMonth) {
+                    successMsg += ` (Tự động LỌC BỎ DS Ngày của Tháng ${detectedOldMonth} cũ để tránh rác số liệu!)`;
+                } else if (hasRestoredSales) {
+                    successMsg += " (Đã quét và phục hồi DS Ngày!)";
                 }
                 
                 setActiveTab('categorize'); setStatus({ type: 'success', text: successMsg }); setFullMonthSchedule(null);
@@ -305,28 +277,42 @@
             const handleFileUpload = async (event) => {
                 const files = event.target.files; if (!files || files.length === 0) return;
                 if (!librariesReady || !window.XLSX) return setStatus({ type: 'error', text: 'Thư viện chưa sẵn sàng.' });
-                setStatus({ type: 'loading', text: 'Đang đọc phân tích dữ liệu đa thời gian...' });
+                setStatus({ type: 'loading', text: 'Đang đọc và phân tích dữ liệu đa tầng...' });
                 
                 try {
                     let allParsedCustomers = [];
                     let hasRestoredAnySales = false;
                     let foundTarget = 0;
-                    let detectedOldYear = null;
+                    let detectedOldMonth = null;
 
                     for (let i = 0; i < files.length; i++) {
                         const buffer = await files[i].arrayBuffer(); 
                         const workbook = window.XLSX.read(buffer, { type: 'array' });
                         
+                        // Tầng 1: TÌM THÁNG TỪ TÊN SHEET (Độ chính xác tuyệt đối với file xuất từ hệ thống)
+                        let fileMonth = null;
+                        for (let sName of workbook.SheetNames) {
+                            const match = String(sName).match(/L[IỊ]CH TUY[EẾ]N T(\d+)/i);
+                            if (match && parseInt(match[1]) <= 12) { fileMonth = parseInt(match[1]); break; }
+                        }
+                        
+                        // Tầng 2: TÌM THÁNG TỪ TÊN FILE (Dự phòng cho file user tự đổi tên)
+                        if (!fileMonth) {
+                            const fNameLower = String(files[i].name).toLowerCase();
+                            const fMatch = fNameLower.match(/th[aá]ng\s*0?(\d+)/i) || fNameLower.match(/_t(\d+)_/i);
+                            if (fMatch && parseInt(fMatch[1]) <= 12) fileMonth = parseInt(fMatch[1]);
+                        }
+
                         for (let sName of workbook.SheetNames) {
                             const worksheet = workbook.Sheets[sName]; 
                             const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
                             
-                            const { parsed, target, hasRestoredSales, fileYear } = processSingleSheetData(jsonData, files[i].name);
+                            const { parsed, target, hasRestoredSales, detectedFileMonth } = processSingleSheetData(jsonData, fileMonth);
                             if (parsed.length > 0) {
                                 allParsedCustomers = allParsedCustomers.concat(parsed);
                                 if (target > foundTarget) foundTarget = target;
                                 if (hasRestoredSales) hasRestoredAnySales = true;
-                                if (fileYear && fileYear !== selectedYear) detectedOldYear = fileYear;
+                                if (detectedFileMonth && detectedFileMonth !== selectedMonth) detectedOldMonth = detectedFileMonth;
                             }
                         }
                     }
@@ -334,7 +320,7 @@
                     if (allParsedCustomers.length === 0) {
                         setStatus({ type: 'error', text: 'Không tìm thấy bảng "TÊN KHÁCH HÀNG" trong file.' });
                     } else {
-                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, detectedOldYear);
+                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, detectedOldMonth);
                     }
                 } catch (err) { setStatus({ type: 'error', text: 'Lỗi đọc file: ' + err.message }); }
                 if (fileInputRef.current) fileInputRef.current.value = '';
@@ -342,40 +328,17 @@
 
             const handleAddCustomer = () => {
                 if(!newCustomer.name) return setStatus({ type: 'error', text: 'Vui lòng nhập tên khách hàng.' });
-                setCustomers(prev => [{ ...newCustomer, id: `MT1_MANUAL_${Date.now()}`, subGroup: (Date.now() % 4) + 1, location: null, monthlySales: {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0}, dailySales: {} }, ...prev]);
+                setCustomers(prev => [{ ...newCustomer, id: `MT1_MANUAL_${Date.now()}`, subGroup: 1, location: null, monthlySales: {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0}, dailySales: {} }, ...prev]);
                 setNewCustomer({ name: '', phone: '', xa: '', huyen: '', type: 'DUY_TRI' }); setShowAddForm(false); setFullMonthSchedule(null); setStatus({ type: 'success', text: 'Thêm khách hàng thành công.' });
-            };
-
-            const openEditForm = (c) => {
-                setExpandedCustomer(c.id);
-                setEditingData(JSON.parse(JSON.stringify(c))); 
-            };
-
-            const saveEditForm = () => {
-                if (!editingData) return;
-                setCustomers(prev => prev.map(c => c.id === editingData.id ? editingData : c));
-                setExpandedCustomer(null);
-                setFullMonthSchedule(null); 
-                setStatus({ type: 'success', text: 'Đã cập nhật thông tin thành công!' });
             };
 
             const confirmDeleteCustomer = () => { 
                 if(customerToDelete) { setCustomers(prev => prev.filter(c => c.id !== customerToDelete.id)); setFullMonthSchedule(null); setCustomerToDelete(null); }
             };
 
-            const toggleType = (id) => { 
-                setCustomers(prev => prev.map(c => {
-                    if (c.id === id) {
-                        let nextType = 'DUY_TRI';
-                        if (c.type === 'DUY_TRI') nextType = 'TUONG_TAC';
-                        else if (c.type === 'TUONG_TAC') nextType = 'TRONG_DIEM';
-                        return { ...c, type: nextType };
-                    }
-                    return c;
-                })); 
-                setFullMonthSchedule(null); 
-            };
-            
+            const toggleType = (id) => { setCustomers(prev => prev.map(c => c.id === id ? { ...c, type: c.type === 'TRONG_DIEM' ? 'DUY_TRI' : 'TRONG_DIEM' } : c)); setFullMonthSchedule(null); };
+            const handleMonthlySalesChange = (id, month, val) => { setCustomers(prev => prev.map(c => c.id === id ? { ...c, monthlySales: {...c.monthlySales, [month]: val} } : c)); };
+
             const handleSetHomeLocation = () => {
                 if (!navigator.geolocation) return setStatus({ type: 'error', text: 'Trình duyệt không hỗ trợ định vị.' });
                 setStatus({ type: 'loading', text: 'Đang lấy tọa độ...' });
@@ -398,223 +361,85 @@
                 });
             }, []);
 
-            // =========================================================================
-            // CORE UPGRADE: THUẬT TOÁN ĐƯỜNG ĐI THỰC TẾ (OSRM API) KẾT HỢP FALLBACK
-            // =========================================================================
-            const handleOptimizeRoute = async (week, day) => {
-                if (!homeLocation || !homeLocation.lat || !homeLocation.lng) {
-                    return setStatus({ type: 'error', text: 'Vui lòng thiết lập Vị trí Nhà trước.' });
-                }
-
-                const dayItems = fullMonthSchedule[week][day].items;
-                if (dayItems.length <= 1) return;
-
-                setStatus({ type: 'loading', text: 'Đang kết nối vệ tinh tính toán lộ trình thực tế...' });
-
-                const withLoc = [];
-                const unlocated = [];
-                dayItems.forEach(item => {
-                    const loc = getCustomerLocation(item.id);
-                    if (loc && typeof loc.lat === 'number' && typeof loc.lng === 'number') {
-                        withLoc.push({ ...item, _loc: loc });
-                    } else {
-                        unlocated.push(item);
-                    }
-                });
-
-                if (withLoc.length === 0) {
-                    return setStatus({ type: 'error', text: 'Không có KH nào có tọa độ để tối ưu. Hãy bấm GPS cho KH.' });
-                }
-
-                try {
-                    let coords = `${homeLocation.lng},${homeLocation.lat}`;
-                    withLoc.forEach(item => {
-                        coords += `;${item._loc.lng},${item._loc.lat}`;
-                    });
-
-                    const response = await fetch(`https://router.project-osrm.org/trip/v1/driving/${coords}?source=first&roundtrip=false`);
-                    
-                    if (!response.ok) throw new Error(`Network Error: ${response.status}`);
-                    const data = await response.json();
-                    if (data.code !== 'Ok') throw new Error(`API Error: ${data.code}`);
-
-                    const sortedCustomers = [];
-                    const customerWaypoints = data.waypoints.filter(wp => wp.waypoint_index > 0);
-                    
-                    customerWaypoints.sort((a, b) => a.trips_index - b.trips_index);
-
-                    customerWaypoints.forEach(wp => {
-                        const originalItem = withLoc[wp.waypoint_index - 1];
-                        delete originalItem._loc; 
-                        sortedCustomers.push(originalItem);
-                    });
-
-                    setFullMonthSchedule(prev => {
-                        const newSched = { ...prev };
-                        newSched[week] = { ...newSched[week] };
-                        newSched[week][day] = { 
-                            ...newSched[week][day], 
-                            items: [...sortedCustomers, ...unlocated] 
-                        };
-                        return newSched;
-                    });
-
-                    setStatus({ type: 'success', text: `Đã tự động tối ưu theo đường thực tế!` });
-
-                } catch (error) {
-                    console.warn("Lỗi kết nối OSRM, kích hoạt Fallback:", error);
-                    
-                    let currentLoc = homeLocation; 
-                    const optimized = [...withLoc];
+            const handleOptimizeRoute = (week, day) => {
+                if (!homeLocation) return setStatus({ type: 'error', text: 'Vui lòng thiết lập Vị trí Nhà trước.' });
+                const newSchedule = { ...fullMonthSchedule }; const dayItems = [...newSchedule[week][day].items]; if (dayItems.length <= 1) return;
+                setStatus({ type: 'loading', text: 'Đang tối ưu lộ trình...' });
+                setTimeout(() => {
+                    let currentLoc = homeLocation; const optimized = []; const unlocated = []; 
+                    dayItems.forEach(item => { const loc = getCustomerLocation(item.id); if (loc) optimized.push({ ...item, _loc: loc }); else unlocated.push(item); });
                     const finalOptimized = [];
-                    
                     while (optimized.length > 0) {
                         optimized.sort((a, b) => getDistanceFromLatLonInKm(currentLoc.lat, currentLoc.lng, a._loc.lat, a._loc.lng) - getDistanceFromLatLonInKm(currentLoc.lat, currentLoc.lng, b._loc.lat, b._loc.lng));
-                        const nearest = optimized.shift(); 
-                        finalOptimized.push(nearest); 
-                        currentLoc = nearest._loc; 
+                        const nearest = optimized.shift(); finalOptimized.push(nearest); currentLoc = nearest._loc; 
                     }
                     finalOptimized.forEach(item => delete item._loc);
+                    newSchedule[week][day].items = [...finalOptimized, ...unlocated];
+                    setFullMonthSchedule(newSchedule); setStatus({ type: 'success', text: `Đã tự động tối ưu!` });
+                }, 300);
+            };
 
-                    setFullMonthSchedule(prev => {
-                        const newSched = { ...prev };
-                        newSched[week] = { ...newSched[week] };
-                        newSched[week][day] = { 
-                            ...newSched[week][day], 
-                            items: [...finalOptimized, ...unlocated] 
-                        };
-                        return newSched;
-                    });
-                    
-                    setStatus({ type: 'success', text: `Đã dùng thuật toán dự phòng do mạng yếu!` });
+            const buildSingleWeek = (weekNum) => {
+                const activeSubGroup = (weekNum % 2 !== 0) ? 1 : 2;
+                let activeCustomersPool = customers.filter(c => c.type === 'TRONG_DIEM' || c.subGroup === activeSubGroup).map(c => ({...c, sales: ''}));
+                
+                const weekSchedule = {
+                    T2: { day: 'Thứ 2', desc: 'Triển khai tuyến Cai Lậy / Tân Phước', limit: 12, items: [] },
+                    T3: { day: 'Thứ 3', desc: 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', limit: 12, items: [] },
+                    T4: { day: 'Thứ 4', desc: 'Triển khai Châu Thành / Mỹ Tho', limit: 12, items: [] },
+                    T5: { day: 'Thứ 5', desc: 'Triển khai tuyến Cai Lậy / Tân Phước', limit: 12, items: [] },
+                    T6: { day: 'Thứ 6', desc: 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', limit: 12, items: [] },
+                    T7: { day: 'Thứ 7', desc: 'Bảo trì tuyến Mỹ Tho / Châu Thành', limit: 12, items: [] },
+                };
+
+                const dayDistrictMap = {
+                    'T2': ['cai lay', 'tan phuoc'], 'T3': ['cai be', 'cai lay'], 'T4': ['chau thanh', 'my tho'],
+                    'T5': ['cai lay', 'tan phuoc'], 'T6': ['cai be', 'cai lay'], 'T7': ['my tho', 'chau thanh']
+                };
+                const daysKeys = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+
+                const pullCustomersForDay = (targetDistricts, maxToPull) => {
+                    let pulled = [];
+                    for (let i = activeCustomersPool.length - 1; i >= 0; i--) {
+                        const c = activeCustomersPool[i]; const h = normalizeStr(c.huyen) || 'khac';
+                        if (targetDistricts.includes('all') || targetDistricts.some(dist => h.includes(dist))) {
+                            pulled.push(c); activeCustomersPool.splice(i, 1);
+                            if (pulled.length >= maxToPull) break;
+                        }
+                    }
+                    return pulled;
+                };
+
+                daysKeys.forEach(d => { const needed = 8 - weekSchedule[d].items.length; if (needed > 0) weekSchedule[d].items.push(...pullCustomersForDay(dayDistrictMap[d], needed)); });
+                daysKeys.forEach(d => { const needed = 8 - weekSchedule[d].items.length; if (needed > 0) weekSchedule[d].items.push(...pullCustomersForDay(['all'], needed)); });
+                daysKeys.forEach(d => { const currentCount = weekSchedule[d].items.length; if (currentCount < 12) weekSchedule[d].items.push(...pullCustomersForDay(dayDistrictMap[d], 12 - currentCount)); });
+
+                while (activeCustomersPool.length > 0) {
+                    const c = activeCustomersPool.shift(); let minDay = daysKeys[0]; 
+                    for (let d of daysKeys) { if (weekSchedule[d].items.length < weekSchedule[minDay].items.length) { minDay = d; } }
+                    weekSchedule[minDay].items.push(c);
                 }
+                return weekSchedule;
             };
 
             const executeRoutingForMonth = () => {
-                setStatus({ type: 'loading', text: 'Đang giải bài toán rải đều & bù đắp KPI...' });
+                setStatus({ type: 'loading', text: 'Đang tổng hợp lộ trình...' });
                 setTimeout(() => {
-                    const cal = buildMonthCalendar(selectedYear, selectedMonth);
-                    const newSchedule = {};
-                    let allAvailableDays = [];
-
-                    const dayDescMap = { 'T2': 'Triển khai tuyến Cai Lậy / Tân Phước', 'T3': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', 'T4': 'Triển khai Châu Thành / Mỹ Tho', 'T5': 'Triển khai tuyến Cai Lậy / Tân Phước', 'T6': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', 'T7': 'Bảo trì tuyến Mỹ Tho / Châu Thành' };
-                    const dayDistrictMap = { 'T2': ['cai lay', 'tan phuoc'], 'T3': ['cai be', 'cai lay'], 'T4': ['chau thanh', 'my tho'], 'T5': ['cai lay', 'tan phuoc'], 'T6': ['cai be', 'cai lay'], 'T7': ['my tho', 'chau thanh'] };
-
-                    Object.keys(cal).forEach(wStr => {
-                        const weekNum = parseInt(wStr);
-                        newSchedule[weekNum] = {};
-                        Object.keys(cal[wStr]).forEach(dayKey => {
-                            newSchedule[weekNum][dayKey] = {
-                                day: `Thứ ${dayKey.replace('T', '')}`,
-                                desc: dayDescMap[dayKey] || 'Triển khai tuyến',
-                                limit: 12,
-                                items: [],
-                                date: cal[wStr][dayKey].date
-                            };
-                            allAvailableDays.push({ week: weekNum, dayKey, date: cal[wStr][dayKey].date, items: [] });
-                        });
-                    });
-
-                    let visitsToAssign = [];
-                    customers.forEach(c => {
-                        let visits = 1; 
-                        if (c.type === 'TRONG_DIEM') visits = 3;
-                        else if (c.type === 'DUY_TRI') visits = 2;
-                        
-                        for (let i = 0; i < visits; i++) {
-                            visitsToAssign.push({ ...c, sales: '', _visitIndex: i }); 
-                        }
-                    });
-
-                    visitsToAssign.sort((a, b) => {
-                        if (a._visitIndex !== b._visitIndex) return a._visitIndex - b._visitIndex;
-                        const weight = { 'TRONG_DIEM': 3, 'DUY_TRI': 2, 'TUONG_TAC': 1 };
-                        return weight[b.type] - weight[a.type];
-                    });
-
-                    const countInWeek = (dayList, weekNum, custId) => {
-                        return dayList.filter(d => d.week === weekNum).flatMap(d => d.items).filter(i => i.id === custId).length;
-                    };
-
-                    visitsToAssign.forEach(visit => {
-                        const h = normalizeStr(visit.huyen) || 'khac';
-                        
-                        const geoMatchedDays = allAvailableDays.filter(d => {
-                            const targetDistricts = dayDistrictMap[d.dayKey] || ['all'];
-                            return targetDistricts.includes('all') || targetDistricts.some(dist => h.includes(dist));
-                        });
-
-                        let candidates = geoMatchedDays.filter(d => d.items.length < 12 && countInWeek(allAvailableDays, d.week, visit.id) === 0);
-
-                        if (candidates.length === 0) {
-                            candidates = geoMatchedDays.filter(d => d.items.length < 12 && !d.items.some(i => i.id === visit.id));
-                        }
-
-                        if (candidates.length === 0) {
-                            candidates = allAvailableDays.filter(d => d.items.length < 12 && countInWeek(allAvailableDays, d.week, visit.id) === 0);
-                        }
-
-                        if (candidates.length === 0) {
-                            candidates = allAvailableDays.filter(d => !d.items.some(i => i.id === visit.id));
-                        }
-
-                        candidates.sort((a, b) => a.items.length - b.items.length);
-                        
-                        if(candidates.length > 0) {
-                            candidates[0].items.push(visit);
-                        }
-                    });
-
-                    const countInMonth = (custId) => allAvailableDays.flatMap(d => d.items).filter(i => i.id === custId).length;
-
-                    allAvailableDays.forEach(day => {
-                        while (day.items.length < 8) {
-                            let padCandidates = customers.filter(c => 
-                                !day.items.some(i => i.id === c.id) && countInMonth(c.id) < 4 
-                            );
-                            if (padCandidates.length === 0) break; 
-
-                            const targetDistricts = dayDistrictMap[day.dayKey] || ['all'];
-                            
-                            let bestMatches = padCandidates.filter(c => {
-                                const h = normalizeStr(c.huyen) || 'khac';
-                                return targetDistricts.includes('all') || targetDistricts.some(dist => h.includes(dist));
-                            });
-                            
-                            if (bestMatches.length === 0) bestMatches = padCandidates;
-
-                            let notInWeekMatches = bestMatches.filter(c => countInWeek(allAvailableDays, day.week, c.id) === 0);
-                            if (notInWeekMatches.length > 0) {
-                                bestMatches = notInWeekMatches;
-                            }
-
-                            bestMatches.sort((a, b) => countInMonth(a.id) - countInMonth(b.id));
-
-                            const picked = bestMatches[0];
-                            day.items.push({ ...picked, sales: '', _visitIndex: 'pad_auto' });
-                        }
-                    });
-
-                    allAvailableDays.forEach(d => {
-                        newSchedule[d.week][d.dayKey].items = d.items;
-                    });
-
-                    setFullMonthSchedule(newSchedule);
+                    setFullMonthSchedule({ 1: buildSingleWeek(1), 2: buildSingleWeek(2), 3: buildSingleWeek(3), 4: buildSingleWeek(4) });
                     setActiveTab('schedule'); setActiveWeekTab(1); setSearchTerm('');
-                    setStatus({ type: 'success', text: `Chia lịch thành công! Ưu tiên KH Trọng điểm & Tuyến khu vực.` });
+                    setStatus({ type: 'success', text: `Tạo lộ trình Tháng ${selectedMonth}/${selectedYear} thành công.` });
                 }, 500);
             };
 
             const getSalesData = () => {
-                let currentMonthSales = 0; let currentQuarterManualSales = 0; let yearManualSales = 0; 
-                let trongDiemSales = 0, duyTriSales = 0, tuongTacSales = 0;
+                let currentMonthSales = 0; let currentQuarterManualSales = 0; let yearManualSales = 0; let trongDiemSales = 0;
                 const currentQuarter = Math.ceil(selectedMonth / 3);
                 const qMonths = [(currentQuarter-1)*3 + 1, (currentQuarter-1)*3 + 2, (currentQuarter-1)*3 + 3];
 
                 customers.forEach(c => {
                     let scheduleSales = 0;
                     if (fullMonthSchedule) {
-                        Object.keys(fullMonthSchedule).forEach(week => {
+                        [1, 2, 3, 4].forEach(week => {
                             Object.values(fullMonthSchedule[week]).forEach(day => {
                                 const item = day.items.find(i => i.id === c.id);
                                 if (item && item.sales) scheduleSales += Number(item.sales) || 0;
@@ -629,10 +454,7 @@
 
                     const mSales = scheduleSales > 0 ? scheduleSales : (fallbackDaysSum > 0 ? fallbackDaysSum : (Number(c.monthlySales?.[selectedMonth]) || 0));
                     currentMonthSales += mSales;
-                    
                     if (c.type === 'TRONG_DIEM') trongDiemSales += mSales;
-                    else if (c.type === 'DUY_TRI') duyTriSales += mSales;
-                    else if (c.type === 'TUONG_TAC') tuongTacSales += mSales;
 
                     for(let m = 1; m <= 12; m++) {
                         if (m !== selectedMonth) { 
@@ -645,7 +467,7 @@
 
                 const totalQuarter = currentQuarterManualSales + currentMonthSales;
                 const totalYear = yearManualSales + currentMonthSales;
-                return { currentMonthSales, totalQuarter, totalYear, trongDiemSales, duyTriSales, tuongTacSales };
+                return { currentMonthSales, totalQuarter, totalYear, trongDiemSales };
             };
             const salesStats = getSalesData();
 
@@ -678,17 +500,8 @@
                     const monthColMap = { 1:8, 2:9, 3:10, 4:12, 5:13, 6:14, 7:16, 8:17, 9:18, 10:20, 11:21, 12:22 };
                     const salesMap = {}; customers.forEach(c => salesMap[c.id] = { c, days: Array(31).fill(0) });
 
-                    Object.keys(fullMonthSchedule).forEach(week => { 
-                        Object.keys(fullMonthSchedule[week]).forEach(dayKey => { 
-                            const dayData = fullMonthSchedule[week][dayKey];
-                            const exactDate = dayData.date; 
-                            if (exactDate) { 
-                                dayData.items.forEach(item => { 
-                                    if (item.sales && !isNaN(item.sales)) salesMap[item.id].days[exactDate - 1] += Number(item.sales); 
-                                }); 
-                            } 
-                        }); 
-                    });
+                    let dayCounter = 0; 
+                    [1, 2, 3, 4].forEach(week => { ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'].forEach(dayKey => { if (fullMonthSchedule[week][dayKey]) { fullMonthSchedule[week][dayKey].items.forEach(item => { if (item.sales && !isNaN(item.sales)) salesMap[item.id].days[dayCounter] += Number(item.sales); }); dayCounter++; } }); });
 
                     let rowIndex = 9;
                     let totalColSums = Array(60).fill(0); 
@@ -712,39 +525,34 @@
                         for (let m = 1; m <= 12; m++) {
                             const targetCol = monthColMap[m];
                             let val = Number(c.monthlySales?.[m]) || 0;
-                            let actualCellValue = val; 
                             
                             if (m === selectedMonth) { 
-                                actualCellValue = daysSum > 0 ? daysSum : val;
-                                r.getCell(targetCol).value = { 
-                                    formula: `IF(SUM(Z${rowIndex}:BD${rowIndex})>0, SUM(Z${rowIndex}:BD${rowIndex}), ${val})`, 
-                                    result: actualCellValue 
-                                };
+                                val = daysSum > 0 ? daysSum : val;
+                                r.getCell(targetCol).value = val > 0 ? { formula: `Y${rowIndex}`, result: val } : val; 
                                 r.getCell(targetCol).font = { bold: true }; 
                             } else { 
                                 if (val > 0) r.getCell(targetCol).value = val; 
                             }
                             r.getCell(targetCol).numFmt = '#,##0';
-                            
-                            mSales[m] = actualCellValue; 
-                            totalColSums[targetCol] = (totalColSums[targetCol] || 0) + actualCellValue; 
+                            mSales[m] = val;
+                            totalColSums[targetCol] = (totalColSums[targetCol] || 0) + val;
                         }
 
                         let q1 = mSales[1]+mSales[2]+mSales[3]; let q2 = mSales[4]+mSales[5]+mSales[6]; let q3 = mSales[7]+mSales[8]+mSales[9]; let q4 = mSales[10]+mSales[11]+mSales[12];
                         let totalYear = q1+q2+q3+q4;
 
-                        r.getCell(11).value = { formula: `SUM(H${rowIndex}:J${rowIndex})`, result: q1 }; r.getCell(11).font = { bold: true }; r.getCell(11).numFmt = '#,##0';
-                        r.getCell(15).value = { formula: `SUM(L${rowIndex}:N${rowIndex})`, result: q2 }; r.getCell(15).font = { bold: true }; r.getCell(15).numFmt = '#,##0';
-                        r.getCell(19).value = { formula: `SUM(P${rowIndex}:R${rowIndex})`, result: q3 }; r.getCell(19).font = { bold: true }; r.getCell(19).numFmt = '#,##0';
-                        r.getCell(23).value = { formula: `SUM(T${rowIndex}:V${rowIndex})`, result: q4 }; r.getCell(23).font = { bold: true }; r.getCell(23).numFmt = '#,##0';
+                        r.getCell(11).value = { formula: `H${rowIndex}+I${rowIndex}+J${rowIndex}`, result: q1 }; r.getCell(11).font = { bold: true }; r.getCell(11).numFmt = '#,##0';
+                        r.getCell(15).value = { formula: `L${rowIndex}+M${rowIndex}+N${rowIndex}`, result: q2 }; r.getCell(15).font = { bold: true }; r.getCell(15).numFmt = '#,##0';
+                        r.getCell(19).value = { formula: `P${rowIndex}+Q${rowIndex}+R${rowIndex}`, result: q3 }; r.getCell(19).font = { bold: true }; r.getCell(19).numFmt = '#,##0';
+                        r.getCell(23).value = { formula: `T${rowIndex}+U${rowIndex}+V${rowIndex}`, result: q4 }; r.getCell(23).font = { bold: true }; r.getCell(23).numFmt = '#,##0';
                         
-                        r.getCell(24).value = { formula: `SUM(K${rowIndex},O${rowIndex},S${rowIndex},W${rowIndex})`, result: totalYear }; r.getCell(24).font = { bold: true, color: { argb: 'FFFF0000' } }; r.getCell(24).numFmt = '#,##0';
+                        r.getCell(24).value = { formula: `K${rowIndex}+O${rowIndex}+S${rowIndex}+W${rowIndex}`, result: totalYear }; r.getCell(24).font = { bold: true, color: { argb: 'FFFF0000' } }; r.getCell(24).numFmt = '#,##0';
                         r.getCell(25).value = { formula: `SUM(Z${rowIndex}:BD${rowIndex})`, result: daysSum }; r.getCell(25).font = { bold: true, color: { argb: 'FF0047AB' } }; r.getCell(25).numFmt = '#,##0';
 
                         totalColSums[11] += q1; totalColSums[15] += q2; totalColSums[19] += q3; totalColSums[23] += q4; totalColSums[24] += totalYear; totalColSums[25] += daysSum;
 
                         finalDailySales.forEach((val, dayIdx) => { 
-                            if (val > 0) { r.getCell(26 + dayIdx).value = val; r.getCell(26 + dayIdx).numFmt = '#,##0'; totalColSums[26 + dayIdx] += Number(val); } 
+                            if (val > 0) { r.getCell(26 + dayIdx).value = val; r.getCell(26 + dayIdx).numFmt = '#,##0'; totalColSums[26 + dayIdx] += val; } 
                         });
                         r.eachCell({ includeEmpty: true }, (cell, colNum) => { if(colNum <= 56) { cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; cell.alignment = { vertical: 'middle', wrapText: true }; }});
                         rowIndex++;
@@ -791,15 +599,12 @@
 
                     let schedRowIdx = 3; let schedSalesTotal = 0;
                     
-                    Object.keys(fullMonthSchedule).forEach(weekNum => {
+                    [1, 2, 3, 4].forEach(weekNum => {
                         Object.keys(fullMonthSchedule[weekNum]).forEach(dayKey => {
                             const dayData = fullMonthSchedule[weekNum][dayKey];
                             if(dayData.items.length === 0) return;
 
-                            const exactDate = dayData.date;
-                            const dateStr = exactDate ? `Ngày ${exactDate}/${selectedMonth}` : '';
-
-                            const dayHeaderRow = wsSchedule.addRow([`[TUẦN ${weekNum}] ${dayData.day.toUpperCase()} (${dateStr}) - MỤC TIÊU: ${dayData.desc}`]);
+                            const dayHeaderRow = wsSchedule.addRow([`[TUẦN ${weekNum}] NGÀY: ${dayData.day.toUpperCase()} - MỤC TIÊU: ${dayData.desc}`]);
                             wsSchedule.mergeCells(`A${schedRowIdx}:G${schedRowIdx}`);
                             dayHeaderRow.getCell(1).font = { bold: true, color: { argb: 'FF0047AB' } }; dayHeaderRow.getCell(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD9E1F2' } }; dayHeaderRow.getCell(1).border = { top: {style:'medium'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; dayHeaderRow.getCell(1).alignment = { vertical: 'middle' }; wsSchedule.getRow(schedRowIdx).height = 22; schedRowIdx++;
 
@@ -808,9 +613,8 @@
                                 const s = c.sales && !isNaN(c.sales) ? Number(c.sales) : 0;
                                 schedSalesTotal += s;
                                 const formattedAddress = [c.xa, c.huyen].filter(Boolean).join(', ');
-                                const typeName = c.type === 'TRONG_DIEM' ? 'Trọng Điểm' : c.type === 'TUONG_TAC' ? 'Tương Tác' : 'Duy Trì';
                                 
-                                const row = wsSchedule.addRow({ stt: sttCounter++, name: c.name, phone: c.phone, address: formattedAddress, type: typeName, sales: s, note: '' });
+                                const row = wsSchedule.addRow({ stt: sttCounter++, name: c.name, phone: c.phone, address: formattedAddress, type: c.type === 'TRONG_DIEM' ? 'Trọng Điểm' : 'Duy Trì', sales: s, note: '' });
                                 row.eachCell({ includeEmpty: true }, (cell, colNumber) => { 
                                     cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; cell.alignment = { vertical: 'middle', wrapText: true };
                                     if (colNumber === 6) { cell.numFmt = '#,##0'; cell.font = { bold: true, color: { argb: 'FF008000' } }; } 
@@ -833,8 +637,6 @@
                     wsSummary.addRow(['TỔNG HỢP THÔNG TIN MỤC TIÊU']); wsSummary.getRow(1).font = { bold: true, size: 14 }; wsSummary.addRow([]);
                     
                     wsSummary.addRow(['Doanh số KH Trọng Điểm:', salesStats.trongDiemSales]).getCell(2).numFmt = '#,##0';
-                    wsSummary.addRow(['Doanh số KH Duy Trì:', salesStats.duyTriSales]).getCell(2).numFmt = '#,##0';
-                    wsSummary.addRow(['Doanh số KH Tương Tác:', salesStats.tuongTacSales]).getCell(2).numFmt = '#,##0';
                     wsSummary.addRow(['Tổng Doanh số Tháng:', salesStats.currentMonthSales]).getCell(2).numFmt = '#,##0';
                     wsSummary.addRow([`Doanh số Quý ${currentQuarterCol} Đạt Được:`, salesStats.totalQuarter]).getCell(2).numFmt = '#,##0';
                     wsSummary.addRow([`Chỉ tiêu Quý ${currentQuarterCol}:`, targetQuarter]).getCell(2).numFmt = '#,##0';
@@ -843,7 +645,7 @@
                     wsSummary.addRow(['Chỉ tiêu Năm:', targetYear]).getCell(2).numFmt = '#,##0';
                     wsSummary.addRow(['Tiến độ Năm:', targetYear > 0 ? (salesStats.totalYear / targetYear) : 0]).getCell(2).numFmt = '0.00%';
                     
-                    wsSummary.eachRow((row, rowNumber) => { if (rowNumber > 2) { row.getCell(1).font = { bold: true }; row.getCell(1).border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; row.getCell(2).border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; row.getCell(1).alignment = { vertical: 'middle' }; row.getCell(2).alignment = { vertical: 'middle' }; if (rowNumber === 6 || rowNumber === 9 || rowNumber === 12) { row.getCell(2).font = { bold: true, color: {argb: 'FF008000'} }; } } });
+                    wsSummary.eachRow((row, rowNumber) => { if (rowNumber > 2) { row.getCell(1).font = { bold: true }; row.getCell(1).border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; row.getCell(2).border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; row.getCell(1).alignment = { vertical: 'middle' }; row.getCell(2).alignment = { vertical: 'middle' }; if (rowNumber === 7 || rowNumber === 10) { row.getCell(2).font = { bold: true, color: {argb: 'FF008000'} }; } } });
 
                     const buffer = await wb.xlsx.writeBuffer(); 
                     const fileName = `LichTuyen_BaoCao_Thang${selectedMonth}_${selectedYear}.xlsx`; 
@@ -852,6 +654,7 @@
 
                     const file = new File([blob], fileName, { type: mimeType });
 
+                    // Tạo chuỗi text chia sẻ tự động theo mẫu Zalo yêu cầu
                     const today = new Date();
                     const dateString = `${String(today.getDate()).padStart(2, '0')}.${String(today.getMonth() + 1).padStart(2, '0')}.${today.getFullYear()}`;
                     const ratioVal = targetQuarter > 0 ? (salesStats.totalQuarter / targetQuarter) * 100 : 0;
@@ -861,7 +664,11 @@
 
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try { 
-                            await navigator.share({ files: [file], title: 'Báo Cáo Lịch Tuyến', text: shareText }); 
+                            await navigator.share({ 
+                                files: [file], 
+                                title: 'Báo Cáo Lịch Tuyến', 
+                                text: shareText 
+                            }); 
                             setStatus({ type: 'success', text: 'Đã lưu/chia sẻ file thành công!' }); 
                             return; 
                         } catch (e) {}
@@ -878,11 +685,11 @@
             };
 
             const trongDiemCount = customers.filter(c => c.type === 'TRONG_DIEM').length;
-            const tuongTacCount = customers.filter(c => c.type === 'TUONG_TAC').length;
-            const duyTriCount = customers.length - trongDiemCount - tuongTacCount;
+            const duyTriCount = customers.length - trongDiemCount;
             const geoStats = {}; customers.forEach(c => { const h = c.huyen || 'Khác'; geoStats[h] = (geoStats[h] || 0) + 1; });
             const geoArr = Object.entries(geoStats).sort((a,b) => b[1] - a[1]);
             
+            // Xử lý chuẩn hóa từ khóa để search chống vỡ khi có kí tự null và không bị ảnh hưởng dấu tiếng việt
             const searchStr = normalizeStr(searchTerm);
             const filteredCustomers = customers.filter(c => 
                 normalizeStr(c.name).includes(searchStr) || 
@@ -890,7 +697,9 @@
                 normalizeStr(c.huyen).includes(searchStr)
             );
             
-            const estimatedVisits = (trongDiemCount * 3) + (duyTriCount * 2) + (tuongTacCount * 1);
+            const currentQuarterMonths = (() => { const q = Math.ceil(selectedMonth / 3); return [(q-1)*3 + 1, (q-1)*3 + 2, (q-1)*3 + 3]; })();
+
+            const estimatedVisits = (trongDiemCount * 4) + (duyTriCount * 2);
             const minRequiredVisits = 200; 
             const maxAllowedVisits = 288; 
             
@@ -921,11 +730,16 @@
 
                     <div className="max-w-7xl mx-auto space-y-4">
                         <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-                           <div className="p-4 flex flex-col md:flex-row justify-between items-center border-b border-slate-100">
-                                <div className="text-center md:text-left w-full">
+                            <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-100 relative">
+                                <div className="text-center md:text-left">
                                     <h1 className="text-2xl font-black text-blue-900 tracking-tight uppercase">Lịch Chăm Sóc Khách Hàng</h1>
                                     <p className="text-sm font-medium text-slate-500 mt-1">Quản lý Tuyến & Doanh số</p>
                                 </div>
+                                {activeTab !== 'upload' && (
+                                    <button onClick={goBack} className="absolute top-4 right-4 md:static md:right-auto md:top-auto bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-1.5 rounded-lg text-sm font-bold transition flex items-center gap-2 border border-slate-200">
+                                        <i className="fa-solid fa-arrow-left"></i> <span className="hidden sm:inline">Quay lại</span>
+                                    </button>
+                                )}
                             </div>
 
                             <div className="flex bg-slate-50 p-2 overflow-x-auto w-full border-b border-slate-100 justify-start md:justify-center gap-1">
@@ -955,7 +769,7 @@
                                     <div onClick={() => librariesReady && fileInputRef.current.click()} className={`max-w-xl mx-auto border-2 border-dashed rounded-2xl p-10 cursor-pointer transition-all ${librariesReady ? 'border-blue-400 bg-blue-50 hover:bg-blue-100' : 'border-slate-300 bg-slate-50 opacity-60'}`}>
                                         <i className="fa-solid fa-file-excel text-blue-600 text-[48px] mb-4"></i>
                                         <h2 className="text-xl font-black text-blue-900 mb-2">QUÉT CHỌN CÁC FILE .XLSX CẦN GỘP</h2>
-                                        <p className="text-blue-600/70 text-sm font-medium">Bản nâng cấp: Loại trừ thông minh doanh số file năm cũ.</p>
+                                        <p className="text-blue-600/70 text-sm font-medium">Bản nâng cấp: Tự động gỡ định dạng tiền tệ và nhận dạng cả cột ngày bị ẩn.</p>
                                     </div>
                                 )}
                                 <input type="file" accept=".xlsx, .xls" multiple ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
@@ -1003,73 +817,40 @@
                                         {filteredCustomers.map((c) => {
                                             const importedDaysSum = c.dailySales ? Object.values(c.dailySales).reduce((sum, val) => sum + (Number(val) || 0), 0) : 0;
                                             return (
-                                            <div key={c.id} className={`p-4 rounded-xl border flex flex-col transition-all ${c.type === 'TRONG_DIEM' ? 'border-blue-300 bg-blue-50/40' : c.type === 'TUONG_TAC' ? 'border-purple-300 bg-purple-50/40' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
+                                            <div key={c.id} className={`p-4 rounded-xl border flex flex-col transition-all ${c.type === 'TRONG_DIEM' ? 'border-blue-300 bg-blue-50/40' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
                                                 <div className="flex justify-between items-start mb-2">
                                                     <div className="truncate pr-2 flex-1">
                                                         <div className="font-bold text-[15px] truncate text-slate-800">{c.name}</div>
-                                                        <div className="text-[11px] text-slate-500 mt-0.5"><i className="fa-solid fa-location-dot"></i> {[c.xa, c.huyen].filter(Boolean).join(', ')} - SĐT: {c.phone || '--'}</div>
+                                                        <div className="text-[11px] text-slate-500 mt-0.5"><i className="fa-solid fa-location-dot"></i> {[c.xa, c.huyen].filter(Boolean).join(', ')}</div>
                                                         {importedDaysSum > 0 && (
                                                             <div className="text-[10px] font-bold text-emerald-600 mt-1"><i className="fa-solid fa-check-circle"></i> Đã nạp DS Ngày: {formatVND(importedDaysSum)}đ</div>
                                                         )}
                                                     </div>
-                                                    <button onClick={() => toggleType(c.id)} className={`shrink-0 text-[10px] uppercase font-bold px-2 py-1.5 rounded-md border transition-colors ${c.type === 'TRONG_DIEM' ? 'bg-blue-600 text-white border-blue-700 shadow-sm' : c.type === 'TUONG_TAC' ? 'bg-purple-600 text-white border-purple-700 shadow-sm' : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'}`}>
-                                                        {c.type === 'TRONG_DIEM' ? 'Trọng Điểm' : c.type === 'TUONG_TAC' ? 'Tương Tác' : 'Duy Trì'}
+                                                    <button onClick={() => toggleType(c.id)} className={`shrink-0 text-[10px] uppercase font-bold px-2 py-1.5 rounded-md border transition-colors ${c.type === 'TRONG_DIEM' ? 'bg-blue-600 text-white border-blue-700 shadow-sm' : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'}`}>
+                                                        {c.type === 'TRONG_DIEM' ? 'Trọng Điểm' : 'Duy Trì'}
                                                     </button>
                                                 </div>
                                                 
                                                 <div className="flex items-center justify-between border-t border-slate-100 pt-3 mt-1">
-                                                    <div className="flex items-center gap-2">
-                                                        <button onClick={() => expandedCustomer === c.id ? setExpandedCustomer(null) : openEditForm(c)} className="text-[11px] bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold px-2.5 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5">
-                                                            <i className="fa-solid fa-pencil"></i> Sửa Thông Tin & DS
-                                                        </button>
-                                                        <button onClick={() => {
-                                                            const url = new URL('https://thuanstore.com/');
-                                                            url.searchParams.append('kh', c.name);
-                                                            window.open(url.toString(), '_blank');
-                                                        }} className="text-[11px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1.5 rounded transition border border-emerald-200 flex items-center gap-1.5 shadow-sm active:scale-95">
-                                                            <i className="fa-solid fa-file-invoice-dollar"></i> Tạo Báo Giá
-                                                        </button>
-                                                    </div>
+                                                    <button onClick={() => setExpandedCustomer(expandedCustomer === c.id ? null : c.id)} className="text-[11px] bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold px-2.5 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5">
+                                                        <i className="fa-solid fa-pencil"></i> Nhập DS Các Tháng
+                                                    </button>
                                                     <button onClick={() => setCustomerToDelete(c)} className="w-7 h-7 flex items-center justify-center hover:bg-red-50 text-slate-400 hover:text-red-500 rounded transition-colors" title="Xóa KH">
                                                         <i className="fa-solid fa-trash-can"></i>
                                                     </button>
                                                 </div>
 
-                                                {expandedCustomer === c.id && editingData && (
-                                                    <div className="mt-3 bg-white border border-slate-200 rounded-lg p-3 animate-in zoom-in-95 shadow-sm">
-                                                        <div className="text-[10px] font-bold text-blue-600 mb-2 uppercase border-b border-slate-100 pb-1.5"><i className="fa-solid fa-address-card"></i> Thông tin cơ bản</div>
-                                                        <div className="grid grid-cols-2 gap-2 mb-3">
-                                                            <input type="text" value={editingData.name} onChange={e => setEditingData({...editingData, name: e.target.value})} className="border border-slate-300 p-1.5 text-xs rounded outline-none focus:border-blue-500 bg-slate-50" placeholder="Tên KH" />
-                                                            <input type="text" value={editingData.phone} onChange={e => setEditingData({...editingData, phone: e.target.value})} className="border border-slate-300 p-1.5 text-xs rounded outline-none focus:border-blue-500 bg-slate-50" placeholder="SĐT" />
-                                                            <input type="text" value={editingData.xa} onChange={e => setEditingData({...editingData, xa: e.target.value})} className="border border-slate-300 p-1.5 text-xs rounded outline-none focus:border-blue-500 bg-slate-50" placeholder="Xã/Phường" />
-                                                            <input type="text" value={editingData.huyen} onChange={e => setEditingData({...editingData, huyen: e.target.value})} className="border border-slate-300 p-1.5 text-xs rounded outline-none focus:border-blue-500 bg-slate-50" placeholder="Huyện/Thị trấn" />
-                                                        </div>
-
-                                                        <div className="text-[10px] font-bold text-blue-600 mb-2 uppercase border-b border-slate-100 pb-1.5 flex justify-between">
-                                                            <span><i className="fa-solid fa-chart-bar"></i> Doanh số 12 Tháng</span>
-                                                        </div>
-                                                        <div className="grid grid-cols-4 gap-1.5 mb-3">
-                                                            {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => {
-                                                                const isCurrentMonth = (m === selectedMonth);
-                                                                return (
-                                                                    <div key={m} className="flex flex-col relative">
-                                                                        <span className={`text-[9px] text-center font-bold mb-0.5 ${isCurrentMonth ? 'text-blue-600' : 'text-slate-500'}`}>T.{m} {isCurrentMonth && '(Nay)'}</span>
-                                                                        <input type="number" 
-                                                                            value={editingData.monthlySales?.[m] || ''} 
-                                                                            onChange={e => setEditingData({...editingData, monthlySales: {...editingData.monthlySales, [m]: extractNumber(e.target.value)}})}
-                                                                            className={`border p-1.5 text-[11px] font-bold rounded outline-none text-center transition-colors
-                                                                                ${isCurrentMonth ? 'bg-blue-50 border-blue-400 text-blue-800 focus:bg-white' : 'bg-white border-slate-300 text-slate-700 focus:border-blue-500'}
-                                                                            `} 
-                                                                            placeholder="0" 
-                                                                        />
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-
-                                                        <div className="flex gap-2 justify-end border-t border-slate-100 pt-2.5">
-                                                            <button onClick={() => setExpandedCustomer(null)} className="px-3 py-1.5 text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded transition border border-slate-200">Hủy</button>
-                                                            <button onClick={saveEditForm} className="px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded transition shadow-sm"><i className="fa-solid fa-floppy-disk"></i> Lưu Thay Đổi</button>
+                                                {expandedCustomer === c.id && (
+                                                    <div className="mt-3 bg-slate-50 border border-slate-200 rounded-lg p-2.5 animate-in zoom-in-95">
+                                                        <div className="text-[10px] font-bold text-slate-500 mb-2 uppercase text-center tracking-wider">Doanh Số Quý {Math.ceil(selectedMonth/3)}</div>
+                                                        <div className="grid grid-cols-3 gap-1.5">
+                                                            {currentQuarterMonths.map(m => (
+                                                                <input key={m} type="number" placeholder={`T${m}`} value={c.monthlySales?.[m] || ''} 
+                                                                    onChange={e => handleMonthlySalesChange(c.id, m, e.target.value)}
+                                                                    className={`w-full border p-1 text-[11px] font-bold rounded outline-none text-center ${m === selectedMonth && importedDaysSum > 0 ? 'bg-emerald-100 text-emerald-700 cursor-not-allowed' : m === selectedMonth ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-white focus:border-blue-500 text-blue-700'}`} 
+                                                                    disabled={m === selectedMonth} title={m === selectedMonth ? "Tháng hiện hành lấy từ Lịch Tuyến/DS Ngày" : `Nhập DS Tháng ${m}`} 
+                                                                />
+                                                            ))}
                                                         </div>
                                                     </div>
                                                 )}
@@ -1121,9 +902,9 @@
                                                 {kpiStatus === 'good' ? (
                                                     <span>Tiến độ <b>TỐI ƯU</b>. Đủ điều kiện đáp ứng KPI. Bấm Tạo lịch để triển khai.</span>
                                                 ) : kpiStatus === 'under' ? (
-                                                    <span>Hụt KPI. <b>Cần mở mới thêm KH</b> hoặc nâng lên Trọng Điểm/Duy Trì.</span>
+                                                    <span>Hụt KPI. <b>Cần mở mới thêm KH</b> hoặc nâng KH Duy Trì lên Trọng Điểm.</span>
                                                 ) : (
-                                                    <span>Quá tải. <b>Cần giảm tải</b>: Đổi bớt KH Trọng Điểm xuống Duy Trì/Tương Tác.</span>
+                                                    <span>Quá tải. <b>Cần giảm tải</b>: Đổi bớt KH Trọng Điểm xuống Duy Trì.</span>
                                                 )}
                                                 {gpsPercent < 100 && (
                                                     <div className="mt-1.5 text-xs text-blue-600">* Nhớ cập nhật GPS trên đường đi.</div>
@@ -1135,26 +916,15 @@
 
                                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
                                     <h3 className="font-bold text-slate-800 mb-4 text-lg">Tổng Hợp Doanh Số Tháng {selectedMonth}</h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg">
                                             <div className="text-[11px] text-slate-500 font-bold uppercase mb-1">DS Trọng Điểm</div>
                                             <div className="text-xl font-black text-blue-700">{formatVND(salesStats.trongDiemSales)} <span className="text-sm">đ</span></div>
                                         </div>
                                         <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg">
-                                            <div className="text-[11px] text-slate-500 font-bold uppercase mb-1">DS Duy Trì</div>
-                                            <div className="text-xl font-black text-slate-600">{formatVND(salesStats.duyTriSales)} <span className="text-sm">đ</span></div>
-                                        </div>
-                                        <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg">
-                                            <div className="text-[11px] text-slate-500 font-bold uppercase mb-1">DS Tương Tác</div>
-                                            <div className="text-xl font-black text-purple-600">{formatVND(salesStats.tuongTacSales)} <span className="text-sm">đ</span></div>
-                                        </div>
-                                        <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg bg-emerald-50/50">
                                             <div className="text-[11px] text-slate-500 font-bold uppercase mb-1">Tổng DS Tháng</div>
-                                            <div className="text-xl font-black text-emerald-700">{formatVND(salesStats.currentMonthSales)} <span className="text-sm">đ</span></div>
+                                            <div className="text-xl font-black text-blue-700">{formatVND(salesStats.currentMonthSales)} <span className="text-sm">đ</span></div>
                                         </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
                                         <div className="bg-slate-50 border border-slate-100 p-4 rounded-lg flex flex-col justify-between">
                                             <div className="flex justify-between items-center mb-1">
                                                 <div className="text-[11px] text-slate-500 font-bold uppercase">Tiến Độ Quý</div>
@@ -1177,16 +947,12 @@
                                         <h3 className="font-bold text-slate-700 mb-5 text-sm uppercase">Quy Mô Tập KH</h3>
                                         <div className="space-y-6">
                                             <div>
-                                                <div className="flex justify-between text-sm font-bold mb-2"><span className="text-blue-700">Trọng Điểm (3 lần)</span><span className="text-blue-700">{trongDiemCount} CH ({customers.length > 0 ? Math.round((trongDiemCount/customers.length)*100) : 0}%)</span></div>
+                                                <div className="flex justify-between text-sm font-bold mb-2"><span className="text-blue-700">Trọng Điểm</span><span className="text-blue-700">{trongDiemCount} CH ({customers.length > 0 ? Math.round((trongDiemCount/customers.length)*100) : 0}%)</span></div>
                                                 <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden"><div className="bg-blue-600 h-3 rounded-full" style={{width: `${customers.length > 0 ? (trongDiemCount/customers.length)*100 : 0}%`}}></div></div>
                                             </div>
                                             <div>
-                                                <div className="flex justify-between text-sm font-bold mb-2"><span className="text-slate-600">Duy Trì (2 lần)</span><span className="text-slate-600">{duyTriCount} CH ({customers.length > 0 ? Math.round((duyTriCount/customers.length)*100) : 0}%)</span></div>
-                                                <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden"><div className="bg-slate-400 h-3 rounded-full" style={{width: `${customers.length > 0 ? (duyTriCount/customers.length)*100 : 0}%`}}></div></div>
-                                            </div>
-                                            <div>
-                                                <div className="flex justify-between text-sm font-bold mb-2"><span className="text-purple-600">Tương Tác (1 lần)</span><span className="text-purple-600">{tuongTacCount} CH ({customers.length > 0 ? Math.round((tuongTacCount/customers.length)*100) : 0}%)</span></div>
-                                                <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden"><div className="bg-purple-500 h-3 rounded-full" style={{width: `${customers.length > 0 ? (tuongTacCount/customers.length)*100 : 0}%`}}></div></div>
+                                                <div className="flex justify-between text-sm font-bold mb-2"><span className="text-slate-600">Duy Trì</span><span className="text-slate-600">{customers.length - trongDiemCount} CH ({customers.length > 0 ? Math.round(((customers.length - trongDiemCount)/customers.length)*100) : 0}%)</span></div>
+                                                <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden"><div className="bg-slate-400 h-3 rounded-full" style={{width: `${customers.length > 0 ? ((customers.length - trongDiemCount)/customers.length)*100 : 0}%`}}></div></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1209,7 +975,7 @@
                                 </div>
 
                                 <div className="flex justify-center mt-6">
-                                    <button onClick={executeRoutingForMonth} className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-black text-lg flex items-center gap-3 shadow-md active:scale-95 transition-all"><i className="fa-solid fa-calendar-check text-[20px]"></i> TẠO LỊCH ĐI TUYẾN CHUẨN</button>
+                                    <button onClick={executeRoutingForMonth} className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-black text-lg flex items-center gap-3 shadow-md active:scale-95 transition-all"><i className="fa-solid fa-calendar-check text-[20px]"></i> TẠO LỊCH 1 THÁNG (4 TUẦN)</button>
                                 </div>
                             </div>
                         )}
@@ -1232,12 +998,20 @@
                                     <div className="flex flex-col gap-2 md:w-1/3">
                                         <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-2 rounded-lg font-bold text-slate-700 text-sm">
                                             <i className="fa-solid fa-calendar-days text-blue-600"></i><span>Tháng</span>
-                                            <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))} className="bg-transparent outline-none cursor-pointer text-blue-700">
+                                            <select value={selectedMonth} onChange={e => {
+                                                const newM = Number(e.target.value);
+                                                if(newM !== selectedMonth) {
+                                                    setSelectedMonth(newM);
+                                                    setFullMonthSchedule(null);
+                                                    setCustomers(prev => prev.map(c => ({...c, dailySales: {}})));
+                                                    setStatus({ type: 'success', text: `Đã chuyển sang Tháng ${newM} và làm sạch DS Ngày cũ.` });
+                                                }
+                                            }} className="bg-transparent outline-none cursor-pointer text-blue-700">
                                                 {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <option key={m} value={m}>{m}</option>)}
                                             </select>
                                             <span className="mx-1">/</span>
                                             <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} className="bg-transparent outline-none cursor-pointer text-blue-700">
-                                                {[2023, 2024, 2025, 2026, 2027, 2028].map(y => <option key={y} value={y}>{y}</option>)}
+                                                {[2025, 2026, 2027, 2028].map(y => <option key={y} value={y}>{y}</option>)}
                                             </select>
                                         </div>
                                         <button onClick={exportToExcelReal} className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 text-sm">
@@ -1254,9 +1028,9 @@
                                 </div>
 
                                 <div className="flex bg-slate-200 p-1.5 rounded-xl overflow-x-auto w-full border border-slate-300 shadow-inner">
-                                    {Object.keys(fullMonthSchedule).map(week => (
-                                        <button key={week} onClick={() => setActiveWeekTab(Number(week))} className={`flex-1 whitespace-nowrap px-4 py-2.5 rounded-lg text-sm font-black transition-all ${activeWeekTab === Number(week) ? 'bg-white shadow-md text-blue-700 scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
-                                            <i className={`fa-solid ${activeWeekTab === Number(week) ? 'fa-folder-open' : 'fa-folder'} mr-2`}></i> TUẦN {week}
+                                    {[1, 2, 3, 4].map(week => (
+                                        <button key={week} onClick={() => setActiveWeekTab(week)} className={`flex-1 whitespace-nowrap px-4 py-2.5 rounded-lg text-sm font-black transition-all ${activeWeekTab === week ? 'bg-white shadow-md text-blue-700 scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}>
+                                            <i className={`fa-solid ${activeWeekTab === week ? 'fa-folder-open' : 'fa-folder'} mr-2`}></i> TUẦN {week}
                                         </button>
                                     ))}
                                 </div>
@@ -1269,15 +1043,11 @@
                                         let kpiColor = 'bg-emerald-100 text-emerald-700 border-emerald-200';
                                         if (count < 8) kpiColor = 'bg-orange-100 text-orange-700 border-orange-200';
 
-                                        const dateDisplay = data.date ? `(Ngày ${data.date}/${selectedMonth})` : '';
-
                                         return (
                                             <div key={key} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
                                                 <div className="bg-slate-50 p-4 border-b border-slate-200">
                                                     <div className="flex justify-between items-center mb-3">
-                                                        <h3 className="font-black text-slate-800 text-lg">
-                                                            {data.day} <span className="text-sm font-bold text-blue-600">{dateDisplay}</span>
-                                                        </h3>
+                                                        <h3 className="font-black text-slate-800 text-lg">{data.day}</h3>
                                                         <div className={`px-2 py-1 text-[11px] font-bold rounded-md border ${kpiColor}`}>{count}/12 Đại lý</div>
                                                     </div>
                                                     <div className="flex justify-between items-center">
@@ -1307,8 +1077,8 @@
                                                                             <div className="font-bold text-slate-800 text-[13px] truncate">{c.name}</div>
                                                                             <div className="text-[11px] text-slate-500 mt-0.5 font-medium truncate">{[c.xa, c.huyen].filter(Boolean).join(', ')}</div>
                                                                         </div>
-                                                                        <span className={`shrink-0 text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border ${c.type === 'TRONG_DIEM' ? 'bg-blue-50 text-blue-700 border-blue-200' : c.type === 'TUONG_TAC' ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
-                                                                            {c.type === 'TRONG_DIEM' ? 'Trọng điểm' : c.type === 'TUONG_TAC' ? 'Tương tác' : 'Duy trì'}
+                                                                        <span className={`shrink-0 text-[9px] uppercase font-bold px-1.5 py-0.5 rounded border ${c.type === 'TRONG_DIEM' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>
+                                                                            {c.type === 'TRONG_DIEM' ? 'Trọng điểm' : 'Duy trì'}
                                                                         </span>
                                                                     </div>
 
