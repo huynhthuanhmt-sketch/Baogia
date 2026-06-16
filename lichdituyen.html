@@ -8,11 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- CHỖ SỬA LỖI TRẮNG MÀN HÌNH: Đổi máy chủ tải React và Babel sang cdnjs vì unpkg rất hay bị sập -->
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -150,7 +150,7 @@
                 let parsed = []; let target = 0; let hasRestoredSales = false;
                 let headerIdx = -1; let sttIdx = -1, nameIdx = -1, phoneIdx = -1, xaIdx = -1, huyenIdx = -1;
                 let monthIndices = {}; let dayIndices = {}; let dailyStartIdx = -1;
-                let detectedFileMonth = fileMonthFromSheet; // Kế thừa Tầng 1 & Tầng 2
+                let detectedFileMonth = fileMonthFromSheet; 
 
                 let fileYear = selectedYear; 
                 const fileNameMatch = String(fileName).match(/(?:20)\d{2}/);
@@ -183,7 +183,6 @@
                             if (str === 'huyen' || str === 'quan') huyenIdx = idx;
                             if (str.includes('hang ngay') || str.includes('hằng ngày')) dailyStartIdx = idx;
 
-                            // Tầng 3: Nhận diện tháng từ Header nếu các tầng trước thất bại
                             if (!detectedFileMonth && (strRawLower.includes('ds tong thang') || strRawLower.includes('doanh so tong thang') || strRawLower.includes('lich tuyen t'))) {
                                 const mMatch = strRawLower.match(/\d+/);
                                 if (mMatch && parseInt(mMatch[0]) <= 12) detectedFileMonth = parseInt(mMatch[0]);
@@ -215,7 +214,6 @@
 
                 if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth };
 
-                // CHỐT CHẶN BẢO VỆ: Nếu phát hiện file của tháng khác, XÓA TRẮNG mảng quét cột ngày
                 if (detectedFileMonth && detectedFileMonth !== selectedMonth) {
                     dayIndices = {};
                     dailyStartIdx = -1;
@@ -265,7 +263,6 @@
                         }
                     }
 
-                    // Vòng lặp này bị ngắt nếu phát hiện tháng cũ
                     for (let d = 1; d <= 31; d++) {
                         if (dayIndices[d] !== undefined) {
                             const val = extractNumber(row[dayIndices[d]]);
@@ -339,14 +336,12 @@
                         const buffer = await files[i].arrayBuffer(); 
                         const workbook = window.XLSX.read(buffer, { type: 'array' });
                         
-                        // Tầng 1: TÌM THÁNG TỪ TÊN SHEET (Độ chính xác tuyệt đối với file xuất từ hệ thống)
                         let fileMonth = null;
                         for (let sName of workbook.SheetNames) {
                             const match = String(sName).match(/L[IỊ]CH TUY[EẾ]N T(\d+)/i);
                             if (match && parseInt(match[1]) <= 12) { fileMonth = parseInt(match[1]); break; }
                         }
                         
-                        // Tầng 2: TÌM THÁNG TỪ TÊN FILE (Dự phòng cho file user tự đổi tên)
                         if (!fileMonth) {
                             const fNameLower = String(files[i].name).toLowerCase();
                             const fMatch = fNameLower.match(/th[aá]ng\s*0?(\d+)/i) || fNameLower.match(/_t(\d+)_/i);
@@ -652,7 +647,7 @@
                     let scheduleSales = 0;
                     if (fullMonthSchedule) {
                         Object.keys(fullMonthSchedule).forEach(week => {
-                            Object.values(fullMonthSchedule[week]).forEach(day => {
+                            Object.values(fullMonthSchedule[week] || {}).forEach(day => {
                                 const item = day.items.find(i => i.id === c.id);
                                 if (item && item.sales) scheduleSales += Number(item.sales) || 0;
                             });
@@ -716,7 +711,7 @@
                     const salesMap = {}; customers.forEach(c => salesMap[c.id] = { c, days: Array(31).fill(0) });
 
                     Object.keys(fullMonthSchedule).forEach(week => { 
-                        Object.keys(fullMonthSchedule[week]).forEach(dayKey => { 
+                        Object.keys(fullMonthSchedule[week] || {}).forEach(dayKey => { 
                             const dayData = fullMonthSchedule[week][dayKey];
                             const exactDate = dayData.date; 
                             if (exactDate) { 
@@ -829,7 +824,7 @@
                     let schedRowIdx = 3; let schedSalesTotal = 0;
                     
                     Object.keys(fullMonthSchedule).forEach(weekNum => {
-                        Object.keys(fullMonthSchedule[weekNum]).forEach(dayKey => {
+                        Object.keys(fullMonthSchedule[weekNum] || {}).forEach(dayKey => {
                             const dayData = fullMonthSchedule[weekNum][dayKey];
                             if(dayData.items.length === 0) return;
 
@@ -1307,7 +1302,8 @@
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-in fade-in zoom-in-95 duration-200" key={activeWeekTab}>
-                                    {Object.entries(fullMonthSchedule[activeWeekTab]).map(([key, data]) => {
+                                    {/* CHỖ SỬA LỖI UI CRASH: Thêm "|| {}" ở đây để chống lỗi khi activeWeekTab bị lệch nhịp do load file cũ */}
+                                    {Object.entries(fullMonthSchedule[activeWeekTab] || {}).map(([key, data]) => {
                                         const count = data.items.length;
                                         const displayedItems = data.items.filter(c => normalizeStr(c.name).includes(searchStr));
                                         
