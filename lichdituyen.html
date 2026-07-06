@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Chăm Sóc Khách Hàng MPE</title>
+    <title>Lịch Chăm Sóc Khách Hàng</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -50,6 +50,254 @@
             return strVal ? Number(strVal) : 0;
         };
 
+        const STORAGE_KEY = 'routing_data_pro_v6';
+        const SETTINGS_KEY = 'routing_public_settings_v1';
+        const GPS_TARGET_ACCURACY_METERS = 35;
+        const GPS_WARN_ACCURACY_METERS = 80;
+        const GPS_MAX_WAIT_MS = 12000;
+
+        const emptyMonthlySales = () => ({1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0});
+        const normalizeYearNumber = (year, fallback = null) => {
+            const raw = String(year || '').match(/\d{2,4}/)?.[0];
+            if (!raw) return fallback;
+            const value = Number(raw.length === 2 ? `20${raw}` : raw);
+            return value >= 2000 && value <= 2100 ? value : fallback;
+        };
+        const detectYearFromText = (text) => normalizeYearNumber(String(text || '').match(/20\d{2}/)?.[0], null);
+        const detectMonthFromText = (text) => {
+            const str = String(text || '').toLowerCase();
+            const match = str.match(/(?:th[aá]ng|t)\s*0?(\d{1,2})(?:\D|$)/i);
+            const value = match ? Number(match[1]) : null;
+            return value >= 1 && value <= 12 ? value : null;
+        };
+        const isFutureSalesPeriod = (year, month) => {
+            const now = new Date();
+            const y = normalizeYearNumber(year, null);
+            const m = Number(month);
+            if (!y || !m) return false;
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+            return y > currentYear || (y === currentYear && m > currentMonth);
+        };
+        const createImportStats = () => ({
+            monthlyCells: 0,
+            dailyCells: 0,
+            skippedFutureSales: 0,
+            skippedMixedYearSales: 0,
+            skippedMixedMonthDailySales: 0,
+            skippedScheduleEntries: 0
+        });
+        const countParsedSalesCells = (list) => (list || []).reduce((sum, item) => {
+            const monthCount = Object.values(item.monthlySales || {}).filter(v => Number(v) > 0).length;
+            const dayCount = Object.values(item.dailySales || {}).filter(v => Number(v) > 0).length;
+            return sum + monthCount + dayCount;
+        }, 0);
+        const stripParsedSales = (list, scope = 'all') => (list || []).map(item => ({
+            ...item,
+            monthlySales: scope === 'daily' ? item.monthlySales : emptyMonthlySales(),
+            dailySales: {}
+        }));
+        const formatAccuracy = (loc) => loc && Number(loc.accuracy) > 0 ? `±${Math.round(Number(loc.accuracy))}m` : '';
+        const isUsableLocation = (loc) => loc && typeof loc.lat === 'number' && typeof loc.lng === 'number';
+        const hasWeakAccuracy = (loc) => loc && Number(loc.accuracy) > GPS_WARN_ACCURACY_METERS;
+        const estimateRoundTripKm = (home, items = []) => {
+            if (!isUsableLocation(home)) return null;
+            const remaining = items.map(item => item.location).filter(isUsableLocation);
+            if (remaining.length === 0) return null;
+
+            let current = home;
+            let total = 0;
+            while (remaining.length > 0) {
+                let nearestIndex = 0;
+                let nearestKm = getDistanceFromLatLonInKm(current.lat, current.lng, remaining[0].lat, remaining[0].lng);
+                for (let i = 1; i < remaining.length; i++) {
+                    const km = getDistanceFromLatLonInKm(current.lat, current.lng, remaining[i].lat, remaining[i].lng);
+                    if (km < nearestKm) {
+                        nearestKm = km;
+                        nearestIndex = i;
+                    }
+                }
+                total += nearestKm;
+                current = remaining.splice(nearestIndex, 1)[0];
+            }
+            total += getDistanceFromLatLonInKm(current.lat, current.lng, home.lat, home.lng);
+            return Number(total.toFixed(1));
+        };
+        const getCurrentRoutePeriod = () => {
+            const now = new Date();
+            return { month: now.getMonth() + 1, year: now.getFullYear() };
+        };
+        const DEFAULT_SETTINGS = {
+            appTitle: 'Lịch Chăm Sóc Khách Hàng',
+            salesperson: '',
+            province: '',
+            distributor: '',
+            quoteBaseUrl: '',
+            minDailyAgents: 8,
+            maxDailyAgents: 12,
+            maxDailyKm: 100
+        };
+
+        const parseCustomerType = (value) => {
+            const str = normalizeStr(value);
+            if (str.includes('trong diem')) return 'TRONG_DIEM';
+            if (str.includes('tuong tac')) return 'TUONG_TAC';
+            if (str.includes('duy tri')) return 'DUY_TRI';
+            return '';
+        };
+
+        const splitAddress = (address) => {
+            const parts = String(address || '').split(',').map(x => x.trim()).filter(Boolean);
+            if (parts.length >= 2) return { xa: parts.slice(0, -1).join(', '), huyen: parts[parts.length - 1] };
+            return { xa: parts[0] || '', huyen: '' };
+        };
+
+        const detectMonthFromRows = (rows) => {
+            for (let i = 0; i < Math.min(rows.length, 35); i++) {
+                const row = rows[i] || [];
+                for (const cell of row) {
+                    const raw = String(cell || '').toLowerCase();
+                    if (!raw) continue;
+                    const match = raw.match(/(?:l[iị]ch\s*tuy[eế]n\s*t|ds\s*t[ôo]ng\s*th[aá]ng|doanh\s*s[oố]\s*t[ôo]ng\s*th[aá]ng|th[aá]ng)\s*0?(\d{1,2})/i);
+                    if (match && Number(match[1]) >= 1 && Number(match[1]) <= 12) return Number(match[1]);
+                }
+            }
+            return null;
+        };
+
+        const detectYearFromRows = (rows, fallbackYear) => {
+            for (let i = 0; i < Math.min(rows.length, 35); i++) {
+                const row = rows[i] || [];
+                const rowStr = row.join(' ').toLowerCase();
+                const match = rowStr.match(/(?:n[aă]m\s*)?(20\d{2})/);
+                if (match) return normalizeYearNumber(match[1], fallbackYear);
+            }
+            return normalizeYearNumber(fallbackYear, fallbackYear);
+        };
+
+        const getDesiredVisits = (type) => {
+            if (type === 'TRONG_DIEM') return 3;
+            if (type === 'DUY_TRI') return 2;
+            return 1;
+        };
+
+        const buildRouteConfig = (customerList) => {
+            const defaultDesc = {
+                'T2': 'Triển khai tuyến Cai Lậy / Tân Phước',
+                'T3': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)',
+                'T4': 'Triển khai Châu Thành / Mỹ Tho',
+                'T5': 'Triển khai tuyến Cai Lậy / Tân Phước',
+                'T6': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)',
+                'T7': 'Bảo trì tuyến Mỹ Tho / Châu Thành'
+            };
+            const defaultDistricts = {
+                'T2': ['cai lay', 'tan phuoc'],
+                'T3': ['cai be', 'cai lay'],
+                'T4': ['chau thanh', 'my tho'],
+                'T5': ['cai lay', 'tan phuoc'],
+                'T6': ['cai be', 'cai lay'],
+                'T7': ['my tho', 'chau thanh']
+            };
+            const knownDistricts = Object.values(defaultDistricts).flat();
+            const normalizedDistricts = customerList.map(c => normalizeStr(c.huyen)).filter(Boolean);
+            const matchedKnownDistricts = new Set(
+                normalizedDistricts.flatMap(h => knownDistricts.filter(k => h.includes(k)))
+            );
+            const hasSpecificTienGiangDistrict = normalizedDistricts.some(h =>
+                ['cai lay', 'cai be', 'tan phuoc', 'my tho'].some(k => h.includes(k))
+            );
+            const hasKnownRoute = hasSpecificTienGiangDistrict || matchedKnownDistricts.size >= 3;
+            if (hasKnownRoute) return { descMap: defaultDesc, districtMap: defaultDistricts };
+
+            const originalByNorm = new Map();
+            customerList.forEach(c => {
+                const norm = normalizeStr(c.huyen);
+                if (norm && !originalByNorm.has(norm)) originalByNorm.set(norm, c.huyen);
+            });
+            const districts = Array.from(originalByNorm.keys());
+            const dayKeys = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+            const descMap = {};
+            const districtMap = {};
+            dayKeys.forEach((dayKey, idx) => {
+                const picked = [districts[idx % Math.max(districts.length, 1)], districts[(idx + 1) % Math.max(districts.length, 1)]].filter(Boolean);
+                districtMap[dayKey] = picked.length ? picked : ['all'];
+                const names = picked.map(d => originalByNorm.get(d)).filter(Boolean).join(' / ');
+                descMap[dayKey] = names ? `Triển khai tuyến ${names}` : 'Triển khai tuyến';
+            });
+            return { descMap, districtMap };
+        };
+
+        const parseScheduleSheetData = (data, fileName = '', fileMonthFromSheet = null, fileYearFromSheet = null) => {
+            let headerIdx = -1;
+            let nameIdx = -1, phoneIdx = -1, addressIdx = -1, typeIdx = -1, salesIdx = -1;
+            const fileYear = normalizeYearNumber(fileYearFromSheet, null) || detectYearFromText(fileName) || detectYearFromRows(data, new Date().getFullYear());
+            const fileMonth = fileMonthFromSheet || detectMonthFromRows(data) || detectMonthFromText(fileName);
+            const entries = [];
+
+            for (let i = 0; i < Math.min(data.length, 40); i++) {
+                const row = data[i] || [];
+                const rowStr = row.map(c => normalizeStr(c)).join(' ');
+                if (rowStr.includes('ten khach hang') && (rowStr.includes('dia chi') || rowStr.includes('dien thoai'))) {
+                    headerIdx = i;
+                    row.forEach((cell, idx) => {
+                        const str = normalizeStr(cell);
+                        if (str.includes('ten khach hang') || str.includes('ten dai ly')) nameIdx = idx;
+                        if (str.includes('dien thoai') || str.includes('sdt')) phoneIdx = idx;
+                        if (str.includes('dia chi')) addressIdx = idx;
+                        if (str.includes('phan loai') || str.includes('loai')) typeIdx = idx;
+                        if (str.includes('doanh so')) salesIdx = idx;
+                    });
+                    break;
+                }
+            }
+
+            if (headerIdx === -1 || nameIdx === -1) return { entries, fileMonth, fileYear };
+
+            let currentSection = null;
+            for (let r = headerIdx + 1; r < data.length; r++) {
+                const row = data[r] || [];
+                const firstCell = String(row[0] || '').trim();
+                const normalizedFirst = normalizeStr(firstCell);
+
+                if (normalizedFirst.includes('tuan') && normalizedFirst.includes('ngay')) {
+                    const weekMatch = firstCell.match(/TUẦN\s*(\d+)/i) || normalizedFirst.match(/tuan\s*(\d+)/i);
+                    const dateMatch = firstCell.match(/Ngày\s*(\d{1,2})\s*\/\s*(\d{1,2})/i) || normalizedFirst.match(/ngay\s*(\d{1,2})\s*\/\s*(\d{1,2})/i);
+                    const thuMatch = firstCell.match(/THỨ\s*(\d)/i) || normalizedFirst.match(/thu\s*(\d)/i);
+                    const descMatch = firstCell.match(/MỤC TIÊU:\s*(.+)$/i);
+                    currentSection = {
+                        week: weekMatch ? Number(weekMatch[1]) : null,
+                        date: dateMatch ? Number(dateMatch[1]) : null,
+                        month: dateMatch ? Number(dateMatch[2]) : fileMonth,
+                        dayKey: thuMatch ? `T${thuMatch[1]}` : '',
+                        desc: descMatch ? descMatch[1].trim() : ''
+                    };
+                    continue;
+                }
+
+                if (!currentSection) continue;
+                const rawName = row[nameIdx];
+                const name = rawName === undefined || rawName === null ? '' : String(rawName).trim();
+                if (!name || normalizeStr(name).includes('tong doanh so') || normalizeStr(name).includes('ten khach hang')) continue;
+
+                const addressParts = splitAddress(addressIdx !== -1 ? row[addressIdx] : '');
+                if (currentSection.month && currentSection.month !== fileMonth) continue;
+                if (isFutureSalesPeriod(fileYear, currentSection.month || fileMonth)) continue;
+
+                entries.push({
+                    ...currentSection,
+                    year: fileYear,
+                    name,
+                    phone: phoneIdx !== -1 ? String(row[phoneIdx] || '').replace(/\.0$/, '').trim() : '',
+                    xa: addressParts.xa,
+                    huyen: addressParts.huyen,
+                    type: typeIdx !== -1 ? parseCustomerType(row[typeIdx]) : '',
+                    sales: salesIdx !== -1 ? extractNumber(row[salesIdx]) : 0
+                });
+            }
+
+            return { entries, fileMonth, fileYear };
+        };
+
         const buildMonthCalendar = (year, month) => {
             const weeks = {};
             let weekNum = 1;
@@ -86,6 +334,10 @@
             
             const [targetQuarter, setTargetQuarter] = useState(600000000);
             const [targetYear, setTargetYear] = useState(2400000000);
+            const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+            const minDailyAgents = Math.max(1, Math.min(30, Math.round(Number(settings.minDailyAgents) || DEFAULT_SETTINGS.minDailyAgents)));
+            const maxDailyAgents = Math.max(minDailyAgents, Math.min(30, Math.round(Number(settings.maxDailyAgents) || DEFAULT_SETTINGS.maxDailyAgents)));
+            const maxDailyKm = Math.max(20, Math.min(300, Math.round(Number(settings.maxDailyKm) || DEFAULT_SETTINGS.maxDailyKm)));
 
             const [showAddForm, setShowAddForm] = useState(false);
             const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', xa: '', huyen: '', type: 'DUY_TRI' });
@@ -112,7 +364,11 @@
                     loadScript("https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js")
                 ]).then(() => {
                     setLibrariesReady(true);
-                    window.localforage.getItem('routing_data_pro_v6').then(data => {
+                    Promise.all([
+                        window.localforage.getItem(STORAGE_KEY),
+                        window.localforage.getItem(SETTINGS_KEY)
+                    ]).then(([data, savedSettings]) => {
+                        if (savedSettings) setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
                         if(data && data.customers && data.customers.length > 0) { setHasSavedData(true); setStatus({ type: 'success', text: 'Phát hiện phiên làm việc cũ.' }); } 
                         else { setStatus({ type: 'success', text: 'Hệ thống đã sẵn sàng.' }); }
                     });
@@ -122,16 +378,22 @@
             useEffect(() => {
                 if (librariesReady && customers.length > 0) {
                     const timeoutId = setTimeout(() => {
-                        window.localforage.setItem('routing_data_pro_v6', { customers, fullMonthSchedule, selectedMonth, selectedYear, homeLocation, targetQuarter, targetYear });
+                        window.localforage.setItem(STORAGE_KEY, { customers, fullMonthSchedule, selectedMonth, selectedYear, homeLocation, targetQuarter, targetYear });
                         setHasSavedData(true);
                     }, 500);
                     return () => clearTimeout(timeoutId);
                 }
             }, [customers, fullMonthSchedule, selectedMonth, selectedYear, homeLocation, targetQuarter, targetYear, librariesReady]);
 
+            useEffect(() => {
+                if (!librariesReady) return;
+                const timeoutId = setTimeout(() => window.localforage.setItem(SETTINGS_KEY, settings), 400);
+                return () => clearTimeout(timeoutId);
+            }, [settings, librariesReady]);
+
             const restoreData = () => {
                 setStatus({ type: 'loading', text: 'Đang khôi phục dữ liệu...' });
-                window.localforage.getItem('routing_data_pro_v6').then(data => {
+                window.localforage.getItem(STORAGE_KEY).then(data => {
                     if(data) {
                         setCustomers(data.customers || []); setFullMonthSchedule(data.fullMonthSchedule || null); setSelectedMonth(data.selectedMonth || selectedMonth); setSelectedYear(data.selectedYear || selectedYear); setHomeLocation(data.homeLocation || null);
                         if(data.targetQuarter) setTargetQuarter(data.targetQuarter); if(data.targetYear) setTargetYear(data.targetYear);
@@ -140,29 +402,57 @@
                 });
             };
 
-            const clearDataAndNew = () => { window.localforage.removeItem('routing_data_pro_v6'); setHasSavedData(false); setCustomers([]); setFullMonthSchedule(null); setHomeLocation(null); if (fileInputRef.current) fileInputRef.current.click(); };
+            const clearDataAndNew = () => { window.localforage.removeItem(STORAGE_KEY); setHasSavedData(false); setCustomers([]); setFullMonthSchedule(null); setHomeLocation(null); setActiveTab('upload'); if (fileInputRef.current) fileInputRef.current.click(); };
             const goBack = () => { setSearchTerm(''); if (activeTab === 'schedule') setActiveTab('analysis'); else if (activeTab === 'analysis') setActiveTab('categorize'); else if (activeTab === 'categorize') setActiveTab('upload'); };
+            const updateDailyLimit = (field, rawValue) => {
+                const fallback = field === 'minDailyAgents' ? DEFAULT_SETTINGS.minDailyAgents : DEFAULT_SETTINGS.maxDailyAgents;
+                const value = Math.max(1, Math.min(30, Math.round(Number(rawValue) || fallback)));
+                setSettings(prev => {
+                    const currentMin = Math.max(1, Math.min(30, Math.round(Number(prev.minDailyAgents) || DEFAULT_SETTINGS.minDailyAgents)));
+                    const currentMax = Math.max(currentMin, Math.min(30, Math.round(Number(prev.maxDailyAgents) || DEFAULT_SETTINGS.maxDailyAgents)));
+                    if (field === 'minDailyAgents') {
+                        return { ...prev, minDailyAgents: value, maxDailyAgents: Math.max(value, currentMax) };
+                    }
+                    return { ...prev, minDailyAgents: Math.min(currentMin, value), maxDailyAgents: value };
+                });
+                if (fullMonthSchedule) {
+                    setFullMonthSchedule(null);
+                    setActiveTab(customers.length > 0 ? 'analysis' : 'upload');
+                    setStatus({ type: 'success', text: 'Đã cập nhật chỉ tiêu. Hãy tạo lại lịch để áp dụng giới hạn mới.' });
+                }
+            };
+            const updateRouteKmLimit = (rawValue) => {
+                const value = Math.max(20, Math.min(300, Math.round(Number(rawValue) || DEFAULT_SETTINGS.maxDailyKm)));
+                setSettings(prev => ({ ...prev, maxDailyKm: value }));
+                if (fullMonthSchedule) {
+                    setFullMonthSchedule(null);
+                    setActiveTab(customers.length > 0 ? 'analysis' : 'upload');
+                    setStatus({ type: 'success', text: 'Đã cập nhật giới hạn km/ngày. Hãy tạo lại lịch để tối ưu địa lý.' });
+                }
+            };
 
             // ==============================================================================
             // LÁ CHẮN 3 TẦNG: BẢO VỆ DOANH SỐ NGÀY
             // ==============================================================================
-            const processSingleSheetData = (data, fileName = "", fileMonthFromSheet = null) => {
+            const processSingleSheetData = (data, fileName = "", fileMonthFromSheet = null, fileYearFromSheet = null, importStats = null) => {
                 let parsed = []; let target = 0; let hasRestoredSales = false;
-                let headerIdx = -1; let sttIdx = -1, nameIdx = -1, phoneIdx = -1, xaIdx = -1, huyenIdx = -1;
-                let monthIndices = {}; let dayIndices = {}; let dailyStartIdx = -1;
-                let detectedFileMonth = fileMonthFromSheet; 
+                let headerIdx = -1; let sttIdx = -1, nameIdx = -1, phoneIdx = -1, xaIdx = -1, huyenIdx = -1, addressIdx = -1, typeIdx = -1, provinceIdx = -1, distributorIdx = -1;
+                let monthIndices = {}; let skippedFutureMonthIndices = {}; let dayIndices = {}; let dailyStartIdx = -1;
+                let detectedFileMonth = fileMonthFromSheet || detectMonthFromRows(data) || detectMonthFromText(fileName); 
+                let detectedSalesperson = '';
 
-                let fileYear = selectedYear; 
-                const fileNameMatch = String(fileName).match(/(?:20)\d{2}/);
-                if (fileNameMatch) {
-                    fileYear = parseInt(fileNameMatch[0]);
-                } else {
-                    for (let i = 0; i < Math.min(data.length, 15); i++) {
-                        const row = data[i]; if (!row) continue;
-                        const rowStr = row.join(' ').toLowerCase();
-                        const yearMatch = rowStr.match(/n[aă]m\s*(20\d{2})/); 
-                        if (yearMatch) { fileYear = parseInt(yearMatch[1]); break; }
+                let fileYear = normalizeYearNumber(fileYearFromSheet, null) || detectYearFromText(fileName) || detectYearFromRows(data, selectedYear);
+
+                for (let i = 0; i < Math.min(data.length, 20); i++) {
+                    const row = data[i] || [];
+                    for (const cell of row) {
+                        const match = String(cell || '').match(/NVKD\s*:\s*(.+)$/i);
+                        if (match && match[1].trim()) {
+                            detectedSalesperson = match[1].trim();
+                            break;
+                        }
                     }
+                    if (detectedSalesperson) break;
                 }
 
                 for (let i = 0; i < Math.min(data.length, 30); i++) {
@@ -181,6 +471,10 @@
                             if (str.includes('sdt') || str.includes('dien thoai')) phoneIdx = idx;
                             if (str === 'xa' || str === 'phuong') xaIdx = idx;
                             if (str === 'huyen' || str === 'quan') huyenIdx = idx;
+                            if (str.includes('dia chi')) addressIdx = idx;
+                            if (str.includes('phan loai') || str === 'loai') typeIdx = idx;
+                            if (str === 'tinh' || str.includes('tinh thanh')) provinceIdx = idx;
+                            if (str.includes('ten npp') || str.includes('nha phan phoi') || str === 'npp') distributorIdx = idx;
                             if (str.includes('hang ngay') || str.includes('hằng ngày')) dailyStartIdx = idx;
 
                             if (!detectedFileMonth && (strRawLower.includes('ds tong thang') || strRawLower.includes('doanh so tong thang') || strRawLower.includes('lich tuyen t'))) {
@@ -195,16 +489,17 @@
                                     let yearInCol = match[1] || match[2];
                                     if (yearInCol && yearInCol.length === 2) yearInCol = "20" + yearInCol; 
                                     const colYear = yearInCol ? parseInt(yearInCol) : fileYear;
-                                    if (colYear === selectedYear) { monthIndices[m] = idx; }
+                                    if (colYear === fileYear) {
+                                        if (isFutureSalesPeriod(colYear, m)) skippedFutureMonthIndices[m] = idx;
+                                        else monthIndices[m] = idx;
+                                    }
                                 }
                             }
                             
-                            if (fileYear === selectedYear) {
-                                for(let d=1; d<=31; d++) {
-                                    const dayRegex = new RegExp(`ng[aà]y\\s*0?${d}$`, 'i');
-                                    if (dayRegex.test(strRawLower) || ((strRawLower === `${d}` || strRawLower === `0${d}`) && idx > 10)) {
-                                        dayIndices[d] = idx;
-                                    }
+                            for(let d=1; d<=31; d++) {
+                                const dayRegex = new RegExp(`ng[aà]y\\s*0?${d}$`, 'i');
+                                if (dayRegex.test(strRawLower) || ((strRawLower === `${d}` || strRawLower === `0${d}`) && idx > 10)) {
+                                    dayIndices[d] = idx;
                                 }
                             }
                         });
@@ -212,23 +507,18 @@
                     }
                 }
 
-                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth };
+                if (headerIdx === -1 || nameIdx === -1) return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth, detectedSalesperson };
 
-                if (detectedFileMonth && detectedFileMonth !== selectedMonth) {
-                    dayIndices = {};
-                    dailyStartIdx = -1;
-                } else if (dailyStartIdx !== -1 && fileYear === selectedYear) {
+                if (dailyStartIdx !== -1) {
                     for(let d=1; d<=31; d++) dayIndices[d] = dailyStartIdx + d - 1;
                 }
 
-                if (fileYear === selectedYear) {
-                    for (let i = 0; i < headerIdx; i++) {
-                        const row = data[i]; if (!row) continue;
-                        const rowStr = row.map(c => normalizeStr(c)).join(' ');
-                        if (rowStr.includes('chi tieu')) {
-                            const nums = row.map(c => extractNumber(c)).filter(n => n > 1000);
-                            if (nums.length > 0) target = Math.max(...nums);
-                        }
+                for (let i = 0; i < headerIdx; i++) {
+                    const row = data[i]; if (!row) continue;
+                    const rowStr = row.map(c => normalizeStr(c)).join(' ');
+                    if (rowStr.includes('chi tieu')) {
+                        const nums = row.map(c => extractNumber(c)).filter(n => n > 1000);
+                        if (nums.length > 0) target = Math.max(...nums);
                     }
                 }
 
@@ -252,45 +542,80 @@
                     let huyen = huyenIdx !== -1 ? String(row[huyenIdx] || '').trim() : '';
                     if (huyen === 'NaN' || huyen === 'undefined' || huyen === 'null') huyen = '';
 
-                    let currentSales = {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0};
+                    if ((!xa || !huyen) && addressIdx !== -1) {
+                        const addressParts = splitAddress(row[addressIdx]);
+                        if (!xa) xa = addressParts.xa;
+                        if (!huyen) huyen = addressParts.huyen;
+                    }
+
+                    let type = typeIdx !== -1 ? parseCustomerType(row[typeIdx]) : '';
+                    let province = provinceIdx !== -1 ? String(row[provinceIdx] || '').trim() : '';
+                    let distributor = distributorIdx !== -1 ? String(row[distributorIdx] || '').trim() : '';
+
+                    let currentSales = emptyMonthlySales();
                     let currentDailySales = {};
                     let rowHasData = false;
 
                     for (let m = 1; m <= 12; m++) {
                         if (monthIndices[m] !== undefined) {
                             const val = extractNumber(row[monthIndices[m]]);
-                            if (val > 0) { currentSales[m] = val; rowHasData = true; }
+                            if (val > 0) {
+                                currentSales[m] = val;
+                                rowHasData = true;
+                                if (importStats) importStats.monthlyCells++;
+                            }
+                        } else if (skippedFutureMonthIndices[m] !== undefined) {
+                            const val = extractNumber(row[skippedFutureMonthIndices[m]]);
+                            if (val > 0 && importStats) importStats.skippedFutureSales++;
                         }
                     }
 
+                    const canImportDailySales = detectedFileMonth && !isFutureSalesPeriod(fileYear, detectedFileMonth);
                     for (let d = 1; d <= 31; d++) {
                         if (dayIndices[d] !== undefined) {
                             const val = extractNumber(row[dayIndices[d]]);
-                            if (val > 0) { currentDailySales[d] = val; rowHasData = true; }
+                            if (val > 0) {
+                                if (canImportDailySales) {
+                                    currentDailySales[d] = val;
+                                    rowHasData = true;
+                                    if (importStats) importStats.dailyCells++;
+                                } else if (importStats) {
+                                    importStats.skippedFutureSales++;
+                                }
+                            }
                         }
                     }
 
                     if (rowHasData && Object.keys(currentDailySales).length > 0) hasRestoredSales = true;
-                    parsed.push({ name, phone, xa, huyen, monthlySales: currentSales, dailySales: currentDailySales });
+                    parsed.push({ name, phone, xa, huyen, type, province, distributor, monthlySales: currentSales, dailySales: currentDailySales });
                 }
 
-                return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth };
+                return { parsed, target, hasRestoredSales, fileYear, detectedFileMonth, detectedSalesperson };
             };
 
-            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, detectedOldYear, detectedOldMonth) => {
+            const mergeIntoState = (newParsedList, foundTarget, hasRestoredSales, importContext = {}) => {
                 const customerMap = new Map(); let idCounter = 1;
                 const oldCustomers = [...customers];
-                const cleanName = (name) => String(name).toLowerCase().replace(/\s+/g, '').trim();
+                const cleanName = (name) => normalizeStr(name).replace(/\s+/g, '');
+                const cleanPhone = (phone) => String(phone || '').replace(/\D/g, '');
+                const cleanAddress = (item) => normalizeStr([item.xa, item.huyen].filter(Boolean).join('|')).replace(/\s+/g, '');
+                const identityKey = (item) => {
+                    const phonePart = cleanPhone(item.phone);
+                    return `${cleanName(item.name)}|${phonePart ? `p:${phonePart}` : `a:${cleanAddress(item)}`}`;
+                };
 
-                oldCustomers.forEach(c => customerMap.set(cleanName(c.name), c));
+                oldCustomers.forEach(c => customerMap.set(identityKey(c), c));
 
                 newParsedList.forEach(item => {
-                    const key = cleanName(item.name);
+                    const key = identityKey(item);
                     if (customerMap.has(key)) {
                         const existing = customerMap.get(key);
+                        existing.monthlySales = existing.monthlySales || emptyMonthlySales();
+                        existing.dailySales = existing.dailySales || {};
                         if (!existing.phone && item.phone) existing.phone = item.phone;
                         if (!existing.xa && item.xa) existing.xa = item.xa;
                         if (!existing.huyen && item.huyen) existing.huyen = item.huyen;
+                        if (item.type) existing.type = item.type;
                         
                         for (let m = 1; m <= 12; m++) { if (item.monthlySales[m] > 0) existing.monthlySales[m] = item.monthlySales[m]; }
                         for (let d = 1; d <= 31; d++) { if (item.dailySales[d] > 0) existing.dailySales[d] = item.dailySales[d]; }
@@ -298,26 +623,108 @@
                         customerMap.set(key, {
                             id: `MT1_${Date.now()}_${idCounter++}`,
                             name: item.name, phone: item.phone, xa: item.xa, huyen: item.huyen,
-                            type: 'DUY_TRI', subGroup: (idCounter % 4) + 1, location: null,
-                            monthlySales: item.monthlySales, dailySales: item.dailySales
+                            type: item.type || 'DUY_TRI', subGroup: (idCounter % 4) + 1, location: null,
+                            monthlySales: item.monthlySales || emptyMonthlySales(), dailySales: item.dailySales || {}
                         });
                     }
                 });
 
                 const finalParsed = Array.from(customerMap.values());
+                const finalCustomerMap = new Map(finalParsed.map(c => [identityKey(c), c]));
+                const finalCustomersByName = new Map();
+                finalParsed.forEach(c => {
+                    const nameKey = cleanName(c.name);
+                    if (!finalCustomersByName.has(nameKey)) finalCustomersByName.set(nameKey, []);
+                    finalCustomersByName.get(nameKey).push(c);
+                });
+                const findImportedCustomer = (item) => {
+                    const exact = finalCustomerMap.get(identityKey(item));
+                    if (exact) return exact;
+                    const sameName = finalCustomersByName.get(cleanName(item.name)) || [];
+                    return sameName.length === 1 ? sameName[0] : null;
+                };
+                const rawScheduleEntries = importContext.scheduleEntries || [];
+                const scheduleEntries = rawScheduleEntries.filter(entry => {
+                    const sameYear = !importContext.year || !entry.year || entry.year === importContext.year;
+                    const sameMonth = !importContext.month || !entry.month || entry.month === importContext.month;
+                    const future = isFutureSalesPeriod(entry.year || importContext.year, entry.month || importContext.month);
+                    if ((!sameYear || !sameMonth || future) && importContext.stats) importContext.stats.skippedScheduleEntries++;
+                    return sameYear && sameMonth && !future;
+                });
+
+                scheduleEntries.forEach(entry => {
+                    const customer = findImportedCustomer(entry);
+                    if (!customer) return;
+                    if (entry.type) customer.type = entry.type;
+                    customer.dailySales = customer.dailySales || {};
+                    if (entry.date && entry.sales > 0) customer.dailySales[entry.date] = entry.sales;
+                });
+
+                const canActivateImportPeriod = importContext.month && importContext.year && !isFutureSalesPeriod(importContext.year, importContext.month);
+
                 setCustomers(finalParsed);
                 if (foundTarget > 0) setTargetQuarter(foundTarget);
+                if (canActivateImportPeriod) {
+                    setSelectedMonth(importContext.month);
+                    setSelectedYear(importContext.year);
+                } else if (importContext.year && !isFutureSalesPeriod(importContext.year, 1)) {
+                    setSelectedYear(importContext.year);
+                }
+
+                const firstProvince = newParsedList.find(item => item.province)?.province || '';
+                const firstDistributor = newParsedList.find(item => item.distributor)?.distributor || '';
+                setSettings(prev => ({
+                    ...prev,
+                    salesperson: importContext.salesperson || prev.salesperson,
+                    province: firstProvince || prev.province,
+                    distributor: firstDistributor || prev.distributor
+                }));
+
+                let restoredSchedule = null;
+                if (scheduleEntries.length > 0 && importContext.month && importContext.year) {
+                    const cal = buildMonthCalendar(importContext.year, importContext.month);
+                    restoredSchedule = {};
+                    const dateLookup = new Map();
+                    Object.keys(cal).forEach(week => {
+                        restoredSchedule[week] = {};
+                        Object.keys(cal[week]).forEach(dayKey => {
+                            const date = cal[week][dayKey].date;
+                            restoredSchedule[week][dayKey] = { day: `Thứ ${dayKey.replace('T', '')}`, desc: 'Triển khai tuyến', limit: maxDailyAgents, items: [], date };
+                            dateLookup.set(date, { week, dayKey });
+                        });
+                    });
+
+                    scheduleEntries.forEach(entry => {
+                        const customer = findImportedCustomer(entry);
+                        const targetDay = dateLookup.get(entry.date);
+                        if (!customer || !targetDay) return;
+                        const dayData = restoredSchedule[targetDay.week][targetDay.dayKey];
+                        if (entry.desc) dayData.desc = entry.desc;
+                        if (dayData.items.some(item => item.id === customer.id)) return;
+                        dayData.items.push({
+                            ...customer,
+                            type: entry.type || customer.type,
+                            sales: entry.sales > 0 ? entry.sales : (customer.dailySales?.[entry.date] || '')
+                        });
+                    });
+                }
 
                 let successMsg = `Nạp thành công ${finalParsed.length} KH từ file.`;
-                if (detectedOldMonth && detectedOldMonth !== selectedMonth) {
-                    successMsg += ` (Đã tự động LỌC BỎ DS Ngày của Tháng ${detectedOldMonth} cũ!)`;
-                } else if (hasRestoredSales) {
-                    successMsg += " (Đã quét và phục hồi Doanh số Ngày!)";
-                } else if (detectedOldYear && detectedOldYear !== selectedYear) {
-                    successMsg += ` (Đã làm sạch Doanh số cũ năm ${detectedOldYear})`;
+                if (canActivateImportPeriod) successMsg += importContext.lockedPeriod
+                    ? ` Đã giữ kỳ đang mở Tháng ${importContext.month}/${importContext.year}.`
+                    : ` Đã đồng bộ Tháng ${importContext.month}/${importContext.year}.`;
+                else if (importContext.month && importContext.year) successMsg += ` Giữ kỳ hiện tại vì Tháng ${importContext.month}/${importContext.year} chưa tới.`;
+                if (hasRestoredSales || scheduleEntries.some(entry => entry.sales > 0)) successMsg += " Đã phục hồi Doanh số Ngày.";
+                if (restoredSchedule) successMsg += ` Đã khôi phục ${scheduleEntries.length} lượt trong lịch tuyến.`;
+                if (importContext.stats) {
+                    const skipped = importContext.stats.skippedFutureSales + importContext.stats.skippedMixedYearSales + importContext.stats.skippedMixedMonthDailySales + importContext.stats.skippedScheduleEntries;
+                    if (skipped > 0) successMsg += ` Đã chặn ${skipped} ô/lượt doanh số sai kỳ hoặc chưa tới kỳ.`;
                 }
                 
-                setActiveTab('categorize'); setStatus({ type: 'success', text: successMsg }); setFullMonthSchedule(null);
+                setFullMonthSchedule(restoredSchedule);
+                setActiveWeekTab(1);
+                setActiveTab(restoredSchedule ? 'schedule' : 'categorize');
+                setStatus({ type: 'success', text: successMsg });
             };
 
             const handleFileUpload = async (event) => {
@@ -329,17 +736,26 @@
                     let allParsedCustomers = [];
                     let hasRestoredAnySales = false;
                     let foundTarget = 0;
-                    let detectedOldYear = null;
-                    let detectedOldMonth = null;
+                    const hasActiveDataset = customers.length > 0;
+                    let importYear = hasActiveDataset ? selectedYear : null;
+                    let importMonth = hasActiveDataset ? selectedMonth : null;
+                    let importedSalesperson = '';
+                    let scheduleEntries = [];
+                    const importStats = createImportStats();
+                    const countDailySalesCells = (list) => (list || []).reduce((sum, item) => sum + Object.values(item.dailySales || {}).filter(v => Number(v) > 0).length, 0);
+                    const hasDailySales = (list) => countDailySalesCells(list) > 0;
 
                     for (let i = 0; i < files.length; i++) {
                         const buffer = await files[i].arrayBuffer(); 
                         const workbook = window.XLSX.read(buffer, { type: 'array' });
                         
-                        let fileMonth = null;
+                        let fileMonth = detectMonthFromText(files[i].name);
+                        let fileYear = detectYearFromText(files[i].name);
                         for (let sName of workbook.SheetNames) {
                             const match = String(sName).match(/L[IỊ]CH TUY[EẾ]N T(\d+)/i);
                             if (match && parseInt(match[1]) <= 12) { fileMonth = parseInt(match[1]); break; }
+                            if (!fileMonth) fileMonth = detectMonthFromText(sName);
+                            if (!fileYear) fileYear = detectYearFromText(sName);
                         }
                         
                         if (!fileMonth) {
@@ -351,14 +767,48 @@
                         for (let sName of workbook.SheetNames) {
                             const worksheet = workbook.Sheets[sName]; 
                             const jsonData = window.XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+                            const sheetMonth = detectMonthFromText(sName) || fileMonth || detectMonthFromRows(jsonData);
+                            const sheetYear = detectYearFromText(sName) || fileYear || detectYearFromRows(jsonData, selectedYear);
+
+                            const scheduleResult = parseScheduleSheetData(jsonData, files[i].name, sheetMonth, sheetYear);
+                            let currentScheduleEntries = scheduleResult.entries;
+                            const blockYear = scheduleResult.fileYear || sheetYear || selectedYear;
+                            const blockMonth = scheduleResult.fileMonth || sheetMonth || fileMonth;
+                            if (!importYear && currentScheduleEntries.length > 0 && blockYear) importYear = blockYear;
+                            if (!importMonth && currentScheduleEntries.length > 0 && blockMonth) importMonth = blockMonth;
+                            if (scheduleResult.entries.length > 0) {
+                                if (importYear && blockYear && blockYear !== importYear) {
+                                    importStats.skippedScheduleEntries += currentScheduleEntries.length;
+                                    currentScheduleEntries = [];
+                                }
+                                if (importMonth && blockMonth && blockMonth !== importMonth) {
+                                    importStats.skippedScheduleEntries += currentScheduleEntries.length;
+                                    currentScheduleEntries = [];
+                                }
+                                scheduleEntries = scheduleEntries.concat(currentScheduleEntries);
+                            }
                             
-                            const { parsed, target, hasRestoredSales, fileYear, detectedFileMonth } = processSingleSheetData(jsonData, files[i].name, fileMonth);
-                            if (parsed.length > 0) {
-                                allParsedCustomers = allParsedCustomers.concat(parsed);
-                                if (target > foundTarget) foundTarget = target;
-                                if (hasRestoredSales) hasRestoredAnySales = true;
-                                if (fileYear && fileYear !== selectedYear) detectedOldYear = fileYear;
-                                if (detectedFileMonth && detectedFileMonth !== selectedMonth) detectedOldMonth = detectedFileMonth;
+                            const result = processSingleSheetData(jsonData, files[i].name, sheetMonth, sheetYear, importStats);
+                            let parsedBlock = result.parsed;
+                            const parsedYear = result.fileYear || sheetYear || selectedYear;
+                            const parsedMonth = result.detectedFileMonth || sheetMonth || fileMonth;
+                            if (!importYear && parsedBlock.length > 0) importYear = parsedYear;
+                            if (!importMonth && parsedBlock.length > 0 && parsedMonth) importMonth = parsedMonth;
+
+                            if (importYear && parsedYear && parsedYear !== importYear) {
+                                importStats.skippedMixedYearSales += countParsedSalesCells(parsedBlock);
+                                parsedBlock = stripParsedSales(parsedBlock);
+                            }
+                            if (importMonth && parsedMonth && parsedMonth !== importMonth) {
+                                importStats.skippedMixedMonthDailySales += countDailySalesCells(parsedBlock);
+                                parsedBlock = stripParsedSales(parsedBlock, 'daily');
+                            }
+
+                            if (parsedBlock.length > 0) {
+                                allParsedCustomers = allParsedCustomers.concat(parsedBlock);
+                                if (result.target > foundTarget) foundTarget = result.target;
+                                if (hasDailySales(parsedBlock)) hasRestoredAnySales = true;
+                                if (!importedSalesperson && result.detectedSalesperson) importedSalesperson = result.detectedSalesperson;
                             }
                         }
                     }
@@ -366,7 +816,14 @@
                     if (allParsedCustomers.length === 0) {
                         setStatus({ type: 'error', text: 'Không tìm thấy bảng "TÊN KHÁCH HÀNG" trong file.' });
                     } else {
-                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, detectedOldYear, detectedOldMonth);
+                        mergeIntoState(allParsedCustomers, foundTarget, hasRestoredAnySales, {
+                            month: importMonth || selectedMonth,
+                            year: importYear || selectedYear,
+                            salesperson: importedSalesperson,
+                            scheduleEntries,
+                            stats: importStats,
+                            lockedPeriod: hasActiveDataset
+                        });
                     }
                 } catch (err) { setStatus({ type: 'error', text: 'Lỗi đọc file: ' + err.message }); }
                 if (fileInputRef.current) fileInputRef.current.value = '';
@@ -374,7 +831,7 @@
 
             const handleAddCustomer = () => {
                 if(!newCustomer.name) return setStatus({ type: 'error', text: 'Vui lòng nhập tên khách hàng.' });
-                setCustomers(prev => [{ ...newCustomer, id: `MT1_MANUAL_${Date.now()}`, subGroup: (Date.now() % 4) + 1, location: null, monthlySales: {1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0,10:0,11:0,12:0}, dailySales: {} }, ...prev]);
+                setCustomers(prev => [{ ...newCustomer, id: `MT1_MANUAL_${Date.now()}`, subGroup: (Date.now() % 4) + 1, location: null, monthlySales: emptyMonthlySales(), dailySales: {} }, ...prev]);
                 setNewCustomer({ name: '', phone: '', xa: '', huyen: '', type: 'DUY_TRI' }); setShowAddForm(false); setFullMonthSchedule(null); setStatus({ type: 'success', text: 'Thêm khách hàng thành công.' });
             };
 
@@ -392,7 +849,18 @@
             };
 
             const confirmDeleteCustomer = () => { 
-                if(customerToDelete) { setCustomers(prev => prev.filter(c => c.id !== customerToDelete.id)); setFullMonthSchedule(null); setCustomerToDelete(null); }
+                if(customerToDelete) {
+                    setCustomers(prev => {
+                        const nextCustomers = prev.filter(c => c.id !== customerToDelete.id);
+                        if (nextCustomers.length === 0 && window.localforage) {
+                            window.localforage.removeItem(STORAGE_KEY);
+                            setHasSavedData(false);
+                        }
+                        return nextCustomers;
+                    });
+                    setFullMonthSchedule(null);
+                    setCustomerToDelete(null);
+                }
             };
 
             const toggleType = (id) => { 
@@ -408,20 +876,110 @@
                 setFullMonthSchedule(null); 
             };
             
-            const handleSetHomeLocation = () => {
-                if (!navigator.geolocation) return setStatus({ type: 'error', text: 'Trình duyệt không hỗ trợ định vị.' });
-                setStatus({ type: 'loading', text: 'Đang lấy tọa độ...' });
-                navigator.geolocation.getCurrentPosition( (pos) => { setHomeLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setStatus({ type: 'success', text: 'Đã lưu Vị trí!' }); }, () => setStatus({ type: 'error', text: 'Vui lòng cấp quyền Vị Trí.' }), { enableHighAccuracy: true } );
+            const getBestGeoPosition = () => new Promise((resolve, reject) => {
+                if (!navigator.geolocation) return reject(new Error('Trình duyệt không hỗ trợ định vị.'));
+                let bestPosition = null;
+                let lastError = null;
+                let watchId = null;
+                let finished = false;
+                const finish = (position, error = null) => {
+                    if (finished) return;
+                    finished = true;
+                    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+                    clearTimeout(timerId);
+                    if (position) resolve(position);
+                    else reject(error || lastError || new Error('Không lấy được tọa độ.'));
+                };
+                const timerId = setTimeout(() => finish(bestPosition, lastError), GPS_MAX_WAIT_MS);
+                try {
+                    watchId = navigator.geolocation.watchPosition(
+                        (pos) => {
+                            const acc = Number(pos.coords.accuracy) || 99999;
+                            const bestAcc = bestPosition ? (Number(bestPosition.coords.accuracy) || 99999) : 99999;
+                            if (!bestPosition || acc < bestAcc) bestPosition = pos;
+                            if (acc <= GPS_TARGET_ACCURACY_METERS) finish(pos);
+                        },
+                        (err) => {
+                            lastError = err;
+                            if (err && err.code === 1) finish(null, err);
+                        },
+                        { enableHighAccuracy: true, maximumAge: 0, timeout: GPS_MAX_WAIT_MS }
+                    );
+                } catch (error) {
+                    finish(null, error);
+                }
+            });
+
+            const buildLocationPayload = (pos) => ({
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude,
+                accuracy: Math.round(Number(pos.coords.accuracy) || 0),
+                capturedAt: new Date().toISOString()
+            });
+
+            const gpsStatusText = (loc, label) => {
+                const accuracyText = formatAccuracy(loc);
+                const warning = hasWeakAccuracy(loc) ? ' GPS còn yếu, nên cập nhật lại khi đứng thoáng hơn.' : '';
+                return `Đã lưu ${label}${accuracyText ? ` (${accuracyText})` : ''}.${warning}`;
             };
 
-            const handleSetCustomerLocation = (id) => {
+            const handleSetHomeLocation = async () => {
                 if (!navigator.geolocation) return setStatus({ type: 'error', text: 'Trình duyệt không hỗ trợ định vị.' });
-                setStatus({ type: 'loading', text: 'Đang lấy tọa độ...' });
-                navigator.geolocation.getCurrentPosition( (pos) => { setCustomers(prev => prev.map(c => c.id === id ? { ...c, location: { lat: pos.coords.latitude, lng: pos.coords.longitude } } : c)); setStatus({ type: 'success', text: 'Đã lưu tọa độ!' }); }, () => setStatus({ type: 'error', text: 'Vui lòng cấp quyền Vị Trí.' }), { enableHighAccuracy: true } );
+                setStatus({ type: 'loading', text: 'Đang lấy GPS chuẩn, giữ thiết bị ở nơi thoáng trong vài giây...' });
+                try {
+                    const pos = await getBestGeoPosition();
+                    const loc = buildLocationPayload(pos);
+                    setHomeLocation(loc);
+                    setStatus({ type: hasWeakAccuracy(loc) ? 'error' : 'success', text: gpsStatusText(loc, 'điểm xuất phát') });
+                } catch (error) {
+                    setStatus({ type: 'error', text: 'Không lấy được GPS. Hãy cấp quyền vị trí và thử lại ở nơi thoáng.' });
+                }
+            };
+
+            const handleSetCustomerLocation = async (id) => {
+                if (!navigator.geolocation) return setStatus({ type: 'error', text: 'Trình duyệt không hỗ trợ định vị.' });
+                setStatus({ type: 'loading', text: 'Đang lấy GPS chuẩn cho đại lý, giữ thiết bị ở nơi thoáng trong vài giây...' });
+                try {
+                    const pos = await getBestGeoPosition();
+                    const loc = buildLocationPayload(pos);
+                    setCustomers(prev => prev.map(c => c.id === id ? { ...c, location: loc } : c));
+                    setStatus({ type: hasWeakAccuracy(loc) ? 'error' : 'success', text: gpsStatusText(loc, 'tọa độ đại lý') });
+                } catch (error) {
+                    setStatus({ type: 'error', text: 'Không lấy được GPS. Hãy cấp quyền vị trí và thử lại ở nơi thoáng.' });
+                }
             };
 
             const handleRemoveCustomerLocation = (id) => setCustomers(prev => prev.map(c => c.id === id ? { ...c, location: null } : c));
             const getCustomerLocation = (id) => customers.find(c => c.id === id)?.location;
+
+            const getQuoteBaseUrl = () => {
+                let baseUrl = String(settings.quoteBaseUrl || '').trim();
+                if (!baseUrl && /^https?:$/i.test(window.location.protocol)) baseUrl = `${window.location.origin}/`;
+                if (!baseUrl) return '';
+                if (!/^https?:\/\//i.test(baseUrl)) baseUrl = `https://${baseUrl}`;
+                return baseUrl;
+            };
+
+            const openQuoteForCustomer = (customer = null) => {
+                try {
+                    const baseUrl = getQuoteBaseUrl();
+                    if (!baseUrl) {
+                        setStatus({ type: 'error', text: 'Chưa cấu hình link bảng báo giá. Hãy nhập link trong phần Thiết lập ứng dụng.' });
+                        return;
+                    }
+                    const url = new URL(baseUrl);
+                    if (customer) {
+                        url.searchParams.set('kh', customer.name || '');
+                        if (customer.phone) url.searchParams.set('sdt', customer.phone);
+                        const address = [customer.xa, customer.huyen].filter(Boolean).join(', ');
+                        if (address) url.searchParams.set('diachi', address);
+                    }
+                    url.searchParams.set('nguon', 'lichdituyen');
+                    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+                } catch (error) {
+                    setStatus({ type: 'error', text: 'Đường dẫn tạo báo giá chưa hợp lệ.' });
+                }
+            };
 
             const handleSalesChange = useCallback((week, day, customerId, salesValue) => {
                 setFullMonthSchedule(prev => {
@@ -447,12 +1005,14 @@
                 const unlocated = [];
                 dayItems.forEach(item => {
                     const loc = getCustomerLocation(item.id);
-                    if (loc && typeof loc.lat === 'number' && typeof loc.lng === 'number') {
+                    if (isUsableLocation(loc)) {
                         withLoc.push({ ...item, _loc: loc });
                     } else {
                         unlocated.push(item);
                     }
                 });
+                const weakAccuracyCount = withLoc.filter(item => hasWeakAccuracy(item._loc)).length;
+                const accuracyNote = weakAccuracyCount > 0 ? ` Có ${weakAccuracyCount} điểm GPS còn yếu, nên cập nhật lại để tuyến chuẩn hơn.` : '';
 
                 if (withLoc.length === 0) {
                     return setStatus({ type: 'error', text: 'Không có KH nào có tọa độ để tối ưu. Hãy bấm GPS cho KH.' });
@@ -470,16 +1030,18 @@
                     const data = await response.json();
                     if (data.code !== 'Ok') throw new Error(`API Error: ${data.code}`);
 
-                    const sortedCustomers = [];
-                    const customerWaypoints = data.waypoints.filter(wp => wp.waypoint_index > 0);
-                    
-                    customerWaypoints.sort((a, b) => a.trips_index - b.trips_index);
-
-                    customerWaypoints.forEach(wp => {
-                        const originalItem = withLoc[wp.waypoint_index - 1];
-                        delete originalItem._loc; 
-                        sortedCustomers.push(originalItem);
-                    });
+                    const sortedCustomers = data.waypoints
+                        .map((waypoint, inputIndex) => ({
+                            waypoint,
+                            item: inputIndex === 0 ? null : withLoc[inputIndex - 1]
+                        }))
+                        .filter(entry => entry.item)
+                        .sort((a, b) => a.waypoint.waypoint_index - b.waypoint.waypoint_index)
+                        .map(entry => {
+                            const cleanedItem = { ...entry.item };
+                            delete cleanedItem._loc;
+                            return cleanedItem;
+                        });
 
                     setFullMonthSchedule(prev => {
                         const newSched = { ...prev };
@@ -491,7 +1053,7 @@
                         return newSched;
                     });
 
-                    setStatus({ type: 'success', text: `Đã tự động tối ưu theo đường thực tế!` });
+                    setStatus({ type: 'success', text: `Đã tự động tối ưu theo đường thực tế!${accuracyNote}` });
 
                 } catch (error) {
                     console.warn("Lỗi kết nối OSRM, kích hoạt Fallback:", error);
@@ -518,19 +1080,40 @@
                         return newSched;
                     });
                     
-                    setStatus({ type: 'success', text: `Đã dùng thuật toán dự phòng do mạng yếu!` });
+                    setStatus({ type: 'success', text: `Đã dùng thuật toán dự phòng do mạng yếu!${accuracyNote}` });
                 }
             };
 
             const executeRoutingForMonth = () => {
-                setStatus({ type: 'loading', text: 'Đang giải bài toán rải đều & bù đắp KPI...' });
+                const routePeriod = getCurrentRoutePeriod();
+                const periodChanged = selectedMonth !== routePeriod.month || selectedYear !== routePeriod.year;
+                const routeCustomers = periodChanged
+                    ? customers.map(c => ({
+                        ...c,
+                        dailySales: {},
+                        monthlySales: selectedYear !== routePeriod.year ? emptyMonthlySales() : (c.monthlySales || emptyMonthlySales())
+                    }))
+                    : customers;
+                const autoPeriodNote = periodChanged
+                    ? ` Đã tự chuyển sang Tháng ${routePeriod.month}/${routePeriod.year} theo tháng hiện tại.`
+                    : ` Tháng ${routePeriod.month}/${routePeriod.year}.`;
+
+                if (periodChanged) {
+                    setSelectedMonth(routePeriod.month);
+                    setSelectedYear(routePeriod.year);
+                    setCustomers(routeCustomers);
+                    setFullMonthSchedule(null);
+                }
+
+                setStatus({ type: 'loading', text: `Đang tạo lịch Tháng ${routePeriod.month}/${routePeriod.year} theo tháng hiện tại...` });
                 setTimeout(() => {
-                    const cal = buildMonthCalendar(selectedYear, selectedMonth);
+                    const cal = buildMonthCalendar(routePeriod.year, routePeriod.month);
                     const newSchedule = {};
                     let allAvailableDays = [];
 
-                    const dayDescMap = { 'T2': 'Triển khai tuyến Cai Lậy / Tân Phước', 'T3': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', 'T4': 'Triển khai Châu Thành / Mỹ Tho', 'T5': 'Triển khai tuyến Cai Lậy / Tân Phước', 'T6': 'Trọng điểm Cái Bè (Thúc đẩy doanh số)', 'T7': 'Bảo trì tuyến Mỹ Tho / Châu Thành' };
-                    const dayDistrictMap = { 'T2': ['cai lay', 'tan phuoc'], 'T3': ['cai be', 'cai lay'], 'T4': ['chau thanh', 'my tho'], 'T5': ['cai lay', 'tan phuoc'], 'T6': ['cai be', 'cai lay'], 'T7': ['my tho', 'chau thanh'] };
+                    const routeConfig = buildRouteConfig(routeCustomers);
+                    const dayDescMap = routeConfig.descMap;
+                    const dayDistrictMap = routeConfig.districtMap;
 
                     Object.keys(cal).forEach(wStr => {
                         const weekNum = parseInt(wStr);
@@ -539,7 +1122,7 @@
                             newSchedule[weekNum][dayKey] = {
                                 day: `Thứ ${dayKey.replace('T', '')}`,
                                 desc: dayDescMap[dayKey] || 'Triển khai tuyến',
-                                limit: 12,
+                                limit: maxDailyAgents,
                                 items: [],
                                 date: cal[wStr][dayKey].date
                             };
@@ -548,11 +1131,8 @@
                     });
 
                     let visitsToAssign = [];
-                    customers.forEach(c => {
-                        let visits = 1; 
-                        if (c.type === 'TRONG_DIEM') visits = 3;
-                        else if (c.type === 'DUY_TRI') visits = 2;
-                        
+                    routeCustomers.forEach(c => {
+                        const visits = getDesiredVisits(c.type);
                         for (let i = 0; i < visits; i++) {
                             visitsToAssign.push({ ...c, sales: '', _visitIndex: i }); 
                         }
@@ -567,7 +1147,35 @@
                     const countInWeek = (dayList, weekNum, custId) => {
                         return dayList.filter(d => d.week === weekNum).flatMap(d => d.items).filter(i => i.id === custId).length;
                     };
+                    const routeKmForItems = (items) => estimateRoundTripKm(homeLocation, items);
+                    const dayGeoScore = (day, nextItem = null) => {
+                        const items = nextItem ? [...day.items, nextItem] : day.items;
+                        const km = routeKmForItems(items);
+                        const overKm = km !== null && km > maxDailyKm;
+                        const nextLoc = nextItem?.location;
+                        const existingLocs = day.items.map(item => item.location).filter(isUsableLocation);
+                        const clusterKm = isUsableLocation(nextLoc) && existingLocs.length > 0
+                            ? Math.min(...existingLocs.map(loc => getDistanceFromLatLonInKm(nextLoc.lat, nextLoc.lng, loc.lat, loc.lng)))
+                            : null;
+                        return { km, overKm, clusterKm };
+                    };
+                    const sortDaysByGeoFit = (candidateDays, visit) => {
+                        candidateDays.sort((a, b) => {
+                            const aGeo = dayGeoScore(a, visit);
+                            const bGeo = dayGeoScore(b, visit);
+                            if (aGeo.overKm !== bGeo.overKm) return aGeo.overKm ? 1 : -1;
+                            if (aGeo.clusterKm !== null || bGeo.clusterKm !== null) {
+                                if (aGeo.clusterKm === null) return 1;
+                                if (bGeo.clusterKm === null) return -1;
+                                if (aGeo.clusterKm !== bGeo.clusterKm) return aGeo.clusterKm - bGeo.clusterKm;
+                            }
+                            if (aGeo.km !== null && bGeo.km !== null && aGeo.km !== bGeo.km) return aGeo.km - bGeo.km;
+                            if (a.items.length !== b.items.length) return a.items.length - b.items.length;
+                            return a.date - b.date;
+                        });
+                    };
 
+                    let unassignedVisits = 0;
                     visitsToAssign.forEach(visit => {
                         const h = normalizeStr(visit.huyen) || 'khac';
                         
@@ -576,35 +1184,86 @@
                             return targetDistricts.includes('all') || targetDistricts.some(dist => h.includes(dist));
                         });
 
-                        let candidates = geoMatchedDays.filter(d => d.items.length < 12 && countInWeek(allAvailableDays, d.week, visit.id) === 0);
+                        let candidates = geoMatchedDays.filter(d => d.items.length < maxDailyAgents && countInWeek(allAvailableDays, d.week, visit.id) === 0);
 
                         if (candidates.length === 0) {
-                            candidates = geoMatchedDays.filter(d => d.items.length < 12 && !d.items.some(i => i.id === visit.id));
+                            candidates = geoMatchedDays.filter(d => d.items.length < maxDailyAgents && !d.items.some(i => i.id === visit.id));
                         }
 
                         if (candidates.length === 0) {
-                            candidates = allAvailableDays.filter(d => d.items.length < 12 && countInWeek(allAvailableDays, d.week, visit.id) === 0);
+                            candidates = allAvailableDays.filter(d => d.items.length < maxDailyAgents && countInWeek(allAvailableDays, d.week, visit.id) === 0);
                         }
 
                         if (candidates.length === 0) {
-                            candidates = allAvailableDays.filter(d => !d.items.some(i => i.id === visit.id));
+                            candidates = allAvailableDays.filter(d => d.items.length < maxDailyAgents && !d.items.some(i => i.id === visit.id));
                         }
 
-                        candidates.sort((a, b) => a.items.length - b.items.length);
+                        sortDaysByGeoFit(candidates, visit);
                         
                         if(candidates.length > 0) {
-                            candidates[0].items.push(visit);
+                            const targetDay = candidates[0];
+                            targetDay.items.push({
+                                ...visit,
+                                sales: visit.dailySales?.[targetDay.date] || ''
+                            });
+                        } else {
+                            unassignedVisits++;
                         }
                     });
 
                     const countInMonth = (custId) => allAvailableDays.flatMap(d => d.items).filter(i => i.id === custId).length;
+                    let rebalancedVisits = 0;
+                    let addedMinimumVisits = 0;
+
+                    allAvailableDays.forEach(targetDay => {
+                        while (targetDay.items.length < minDailyAgents) {
+                            const targetDistricts = dayDistrictMap[targetDay.dayKey] || ['all'];
+                            const moveOptions = [];
+
+                            allAvailableDays
+                                .filter(donorDay => donorDay !== targetDay && donorDay.items.length > minDailyAgents)
+                                .forEach(donorDay => {
+                                    donorDay.items.forEach((item, itemIndex) => {
+                                        if (targetDay.items.some(existing => existing.id === item.id)) return;
+                                        const targetWeekCount = countInWeek(allAvailableDays, targetDay.week, item.id);
+                                        const keepsWeeklySpacing = donorDay.week === targetDay.week ? targetWeekCount <= 1 : targetWeekCount === 0;
+                                        const district = normalizeStr(item.huyen) || 'khac';
+                                        const matchesDistrict = targetDistricts.includes('all') || targetDistricts.some(dist => district.includes(dist));
+                                        const geoScore = dayGeoScore(targetDay, item);
+                                        moveOptions.push({ donorDay, item, itemIndex, keepsWeeklySpacing, matchesDistrict, ...geoScore });
+                                    });
+                                });
+
+                            if (moveOptions.length === 0) break;
+                            moveOptions.sort((a, b) => {
+                                if (a.overKm !== b.overKm) return a.overKm ? 1 : -1;
+                                if (a.keepsWeeklySpacing !== b.keepsWeeklySpacing) return a.keepsWeeklySpacing ? -1 : 1;
+                                if (a.matchesDistrict !== b.matchesDistrict) return a.matchesDistrict ? -1 : 1;
+                                if (a.clusterKm !== null || b.clusterKm !== null) {
+                                    if (a.clusterKm === null) return 1;
+                                    if (b.clusterKm === null) return -1;
+                                    if (a.clusterKm !== b.clusterKm) return a.clusterKm - b.clusterKm;
+                                }
+                                if (a.km !== null && b.km !== null && a.km !== b.km) return a.km - b.km;
+                                return b.donorDay.items.length - a.donorDay.items.length;
+                            });
+
+                            const selectedMove = moveOptions[0];
+                            selectedMove.donorDay.items.splice(selectedMove.itemIndex, 1);
+                            targetDay.items.push({
+                                ...selectedMove.item,
+                                sales: selectedMove.item.dailySales?.[targetDay.date] || ''
+                            });
+                            rebalancedVisits++;
+                        }
+                    });
 
                     allAvailableDays.forEach(day => {
-                        while (day.items.length < 8) {
-                            let padCandidates = customers.filter(c => 
-                                !day.items.some(i => i.id === c.id) && countInMonth(c.id) < 4 
+                        while (day.items.length < minDailyAgents) {
+                            let padCandidates = routeCustomers.filter(c => 
+                                !day.items.some(i => i.id === c.id)
                             );
-                            if (padCandidates.length === 0) break; 
+                            if (padCandidates.length === 0) break;
 
                             const targetDistricts = dayDistrictMap[day.dayKey] || ['all'];
                             
@@ -620,10 +1279,29 @@
                                 bestMatches = notInWeekMatches;
                             }
 
-                            bestMatches.sort((a, b) => countInMonth(a.id) - countInMonth(b.id));
+                            bestMatches.sort((a, b) => {
+                                const aGeo = dayGeoScore(day, a);
+                                const bGeo = dayGeoScore(day, b);
+                                if (aGeo.overKm !== bGeo.overKm) return aGeo.overKm ? 1 : -1;
+                                if (aGeo.clusterKm !== null || bGeo.clusterKm !== null) {
+                                    if (aGeo.clusterKm === null) return 1;
+                                    if (bGeo.clusterKm === null) return -1;
+                                    if (aGeo.clusterKm !== bGeo.clusterKm) return aGeo.clusterKm - bGeo.clusterKm;
+                                }
+                                if (aGeo.km !== null && bGeo.km !== null && aGeo.km !== bGeo.km) return aGeo.km - bGeo.km;
+                                const extraA = Math.max(0, countInMonth(a.id) - getDesiredVisits(a.type));
+                                const extraB = Math.max(0, countInMonth(b.id) - getDesiredVisits(b.type));
+                                if (extraA !== extraB) return extraA - extraB;
+                                return countInMonth(a.id) - countInMonth(b.id);
+                            });
 
                             const picked = bestMatches[0];
-                            day.items.push({ ...picked, sales: '', _visitIndex: 'pad_auto' });
+                            day.items.push({
+                                ...picked,
+                                sales: picked.dailySales?.[day.date] || '',
+                                _visitIndex: 'kpi_minimum'
+                            });
+                            addedMinimumVisits++;
                         }
                     });
 
@@ -631,9 +1309,39 @@
                         newSchedule[d.week][d.dayKey].items = d.items;
                     });
 
+                    const underfilledDays = allAvailableDays.filter(d => d.items.length < minDailyAgents);
+                    const missingMinimumVisits = underfilledDays.reduce((sum, d) => sum + (minDailyAgents - d.items.length), 0);
+                    const dayKmStats = allAvailableDays
+                        .map(d => ({ ...d, km: routeKmForItems(d.items) }))
+                        .filter(d => d.km !== null);
+                    const overKmDays = dayKmStats.filter(d => d.km > maxDailyKm);
+                    const missingGpsCount = routeCustomers.filter(c => !isUsableLocation(c.location)).length;
+                    const hasHomeGps = isUsableLocation(homeLocation);
+                    let geoNote = '';
+                    if (!hasHomeGps) {
+                        geoNote = ' Chưa có GPS điểm xuất phát nên chưa kiểm soát được km/ngày.';
+                    } else if (missingGpsCount > 0) {
+                        geoNote = ` Cần bổ sung GPS cho ${missingGpsCount} đại lý để kiểm soát km chính xác.`;
+                    } else if (overKmDays.length > 0) {
+                        const maxKm = Math.max(...overKmDays.map(d => d.km));
+                        geoNote = ` Cảnh báo: ${overKmDays.length} ngày vượt ${maxDailyKm} km/ngày, cao nhất khoảng ${maxKm} km.`;
+                    } else {
+                        geoNote = ` Quãng đường GPS nằm trong giới hạn ${maxDailyKm} km/ngày.`;
+                    }
+                    const hasRoutingError = unassignedVisits > 0 || underfilledDays.length > 0 || overKmDays.length > 0;
+
                     setFullMonthSchedule(newSchedule);
                     setActiveTab('schedule'); setActiveWeekTab(1); setSearchTerm('');
-                    setStatus({ type: 'success', text: `Chia lịch thành công! Ưu tiên KH Trọng điểm & Tuyến khu vực.` });
+                    setStatus({
+                        type: hasRoutingError ? 'error' : 'success',
+                        text: unassignedVisits > 0
+                            ? `Còn ${unassignedVisits} lượt chưa xếp vì các ngày đã đạt tối đa ${maxDailyAgents} đại lý.${autoPeriodNote}${geoNote}`
+                            : underfilledDays.length > 0
+                                ? `Chưa thể đạt tối thiểu ${minDailyAgents} đại lý ở ${underfilledDays.length} ngày, còn thiếu ${missingMinimumVisits} lượt. Cần ít nhất ${minDailyAgents} đại lý khác nhau.${autoPeriodNote}${geoNote}`
+                                : overKmDays.length > 0
+                                    ? `Đã tạo lịch nhưng còn ngày vượt giới hạn địa lý.${autoPeriodNote}${geoNote}`
+                                    : `Chia lịch thành công: mỗi ngày từ ${minDailyAgents} đến ${maxDailyAgents} đại lý${rebalancedVisits > 0 ? `, đã cân lại ${rebalancedVisits} lượt` : ''}${addedMinimumVisits > 0 ? ` và bổ sung ${addedMinimumVisits} lượt để đủ KPI` : ''}.${autoPeriodNote}${geoNote}`
+                    });
                 }, 500);
             };
 
@@ -644,22 +1352,27 @@
                 const qMonths = [(currentQuarter-1)*3 + 1, (currentQuarter-1)*3 + 2, (currentQuarter-1)*3 + 3];
 
                 customers.forEach(c => {
-                    let scheduleSales = 0;
+                    const effectiveDailySales = {};
+                    if (c.dailySales) {
+                        for (let d = 1; d <= 31; d++) {
+                            const importedValue = Number(c.dailySales[d]) || 0;
+                            if (importedValue > 0) effectiveDailySales[d] = importedValue;
+                        }
+                    }
+
                     if (fullMonthSchedule) {
                         Object.keys(fullMonthSchedule).forEach(week => {
                             Object.values(fullMonthSchedule[week] || {}).forEach(day => {
                                 const item = day.items.find(i => i.id === c.id);
-                                if (item && item.sales) scheduleSales += Number(item.sales) || 0;
+                                if (item && day.date && item.sales !== '' && item.sales !== null && item.sales !== undefined) {
+                                    effectiveDailySales[day.date] = Number(item.sales) || 0;
+                                }
                             });
                         });
                     }
-                    
-                    let fallbackDaysSum = 0;
-                    if (c.dailySales) {
-                        for(let d=1; d<=31; d++) fallbackDaysSum += Number(c.dailySales[d]) || 0;
-                    }
 
-                    const mSales = scheduleSales > 0 ? scheduleSales : (fallbackDaysSum > 0 ? fallbackDaysSum : (Number(c.monthlySales?.[selectedMonth]) || 0));
+                    const dailySalesSum = Object.values(effectiveDailySales).reduce((sum, value) => sum + (Number(value) || 0), 0);
+                    const mSales = dailySalesSum > 0 ? dailySalesSum : (Number(c.monthlySales?.[selectedMonth]) || 0);
                     currentMonthSales += mSales;
                     
                     if (c.type === 'TRONG_DIEM') trongDiemSales += mSales;
@@ -687,7 +1400,7 @@
                 
                 try {
                     const wb = new window.ExcelJS.Workbook();
-                    wb.creator = 'MPE Routing System';
+                    wb.creator = settings.appTitle || DEFAULT_SETTINGS.appTitle;
                     const currentQuarterCol = Math.ceil(selectedMonth / 3);
                     
                     const wsForm = wb.addWorksheet('DOANH SỐ SALE OUT', { views: [{ state: 'frozen', ySplit: 8 }] });
@@ -697,7 +1410,7 @@
                     wsForm.columns = columns;
 
                     wsForm.mergeCells('D2:K2'); wsForm.getCell('D2').value = `BẢNG THEO DÕI DOANH SỐ KHÁCH HÀNG NĂM ${selectedYear}`; wsForm.getCell('D2').font = { bold: true, size: 14 };
-                    wsForm.mergeCells('D3:F3'); wsForm.getCell('D3').value = 'NVKD : Huỳnh Minh Thuận';
+                    wsForm.mergeCells('D3:F3'); wsForm.getCell('D3').value = `NVKD : ${settings.salesperson || ''}`;
                     wsForm.mergeCells('D4:F4'); wsForm.getCell('D4').value = `CHỈ TIÊU QUÝ ${currentQuarterCol}`; wsForm.getCell('G4').value = Number(targetQuarter); wsForm.getCell('G4').numFmt = '#,##0';
                     wsForm.mergeCells('D5:F5'); wsForm.getCell('D5').value = 'THỰC HIỆN:'; wsForm.mergeCells('D6:F6'); wsForm.getCell('D6').value = 'TỈ LỆ % :'; 
 
@@ -716,7 +1429,9 @@
                             const exactDate = dayData.date; 
                             if (exactDate) { 
                                 dayData.items.forEach(item => { 
-                                    if (item.sales && !isNaN(item.sales)) salesMap[item.id].days[exactDate - 1] += Number(item.sales); 
+                                    if (salesMap[item.id] && item.sales && !isNaN(item.sales)) {
+                                        salesMap[item.id].days[exactDate - 1] = Number(item.sales);
+                                    }
                                 }); 
                             } 
                         }); 
@@ -727,17 +1442,15 @@
 
                     customers.forEach((c, idx) => {
                         const r = wsForm.getRow(rowIndex);
-                        r.getCell(1).value = idx + 1; r.getCell(2).value = c.name; r.getCell(3).value = c.phone; r.getCell(4).value = c.xa; r.getCell(5).value = c.huyen; r.getCell(6).value = 'TIỀN GIANG'; r.getCell(7).value = 'LÊ NGUYỄN';
+                        r.getCell(1).value = idx + 1; r.getCell(2).value = c.name; r.getCell(3).value = c.phone; r.getCell(4).value = c.xa; r.getCell(5).value = c.huyen; r.getCell(6).value = settings.province || ''; r.getCell(7).value = settings.distributor || '';
                         
-                        let finalDailySales = [...salesMap[c.id].days];
-                        let daysSum = finalDailySales.reduce((a,b)=>a+b, 0);
-
-                        if (daysSum === 0 && c.dailySales) {
-                            for(let d = 1; d <= 31; d++) {
-                                if (c.dailySales[d]) finalDailySales[d-1] = c.dailySales[d];
+                        let finalDailySales = Array.from({ length: 31 }, (_, dayIdx) => Number(c.dailySales?.[dayIdx + 1]) || 0);
+                        for (let dayIdx = 0; dayIdx < 31; dayIdx++) {
+                            if (salesMap[c.id].days[dayIdx] > 0) {
+                                finalDailySales[dayIdx] = salesMap[c.id].days[dayIdx];
                             }
-                            daysSum = finalDailySales.reduce((a,b)=>a+b, 0);
                         }
+                        let daysSum = finalDailySales.reduce((a,b)=>a+b, 0);
 
                         let mSales = {};
 
@@ -837,7 +1550,9 @@
 
                             let sttCounter = 1;
                             dayData.items.forEach(c => {
-                                const s = c.sales && !isNaN(c.sales) ? Number(c.sales) : 0;
+                                const s = c.sales && !isNaN(c.sales)
+                                    ? Number(c.sales)
+                                    : (Number(c.dailySales?.[exactDate]) || 0);
                                 schedSalesTotal += s;
                                 const formattedAddress = [c.xa, c.huyen].filter(Boolean).join(', ');
                                 const typeName = c.type === 'TRONG_DIEM' ? 'Trọng Điểm' : c.type === 'TUONG_TAC' ? 'Tương Tác' : 'Duy Trì';
@@ -889,7 +1604,7 @@
                     const ratioVal = targetQuarter > 0 ? (salesStats.totalQuarter / targetQuarter) * 100 : 0;
                     const ratioStr = parseFloat(ratioVal.toFixed(2)) + '%';
                     
-                    const shareText = `Ngày ${dateString}\n- Doanh số ngày: ${formatVND(schedSalesTotal)}\n- Doanh số cộng dồn: ${formatVND(salesStats.totalQuarter)}\n- Chỉ tiêu sell out Q${currentQuarterCol}: ${formatVND(targetQuarter)}\n- Tỉ lệ ${ratioStr}`;
+                    const shareText = `Ngày ${dateString}\n- Doanh số trên lịch: ${formatVND(schedSalesTotal)}\n- Doanh số cộng dồn: ${formatVND(salesStats.totalQuarter)}\n- Chỉ tiêu quý ${currentQuarterCol}: ${formatVND(targetQuarter)}\n- Tỉ lệ ${ratioStr}`;
 
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try { 
@@ -923,14 +1638,20 @@
             );
             
             const estimatedVisits = (trongDiemCount * 3) + (duyTriCount * 2) + (tuongTacCount * 1);
-            const minRequiredVisits = 200; 
-            const maxAllowedVisits = 288; 
+            const workdayCount = Object.values(buildMonthCalendar(selectedYear, selectedMonth))
+                .reduce((sum, week) => sum + Object.keys(week).length, 0);
+            const minRequiredVisits = workdayCount * minDailyAgents; 
+            const maxAllowedVisits = workdayCount * maxDailyAgents; 
+            const yearOptions = Array.from({ length: 11 }, (_, idx) => currentObjDate.getFullYear() - 5 + idx);
+            if (!yearOptions.includes(selectedYear)) yearOptions.push(selectedYear);
+            yearOptions.sort((a, b) => a - b);
             
             let kpiStatus = 'good';
             if (estimatedVisits < minRequiredVisits) kpiStatus = 'under';
             else if (estimatedVisits > maxAllowedVisits) kpiStatus = 'over';
 
-            const gpsCount = customers.filter(c => c.location).length;
+            const gpsCount = customers.filter(c => isUsableLocation(c.location)).length;
+            const gpsWeakCount = customers.filter(c => isUsableLocation(c.location) && hasWeakAccuracy(c.location)).length;
             const gpsPercent = customers.length > 0 ? Math.round((gpsCount / customers.length) * 100) : 0;
 
             return (
@@ -953,11 +1674,14 @@
 
                     <div className="max-w-7xl mx-auto space-y-4">
                         <div className="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-                            <div className="p-4 flex flex-col md:flex-row justify-between items-center border-b border-slate-100">
+                            <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-3 border-b border-slate-100">
                                 <div className="text-center md:text-left w-full">
-                                    <h1 className="text-2xl font-black text-blue-900 tracking-tight uppercase">Lịch Chăm Sóc Khách Hàng</h1>
+                                    <h1 className="text-2xl font-black text-blue-900 tracking-tight uppercase">{settings.appTitle || DEFAULT_SETTINGS.appTitle}</h1>
                                     <p className="text-sm font-medium text-slate-500 mt-1">Quản lý Tuyến & Doanh số</p>
                                 </div>
+                                <button onClick={() => openQuoteForCustomer()} className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg font-black text-sm flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 whitespace-nowrap">
+                                    <i className="fa-solid fa-file-invoice-dollar"></i> BẢNG BÁO GIÁ
+                                </button>
                             </div>
 
                             <div className="flex bg-slate-50 p-2 overflow-x-auto w-full border-b border-slate-100 justify-start md:justify-center gap-1">
@@ -972,6 +1696,30 @@
                             <div className={`px-4 py-2.5 text-[13px] font-bold flex items-center gap-2 ${status.type === 'error' ? 'bg-red-50 text-red-700' : status.type === 'loading' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'}`}>
                                 {status.type === 'error' ? <i className="fa-solid fa-circle-exclamation"></i> : status.type === 'loading' ? <i className="fa-solid fa-rotate animate-spin"></i> : <i className="fa-solid fa-circle-check"></i>} {status.text}
                             </div>
+                            <details className="border-t border-slate-100 bg-white">
+                                <summary className="cursor-pointer select-none px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50">
+                                    <i className="fa-solid fa-sliders mr-2 text-blue-600"></i>Thiết lập ứng dụng & chỉ tiêu tuyến
+                                </summary>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 px-4 pb-4">
+                                    <input type="text" value={settings.appTitle} onChange={e => setSettings(prev => ({ ...prev, appTitle: e.target.value }))} placeholder="Tên ứng dụng" className="border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                                    <input type="text" value={settings.salesperson} onChange={e => setSettings(prev => ({ ...prev, salesperson: e.target.value }))} placeholder="Tên nhân viên kinh doanh" className="border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                                    <input type="text" value={settings.province} onChange={e => setSettings(prev => ({ ...prev, province: e.target.value }))} placeholder="Tỉnh / Thành phố" className="border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                                    <input type="text" value={settings.distributor} onChange={e => setSettings(prev => ({ ...prev, distributor: e.target.value }))} placeholder="Nhà phân phối" className="border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                                    <input type="text" value={settings.quoteBaseUrl} onChange={e => setSettings(prev => ({ ...prev, quoteBaseUrl: e.target.value }))} placeholder="Link bảng báo giá (trống = cùng domain)" className="border border-slate-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" />
+                                    <label className="text-xs font-bold text-slate-600">
+                                        Tối thiểu đại lý/ngày
+                                        <input type="number" min="1" max="30" step="1" value={minDailyAgents} onChange={e => updateDailyLimit('minDailyAgents', e.target.value)} className="mt-1 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 outline-none focus:border-blue-500" />
+                                    </label>
+                                    <label className="text-xs font-bold text-slate-600">
+                                        Tối đa đại lý/ngày
+                                        <input type="number" min="1" max="30" step="1" value={maxDailyAgents} onChange={e => updateDailyLimit('maxDailyAgents', e.target.value)} className="mt-1 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 outline-none focus:border-blue-500" />
+                                    </label>
+                                    <label className="text-xs font-bold text-slate-600">
+                                        Tối đa km/ngày
+                                        <input type="number" min="20" max="300" step="5" value={maxDailyKm} onChange={e => updateRouteKmLimit(e.target.value)} className="mt-1 w-full border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-800 outline-none focus:border-blue-500" />
+                                    </label>
+                                </div>
+                            </details>
                         </div>
 
                         {activeTab === 'upload' && (
@@ -1054,12 +1802,8 @@
                                                         <button onClick={() => expandedCustomer === c.id ? setExpandedCustomer(null) : openEditForm(c)} className="text-[11px] bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold px-2.5 py-1.5 rounded transition border border-slate-200 flex items-center gap-1.5">
                                                             <i className="fa-solid fa-pencil"></i> Sửa Thông Tin & DS
                                                         </button>
-                                                        <button onClick={() => {
-                                                            const url = new URL('https://thuanstore.com/');
-                                                            url.searchParams.append('kh', c.name);
-                                                            window.open(url.toString(), '_blank');
-                                                        }} className="text-[11px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1.5 rounded transition border border-emerald-200 flex items-center gap-1.5 shadow-sm active:scale-95">
-                                                            <i className="fa-solid fa-file-invoice-dollar"></i> Tạo Báo Giá
+                                                        <button onClick={() => openQuoteForCustomer(c)} className="text-[11px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1.5 rounded transition border border-emerald-200 flex items-center gap-1.5 shadow-sm active:scale-95">
+                                                            <i className="fa-solid fa-file-invoice-dollar"></i> Báo Giá
                                                         </button>
                                                     </div>
                                                     <button onClick={() => setCustomerToDelete(c)} className="w-7 h-7 flex items-center justify-center hover:bg-red-50 text-slate-400 hover:text-red-500 rounded transition-colors" title="Xóa KH">
@@ -1125,7 +1869,7 @@
                                             <div className="flex justify-between items-start mb-2">
                                                 <div className="text-[11px] font-bold uppercase text-slate-600">Công suất dự kiến</div>
                                                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${kpiStatus === 'under' ? 'bg-orange-100 text-orange-700' : kpiStatus === 'over' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}`}>
-                                                    {kpiStatus === 'under' ? 'THIẾU' : kpiStatus === 'over' ? 'QUÁ TẢI' : 'ĐẠT'}
+                                                    {kpiStatus === 'under' ? 'CẦN BÙ' : kpiStatus === 'over' ? 'QUÁ TẢI' : 'ĐẠT'}
                                                 </span>
                                             </div>
                                             <div className="flex items-end gap-1.5">
@@ -1133,7 +1877,7 @@
                                                 <div className="text-sm font-bold text-slate-400 mb-1">lượt/tháng</div>
                                             </div>
                                             <div className="text-[11px] text-slate-500 font-medium mt-2 pt-2 border-t border-slate-200">
-                                                Mục tiêu: <strong>{minRequiredVisits} - 288</strong> lượt.
+                                                Mục tiêu: <strong>{minRequiredVisits} - {maxAllowedVisits}</strong> lượt ({workdayCount} ngày làm việc).
                                             </div>
                                         </div>
 
@@ -1143,7 +1887,7 @@
                                                 <div className={`text-3xl font-black ${gpsPercent === 100 ? 'text-blue-600' : 'text-slate-700'}`}>{gpsPercent}%</div>
                                             </div>
                                             <div className="text-[11px] text-slate-500 font-medium mt-2 pt-2 border-t border-slate-200">
-                                                <strong>{gpsCount}/{customers.length}</strong> KH đã lưu tọa độ
+                                                <strong>{gpsCount}/{customers.length}</strong> KH đã lưu tọa độ{gpsWeakCount > 0 ? `, ${gpsWeakCount} điểm GPS yếu` : ''}
                                             </div>
                                         </div>
 
@@ -1153,7 +1897,9 @@
                                                 {kpiStatus === 'good' ? (
                                                     <span>Tiến độ <b>TỐI ƯU</b>. Đủ điều kiện đáp ứng KPI. Bấm Tạo lịch để triển khai.</span>
                                                 ) : kpiStatus === 'under' ? (
-                                                    <span>Hụt KPI. <b>Cần mở mới thêm KH</b> hoặc nâng KH lên Trọng Điểm/Duy Trì.</span>
+                                                    customers.length < minDailyAgents
+                                                        ? <span>Chưa đủ đại lý. <b>Cần ít nhất {minDailyAgents} đại lý khác nhau</b> để bảo đảm một ngày làm việc.</span>
+                                                        : <span>Lịch sẽ tự <b>bổ sung {minRequiredVisits - estimatedVisits} lượt chăm sóc</b> để mỗi ngày đạt tối thiểu {minDailyAgents} đại lý.</span>
                                                 ) : (
                                                     <span>Quá tải. <b>Cần giảm tải</b>: Đổi bớt KH Trọng Điểm xuống Duy Trì/Tương Tác.</span>
                                                 )}
@@ -1253,7 +1999,7 @@
                                         <div className="flex justify-between items-center bg-slate-50 border border-slate-200 p-2.5 rounded-lg">
                                             <div>
                                                 <h4 className="font-bold text-slate-800 text-sm flex items-center gap-1.5"><i className="fa-solid fa-house-chimney text-blue-600"></i> Điểm Xuất Phát (Nhà)</h4>
-                                                <p className="text-[11px] text-slate-500 font-medium mt-0.5">{homeLocation ? 'Đã lưu định vị' : 'Chưa thiết lập (Dùng để tính km lộ trình)'}</p>
+                                                <p className="text-[11px] text-slate-500 font-medium mt-0.5">{homeLocation ? `Đã lưu định vị ${formatAccuracy(homeLocation)}` : 'Chưa thiết lập (Dùng để tính km lộ trình)'} - Giới hạn {maxDailyKm} km/ngày</p>
                                             </div>
                                             <div className="flex gap-2">
                                                 <button onClick={handleSetHomeLocation} className="bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 px-3 py-1.5 rounded-md text-xs font-bold transition shadow-sm">{homeLocation ? 'Cập nhật' : 'Định vị'}</button>
@@ -1270,14 +2016,28 @@
                                                     setSelectedMonth(newM);
                                                     setFullMonthSchedule(null);
                                                     setCustomers(prev => prev.map(c => ({...c, dailySales: {}})));
+                                                    setActiveTab('analysis');
                                                     setStatus({ type: 'success', text: `Đã chuyển sang Tháng ${newM} và làm sạch DS Ngày cũ.` });
                                                 }
                                             }} className="bg-transparent outline-none cursor-pointer text-blue-700">
                                                 {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => <option key={m} value={m}>{m}</option>)}
                                             </select>
                                             <span className="mx-1">/</span>
-                                            <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))} className="bg-transparent outline-none cursor-pointer text-blue-700">
-                                                {[2023, 2024, 2025, 2026, 2027, 2028].map(y => <option key={y} value={y}>{y}</option>)}
+                                            <select value={selectedYear} onChange={e => {
+                                                const newYear = Number(e.target.value);
+                                                if (newYear !== selectedYear) {
+                                                    setSelectedYear(newYear);
+                                                    setFullMonthSchedule(null);
+                                                    setCustomers(prev => prev.map(c => ({
+                                                        ...c,
+                                                        dailySales: {},
+                                                        monthlySales: emptyMonthlySales()
+                                                    })));
+                                                    setActiveTab('analysis');
+                                                    setStatus({ type: 'success', text: `Đã chuyển sang năm ${newYear} và làm sạch lịch/doanh số của năm cũ.` });
+                                                }
+                                            }} className="bg-transparent outline-none cursor-pointer text-blue-700">
+                                                {yearOptions.map(y => <option key={y} value={y}>{y}</option>)}
                                             </select>
                                         </div>
                                         <button onClick={exportToExcelReal} className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold flex items-center justify-center gap-2 shadow-sm transition-transform active:scale-95 text-sm">
@@ -1308,9 +2068,14 @@
                                         const displayedItems = data.items.filter(c => normalizeStr(c.name).includes(searchStr));
                                         
                                         let kpiColor = 'bg-emerald-100 text-emerald-700 border-emerald-200';
-                                        if (count < 8) kpiColor = 'bg-orange-100 text-orange-700 border-orange-200';
+                                        if (count < minDailyAgents) kpiColor = 'bg-orange-100 text-orange-700 border-orange-200';
+                                        else if (count > maxDailyAgents) kpiColor = 'bg-red-100 text-red-700 border-red-200';
 
                                         const dateDisplay = data.date ? `(Ngày ${data.date}/${selectedMonth})` : '';
+                                        const dayKm = estimateRoundTripKm(homeLocation, data.items);
+                                        const dayKmColor = dayKm !== null && dayKm > maxDailyKm
+                                            ? 'bg-red-100 text-red-700 border-red-200'
+                                            : 'bg-slate-100 text-slate-600 border-slate-200';
 
                                         return (
                                             <div key={key} className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
@@ -1319,7 +2084,10 @@
                                                         <h3 className="font-black text-slate-800 text-lg">
                                                             {data.day} <span className="text-sm font-bold text-blue-600">{dateDisplay}</span>
                                                         </h3>
-                                                        <div className={`px-2 py-1 text-[11px] font-bold rounded-md border ${kpiColor}`}>{count}/12 Đại lý</div>
+                                                        <div className="flex flex-col items-end gap-1">
+                                                            <div className={`px-2 py-1 text-[11px] font-bold rounded-md border ${kpiColor}`}>{count}/{maxDailyAgents} Đại lý</div>
+                                                            {dayKm !== null && <div className={`px-2 py-1 text-[11px] font-bold rounded-md border ${dayKmColor}`}>{dayKm} km</div>}
+                                                        </div>
                                                     </div>
                                                     <div className="flex justify-between items-center">
                                                         <div className="text-[11px] text-slate-600 flex items-center gap-1.5 font-bold bg-white px-2 py-1 rounded border border-slate-200 w-max truncate mr-2">
@@ -1357,7 +2125,7 @@
                                                                         <div className="flex items-center gap-2">
                                                                             <i className="fa-solid fa-sack-dollar text-green-600 w-4 text-center"></i>
                                                                             <SaleInputCell 
-                                                                                initialValue={c.sales} 
+                                                                                initialValue={c.sales || (data.date ? c.dailySales?.[data.date] || '' : '')} 
                                                                                 onSave={(val) => handleSalesChange(activeWeekTab, key, c.id, val)}
                                                                             />
                                                                         </div>
@@ -1366,12 +2134,13 @@
                                                                             <div className="flex items-center gap-2 text-xs">
                                                                                 <i className="fa-solid fa-map-location-dot text-slate-400 w-4 text-center"></i>
                                                                                 {loc ? (
-                                                                                    <span className="text-slate-600 font-medium text-[11px]">Cách nhà: <span className="text-blue-600 font-bold">{distance} km</span></span>
+                                                                                    <span className="text-slate-600 font-medium text-[11px]">Cách nhà: <span className="text-blue-600 font-bold">{distance} km</span>{formatAccuracy(loc) && <span className={hasWeakAccuracy(loc) ? 'text-orange-600 font-bold' : 'text-slate-400'}> / GPS {formatAccuracy(loc)}</span>}</span>
                                                                                 ) : (
                                                                                     <span className="text-slate-400 italic text-[11px]">Chưa có tọa độ</span>
                                                                                 )}
                                                                             </div>
                                                                             <div className="flex gap-1.5">
+                                                                                <button onClick={() => openQuoteForCustomer(c)} className="text-[10px] bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-2 py-1 rounded border border-emerald-200 font-bold transition">Báo giá</button>
                                                                                 <button onClick={() => handleSetCustomerLocation(c.id)} className="text-[10px] bg-slate-50 hover:bg-slate-100 text-slate-600 px-2 py-1 rounded border border-slate-200 font-bold transition">{loc ? 'Cập nhật' : 'GPS'}</button>
                                                                                 {loc && <button onClick={() => handleRemoveCustomerLocation(c.id)} className="text-[10px] bg-white hover:bg-red-50 text-red-500 px-2 py-1 rounded border border-slate-200 font-bold transition">Xóa</button>}
                                                                             </div>
