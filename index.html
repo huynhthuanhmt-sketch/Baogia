@@ -209,33 +209,18 @@
             .cv-footer-pulse { animation: none !important; }
 
             .app-language-switcher {
-                position: fixed;
-                top: max(0.7rem, env(safe-area-inset-top));
-                right: 0.75rem;
-                z-index: 90;
                 display: inline-flex;
                 align-items: center;
-                gap: 0.18rem;
-                border: 1px solid rgba(148, 163, 184, 0.18);
-                background: rgba(15, 23, 42, 0.72);
+                gap: 0.14rem;
                 color: rgba(226, 232, 240, 0.8);
-                -webkit-backdrop-filter: blur(18px);
-                backdrop-filter: blur(18px);
                 border-radius: 999px;
-                padding: 0.2rem;
-                box-shadow: 0 12px 32px rgba(2, 6, 23, 0.22), inset 0 1px 0 rgba(255,255,255,0.08);
-                transition: left 0.24s var(--ui-ease), right 0.24s var(--ui-ease), transform 0.24s var(--ui-ease), opacity 0.2s var(--ui-ease);
-            }
-            body:not(.screen-landing) .app-language-switcher {
-                left: 50%;
-                right: auto;
-                transform: translateX(-50%);
+                padding: 0;
             }
             .app-lang-btn {
-                min-width: 2.25rem;
-                height: 1.9rem;
+                min-width: 2.05rem;
+                height: 2.05rem;
                 border-radius: 999px;
-                font-size: 0.68rem;
+                font-size: 0.66rem;
                 font-weight: 760;
                 letter-spacing: 0.02em;
                 transition: background 0.2s var(--ui-ease), color 0.2s var(--ui-ease), transform 0.2s var(--ui-ease);
@@ -689,11 +674,6 @@
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
 
     <datalist id="dbProductList"></datalist>
-
-    <nav id="appLanguageSwitcher" class="app-language-switcher" aria-label="Ngôn ngữ ứng dụng">
-        <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
-        <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
-    </nav>
 
     <div id="customToast">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -1386,11 +1366,16 @@
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.228 9c.549-1.165 1.979-2 3.772-2 2.21 0 4 1.343 4 3 0 1.305-1.112 2.416-2.666 2.83-.798.213-1.334.922-1.334 1.748V15m0 3h.01"></path></svg>
                     </button>
                     <span class="h-4 w-px bg-slate-400/20"></span>
+                    <nav id="appLanguageSwitcher" class="app-language-switcher" aria-label="Ngôn ngữ ứng dụng">
+                        <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
+                        <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+                    </nav>
+                    <span class="h-4 w-px bg-slate-400/20"></span>
                     <button id="btnOpenCareerProfileFooter" class="resume-launch-button cv-footer-pulse active:scale-95" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân">
                         <svg class="shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M15.75 7.5a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0"></path></svg>
                     </button>
                 </div>
-                <div class="landing-footer-copy" data-i18n="footer.copyright">© 2026 Thuận Store. Bảo lưu mọi quyền.</div>
+                <div class="landing-footer-copy" data-i18n="footer.copyright">© 2026 Thuận Huỳnh. All rights reserved.</div>
             </div>
         </footer>
     </main>
@@ -1980,7 +1965,7 @@
             const keyed = {
                 "landing.slogan": { vi: "CHẠM ĐẾN TƯƠNG LAI", en: "TOUCH THE FUTURE" },
                 "landing.mainTitle": { vi: "BẢNG<br>BÁO GIÁ", en: "QUOTE<br>BUILDER" },
-                "footer.copyright": { vi: "© 2026 Thuận Store. Bảo lưu mọi quyền.", en: "© 2026 Thuận Store. All rights reserved." }
+                "footer.copyright": { vi: "© 2026 Thuận Huỳnh. All rights reserved.", en: "© 2026 Thuận Huỳnh. All rights reserved." }
             };
             const toEn = {
                 "Thông báo": "Notice",
@@ -2110,7 +2095,10 @@
                 "ĐÓNG BẢNG": "CLOSE QUOTE",
                 "Công Cụ Xuất": "Export Tools",
                 "Đang xử lý xuất file...": "Exporting file...",
+                "Bản Xem Trước": "Preview",
                 "Kính gửi khách hàng:": "Dear customer:",
+                "STT": "No.",
+                "SL": "Qty",
                 "Tên Sản Phẩm": "Product Name",
                 "Đơn Giá": "Unit Price",
                 "Thành Tiền": "Line Total",
@@ -2389,12 +2377,13 @@
                     btn.setAttribute("aria-pressed", active ? "true" : "false");
                 });
             };
-            const set = (lang, options = {}) => {
-                currentLang = normalizeLang(lang);
-                localStorage.setItem(APP_LANG_KEY, currentLang);
-                apply(document.body);
-                if (options.syncCareer !== false && typeof setCareerLanguage === "function") setCareerLanguage(currentLang);
-            };
+        const set = (lang, options = {}) => {
+            currentLang = normalizeLang(lang);
+            localStorage.setItem(APP_LANG_KEY, currentLang);
+            apply(document.body);
+            if (window.ProductLanguage) ProductLanguage.refreshVisible();
+            if (options.syncCareer !== false && typeof setCareerLanguage === "function") setCareerLanguage(currentLang);
+        };
             const init = () => {
                 currentLang = normalizeLang(localStorage.getItem(APP_LANG_KEY) || "vi");
                 document.querySelectorAll("[data-app-lang]").forEach(btn => {
@@ -4488,6 +4477,590 @@
             [2080,"FPD3-6060/40T","\u0110\u00e8n led panel 40W t\u00edch h\u1ee3p b\u1ed9 ngu\u1ed3n, 600x600x28mm AST",798400,822400,0.030060120240481]
         ];
 
+        const ProductLanguage = (() => {
+            const termSource = `
+chuông cửa không dây, không pin=>wireless battery-free doorbell
+chuông cửa không dây=>wireless doorbell
+chuông điện=>electric bell
+chuông cửa=>doorbell
+đèn báo đừng làm phiền=>do-not-disturb indicator
+quạt hút âm tường=>wall-mounted exhaust fan
+quạt hút ốp trần=>ceiling-mounted exhaust fan
+quạt hút=>exhaust fan
+mô tơ sử dụng bạc đạn=>ball-bearing motor
+mô tơ=>motor
+bạc đạn=>ball bearing
+ổ cắm công nghiệp di động=>portable industrial socket
+ổ cắm di động công suất cao=>high-power portable socket
+ổ cắm di động gồm=>portable socket with
+ổ cắm từ điện=>panel-mount socket
+ổ cắm kết hợp công tắc=>switched socket outlet
+ổ cắm âm sàn=>floor socket
+ổ cắm tv=>TV outlet
+điện thoại=>telephone
+bút thử điện=>voltage tester
+đèn pin đa năng=>multi-purpose flashlight
+đèn chiếu gần=>near-field light
+đèn pin=>flashlight
+đèn led bàn cảm ứng=>touch-control LED desk lamp
+đèn led bàn=>LED desk lamp
+đèn bàn=>desk lamp
+đồng hồ điện tử đa chức năng=>multi-function digital clock
+đồng hồ điện tử=>digital clock
+đa chức năng=>multi-function
+cảm ứng=>touch-control
+sạc nhanh=>fast charger
+vợt muỗi=>mosquito swatter
+đèn hút muỗi=>mosquito-trap lamp
+hút muỗi=>mosquito trap
+hộp âm tường=>flush-mounted wall box
+hộp nhựa=>plastic box
+hộp che=>protective cover box
+hộp=>box
+nắp che đế âm=>flush box cover
+nắp che=>cover cap
+đế sắt cho ổ cắm âm sàn=>steel floor socket base
+đế sắt=>steel back box
+đế nhựa=>plastic back box
+đế âm vuông chống cháy=>fire-retardant square flush box
+đế âm vuông=>square flush box
+đế âm=>flush box
+đế nổi=>surface-mounted box
+chống cháy=>fire-retardant
+ống ruột gà=>flexible conduit
+ống pvc=>PVC conduit
+lò xo uốn ống=>conduit bending spring
+nẹp bán nguyệt=>half-round trunking
+hộp nối 2 ngã thẳng=>2-way straight junction box
+nắp nối ống đàn hồi=>flexible conduit coupling cap
+nối trơn giảm=>plain reducing coupling
+nối trơn=>plain coupling
+co nối=>elbow connector
+t nối=>T connector
+nối răng=>threaded coupling
+kẹp đỡ ống=>conduit support clip
+kẹp ống=>conduit clip
+không nắp=>without cover
+có nắp=>with cover
+ngã thẳng=>straight way
+ống đàn hồi=>flexible conduit
+ống=>conduit
+cáp mạng=>network cable
+cáp tivi=>TV coaxial cable
+cáp điện thoại=>telephone cable
+cáp=>cable
+băng keo điện=>electrical insulation tape
+điều khiển nâng - hạ bằng điện=>electric lift control
+nâng - hạ bằng điện=>electric lift
+máy lọc không khí=>air purifier
+máy đo chất lượng không khí=>air quality monitor
+máy dò chất lượng không khí=>air quality detector
+cảm biến hiện diện=>presence sensor
+cảm biến quang=>photoelectric sensor
+cảm biến khói và báo cháy=>smoke and fire alarm sensor
+cảm biến khói=>smoke sensor
+cảm biến nước=>water leak sensor
+còi báo động=>alarm siren
+có âm thanh và nháy đèn=>with sound and flashing light
+sóng zigbee=>Zigbee protocol
+báo cháy=>fire alarm
+hiện diện=>presence
+không khí=>air
+mặt phẳng=>flat face
+xám bạc=>silver gray
+đường=>ways
+cuộn=>roll
+nghiêng=>angled
+wifi=>Wi-Fi
+bluetooth=>Bluetooth
+zigbee=>Zigbee
+di động=>portable
+công suất cao=>high-power
+gồm=>with
+loại=>type
+treo=>suspension
+2 dây=>2-wire
+dây=>wire
+phi=>Ø
+đèn led downlight âm điều chỉnh góc chiếu mặt tròn=>round adjustable recessed LED downlight
+đèn led downlight âm điều chỉnh góc chiếu mặt vuông=>square adjustable recessed LED downlight
+đèn led downlight âm điều chỉnh góc=>adjustable recessed LED downlight
+led downlight âm trần điều chỉnh hướng chiếu sáng=>adjustable recessed LED downlight
+đèn led downlight âm chống nước=>waterproof recessed LED downlight
+đèn led downlight âm trần=>recessed LED downlight
+led downlight âm trần=>recessed LED downlight
+đèn led downlight nổi=>surface-mounted LED downlight
+đèn led downlight viền bạc=>silver-trim LED downlight
+đèn led downlight viền vàng=>gold-trim LED downlight
+đèn led downlight viền trắng=>white-trim LED downlight
+đèn led downlight tròn nổi=>surface-mounted round LED downlight
+led downlight tròn nổi=>surface-mounted round LED downlight
+đèn led downlight vuông nổi=>surface-mounted square LED downlight
+led downlight vuông nổi=>surface-mounted square LED downlight
+đèn led downlight vuông=>square LED downlight
+đèn led downlight tròn=>round LED downlight
+đèn led downlight phi=>LED downlight diameter
+đèn led downlight=>LED downlight
+led downlight=>LED downlight
+đèn led multi panel tròn=>round multi LED panel
+đèn led multi panel vuông=>square multi LED panel
+đèn led panel nhỏ tròn âm=>small recessed round LED panel
+led panel nhỏ tròn âm=>small recessed round LED panel
+đèn led panel tròn mỏng âm=>slim recessed round LED panel
+led panel tròn mỏng âm=>slim recessed round LED panel
+đèn led panel tròn âm=>recessed round LED panel
+led panel tròn âm=>recessed round LED panel
+đèn led panel vuông âm=>recessed square LED panel
+led panel vuông âm=>recessed square LED panel
+đèn led panel tròn nổi=>surface-mounted round LED panel
+led panel tròn nổi=>surface-mounted round LED panel
+đèn led panel vuông nổi=>surface-mounted square LED panel
+led panel vuông nổi=>surface-mounted square LED panel
+đèn led panel tròn=>round LED panel
+led panel tròn=>round LED panel
+đèn led panel vuông=>square LED panel
+led panel vuông=>square LED panel
+đèn led panel=>LED panel light
+đèn led pha năng lượng mặt trời=>solar LED floodlight
+led pha năng lượng mặt trời=>solar LED floodlight
+đèn led pha=>LED floodlight
+led pha=>LED floodlight
+đèn led chiếu điểm dùng thanh ray=>track LED spotlight
+led chiếu điểm dùng thanh ray=>track LED spotlight
+đèn led chiếu điểm dạng treo=>pendant LED spotlight
+đèn led chiếu điểm=>LED spotlight
+led chiếu điểm=>LED spotlight
+đèn led chiếu gương=>mirror LED light
+đèn led ốp trần tròn=>round surface-mounted LED ceiling light
+đèn led ốp trần vuông=>square surface-mounted LED ceiling light
+đèn led ốp trần=>surface-mounted LED ceiling light
+led ốp trần=>surface-mounted LED ceiling light
+đèn led ốp tường nổi=>surface-mounted LED wall light
+đèn led bán nguyệt=>LED batten light
+led bán nguyệt=>LED batten light
+bộ đèn led tube thủy tinh=>glass LED tube set
+đèn led tube thủy tinh=>glass LED tube
+led tube thủy tinh=>glass LED tube
+đèn led tube nhôm=>aluminum LED tube
+led tube nhôm=>aluminum LED tube
+bộ đèn led tube=>LED tube set
+đèn led tube=>LED tube
+đèn led bulb chống muỗi=>mosquito-repellent LED bulb
+đèn led bulb chống ẩm=>moisture-resistant LED bulb
+led bulb chống ẩm=>moisture-resistant LED bulb
+đèn led bulb filament=>filament LED bulb
+đèn led filament=>filament LED bulb
+đèn led bulb=>LED bulb
+đèn led nến=>LED candle bulb
+đèn led đường=>LED street light
+đèn led thanh nhà xưởng=>linear industrial LED high bay
+đèn led thanh=>LED linear light
+đèn led high bay=>LED high bay light
+led high bay=>LED high bay light
+chóa đèn high bay=>high bay reflector
+đèn led dây=>LED strip light
+led dây=>LED strip light
+đèn bàn tích hợp quạt và sạc usb=>desk lamp with fan and USB charger
+đèn bàn đa năng có kẹp=>multi-purpose clamp desk lamp
+đèn bàn đa năng=>multi-purpose desk lamp
+đui đèn chuyển bóng thường thành bóng thông minh=>smart bulb adapter socket
+đui đèn=>lamp holder
+remote cho đèn led=>remote control for LED lights
+điều khiển dùng cho đèn led bluetooth=>Bluetooth LED light controller
+điều khiển thông minh=>smart controller
+khớp nối giữa led dây thông minh ac=>middle connector for smart AC LED strip
+cảm biến microwave sử dụng cho đèn=>microwave sensor for
+đèn sân vườn cắm đất năng lượng mặt trời=>solar garden spike light
+đèn led lớp học=>classroom LED light
+đèn led chiếu sáng khẩn cấp=>emergency LED light
+đèn led downlight khẩn cấp âm trần=>recessed emergency LED downlight
+đèn led downlight khẩn cấp nổi=>surface-mounted emergency LED downlight
+đèn báo exit mặt phải=>right-arrow exit sign
+đèn báo exit mặt trái=>left-arrow exit sign
+đèn báo exit=>exit sign
+bộ led chống nổ=>explosion-proof LED fixture
+bộ máng led tube đơn=>single LED tube batten fixture
+bộ máng led tube đôi=>double LED tube batten fixture
+bộ máng xương cá led tube=>V-shape LED tube batten fixture
+bộ máng xương cá=>V-shape batten fixture
+bộ máng led tube=>LED tube batten fixture
+máng đèn xương cá=>V-shape batten
+máng đèn công nghiệp=>industrial lighting batten
+máng led=>LED batten tray
+máng đèn=>lighting batten
+bộ chỉnh lưu led dây=>LED strip rectifier
+bộ chình lưu led dây=>LED strip rectifier
+viền đèn led downlight=>LED downlight trim
+viền đèn led panel nhỏ=>small LED panel trim
+viền đèn led ốp trần=>ceiling light trim
+viền đèn led multi=>multi LED trim
+viền đèn led=>LED trim
+phụ kiện kẹp cho đèn panel=>panel light mounting clip
+phụ kiện kẹp=>mounting clip
+kẹp cho led dây=>LED strip clip
+phụ kiện gắn treo cho đèn=>suspension kit for
+phụ kiện gắn treo đèn led=>suspension kit for LED light
+phụ kiện đèn thoát hiểm=>emergency exit light accessory
+dây điện=>power cable
+đuôi đèn=>lamp socket
+nguồn led dây=>LED strip power supply
+bộ nguồn khẩn cấp=>emergency power supply
+phụ kiện lắp âm=>recessed mounting accessory
+phụ kiện lắp nổi=>surface mounting accessory
+thanh nối x=>X connector
+thanh nối t=>T connector
+thanh nối l=>L connector
+có đèn=>with light
+dài=>length
+seri lnc=>LNC series
+ổ cắm âm bàn=>desktop recessed socket
+ổ cắm đa năng chống thấm smart wifi=>waterproof smart Wi-Fi universal socket
+ổ cắm cố định loại xéo=>angled fixed socket outlet
+ổ cắm cố định gắn nổi=>surface-mounted fixed socket outlet
+ổ cắm cố định gắn âm=>flush-mounted fixed socket outlet
+ổ cắm cố định=>fixed socket outlet
+ổ cắm công nghiệp gắn nổi=>surface-mounted industrial socket
+ổ cắm công nghiệp gắn âm=>flush-mounted industrial socket
+ổ cắm công nghiệp=>industrial socket
+ổ cắm di động thông minh=>smart portable socket
+ổ cắm di động=>portable socket
+ổ cắm sạc usb=>USB charging socket
+ổ cắm đôi 3 chấu=>double 3-pin socket
+ổ cắm đôi 2 chấu=>double 2-pin socket
+ổ cắm ba 2 chấu=>triple 2-pin socket
+ổ cắm đơn đa năng=>single universal socket
+ổ cắm 2 chấu=>2-pin socket
+ổ cắm âm=>flush-mounted socket
+ổ cắm đa năng=>universal socket
+ổ cắm thông minh=>smart socket
+ổ cắm điện thoại=>telephone outlet
+ổ điện thoại=>telephone outlet
+ổ mạng=>data outlet
+ổ tivi=>TV outlet
+ổ cắm=>socket
+phích cắm công nghiệp=>industrial plug
+phích cắm di động=>portable plug
+phích cắm=>plug
+cầu dao chống giật rcbo=>RCBO residual-current circuit breaker
+cầu dao an toàn=>safety circuit breaker
+cầu dao mcb=>MCB circuit breaker
+cầu dao rcbo=>RCBO circuit breaker
+cầu dao=>circuit breaker
+công tắc 1 chiều=>1-way switch
+công tắc 2 chiều=>2-way switch
+công tắc 2 cực=>2-pole switch
+công tắc thông minh=>smart switch
+công tắc=>switch
+tủ điện âm tường=>flush-mounted distribution box
+tủ điện=>distribution box
+cảm biến chuyển động=>motion sensor
+cảm biến=>sensor
+hộp nối chống thấm nước=>waterproof junction box
+hộp nối=>junction box
+thanh nối=>connector bar
+phụ kiện=>accessory
+ổ cắm du lịch đa năng=>universal travel adapter
+ổ cắm du lịch=>travel adapter
+van khoá nước-gas thông minh=>smart water/gas shutoff valve
+module zigbee kết nối thiết bị đóng cắt thông minh=>Zigbee module for smart switching devices
+module wifi=>Wi-Fi module
+module 4g=>4G module
+chân cắm=>plug pins
+cáp nối=>connection cable
+bộ cấp nguồn có màn hình=>power supply with display
+bộ cấp nguồn=>power supply
+bộ inverter=>inverter
+biến tần=>inverter
+data manager=>Data Manager
+dc combinerbox=>DC combiner box
+inverter manager=>Inverter Manager
+mặt nạ trơn=>blank cover plate
+mặt viền đôi=>double cover frame
+mặt viền=>cover frame
+mặt cho mcb=>cover plate for MCB
+mặt lắp cho cầu dao an toàn=>mounting plate for safety circuit breaker
+mặt rời cho cầu dao an toàn=>removable plate for safety circuit breaker
+mặt cho cầu dao an toàn=>cover plate for safety circuit breaker
+mặt đơn=>single-gang faceplate
+mặt đôi=>double-gang faceplate
+mặt ba=>triple-gang faceplate
+mặt=>faceplate
+nút ấn chuông=>doorbell push button
+nút nhấn chuông=>doorbell push button
+nút che trơn=>blank key cover
+nắp che trơn=>blank cover
+đèn báo dọn phòng=>make-up-room indicator
+đèn báo không làm phiền=>do-not-disturb indicator
+đèn báo xanh=>green indicator light
+đèn báo đỏ=>red indicator light
+cổng hdmi=>HDMI port
+cầu chì=>fuse
+bộ chỉnh ánh sáng đèn=>light dimmer
+bộ diều chỉnh ánh sáng đèn=>light dimmer
+bộ điều tốc quạt=>fan speed controller
+điều tốc quạt=>fan speed controller
+điều chỉnh ánh sáng=>dimmer
+trung tính=>neutral white
+ánh sáng trung tính=>neutral white
+ánh sáng vàng=>warm white
+ánh sáng trắng=>cool white
+màu xanh trời=>sky blue
+màu xanh lá=>green
+màu xanh=>blue
+màu trắng=>white
+màu cam=>orange
+màu hồng=>pink
+màu tím=>purple
+màu đỏ=>red
+màu vàng=>yellow
+màu bạc=>silver
+màu xám bạc=>silver gray
+màu đen=>black
+màu đồng=>bronze
+màu xám=>gray
+màu crôm=>chrome
+màu crom=>chrome
+trắng=>cool white
+vàng=>warm white
+đa màu sắc=>RGB multi-color
+3 in 1=>3-in-1
+3 màu=>3-color
+3 chế độ=>3-color mode
+chống thấm nước=>waterproof
+chống thấm=>waterproof
+chống nước=>waterproof
+chống ẩm=>moisture-resistant
+chống muỗi=>mosquito-repellent
+chống nổ=>explosion-proof
+trồng thanh long=>dragon fruit farming
+dùng điện=>using
+dùng tăng phô điện tử=>for electronic ballast
+tăng phô điện tử=>electronic ballast
+tăng phô=>ballast
+chuột đèn=>lamp starter
+khớp nối giữa=>middle connector
+khớp nối=>connector
+điện dc12v=>DC 12V
+dùng lắp mái hiên=>for canopy installation
+lắp mái hiên=>canopy installation
+năng lượng mặt trời=>solar powered
+cắm đất=>spike-mounted
+sân vườn=>garden
+lớp học=>classroom
+chiếu sáng khẩn cấp=>emergency lighting
+khẩn cấp=>emergency
+thoát hiểm=>emergency exit
+báo exit=>exit sign
+mặt phải=>right side
+mặt trái=>left side
+2 mặt=>double-sided
+1 mặt=>single-sided
+và phải=>and right
+điều chỉnh góc=>adjustable angle
+điều chỉnh hướng chiếu sáng=>adjustable beam
+góc chiếu=>beam angle
+dùng dimmer=>dimmable
+dùng remote=>remote controlled
+dùng thanh ray=>track-mounted
+thanh ray=>track rail
+viền bạc=>silver trim
+viền vàng=>gold trim
+viền trắng=>white trim
+viền đèn led=>LED trim
+viền đèn=>light trim
+viền=>trim
+thân đen=>black body
+thân trắng=>white body
+thân nhựa=>plastic body
+thân nhôm=>aluminum body
+mặt tròn=>round face
+mặt vuông=>square face
+hình trái banh=>globe shape
+hình oval=>oval shape
+hình tròn=>round shape
+hình vuông=>square shape
+dạng treo=>pendant type
+tròn âm=>recessed round
+vuông âm=>recessed square
+tròn nổi=>surface-mounted round
+vuông nổi=>surface-mounted square
+nổi thân trắng=>surface-mounted white body
+nổi thân đen=>surface-mounted black body
+nổi=>surface-mounted
+âm trần=>recessed ceiling
+âm tường=>flush-mounted
+gắn treo=>suspension mount
+gắn nổi=>surface-mounted
+gắn âm=>flush-mounted
+liền=>integrated
+driver liền=>integrated driver
+tích hợp bộ nguồn=>integrated driver
+tích hợp=>integrated
+bộ nguồn=>driver
+sử dụng cho=>for
+dùng cho=>for
+kẹp cho=>clip for
+lắp âm=>recessed mounting
+lắp nổi=>surface mounting
+vặn vít=>screw terminal
+cỡ lớn=>large size
+cỡ trung=>medium size
+2 cực=>2-pole
+1 cực=>1-pole
+3 chấu=>3-pin
+2 chấu=>2-pin
+lỗ=>slot
+thiết bị=>devices
+và=>and
+mã=>model
+bảo hành=>warranty
+năm=>years
+1 pha=>single phase
+3 pha=>three phase
+thiết bị đóng cắt=>switchgear
+đóng cắt=>switching
+điều khiển wifi=>Wi-Fi control
+điều khiển=>controller
+thông minh wifi=>smart Wi-Fi
+thông minh=>smart
+cổng nối mạng=>network ports
+cổng mạng=>network ports
+sạc không dây=>wireless charger
+sạc usb=>USB charger
+cổng usb=>USB ports
+châu âu=>EU
+châu úc=>AU
+châu mỹ=>US
+chân cắm kiểu=>plug type
+đa năng=>universal
+đơn=>single
+đôi=>double
+ba=>triple
+bóng thường=>standard bulb
+bóng thông minh=>smart bulb
+bóng=>lamp
+nhà xưởng=>industrial
+tròn=>round
+vuông=>square
+âm=>recessed
+bộ=>set
+máng=>batten
+xương cá=>V-shape
+chỉnh lưu=>rectifier
+chình lưu=>rectifier
+kẹp=>clip
+chùm=>string set
+đuôi=>socket base
+nguồn=>power supply
+cho=>for
+có=>with
+dùng=>for
+đèn led=>LED light
+led=>LED
+đèn=>light
+`;
+            const terms = termSource.trim().split(/\n+/).map(line => line.split("=>")).filter(parts => parts.length === 2);
+            const cache = new Map();
+            const hasVietnamese = /[À-ỹĐđ]/;
+            const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const replaceTerm = (text, term, replacement) => text.replace(
+                new RegExp(`(^|[^\\p{L}])(${escapeRegex(term)})(?=$|[^\\p{L}])`, "giu"),
+                (_, prefix) => `${prefix}${replacement}`
+            );
+            const stripVietnameseMarks = (value) => String(value || "")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/đ/g, "d")
+                .replace(/Đ/g, "D");
+            const cleanupEnglish = (value) => value
+                .replace(/\bAS\s+warm white\b/gi, "warm white")
+                .replace(/\bAS\s+cool white\b/gi, "cool white")
+                .replace(/\bintegrated fast charger GaN-(\d+W)\b/gi, "integrated GaN $1 fast charger")
+                .replace(/\bNLMT\b/g, "solar")
+                .replace(/\bLAN\b/g, "LAN")
+                .replace(/\s*,\s*/g, ", ")
+                .replace(/\s+-\s+/g, " - ")
+                .replace(/\s+\/\s+/g, "/")
+                .replace(/\s{2,}/g, " ")
+                .replace(/\s+\)/g, ")")
+                .replace(/\(\s+/g, "(")
+                .trim();
+            const translateSampleName = (name) => {
+                const source = String(name || "").normalize("NFC").trim().replace(/\s+/g, " ");
+                if (!source) return "";
+                if (cache.has(source)) return cache.get(source);
+                let text = source;
+                [...terms].sort((a, b) => b[0].length - a[0].length).forEach(([term, replacement]) => {
+                    text = replaceTerm(text, term, replacement);
+                });
+                text = cleanupEnglish(text);
+                if (hasVietnamese.test(text)) text = stripVietnameseMarks(text);
+                text = cleanupEnglish(text);
+                const result = text ? text.charAt(0).toUpperCase() + text.slice(1) : source;
+                cache.set(source, result);
+                return result;
+            };
+            const isDefaultSample = (item) => !!item && (item.isDefaultSample || String(item.id || "").startsWith("SAMPLE_202604_") || item.warehouse === DEFAULT_SAMPLE_WAREHOUSE);
+            const enrichProduct = (product) => {
+                if (!product) return product;
+                if (isDefaultSample(product)) {
+                    product.isDefaultSample = true;
+                    product.nameVi = product.nameVi || product.name || "";
+                    product.nameEn = translateSampleName(product.nameVi);
+                    product.searchStr = Utils.normString(`${product.code || ""} ${product.nameVi || ""} ${product.nameEn || ""} ${product.warehouse || ""}`);
+                }
+                return product;
+            };
+            const enrichCartItem = (item, product) => {
+                if (!item) return item;
+                if (product) enrichProduct(product);
+                if (product && isDefaultSample(product)) {
+                    item.nameVi = item.nameVi || product.nameVi || product.name || "";
+                    item.nameEn = product.nameEn || translateSampleName(item.nameVi);
+                    item.isDefaultSample = true;
+                } else if (isDefaultSample(item)) {
+                    item.nameVi = item.nameVi || item.name || "";
+                    item.nameEn = translateSampleName(item.nameVi);
+                    item.isDefaultSample = true;
+                }
+                return item;
+            };
+            const hydrateState = (state) => {
+                const db = Array.isArray(state.productDB) ? state.productDB : [];
+                db.forEach(enrichProduct);
+                if (Array.isArray(state.cart)) {
+                    state.cart.forEach(item => enrichCartItem(item, db.find(product => product.id === item.productId)));
+                }
+            };
+            const getLang = () => window.AppI18n ? AppI18n.get() : "vi";
+            const name = (item, lang = getLang()) => {
+                if (!item) return "";
+                if (isDefaultSample(item)) {
+                    enrichCartItem(item);
+                    return lang === "en" ? (item.nameEn || translateSampleName(item.nameVi || item.name || "")) : (item.nameVi || item.name || "");
+                }
+                return item.name || "";
+            };
+            const searchText = (product) => {
+                enrichProduct(product);
+                return Utils.normString(`${product.searchStr || ""} ${product.code || ""} ${product.name || ""} ${product.nameVi || ""} ${product.nameEn || ""}`);
+            };
+            const refreshVisible = () => {
+                if (typeof CartLogic !== "undefined") CartLogic.renderFull();
+                if (typeof applyFiltersAndSearch === "function" && DOM.search?.modal?.classList.contains("active")) applyFiltersAndSearch();
+                if (typeof PromoLogic !== "undefined") {
+                    PromoLogic.updateDataList();
+                    if (DOM.promo?.searchModal?.classList.contains("active")) PromoLogic.searchProducts();
+                }
+                if (typeof ExportLogic !== "undefined" && DOM.export?.modal?.classList.contains("active")) {
+                    ExportLogic.generatePrintView();
+                    if (window.AppI18n) AppI18n.apply(DOM.export.modal);
+                }
+            };
+            return { enrichProduct, enrichCartItem, hydrateState, name, searchText, translateSampleName, refreshVisible };
+        })();
+        window.ProductLanguage = ProductLanguage;
+
         // 2. CENTRAL STATE MANAGEMENT
         const AppState = {
             data: {
@@ -4506,7 +5079,10 @@
                 this.data[key] = value; 
                 LocalDB.save(); 
                 if (!silent) this.publish(key); 
-                if (key === 'productDB') { PromoLogic.updateDataList(); }
+                if (key === 'productDB') {
+                    (Array.isArray(value) ? value : []).forEach(ProductLanguage.enrichProduct);
+                    PromoLogic.updateDataList();
+                }
             },
             get(key) { return this.data[key]; },
             
@@ -4540,6 +5116,7 @@
                         AppState.data.productDB = p.productDB || []; AppState.data.warehouses = p.warehouses || []; AppState.data.cart = p.cart || [];
                         AppState.data.brand = p.brand || AppState.data.brand; AppState.data.defaults = p.defaults || AppState.data.defaults; 
                         AppState.data.promos = p.promos || []; AppState.data.isCompactView = p.isCompactView || false;
+                        ProductLanguage.hydrateState(AppState.data);
                         
                         if (AppState.data.productDB.length > 0 && AppState.data.warehouses.length === 0) { 
                             AppState.data.warehouses = ['Kho Mặc Định']; 
@@ -4567,11 +5144,14 @@
                     warehouse: DEFAULT_SAMPLE_WAREHOUSE,
                     code: code,
                     name: name,
+                    nameVi: name,
+                    nameEn: ProductLanguage.translateSampleName(name),
+                    isDefaultSample: true,
                     unit: increaseRate,
                     price: price,
                     oldPrice: oldPrice,
                     increaseRate: increaseRate,
-                    searchStr: Utils.normString(`${code || ''} ${name || ''}`),
+                    searchStr: Utils.normString(`${code || ''} ${name || ''} ${ProductLanguage.translateSampleName(name) || ''} ${DEFAULT_SAMPLE_WAREHOUSE}`),
                     autoAdjustment: 0,
                     fallbackDiscount: 0
                 };
@@ -4862,7 +5442,7 @@
                     let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
                     let flucBadge = flucInfo ? `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded font-bold ${flucInfo.type==='tăng'?'bg-red-100 text-red-600':'bg-emerald-100 text-emerald-600'}">${flucInfo.type === 'tăng' ? '⬆' : '⬇'} ${Utils.escapeHTML(flucInfo.text)}</span>` : '';
                     const safeItemId = Utils.escapeAttr(item.id);
-                    const safeName = Utils.escapeHTML(item.name || '');
+                    const safeName = Utils.escapeHTML(ProductLanguage.name(item));
                     const safeCode = Utils.escapeHTML(item.code || '');
                     const safeNoteAttr = Utils.escapeAttr(item.note || '');
                     const safeQty = Utils.escapeAttr(item.qty);
@@ -5427,7 +6007,10 @@
             if (AppState.get('currentFilterWarehouse') !== 'All') filtered = filtered.filter(p => p.warehouse === AppState.get('currentFilterWarehouse'));
             if (sortState === 'inc') { filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'tăng'); } 
             else if (sortState === 'dec') { filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'giảm'); }
-            if (terms.length > 0) filtered = filtered.filter(p => terms.every(term => p.searchStr.includes(term)));
+            if (terms.length > 0) filtered = filtered.filter(p => {
+                const haystack = ProductLanguage.searchText(p);
+                return terms.every(term => haystack.includes(term));
+            });
             
             if (sortState === 'inc') { filtered.sort((a,b) => { return (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value - (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value; }); } 
             else if (sortState === 'dec') { filtered.sort((a,b) => { return Math.abs((Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value) - Math.abs((Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value); }); }
@@ -5459,7 +6042,8 @@
                     finalBase = p.fallbackDiscount; finalKm1 = 0; finalKm2 = 0; finalKmTien = 0;
                 }
                 
-              let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+              let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, nameVi: p.nameVi, nameEn: p.nameEn, isDefaultSample: p.isDefaultSample, unit: p.unit, originalPrice: p.price, qty: 1, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                ProductLanguage.enrichCartItem(newItem, p);
                 
                 PromoLogic.checkAndApplyToItem(newItem); 
                 cart.push(newItem);
@@ -5480,7 +6064,7 @@
                 let flucInfo = Utils.getIncreaseDecreaseInfo(p.unit);
                 let flucBadge = flucInfo ? `<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded font-bold ${flucInfo.type==='tăng'?'bg-red-100 text-red-600':'bg-emerald-100 text-emerald-600'}">${flucInfo.type === 'tăng' ? '⬆ Tăng' : '⬇ Giảm'} ${Utils.escapeHTML(flucInfo.text)}</span>` : '';
                 const safeProductId = Utils.escapeAttr(p.id);
-                const safeProductName = Utils.escapeHTML(p.name || '');
+                const safeProductName = Utils.escapeHTML(ProductLanguage.name(p));
                 const safeProductCode = Utils.escapeHTML(p.code || '');
 
                 return `
@@ -5525,8 +6109,9 @@
                 const db = AppState.get('productDB');
                 const datalist = document.getElementById('dbProductList');
                 datalist.innerHTML = db.map(p => {
+                    const displayName = ProductLanguage.name(p);
                     const codeDisplay = p.code ? `[${Utils.escapeHTML(p.code)}] ` : '';
-                    return `<option value="${Utils.escapeAttr(p.name || '')}">${codeDisplay}${Utils.escapeHTML(p.name || '')}</option>`;
+                    return `<option value="${Utils.escapeAttr(displayName || '')}">${codeDisplay}${Utils.escapeHTML(displayName || '')}</option>`;
                 }).join('');
             },
             openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal); },
@@ -5681,7 +6266,8 @@
                     if (!cart.some(item => item.productId === pid)) {
                         const p = prods.find(x => x.id === pid);
                         if (p) {
-                            let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, unit: p.unit, originalPrice: p.price, qty: promo.minQty > 1 ? promo.minQty : 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                            let newItem = { id: Utils.generateId(), productId: p.id, code: p.code, name: p.name, nameVi: p.nameVi, nameEn: p.nameEn, isDefaultSample: p.isDefaultSample, unit: p.unit, originalPrice: p.price, qty: promo.minQty > 1 ? promo.minQty : 1, baseDiscount: defs.baseDiscount, km1: defs.km1, km2: defs.km2, kmTien: defs.kmTien, kmTienType: defs.kmTienType, note: '', lastAutoStr: '', warehouse: p.warehouse, appliedPromoId: null };
+                            ProductLanguage.enrichCartItem(newItem, p);
                             PromoLogic.checkAndApplyToItem(newItem); cart.push(newItem); addedCount++;
                         }
                     }
@@ -5692,10 +6278,10 @@
             openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); if (window.AppI18n) AppI18n.apply(DOM.promo.searchModal); },
             closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
             searchProducts: () => {
-                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = AppState.get('productDB'); if (term) { list = list.filter(p => p.searchStr.includes(term)); }
+                const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = AppState.get('productDB'); if (term) { list = list.filter(p => ProductLanguage.searchText(p).includes(term)); }
                 const html = list.slice(0, 100).map(p => {
                     const isChecked = editingPromoProductIds.includes(p.id);
-                    return `<label class="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-50 border-b border-slate-50"><div class="flex-1 min-w-0 pr-2"><div class="text-[13px] font-bold text-slate-800 truncate">${Utils.escapeHTML(p.name || '')}</div><div class="text-[11px] text-blue-600 font-bold">${Utils.formatMoney(p.price)}</div></div><div class="custom-checkbox relative w-6 h-6"><input type="checkbox" class="promo-product-checkbox opacity-0 absolute inset-0 z-10" value="${Utils.escapeAttr(p.id)}" ${isChecked ? 'checked' : ''}><div class="w-6 h-6 border-2 border-slate-300 rounded-lg flex items-center justify-center bg-white transition-colors"><svg class="w-4 h-4 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
+                    return `<label class="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-50 border-b border-slate-50"><div class="flex-1 min-w-0 pr-2"><div class="text-[13px] font-bold text-slate-800 truncate">${Utils.escapeHTML(ProductLanguage.name(p))}</div><div class="text-[11px] text-blue-600 font-bold">${Utils.formatMoney(p.price)}</div></div><div class="custom-checkbox relative w-6 h-6"><input type="checkbox" class="promo-product-checkbox opacity-0 absolute inset-0 z-10" value="${Utils.escapeAttr(p.id)}" ${isChecked ? 'checked' : ''}><div class="w-6 h-6 border-2 border-slate-300 rounded-lg flex items-center justify-center bg-white transition-colors"><svg class="w-4 h-4 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
                 }).join(''); DOM.promo.productList.innerHTML = html;
                 if (window.AppI18n) AppI18n.apply(DOM.promo.productList);
             },
@@ -5741,14 +6327,128 @@
         let isExporting = false; 
 
         const ExportLogic = {
+            buildSimpleXlsxBlob: (isEn) => {
+                const escapeXml = (value) => String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&apos;');
+                const colName = (index) => {
+                    let name = '';
+                    while (index > 0) {
+                        const rem = (index - 1) % 26;
+                        name = String.fromCharCode(65 + rem) + name;
+                        index = Math.floor((index - 1) / 26);
+                    }
+                    return name;
+                };
+                const cellXml = (rowIndex, colIndex, value) => {
+                    if (value === undefined || value === null || value === '') return '';
+                    const ref = `${colName(colIndex)}${rowIndex}`;
+                    if (typeof value === 'number' && Number.isFinite(value)) return `<c r="${ref}"><v>${value}</v></c>`;
+                    return `<c r="${ref}" t="inlineStr"><is><t>${escapeXml(value)}</t></is></c>`;
+                };
+                const rowXml = (rowIndex, values) => `<row r="${rowIndex}">${values.map((value, index) => cellXml(rowIndex, index + 1, value)).join('')}</row>`;
+                const translateDynamic = (value) => isEn && window.AppI18n ? AppI18n.t(value || '') : (value || '');
+
+                const rows = [];
+                rows.push(rowXml(1, [document.getElementById('printDocTitle').textContent.trim().toUpperCase()]));
+                rows.push(rowXml(2, []));
+                rows.push(rowXml(3, [isEn ? 'Dear:' : 'Kính gửi:', document.getElementById('pCustomerPrint').textContent.trim() || (isEn ? 'Customer' : 'Khách Hàng'), '', '', '', '', document.getElementById('pDateDisplay').textContent.trim()]));
+                rows.push(rowXml(4, [isEn ? 'Sender:' : 'Người báo giá:', document.getElementById('pSenderDisplay').textContent.trim(), '', '', '', '', `${isEn ? 'Phone: ' : 'SĐT: '}${document.getElementById('pPhoneDisplay').textContent.trim()}`]));
+                rows.push(rowXml(5, []));
+                rows.push(rowXml(6, isEn
+                    ? ['No.', 'SKU', 'Product Name', 'Qty', 'List Price (VND)', 'Unit Price (VND)', 'Line Total (VND)', 'Notes']
+                    : ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú']));
+
+                let currentRow = 7;
+                AppState.get('cart').forEach((item, index) => {
+                    const flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
+                    let excelName = ProductLanguage.name(item);
+                    if (flucInfo) excelName += ` [${flucInfo.type === 'tăng' ? (isEn ? 'Increase' : 'Tăng') : (isEn ? 'Decrease' : 'Giảm')} ${flucInfo.text}]`;
+                    rows.push(rowXml(currentRow, [index + 1, item.code || '-', excelName, item.qty, item.originalPrice || 0, item.priceAfterDiscount || 0, item.totalFinal || 0, translateDynamic(item.note)]));
+                    currentRow++;
+                });
+
+                const opEff = AppState.get('currentOrderPromoEffect');
+                if (opEff) {
+                    rows.push(rowXml(currentRow, [`${isEn ? 'Order Promo' : 'KM Tổng Đơn'}: ${opEff.name}`, '', '', '', '', '', translateDynamic(opEff.msg)]));
+                    currentRow++;
+                }
+                rows.push(rowXml(currentRow, ['', '', '', '', '', isEn ? 'TOTAL:' : 'TỔNG CỘNG:', Utils.cleanNumber(document.getElementById('pTotalPrint').textContent.trim())]));
+
+                const sheetName = isEn ? 'Quote' : 'BaoGia';
+                const sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<dimension ref="A1:H${currentRow}"/>
+<sheetViews><sheetView workbookViewId="0"/></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols><col min="1" max="1" width="8" customWidth="1"/><col min="2" max="2" width="16" customWidth="1"/><col min="3" max="3" width="46" customWidth="1"/><col min="4" max="4" width="10" customWidth="1"/><col min="5" max="7" width="18" customWidth="1"/><col min="8" max="8" width="36" customWidth="1"/></cols>
+<sheetData>${rows.join('')}</sheetData>
+<mergeCells count="1"><mergeCell ref="A1:H1"/></mergeCells>
+</worksheet>`;
+
+                const files = {
+                    '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>`,
+                    '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+                    'xl/workbook.xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${escapeXml(sheetName)}" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+                    'xl/_rels/workbook.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>`,
+                    'xl/worksheets/sheet1.xml': sheetXml
+                };
+
+                const encoder = new TextEncoder();
+                const crcTable = (() => {
+                    const table = new Uint32Array(256);
+                    for (let i = 0; i < 256; i++) {
+                        let c = i;
+                        for (let j = 0; j < 8; j++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+                        table[i] = c >>> 0;
+                    }
+                    return table;
+                })();
+                const crc32 = (bytes) => {
+                    let crc = 0xffffffff;
+                    for (let i = 0; i < bytes.length; i++) crc = crcTable[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+                    return (crc ^ 0xffffffff) >>> 0;
+                };
+                const write16 = (out, value) => { out.push(value & 255, (value >>> 8) & 255); };
+                const write32 = (out, value) => { out.push(value & 255, (value >>> 8) & 255, (value >>> 16) & 255, (value >>> 24) & 255); };
+                const now = new Date();
+                const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2);
+                const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+                const localParts = [];
+                const centralParts = [];
+                let offset = 0;
+                Object.entries(files).forEach(([name, xml]) => {
+                    const nameBytes = encoder.encode(name);
+                    const dataBytes = encoder.encode(xml);
+                    const crc = crc32(dataBytes);
+                    const local = [];
+                    write32(local, 0x04034b50); write16(local, 20); write16(local, 0); write16(local, 0); write16(local, dosTime); write16(local, dosDate); write32(local, crc); write32(local, dataBytes.length); write32(local, dataBytes.length); write16(local, nameBytes.length); write16(local, 0);
+                    localParts.push(new Uint8Array(local), nameBytes, dataBytes);
+                    const central = [];
+                    write32(central, 0x02014b50); write16(central, 20); write16(central, 20); write16(central, 0); write16(central, 0); write16(central, dosTime); write16(central, dosDate); write32(central, crc); write32(central, dataBytes.length); write32(central, dataBytes.length); write16(central, nameBytes.length); write16(central, 0); write16(central, 0); write16(central, 0); write16(central, 0); write32(central, 0); write32(central, offset);
+                    centralParts.push(new Uint8Array(central), nameBytes);
+                    offset += local.length + nameBytes.length + dataBytes.length;
+                });
+                const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+                const end = [];
+                write32(end, 0x06054b50); write16(end, 0); write16(end, 0); write16(end, Object.keys(files).length); write16(end, Object.keys(files).length); write32(end, centralSize); write32(end, offset); write16(end, 0);
+                return new Blob([...localParts, ...centralParts, new Uint8Array(end)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            },
             generatePrintView: () => {
                 const tbody = document.getElementById('printTbody'); tbody.innerHTML = ''; let sumFinal = 0;
                 AppState.get('cart').forEach((item, i) => {
                     sumFinal += item.totalFinal; 
                     
                     let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                    let printName = Utils.escapeHTML(item.name || '');
-                    if (flucInfo) { printName += ` <strong style="color:${flucInfo.type === 'tăng' ? '#dc2626' : '#059669'}; font-size: 24px;">[${flucInfo.type === 'tăng' ? 'Tăng' : 'Giảm'} ${Utils.escapeHTML(flucInfo.text)}]</strong>`; }
+                    let printName = Utils.escapeHTML(ProductLanguage.name(item));
+                    if (flucInfo) {
+                        const isEn = window.AppI18n && AppI18n.get() === 'en';
+                        const flucLabel = flucInfo.type === 'tăng' ? (isEn ? 'Up' : 'Tăng') : (isEn ? 'Down' : 'Giảm');
+                        printName += ` <strong style="color:${flucInfo.type === 'tăng' ? '#dc2626' : '#059669'}; font-size: 24px;">[${flucLabel} ${Utils.escapeHTML(flucInfo.text)}]</strong>`;
+                    }
                     
                     let renderNote = Utils.escapeHTML(item.note || '');
                     if(renderNote.includes('🎁')) {
@@ -5850,10 +6550,16 @@
                 DOM.export.loading.classList.remove('hidden'); 
                 DOM.export.loading.classList.add('flex');
 
-                try {
-                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
-                    const isEn = lang === 'en';
-                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
+	                try {
+	                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
+	                    const isEn = lang === 'en';
+	                    const cleanCust = DOM.main.custName.value.trim() ? Utils.cleanFileName(DOM.main.custName.value) : (isEn ? 'Customer' : 'KhachHang');
+	                    const filename = `${isEn ? 'Quote' : 'BaoGia'}_${cleanCust}_${Utils.getShortDate()}.xlsx`;
+	                    if (typeof ExcelJS === 'undefined') {
+	                        await DownloadHelper.save(ExportLogic.buildSimpleXlsxBlob(isEn), filename);
+	                        return;
+	                    }
+	                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet(isEn ? 'Quote' : 'BaoGia'); 
                     const argbColor = 'FF0055A5'; 
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     titleCell.value = document.getElementById('printDocTitle').textContent.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
@@ -5878,10 +6584,10 @@
                     cartData.forEach((item, idx) => {
                          const row = worksheet.getRow(currentRow);
                          let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
-                         let excelName = item.name;
+                         let excelName = ProductLanguage.name(item);
                          if (flucInfo) excelName += ` [${flucInfo.type === 'tăng' ? (isEn ? 'Increase' : 'Tăng') : (isEn ? 'Decrease' : 'Giảm')} ${flucInfo.text}]`;
 
-                         row.values = [ idx + 1, item.code || '-', excelName, item.qty, item.originalPrice || 0, item.priceAfterDiscount || 0, item.totalFinal || 0, item.note || '' ];
+                         row.values = [ idx + 1, item.code || '-', excelName, item.qty, item.originalPrice || 0, item.priceAfterDiscount || 0, item.totalFinal || 0, isEn && window.AppI18n ? AppI18n.t(item.note || '') : (item.note || '') ];
                          row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
                          
                          row.eachCell((cell, colNumber) => { 
@@ -5902,7 +6608,7 @@
                         const promoRow = worksheet.getRow(currentRow); 
                         worksheet.mergeCells(`A${currentRow}:F${currentRow}`); 
                         promoRow.getCell(1).value = `${isEn ? 'Order Promo' : 'KM Tổng Đơn'}: ${opEff.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF4338CA' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
-                        promoRow.getCell(7).value = opEff.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF4338CA' } };
+                        promoRow.getCell(7).value = isEn && window.AppI18n ? AppI18n.t(opEff.msg) : opEff.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF4338CA' } };
                         currentRow++;
                     }
 
@@ -5914,10 +6620,7 @@
                     const buffer = await workbook.xlsx.writeBuffer(); 
                     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                     
-                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
-                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.xlsx`;
-                    
-                    await DownloadHelper.save(blob, filename);
+	                    await DownloadHelper.save(blob, filename);
                 } catch (error) { 
                     Utils.showToast("Lỗi khi xuất Excel!"); console.error(error); 
                 } finally {
@@ -5944,8 +6647,9 @@
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
                     while (heightLeft > 0) { position -= pdfHeight; pdf.addPage(); pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight; }
                     
-                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
-                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.pdf`;
+	                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
+	                    const cleanCust = DOM.main.custName.value.trim() ? Utils.cleanFileName(DOM.main.custName.value) : (lang === 'en' ? 'Customer' : 'KhachHang');
+	                    const filename = `${lang === 'en' ? 'Quote' : 'BaoGia'}_${cleanCust}_${Utils.getShortDate()}.pdf`;
                     
                     const blob = pdf.output('blob'); await DownloadHelper.save(blob, filename);
                 } catch (error) { 
@@ -6046,11 +6750,13 @@
             if (url) {
                 try {
                     const res = await fetch(url); const blob = await res.blob();
-                    const cleanCust = Utils.cleanFileName(DOM.main.custName.value);
-                    const filename = `BaoGia_${cleanCust}_${Utils.getShortDate()}.jpg`;
-                    await DownloadHelper.save(blob, filename);
-                } catch (e) {
-                    const a = document.createElement('a'); a.href = url; a.download = `BaoGia_${Utils.getShortDate()}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+	                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
+	                    const cleanCust = DOM.main.custName.value.trim() ? Utils.cleanFileName(DOM.main.custName.value) : (lang === 'en' ? 'Customer' : 'KhachHang');
+	                    const filename = `${lang === 'en' ? 'Quote' : 'BaoGia'}_${cleanCust}_${Utils.getShortDate()}.jpg`;
+	                    await DownloadHelper.save(blob, filename);
+	                } catch (e) {
+	                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
+	                    const a = document.createElement('a'); a.href = url; a.download = `${lang === 'en' ? 'Quote' : 'BaoGia'}_${Utils.getShortDate()}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a);
                     if (/Zalo/i.test(navigator.userAgent)) { Utils.showToast("Nếu ảnh không tải về, hãy CHẠM GIỮ vào ảnh để lưu nhé."); }
                 }
             }
