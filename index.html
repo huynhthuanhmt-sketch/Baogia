@@ -191,11 +191,509 @@
 	            .uppercase { letter-spacing: 0.02em; }
 	            .tracking-widest { letter-spacing: 0.055em !important; }
 	        }
+
+            /* BIG UPDATE: Apple-style typography and professional profile polish */
+            :root {
+                --ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, "Plus Jakarta Sans", "Segoe UI", sans-serif;
+                --ui-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+                --ui-text: #111827;
+                --ui-muted: #64748b;
+                --ui-line: rgba(15, 23, 42, 0.1);
+                --ui-surface: rgba(255, 255, 255, 0.92);
+            }
+            html { font-size: 16px; }
+            body, button, input, select, textarea { font-family: var(--ui-font); }
+            body { font-weight: 450; }
+            .font-black { font-weight: 720 !important; }
+            .font-bold { font-weight: 620 !important; }
+            .cv-footer-pulse { animation: none !important; }
+
+            .app-language-switcher {
+                position: fixed;
+                top: max(0.7rem, env(safe-area-inset-top));
+                right: 0.75rem;
+                z-index: 90;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.18rem;
+                border: 1px solid rgba(148, 163, 184, 0.18);
+                background: rgba(15, 23, 42, 0.72);
+                color: rgba(226, 232, 240, 0.8);
+                -webkit-backdrop-filter: blur(18px);
+                backdrop-filter: blur(18px);
+                border-radius: 999px;
+                padding: 0.2rem;
+                box-shadow: 0 12px 32px rgba(2, 6, 23, 0.22), inset 0 1px 0 rgba(255,255,255,0.08);
+                transition: left 0.24s var(--ui-ease), right 0.24s var(--ui-ease), transform 0.24s var(--ui-ease), opacity 0.2s var(--ui-ease);
+            }
+            body:not(.screen-landing) .app-language-switcher {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+            }
+            .app-lang-btn {
+                min-width: 2.25rem;
+                height: 1.9rem;
+                border-radius: 999px;
+                font-size: 0.68rem;
+                font-weight: 760;
+                letter-spacing: 0.02em;
+                transition: background 0.2s var(--ui-ease), color 0.2s var(--ui-ease), transform 0.2s var(--ui-ease);
+            }
+            .app-lang-btn.is-active {
+                background: #f8fafc;
+                color: #0f172a;
+                box-shadow: 0 6px 16px rgba(2, 6, 23, 0.18);
+            }
+            .app-lang-btn:active { transform: scale(0.96); }
+            .landing-footer-stack {
+                display: inline-flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .landing-footer-shell {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.25rem;
+                border: 1px solid rgba(148, 163, 184, 0.16);
+                background: rgba(15, 23, 42, 0.58);
+                -webkit-backdrop-filter: blur(18px);
+                backdrop-filter: blur(18px);
+                border-radius: 999px;
+                padding: 0.22rem;
+                box-shadow: 0 10px 28px rgba(2, 6, 23, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+                opacity: 0.84;
+            }
+            .landing-footer-shell:hover {
+                opacity: 0.98;
+            }
+            .landing-footer-copy {
+                color: rgba(203, 213, 225, 0.68);
+                font-size: 0.64rem;
+                font-weight: 650;
+                letter-spacing: 0.03em;
+                text-shadow: 0 1px 14px rgba(2, 6, 23, 0.55);
+            }
+            .landing-tool-button,
+            .resume-launch-button {
+                width: 2.12rem;
+                height: 2.12rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 999px;
+                transition: transform 0.22s var(--ui-ease), background 0.22s var(--ui-ease), border-color 0.22s var(--ui-ease);
+            }
+            .landing-tool-button {
+                color: rgba(226, 232, 240, 0.82);
+            }
+            .landing-tool-button:hover { background: rgba(255, 255, 255, 0.08); }
+            .resume-launch-button {
+                border: 1px solid transparent;
+                background: transparent;
+                color: rgba(226, 232, 240, 0.68);
+                padding: 0;
+            }
+            .resume-launch-button:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: rgba(226, 232, 240, 0.18);
+                color: #f8fafc;
+                transform: translateY(-1px);
+            }
+            .resume-launch-button svg {
+                width: 1rem;
+                height: 1rem;
+            }
+            .resume-status-dot {
+                width: 0.45rem;
+                height: 0.45rem;
+                border-radius: 999px;
+                background: #22c55e;
+                box-shadow: 0 0 0 rgba(34, 197, 94, 0.38);
+                animation: resumeStatusPulse 2.4s ease-in-out infinite;
+            }
+            .resume-lang-pill {
+                border-radius: 999px;
+                background: rgba(226, 232, 240, 0.14);
+                padding: 0.16rem 0.45rem;
+                color: #cbd5e1;
+                font-size: 0.68rem;
+                font-weight: 680;
+            }
+            @keyframes resumeStatusPulse {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.28); }
+                50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            }
+
+            #promoManagerModal,
+            #promoProductSearchModal {
+                color: var(--ui-text);
+                background: #f5f5f7;
+            }
+            #promoManagerModal > div:first-child,
+            #promoProductSearchModal > div:first-child {
+                min-height: 4.6rem;
+                padding-top: max(1rem, env(safe-area-inset-top));
+                border-color: rgba(15, 23, 42, 0.08) !important;
+                box-shadow: 0 1px 0 rgba(255,255,255,0.9);
+            }
+            #promoManagerModal h2,
+            #promoProductSearchModal h2 {
+                color: #111827 !important;
+                font-size: 1.04rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0 !important;
+                line-height: 1.2;
+                text-transform: none !important;
+            }
+            #promoManagerModal .flex-grow {
+                background: #f5f5f7 !important;
+            }
+            #promoManagerModal .flex-grow > .bg-white {
+                max-width: 760px;
+                margin: 0 auto 1.25rem;
+                border-radius: 24px !important;
+                border-color: rgba(15, 23, 42, 0.08) !important;
+                box-shadow: 0 18px 42px rgba(15, 23, 42, 0.06) !important;
+            }
+            #promoManagerModal label,
+            #promoProductSearchModal label {
+                color: #334155 !important;
+                font-size: 0.82rem !important;
+                font-weight: 620 !important;
+                letter-spacing: 0 !important;
+                line-height: 1.35;
+                text-transform: none !important;
+            }
+            #promoManagerModal input,
+            #promoManagerModal select,
+            #promoProductSearchModal input {
+                min-height: 2.85rem;
+                border-radius: 12px !important;
+                border-color: #d7dde7 !important;
+                background: rgba(255, 255, 255, 0.96) !important;
+                color: #111827 !important;
+                font-size: 0.96rem !important;
+                font-weight: 600 !important;
+                letter-spacing: 0 !important;
+                box-shadow: inset 0 1px 1px rgba(15, 23, 42, 0.03);
+            }
+            #promoManagerModal input[type="checkbox"] {
+                min-height: auto;
+                width: 1.05rem;
+                height: 1.05rem;
+                border-radius: 5px !important;
+            }
+            #promoManagerModal input:focus,
+            #promoManagerModal select:focus,
+            #promoProductSearchModal input:focus {
+                border-color: #2563eb !important;
+                box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+            }
+            #promoManagerModal .promo-tab {
+                min-height: 2.45rem;
+                border-radius: 10px !important;
+                font-size: 0.88rem !important;
+                font-weight: 650 !important;
+                letter-spacing: 0 !important;
+                text-transform: none;
+            }
+            #promoManagerModal .promo-section {
+                background: #ffffff !important;
+                border-color: rgba(15, 23, 42, 0.09) !important;
+                border-radius: 18px !important;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            }
+            #promoManagerModal .promo-accent-section {
+                background: #f8fbff !important;
+                border-color: rgba(37, 99, 235, 0.16) !important;
+            }
+            #promoManagerModal .promo-step-badge {
+                position: static !important;
+                display: inline-flex;
+                align-items: center;
+                width: fit-content;
+                margin: -0.1rem 0 0.8rem;
+                border-radius: 999px !important;
+                padding: 0.28rem 0.65rem !important;
+                background: #f1f5f9 !important;
+                color: #475569 !important;
+                font-size: 0.75rem !important;
+                font-weight: 680 !important;
+                letter-spacing: 0 !important;
+                line-height: 1;
+                text-transform: none !important;
+            }
+            #promoManagerModal .promo-step-badge.is-accent {
+                background: #e8f0ff !important;
+                color: #1d4ed8 !important;
+            }
+            #promoManagerModal #btnSavePromo,
+            #promoProductSearchModal #btnFinishPromoSearch {
+                min-height: 3rem;
+                border-radius: 14px !important;
+                font-size: 0.95rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+                box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14) !important;
+            }
+            #promoManagerModal #btnSelectPromoProducts,
+            #promoManagerModal #btnClosePromoManager,
+            #promoProductSearchModal #btnClosePromoSearch {
+                font-size: 0.86rem !important;
+                font-weight: 650 !important;
+                letter-spacing: 0 !important;
+                text-transform: none !important;
+            }
+            #promoManagerModal .text-\[9px\] { font-size: 0.72rem !important; }
+            #promoManagerModal .text-\[10px\] { font-size: 0.76rem !important; }
+            #promoManagerModal .text-\[11px\] { font-size: 0.82rem !important; }
+            #promoManagerModal .text-xs { font-size: 0.86rem !important; }
+            #promoListContainer > div {
+                border-radius: 18px !important;
+                box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05) !important;
+            }
+
+            #careerProfileModal.lang-en [data-lang="vi"],
+            #careerProfileModal.lang-vi [data-lang="en"] { display: none !important; }
+            #careerProfileModal .career-profile-shell {
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: #f5f5f7;
+            }
+            #careerProfileModal .career-profile-scroll > :not(.resume-profile-upgrade) {
+                display: none !important;
+            }
+            #careerProfileModal .career-profile-header {
+                background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+                color: #111827 !important;
+                border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+            }
+            #careerProfileModal .career-profile-header .cyber-grid,
+            #careerProfileModal .career-profile-header .rounded-full.bg-cyan-500\/10,
+            #careerProfileModal .career-profile-header .rounded-full.bg-blue-500\/10 { display: none !important; }
+            #careerProfileModal .career-profile-header h2 {
+                color: #0f172a !important;
+                text-transform: none !important;
+                letter-spacing: 0 !important;
+            }
+            #careerProfileModal .career-profile-header p { color: #475569 !important; }
+            #careerProfileModal #btnCloseCareerProfile {
+                background: #eef2f7 !important;
+                color: #0f172a !important;
+            }
+            .resume-lang-toggle {
+                display: inline-flex;
+                gap: 0.22rem;
+                padding: 0.22rem;
+                border-radius: 999px;
+                background: #eef2f7;
+                border: 1px solid rgba(15, 23, 42, 0.07);
+            }
+            .resume-lang-btn {
+                border-radius: 999px;
+                padding: 0.42rem 0.7rem;
+                color: #64748b;
+                font-size: 0.75rem;
+                font-weight: 700;
+                letter-spacing: 0;
+                line-height: 1;
+                transition: background 0.22s var(--ui-ease), color 0.22s var(--ui-ease), transform 0.22s var(--ui-ease);
+            }
+            .resume-lang-btn.is-active {
+                background: #0f172a;
+                color: #ffffff;
+                box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+            }
+            .resume-metric-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.75rem;
+            }
+            @media (min-width: 768px) {
+                .resume-metric-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+            }
+            .resume-metric-card {
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 20px;
+                padding: 1rem;
+                box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            #careerProfileModal.is-open .resume-metric-card {
+                animation: resumeMetricIn 0.62s var(--ui-ease) forwards;
+                animation-delay: calc(var(--i, 0) * 70ms);
+            }
+            .resume-kpi-number {
+                display: block;
+                color: #0f172a;
+                font-size: clamp(1.65rem, 3vw, 2.25rem);
+                font-weight: 760;
+                letter-spacing: -0.01em;
+                line-height: 1;
+                font-variant-numeric: tabular-nums;
+            }
+            .resume-kpi-label {
+                margin-top: 0.35rem;
+                color: #64748b;
+                font-size: 0.78rem;
+                font-weight: 620;
+                line-height: 1.25;
+            }
+            .resume-chart {
+                display: grid;
+                gap: 0.8rem;
+            }
+            .resume-chart-row {
+                display: grid;
+                gap: 0.4rem;
+            }
+            .resume-chart-head {
+                display: flex;
+                justify-content: space-between;
+                gap: 0.75rem;
+                color: #334155;
+                font-size: 0.82rem;
+                font-weight: 650;
+                line-height: 1.25;
+            }
+            .resume-chart-value {
+                color: #0f172a;
+                font-variant-numeric: tabular-nums;
+            }
+            .resume-bar-track {
+                height: 0.56rem;
+                overflow: hidden;
+                border-radius: 999px;
+                background: #e5e7eb;
+            }
+            .resume-bar-fill {
+                width: 0;
+                height: 100%;
+                border-radius: inherit;
+                background: linear-gradient(90deg, #0f172a, #2563eb);
+            }
+            #careerProfileModal.is-open .resume-bar-fill {
+                animation: resumeBarGrow 1.1s var(--ui-ease) forwards;
+                animation-delay: calc(var(--i, 0) * 110ms + 120ms);
+            }
+            .resume-section-title {
+                color: #0f172a;
+                font-size: clamp(1.15rem, 2vw, 1.55rem);
+                font-weight: 740;
+                letter-spacing: 0;
+                line-height: 1.18;
+            }
+            .resume-body-text {
+                color: #475569;
+                font-size: 0.92rem;
+                font-weight: 500;
+                line-height: 1.62;
+            }
+            .resume-pill {
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                background: #f8fafc;
+                border-radius: 999px;
+                padding: 0.42rem 0.72rem;
+                color: #475569;
+                font-size: 0.78rem;
+                font-weight: 650;
+                line-height: 1;
+            }
+            .resume-card {
+                border: 1px solid rgba(15, 23, 42, 0.08);
+                background: rgba(255, 255, 255, 0.92);
+                border-radius: 24px;
+                padding: 1.25rem;
+                box-shadow: 0 14px 36px rgba(15, 23, 42, 0.055);
+            }
+            .resume-timeline-item {
+                border-left: 3px solid #dbeafe;
+                padding-left: 1rem;
+            }
+            .resume-timeline-date {
+                display: inline-flex;
+                border-radius: 999px;
+                background: #eff6ff;
+                color: #1d4ed8;
+                padding: 0.28rem 0.58rem;
+                font-size: 0.74rem;
+                font-weight: 700;
+                line-height: 1;
+            }
+            @keyframes resumeMetricIn {
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes resumeBarGrow {
+                to { width: var(--level, 70%); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .resume-status-dot,
+                #careerProfileModal.is-open .resume-metric-card,
+                #careerProfileModal.is-open .resume-bar-fill {
+                    animation: none !important;
+                }
+                .resume-metric-card { opacity: 1; transform: none; }
+                .resume-bar-fill { width: var(--level, 70%); }
+            }
+            @media screen and (max-width: 767px) {
+                #careerProfileModal .career-profile-header > div.relative {
+                    padding: 0.9rem 0.9rem 0.8rem !important;
+                }
+                #careerProfileModal .career-profile-header .flex.items-start.justify-between {
+                    gap: 0.65rem;
+                    align-items: flex-start;
+                }
+                #careerProfileModal .career-profile-header .flex.items-center.gap-4.min-w-0 {
+                    gap: 0.65rem !important;
+                    flex: 1 1 auto;
+                    min-width: 0;
+                }
+                #careerProfileModal .career-profile-header img {
+                    width: 3.65rem !important;
+                    height: 3.65rem !important;
+                    border-radius: 1rem !important;
+                }
+                #careerProfileModal .career-profile-header h2 {
+                    font-size: 1.12rem !important;
+                    line-height: 1.08 !important;
+                    max-width: 10.8rem;
+                }
+                #careerProfileModal .career-profile-header h2 + p {
+                    font-size: 0.72rem !important;
+                    line-height: 1.25 !important;
+                    max-width: 10.8rem;
+                }
+                #careerProfileModal .resume-lang-toggle {
+                    padding: 0.16rem;
+                    gap: 0.12rem;
+                }
+                #careerProfileModal .resume-lang-btn {
+                    padding: 0.36rem 0.52rem;
+                    font-size: 0.68rem;
+                }
+                #careerProfileModal #btnCloseCareerProfile {
+                    width: 2.25rem !important;
+                    height: 2.25rem !important;
+                }
+                #careerProfileModal .resume-card {
+                    border-radius: 20px;
+                    padding: 1rem;
+                }
+            }
 	    </style>
 </head>
-<body class="overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
+<body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
 
     <datalist id="dbProductList"></datalist>
+
+    <nav id="appLanguageSwitcher" class="app-language-switcher" aria-label="Ngôn ngữ ứng dụng">
+        <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
+        <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+    </nav>
 
     <div id="customToast">
         <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -278,7 +776,7 @@
     </div>
 
     <!-- HỒ SƠ NĂNG LỰC ONLINE -->
-    <div id="careerProfileModal" class="fixed inset-0 bg-slate-950/90 z-[2700] hidden items-center justify-center backdrop-blur-md transition-opacity duration-300 opacity-0 px-0 md:px-6">
+    <div id="careerProfileModal" class="lang-vi fixed inset-0 bg-slate-950/90 z-[2700] hidden items-center justify-center backdrop-blur-md transition-opacity duration-300 opacity-0 px-0 md:px-6">
         <div class="career-profile-shell bg-white rounded-none md:rounded-3xl w-full max-w-6xl shadow-[0_24px_80px_rgba(0,0,0,0.45)] transform scale-95 transition-transform duration-300 flex flex-col h-full md:h-auto max-h-[100dvh] md:max-h-[92vh] overflow-hidden">
             <header class="career-profile-header relative overflow-hidden bg-slate-950 text-white shrink-0">
                 <div class="absolute inset-0 pointer-events-none">
@@ -291,35 +789,210 @@
                         <div class="flex items-center gap-4 min-w-0">
                             <img src="data:image/jpeg;base64,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" alt="Huỳnh Minh Thuận" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-white/80 shadow-2xl shrink-0">
                             <div class="min-w-0">
-                                <p class="text-[10px] font-black uppercase tracking-[0.28em] text-cyan-300">Professional Profile</p>
+                                <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="en">Professional Resume</span><span data-lang="vi">Hồ sơ nghề nghiệp</span></p>
                                 <h2 class="mt-1 text-2xl md:text-4xl font-black uppercase tracking-wide leading-tight">Huỳnh Minh Thuận</h2>
-                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300">Sales Supervisor | Field Sales | Kênh đại lý & nhà phân phối</p>
+                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Supervisor | Field Sales | Dealer & Distributor Channels</span><span data-lang="vi">Giám sát bán hàng | Bán hàng thị trường | Kênh đại lý và nhà phân phối</span></p>
                                 <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-bold">
-                                    <span class="rounded-full bg-white/10 border border-white/15 px-3 py-1">Mỹ Tho - Tiền Giang</span>
-                                    <span class="rounded-full bg-white/10 border border-white/15 px-3 py-1">Thiết bị điện</span>
-                                    <span class="rounded-full bg-white/10 border border-white/15 px-3 py-1">Miền Tây</span>
+                                    <span class="resume-pill">My Tho, Tien Giang</span>
+                                    <span class="resume-pill"><span data-lang="en">Electrical products</span><span data-lang="vi">Thiết bị điện</span></span>
+                                    <span class="resume-pill"><span data-lang="en">Mekong Delta</span><span data-lang="vi">Miền Tây</span></span>
                                 </div>
                             </div>
                         </div>
-                        <button id="btnCloseCareerProfile" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors shrink-0">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <div class="resume-lang-toggle" aria-label="Ngôn ngữ hồ sơ">
+                                <button type="button" class="resume-lang-btn" data-career-lang="en">EN</button>
+                                <button type="button" class="resume-lang-btn is-active" data-career-lang="vi">VI</button>
+                            </div>
+                            <button id="btnCloseCareerProfile" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>
 
             <div class="career-profile-scroll flex-grow overflow-y-auto bg-slate-50">
+                <div class="resume-profile-upgrade p-4 md:p-6 lg:p-8">
+                    <div class="mx-auto max-w-6xl space-y-5">
+                        <section class="resume-card">
+                            <div data-lang="en" class="space-y-4">
+                                <p class="text-[12px] font-bold uppercase tracking-[0.16em] text-blue-600">Professional Summary</p>
+                                <h3 class="resume-section-title">Sales supervisor focused on field execution, dealer development, distributor coordination, and retail growth.</h3>
+                                <p class="resume-body-text">More than 10 years of sales experience across electrical products, electronics retail, FMCG, digital TV, and retail software. Strengths include route planning, dealer follow-up, promotion execution, store-level visibility, sales reporting, and practical sales operations tools.</p>
+                            </div>
+                            <div data-lang="vi" class="space-y-4">
+                                <p class="text-[12px] font-bold uppercase tracking-[0.16em] text-blue-600">Tóm tắt năng lực</p>
+                                <h3 class="resume-section-title">Giám sát bán hàng tập trung vào triển khai thị trường, phát triển đại lý, phối hợp nhà phân phối và tăng trưởng điểm bán.</h3>
+                                <p class="resume-body-text">Hơn 10 năm kinh nghiệm bán hàng trong thiết bị điện, điện máy, hàng tiêu dùng, truyền hình kỹ thuật số và phần mềm bán lẻ. Thế mạnh gồm lập tuyến, chăm sóc đại lý, triển khai khuyến mãi, trưng bày điểm bán, báo cáo doanh số và xây dựng công cụ hỗ trợ vận hành bán hàng.</p>
+                            </div>
+
+                            <div class="resume-metric-grid mt-5">
+                                <div class="resume-metric-card" style="--i:0">
+                                    <span class="resume-kpi-number">10+</span>
+                                    <p class="resume-kpi-label"><span data-lang="en">Years in sales and field operations</span><span data-lang="vi">Năm kinh nghiệm bán hàng và thị trường</span></p>
+                                </div>
+                                <div class="resume-metric-card" style="--i:1">
+                                    <span class="resume-kpi-number">5</span>
+                                    <p class="resume-kpi-label"><span data-lang="en">Mekong Delta provinces covered</span><span data-lang="vi">Tỉnh từng phụ trách tuyến bán hàng</span></p>
+                                </div>
+                                <div class="resume-metric-card" style="--i:2">
+                                    <span class="resume-kpi-number">6</span>
+                                    <p class="resume-kpi-label"><span data-lang="en">Sales and retail roles listed</span><span data-lang="vi">Vai trò bán hàng và vận hành đã đảm nhiệm</span></p>
+                                </div>
+                                <div class="resume-metric-card" style="--i:3">
+                                    <span class="resume-kpi-number">4</span>
+                                    <p class="resume-kpi-label"><span data-lang="en">Channels: electrical, retail, FMCG, SaaS</span><span data-lang="vi">Nhóm kênh: thiết bị điện, bán lẻ, hàng tiêu dùng, phần mềm bán hàng</span></p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="grid gap-5 lg:grid-cols-[0.95fr_1.35fr]">
+                            <aside class="space-y-5">
+                                <section class="resume-card">
+                                    <h3 class="resume-section-title"><span data-lang="en">Contact</span><span data-lang="vi">Liên hệ</span></h3>
+                                    <div class="mt-4 space-y-2 text-[14px] font-semibold text-slate-700">
+                                        <a class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5" href="tel:0939125128"><span><span data-lang="en">Phone</span><span data-lang="vi">Điện thoại</span></span><span class="text-blue-600">0939 125 128</span></a>
+                                        <a class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5" href="mailto:huynhthuanhmt@gmail.com"><span>Email</span><span class="truncate text-blue-600">huynhthuanhmt@gmail.com</span></a>
+                                        <a class="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2.5" href="https://thuanstore.com" target="_blank" rel="noopener"><span><span data-lang="en">Website</span><span data-lang="vi">Trang web</span></span><span class="text-blue-600">thuanstore.com</span></a>
+                                    </div>
+                                </section>
+
+                                <section class="resume-card">
+                                    <h3 class="resume-section-title"><span data-lang="en">Capability Dashboard</span><span data-lang="vi">Biểu đồ năng lực</span></h3>
+                                    <div class="resume-chart mt-4">
+                                        <div class="resume-chart-row">
+                                            <div class="resume-chart-head"><span data-lang="en">Field sales and route coverage</span><span data-lang="vi">Bán hàng thị trường và đi tuyến</span><span class="resume-chart-value"><span data-lang="en">10+ yrs</span><span data-lang="vi">10+ năm</span></span></div>
+                                            <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:92%; --i:0"></div></div>
+                                        </div>
+                                        <div class="resume-chart-row">
+                                            <div class="resume-chart-head"><span data-lang="en">Dealer and distributor channel</span><span data-lang="vi">Kênh đại lý và nhà phân phối</span><span class="resume-chart-value"><span data-lang="en">B2B</span><span data-lang="vi">Đại lý</span></span></div>
+                                            <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:84%; --i:1"></div></div>
+                                        </div>
+                                        <div class="resume-chart-row">
+                                            <div class="resume-chart-head"><span data-lang="en">Store operations and retail execution</span><span data-lang="vi">Vận hành cửa hàng và điểm bán</span><span class="resume-chart-value"><span data-lang="en">Retail</span><span data-lang="vi">Bán lẻ</span></span></div>
+                                            <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:74%; --i:2"></div></div>
+                                        </div>
+                                        <div class="resume-chart-row">
+                                            <div class="resume-chart-head"><span data-lang="en">Sales technology: Excel, web, SEO, AI</span><span data-lang="vi">Công nghệ bán hàng: Excel, web, SEO, AI</span><span class="resume-chart-value"><span data-lang="en">Tools</span><span data-lang="vi">Công cụ</span></span></div>
+                                            <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:70%; --i:3"></div></div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="resume-card">
+                                    <h3 class="resume-section-title"><span data-lang="en">Core Skills</span><span data-lang="vi">Năng lực chính</span></h3>
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        <span class="resume-pill"><span data-lang="en">Route planning</span><span data-lang="vi">Lập tuyến bán hàng</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Dealer negotiation</span><span data-lang="vi">Đàm phán đại lý</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Distributor support</span><span data-lang="vi">Hỗ trợ NPP</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Promotion rollout</span><span data-lang="vi">Triển khai khuyến mãi</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Retail display</span><span data-lang="vi">Trưng bày điểm bán</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Quotation workflow</span><span data-lang="vi">Quy trình báo giá</span></span>
+                                    </div>
+                                </section>
+                            </aside>
+
+                            <main class="space-y-5">
+                                <section class="resume-card">
+                                    <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                                        <div>
+                                            <p class="text-[12px] font-bold uppercase tracking-[0.16em] text-blue-600"><span data-lang="en">Career Timeline</span><span data-lang="vi">Lộ trình nghề nghiệp</span></p>
+                                            <h3 class="resume-section-title mt-1"><span data-lang="en">Work Experience</span><span data-lang="vi">Kinh nghiệm làm việc</span></h3>
+                                        </div>
+                                        <span class="resume-pill"><span data-lang="en">2014 - Present</span><span data-lang="vi">2014 - nay</span></span>
+                                    </div>
+
+                                    <div class="mt-5 space-y-5">
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4>
+                                                <span class="resume-timeline-date"><span data-lang="en">06/2024 - Present</span><span data-lang="vi">06/2024 - nay</span></span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor - Electrical products</span><span data-lang="vi">Giám sát bán hàng - Thiết bị điện</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Represent MPE products in Tien Giang, coordinate with distributors, support dealer execution, follow monthly targets, and manage field feedback.</span><span data-lang="vi">Đại diện sản phẩm MPE tại Tiền Giang, phối hợp nhà phân phối, hỗ trợ đại lý triển khai bán hàng, theo dõi mục tiêu tháng và ghi nhận phản hồi thị trường.</span></p>
+                                        </article>
+
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">Thành Hoàng Long</h4>
+                                                <span class="resume-timeline-date">02/2023 - 05/2024</span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor - FMCG and mother-baby products</span><span data-lang="vi">Giám sát bán hàng - FMCG, hàng mẹ và bé</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Developed customers, visited stores on schedule, rolled out promotions, collected market feedback, and improved in-store product visibility.</span><span data-lang="vi">Tìm kiếm khách hàng, ghé thăm định kỳ, triển khai chương trình khuyến mãi, ghi nhận phản hồi và cải thiện hình ảnh sản phẩm tại điểm bán.</span></p>
+                                        </article>
+
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">Điện máy Long Hải</h4>
+                                                <span class="resume-timeline-date">11/2021 - 01/2023</span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Store Manager</span><span data-lang="vi">Quản lý cửa hàng</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Managed store operations, customer service, sales growth, and dealer relationships across consumer electronics and digital TV products.</span><span data-lang="vi">Quản lý vận hành cửa hàng, chăm sóc khách hàng, phát triển doanh số điện máy và duy trì quan hệ với đại lý, chủ cửa hàng.</span></p>
+                                        </article>
+
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">AVG - Công ty CP Nghe Nhìn Toàn Cầu</h4>
+                                                <span class="resume-timeline-date">09/2019 - 10/2021</span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor</span><span data-lang="vi">Giám sát bán hàng</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Built market coverage in the Mekong Delta, supported digital TV dealers, tracked sales targets, and assisted sales team recruitment and training.</span><span data-lang="vi">Phát triển thị trường Miền Tây, chăm sóc đại lý truyền hình kỹ thuật số, theo dõi doanh số và hỗ trợ tuyển dụng, đào tạo đội ngũ bán hàng.</span></p>
+                                        </article>
+
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">Vũ Hồng Minh</h4>
+                                                <span class="resume-timeline-date">03/2017 - 08/2019</span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Market Development Representative</span><span data-lang="vi">Nhân viên phát triển thị trường</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Handled Tien Giang and Ben Tre, advised dealers on electronics, appliances, speakers, amplifiers, and TV products, with recognition as 2018 outstanding employee.</span><span data-lang="vi">Phụ trách Tiền Giang, Bến Tre; tư vấn điện tử, điện máy, loa kéo, âm ly, tivi và đạt nhân viên xuất sắc năm 2018.</span></p>
+                                        </article>
+
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                                <h4 class="text-[15px] font-bold text-slate-950">Sapo</h4>
+                                                <span class="resume-timeline-date">03/2014 - 01/2016</span>
+                                            </div>
+                                            <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Business Development Representative</span><span data-lang="vi">Nhân viên kinh doanh</span></p>
+                                            <p class="resume-body-text mt-2"><span data-lang="en">Consulted retailers on sales software, websites, SEO, ads, POS devices, and store management workflows.</span><span data-lang="vi">Tư vấn phần mềm bán hàng, trang web, SEO, quảng cáo, thiết bị POS và quy trình quản lý cửa hàng.</span></p>
+                                        </article>
+                                    </div>
+                                </section>
+
+                                <section class="grid gap-5 md:grid-cols-2">
+                                    <div class="resume-card">
+                                        <h3 class="resume-section-title"><span data-lang="en">Strengths</span><span data-lang="vi">Điểm mạnh</span></h3>
+                                        <ul class="mt-4 space-y-2 resume-body-text">
+                                            <li><span data-lang="en">Clear communication, negotiation, and dealer follow-up.</span><span data-lang="vi">Giao tiếp rõ, biết đàm phán và theo sát đại lý.</span></li>
+                                            <li><span data-lang="en">Comfortable with monthly targets, store visits, and field reporting.</span><span data-lang="vi">Quen làm mục tiêu tháng, đi tuyến và báo cáo thị trường.</span></li>
+                                            <li><span data-lang="en">Able to connect sales operations with practical digital tools.</span><span data-lang="vi">Có khả năng nối vận hành bán hàng với công cụ số thực tế.</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="resume-card">
+                                        <h3 class="resume-section-title"><span data-lang="en">Education & Recognition</span><span data-lang="vi">Học vấn & ghi nhận</span></h3>
+                                        <div class="mt-4 space-y-3 resume-body-text">
+                                            <p><strong class="text-slate-900"><span data-lang="en">HCMC College of Industry and Trade</span><span data-lang="vi">Cao đẳng Công Thương TP.HCM</span></strong><br><span data-lang="en">Accounting and auditing, 10/2010 - 05/2013.</span><span data-lang="vi">Kế toán kiểm toán, 10/2010 - 05/2013.</span></p>
+                                            <p><strong class="text-slate-900"><span data-lang="en">Recognition</span><span data-lang="vi">Ghi nhận</span></strong><br><span data-lang="en">Outstanding employee in 2018 at Vũ Hồng Minh.</span><span data-lang="vi">Nhân viên xuất sắc năm 2018 tại Công ty Vũ Hồng Minh.</span></p>
+                                            <p><strong class="text-slate-900"><span data-lang="en">English</span><span data-lang="vi">Ngoại ngữ</span></strong><br><span data-lang="en">Basic workplace communication; continuing to improve for sales and customer-facing contexts.</span><span data-lang="vi">Giao tiếp cơ bản; đang cải thiện để phục vụ công việc bán hàng và chăm sóc khách hàng.</span></p>
+                                        </div>
+                                    </div>
+                                </section>
+                            </main>
+                        </section>
+                    </div>
+                </div>
                 <section class="md:hidden p-4 pb-7 space-y-4">
                     <article class="career-premium-card rounded-[28px] p-5">
-                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Candidate Signal</p>
-                        <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950 leading-tight">Sales thực chiến biết biến kinh nghiệm thị trường thành công cụ bán hàng.</h3>
-                        <p class="mt-3 text-[14px] leading-relaxed text-slate-600 font-medium">Tôi không chỉ đi tuyến và chăm đại lý. Tôi hiểu điểm bán cần gì, nhà phân phối cần gì, và tự xây Thuận Store để giải quyết việc báo giá nhanh, rõ, chuyên nghiệp.</p>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Tóm tắt hồ sơ</p>
+                        <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950 leading-tight">Giám sát bán hàng có kinh nghiệm triển khai thị trường và hỗ trợ kênh đại lý.</h3>
+                        <p class="mt-3 text-[14px] leading-relaxed text-slate-600 font-medium">Kinh nghiệm tập trung vào đi tuyến, chăm sóc đại lý, phối hợp nhà phân phối, triển khai khuyến mãi, trưng bày điểm bán và tối ưu quy trình báo giá.</p>
                     </article>
 
                     <section class="grid grid-cols-3 gap-2">
                         <div class="career-premium-card rounded-3xl px-3 py-4 text-center">
                             <p class="text-2xl font-black text-slate-950">10+</p>
-                            <p class="mt-1 text-[9px] font-black uppercase tracking-wider text-slate-400">Năm sales</p>
+                            <p class="mt-1 text-[9px] font-black uppercase tracking-wider text-slate-400">Năm bán hàng</p>
                         </div>
                         <div class="career-premium-card rounded-3xl px-3 py-4 text-center">
                             <p class="text-2xl font-black text-slate-950">B2B</p>
@@ -381,18 +1054,18 @@
                                 <span class="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-slate-400 ring-4 ring-white"></span>
                                 <p class="text-[11px] font-black text-slate-500">2014 - 2016</p>
                                 <h4 class="mt-1 text-[15px] font-black text-slate-950">Sapo - Nhân viên kinh doanh</h4>
-                                <p class="mt-1 text-[13px] leading-relaxed text-slate-600 font-medium">Tư vấn phần mềm bán hàng, website, SEO, quảng cáo và thiết bị POS; nền tảng giúp tôi nối sales với công nghệ.</p>
+                                <p class="mt-1 text-[13px] leading-relaxed text-slate-600 font-medium">Tư vấn phần mềm bán hàng, trang web, SEO, quảng cáo và thiết bị POS; nền tảng giúp tôi nối bán hàng với công nghệ.</p>
                             </section>
                         </div>
                     </article>
 
                     <article class="rounded-[28px] bg-slate-950 p-5 text-white shadow-[0_20px_60px_rgba(15,23,42,0.28)]">
-                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-300">Why Meet Me</p>
-                        <h3 class="mt-2 text-xl font-black leading-tight">Tôi không bán bằng lời đẹp. Tôi bán bằng tuyến, dữ liệu, quan hệ và tốc độ xử lý.</h3>
+                        <p class="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-300">Interview Focus</p>
+                        <h3 class="mt-2 text-xl font-black leading-tight">Kinh nghiệm nổi bật ở triển khai tuyến, dữ liệu bán hàng, quan hệ đại lý và tốc độ xử lý công việc.</h3>
                         <div class="mt-4 grid grid-cols-2 gap-2 text-[12px] font-bold text-slate-200">
                             <span class="rounded-2xl bg-white/10 px-3 py-2">Đàm phán đại lý</span>
                             <span class="rounded-2xl bg-white/10 px-3 py-2">Chăm NPP</span>
-                            <span class="rounded-2xl bg-white/10 px-3 py-2">Quản lý sales</span>
+                            <span class="rounded-2xl bg-white/10 px-3 py-2">Quản lý bán hàng</span>
                             <span class="rounded-2xl bg-white/10 px-3 py-2">Tối ưu báo giá</span>
                         </div>
                     </article>
@@ -415,7 +1088,7 @@
                         <section class="grid grid-cols-3 gap-2">
                             <div class="rounded-2xl bg-slate-950 text-white p-3 text-center">
                                 <div class="text-xl font-black">10+</div>
-                                <div class="mt-1 text-[9px] font-bold uppercase tracking-wider text-slate-400">Năm sales</div>
+                                <div class="mt-1 text-[9px] font-bold uppercase tracking-wider text-slate-400">Năm bán hàng</div>
                             </div>
                             <div class="rounded-2xl bg-blue-50 text-blue-900 p-3 text-center border border-blue-100">
                                 <div class="text-xl font-black">5</div>
@@ -450,7 +1123,7 @@
                             <div class="space-y-2 text-[13px] font-bold text-slate-700">
                                 <a class="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 px-3 py-2" href="tel:0939125128"><span>Điện thoại</span><span class="text-blue-600">0939 125 128</span></a>
                                 <a class="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 px-3 py-2" href="mailto:huynhthuanhmt@gmail.com"><span>Email</span><span class="text-blue-600 truncate ml-3">huynhthuanhmt@gmail.com</span></a>
-                                <a class="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 px-3 py-2" href="https://thuanstore.com" target="_blank" rel="noopener"><span>Website</span><span class="text-blue-600">thuanstore.com</span></a>
+                                <a class="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 px-3 py-2" href="https://thuanstore.com" target="_blank" rel="noopener"><span>Trang web</span><span class="text-blue-600">thuanstore.com</span></a>
                             </div>
                         </section>
                     </aside>
@@ -499,7 +1172,7 @@
                                         <span class="text-[11px] font-black text-slate-600 bg-slate-100 px-2 py-1 rounded-lg">09/2019 - 10/2021</span>
                                     </div>
                                     <p class="text-[12px] font-bold text-slate-500 mt-1">Giám sát bán hàng</p>
-                                    <p class="text-[13px] leading-relaxed text-slate-600 mt-2">Phát triển khu vực Miền Tây, tư vấn sản phẩm đầu thu truyền hình kỹ thuật số, chăm sóc đại lý, đảm bảo doanh số và hỗ trợ tuyển dụng, đào tạo đội ngũ sales thị trường.</p>
+                                    <p class="text-[13px] leading-relaxed text-slate-600 mt-2">Phát triển khu vực Miền Tây, tư vấn sản phẩm đầu thu truyền hình kỹ thuật số, chăm sóc đại lý, đảm bảo doanh số và hỗ trợ tuyển dụng, đào tạo đội ngũ bán hàng thị trường.</p>
                                 </article>
 
                                 <article class="border-l-4 border-emerald-500 pl-4">
@@ -527,7 +1200,7 @@
                                 <h3 class="text-[15px] font-black text-slate-900 uppercase mb-3">Điểm mạnh nghề nghiệp</h3>
                                 <ul class="space-y-2 text-[13px] leading-relaxed text-slate-600 font-medium">
                                     <li>Khả năng giao tiếp, đàm phán và thuyết phục đại lý nhập hàng.</li>
-                                    <li>Có kinh nghiệm tuyển dụng, đào tạo và quản lý đội ngũ sales thị trường.</li>
+                                    <li>Có kinh nghiệm tuyển dụng, đào tạo và quản lý đội ngũ bán hàng thị trường.</li>
                                     <li>Chăm sóc khách hàng, xử lý thắc mắc, bảo hành và phản hồi tại điểm bán.</li>
                                     <li>Tiếp thu sản phẩm mới nhanh, biết phân tích tình huống và xử lý vấn đề.</li>
                                 </ul>
@@ -547,8 +1220,8 @@
 
             <footer class="bg-white border-t border-slate-200 p-3 md:p-4 shrink-0">
                 <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-center md:justify-between">
-                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left">Hồ sơ này được xây dựng từ kinh nghiệm bán hàng thực tế và công cụ Thuận Store.</p>
-                    <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-xs uppercase tracking-widest active:scale-95 transition-transform">Đóng hồ sơ</button>
+                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Resume version prepared for sales supervisor applications and English screening.</span><span data-lang="vi">Phiên bản hồ sơ dùng cho ứng tuyển giám sát bán hàng và sàng lọc tiếng Anh.</span></p>
+                    <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-sm active:scale-95 transition-transform"><span data-lang="en">Close profile</span><span data-lang="vi">Đóng hồ sơ</span></button>
                 </div>
             </footer>
         </div>
@@ -654,7 +1327,7 @@
                 </div>
                 <div class="flex items-center gap-2 mt-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
                     <div class="h-[1px] w-5 bg-gradient-to-r from-transparent to-cyan-500"></div>
-                    <span class="text-[9px] md:text-[10px] text-cyan-400 font-bold tracking-[0.3em] uppercase">Chạm đến tương lai</span>
+                    <span class="text-[9px] md:text-[10px] text-cyan-400 font-bold tracking-[0.18em] uppercase" data-i18n="landing.slogan">CHẠM ĐẾN TƯƠNG LAI</span>
                     <div class="h-[1px] w-5 bg-gradient-to-l from-transparent to-cyan-500"></div>
                 </div>
             </div>
@@ -673,12 +1346,12 @@
 
               <!-- QUỸ ĐẠO NHỎ BÊN TRONG -->
                 <div class="inner-orbit-track cursor-pointer">
-                    <!-- Vệ tinh 1: Hotline cũ -->
+                    <!-- Vệ tinh 1: Liên hệ cũ -->
                     <div class="inner-sat-wrapper group">
                         <div id="demoHotlineTrigger" class="orbit-node sat-hotline text-emerald-400">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                         </div>
-                        <span class="sat-tooltip tooltip-bottom">Hotline & Góp Ý</span>
+                        <span class="sat-tooltip tooltip-bottom">Liên hệ & Góp ý</span>
                     </div>
                     
                     <!-- Vệ tinh 2: Lịch CSKH mới -->
@@ -696,7 +1369,7 @@
                     <div class="absolute top-2 left-2 right-2 bottom-2 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-80" style="animation-duration: 3s; animation-direction: reverse;"></div>
                     <div class="absolute top-[16px] left-[16px] right-[16px] bottom-[16px] bg-slate-950/98 -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); rounded-full border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-[inset_0_0_50px_rgba(6,182,212,0.2)] group-hover:border-cyan-400/60 transition-colors duration-300">
                          <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
-                             <span class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-300 tracking-wider mb-3" style="line-height: 1.2; text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);">BẢNG<br>BÁO GIÁ</span>
+                             <span class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-300 tracking-wider mb-3" style="line-height: 1.2; text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);" data-i18n-html="landing.mainTitle">BẢNG<br>BÁO GIÁ</span>
                              <div class="h-[2px] w-12 bg-gradient-to-r from-transparent via-cyan-500 to-transparent mb-3 opacity-70"></div>
                              <span id="btnStartText" class="text-[9px] md:text-[10px] font-bold text-cyan-400 uppercase tracking-[0.25em] animate-pulse">Tạo báo giá ngay</span>
 	                         </div>
@@ -707,15 +1380,17 @@
 
         <!-- FOOTER CỐ ĐỊNH PHÍA DƯỚI -->
         <footer class="w-full text-center z-50 pb-4 md:pb-8 pt-2 shrink-0 pointer-events-none">
-            <div class="pointer-events-auto inline-flex items-center gap-1 rounded-full border border-cyan-400/25 bg-slate-950/65 px-1.5 py-1 shadow-[0_0_22px_rgba(34,211,238,0.12)] backdrop-blur-xl">
-                <button id="btnOpenGuideLanding" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-cyan-300/90 active:scale-95 transition-transform" title="Hướng dẫn" aria-label="Hướng dẫn">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.228 9c.549-1.165 1.979-2 3.772-2 2.21 0 4 1.343 4 3 0 1.305-1.112 2.416-2.666 2.83-.798.213-1.334.922-1.334 1.748V15m0 3h.01"></path></svg>
-                </button>
-                <span class="h-4 w-px bg-cyan-300/20"></span>
-                <button id="btnOpenCareerProfileFooter" class="cv-footer-pulse inline-flex h-8 items-center justify-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 text-[10px] font-black uppercase tracking-[0.16em] text-cyan-100 active:scale-95 transition-transform">
-                    <span>© Huỳnh Thuận</span>
-                    <span class="rounded-full bg-cyan-300 px-1.5 py-0.5 text-[8px] font-black tracking-widest text-slate-950">CV</span>
-                </button>
+            <div class="landing-footer-stack pointer-events-auto">
+                <div class="landing-footer-shell">
+                    <button id="btnOpenGuideLanding" class="landing-tool-button active:scale-95" title="Hướng dẫn" aria-label="Hướng dẫn">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.228 9c.549-1.165 1.979-2 3.772-2 2.21 0 4 1.343 4 3 0 1.305-1.112 2.416-2.666 2.83-.798.213-1.334.922-1.334 1.748V15m0 3h.01"></path></svg>
+                    </button>
+                    <span class="h-4 w-px bg-slate-400/20"></span>
+                    <button id="btnOpenCareerProfileFooter" class="resume-launch-button cv-footer-pulse active:scale-95" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân">
+                        <svg class="shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M15.75 7.5a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0"></path></svg>
+                    </button>
+                </div>
+                <div class="landing-footer-copy" data-i18n="footer.copyright">© 2026 Thuận Store. Bảo lưu mọi quyền.</div>
             </div>
         </footer>
     </main>
@@ -854,23 +1529,23 @@
     <!-- MODAL KHUYẾN MÃI MỚI (TẶNG QUÀ VIRTUAL) -->
     <div id="promoManagerModal" class="fullscreen-modal" style="z-index: 105;">
         <div class="bg-white border-b border-slate-200 p-4 pt-12 flex items-center justify-between shrink-0 shadow-sm relative z-20">
-            <button id="btnClosePromoManager" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-lg text-xs">ĐÓNG</button>
-            <h2 class="font-black text-indigo-600 text-sm uppercase">Cấu hình Khuyến mãi</h2>
+            <button id="btnClosePromoManager" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-lg text-xs">Đóng</button>
+            <h2 class="font-black text-indigo-600 text-sm uppercase">Cấu hình khuyến mãi</h2>
             <div class="w-20"></div>
         </div>
         <div class="flex-grow overflow-y-auto bg-slate-50 p-4 pb-32">
             <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-200 mb-6">
                 <div class="flex gap-2 mb-4 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
-                    <button id="btnTabItemPromo" class="flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700">Theo Sản Phẩm</button>
-                    <button id="btnTabOrderPromo" class="flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg">Theo Tổng Đơn</button>
+                    <button id="btnTabItemPromo" class="promo-tab flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700">Theo sản phẩm</button>
+                    <button id="btnTabOrderPromo" class="promo-tab flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg">Theo tổng đơn</button>
                 </div>
                 
-                <input type="text" id="promoNameIn" placeholder="Tên CTKM (VD: Mua 10 tặng 1)..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold mb-5 outline-none focus:border-indigo-400 focus:bg-white transition-colors">
+                <input type="text" id="promoNameIn" placeholder="Tên chương trình, ví dụ: Mua 10 tặng 1" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold mb-5 outline-none focus:border-indigo-400 focus:bg-white transition-colors">
                 
                 <div id="groupItemPromo" class="space-y-4">
                     <!-- KHỐI 1: ĐIỀU KIỆN MUA -->
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 relative">
-                        <span class="absolute -top-2.5 left-4 bg-slate-200 text-slate-600 text-[10px] font-black px-2 py-0.5 rounded uppercase">1. Điều kiện mua</span>
+                    <div class="promo-section bg-slate-50 p-4 rounded-xl border border-slate-200 relative">
+                        <span class="promo-step-badge absolute -top-2.5 left-4 bg-slate-200 text-slate-600 text-[10px] font-black px-2 py-0.5 rounded uppercase">1. Điều kiện mua</span>
                         <div class="mt-2">
                             <label class="text-xs font-bold text-slate-800 mb-2 block">Số lượng tối thiểu để kích hoạt:</label>
                             <input type="number" id="promoMinQtyIn" min="1" value="1" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black text-slate-900 outline-none focus:border-indigo-500 mb-3">
@@ -887,37 +1562,37 @@
                     </div>
 
                     <!-- KHỐI 2: ƯU ĐÃI NHẬN -->
-                    <div class="bg-indigo-50/70 p-4 rounded-xl border border-indigo-200 relative">
-                        <span class="absolute -top-2.5 left-4 bg-indigo-500 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">2. Ưu đãi nhận được</span>
+                    <div class="promo-section promo-accent-section bg-indigo-50/70 p-4 rounded-xl border border-indigo-200 relative">
+                        <span class="promo-step-badge is-accent absolute -top-2.5 left-4 bg-indigo-500 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">2. Ưu đãi nhận được</span>
                         
                         <div class="mt-2 space-y-3">
                             <div>
                                 <label class="text-[11px] font-bold text-indigo-900 mb-1.5 block">Loại hình khuyến mãi:</label>
                                 <select id="promoTypeIn" class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-sm font-bold outline-none text-indigo-900 focus:border-indigo-500">
-                                    <optgroup label="Giảm Giá Trực Tiếp">
-                                        <option value="extra_percent">Giảm THÊM (%)</option>
-                                        <option value="extra_tien_sp">Trừ THÊM tiền / Từng SP</option>
-                                        <option value="extra_tien_tong">Trừ THÊM tiền / Tổng dòng</option>
+                                    <optgroup label="Giảm giá trực tiếp">
+                                        <option value="extra_percent">Giảm thêm (%)</option>
+                                        <option value="extra_tien_sp">Trừ thêm tiền / từng sản phẩm</option>
+                                        <option value="extra_tien_tong">Trừ thêm tiền / tổng dòng</option>
                                     </optgroup>
-                                    <optgroup label="Tặng Hiện Vật (Hàng Hóa)">
-                                        <option value="gift_same">🎁 Tặng thêm CHÍNH SP ĐÓ</option>
-                                        <option value="gift_other">🎁 Tặng SP KHÁC (Mua A tặng B)</option>
+                                    <optgroup label="Tặng hiện vật">
+                                        <option value="gift_same">Tặng thêm chính sản phẩm đó</option>
+                                        <option value="gift_other">Tặng sản phẩm khác (mua A tặng B)</option>
                                     </optgroup>
                                 </select>
                             </div>
                             
                             <div id="promoValueContainer">
-                                <input type="number" id="promoValueIn" placeholder="Nhập Mức Giảm (VD: 5)..." class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-base font-black text-indigo-700 outline-none focus:border-indigo-500">
+                                <input type="number" id="promoValueIn" placeholder="Nhập mức giảm, ví dụ: 5" class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-base font-black text-indigo-700 outline-none focus:border-indigo-500">
                             </div>
 
                             <div id="promoGiftContainer" class="hidden space-y-3 bg-white p-3 rounded-lg border border-indigo-100 shadow-sm">
                                 <div>
-                                    <label class="text-[11px] font-bold text-slate-700 block mb-1">Số lượng Tặng:</label>
+                                    <label class="text-[11px] font-bold text-slate-700 block mb-1">Số lượng tặng:</label>
                                     <input type="number" id="promoGiftQtyIn" placeholder="VD: 1" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-base font-black text-emerald-600 outline-none focus:border-emerald-500">
                                 </div>
                                 <div id="promoGiftSearchBox" class="hidden border-t border-slate-100 pt-3">
-                                    <label class="text-[11px] font-bold text-slate-700 block mb-1">Tên SP đem tặng (Gõ để tìm hoặc nhập tên tùy ý):</label>
-                                    <input type="text" id="promoGiftNameIn" list="dbProductList" placeholder="VD: Nón bảo hiểm, Tên SP trong kho..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm font-bold text-slate-900 outline-none focus:border-indigo-500">
+                                    <label class="text-[11px] font-bold text-slate-700 block mb-1">Tên sản phẩm tặng:</label>
+                                    <input type="text" id="promoGiftNameIn" list="dbProductList" placeholder="Gõ để tìm trong kho hoặc nhập quà tùy ý" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm font-bold text-slate-900 outline-none focus:border-indigo-500">
                                 </div>
                             </div>
                         </div>
@@ -926,15 +1601,15 @@
                     <!-- KHỐI 3: ÁP DỤNG CHO -->
                     <div class="relative pt-2">
                         <button id="btnSelectPromoProducts" class="w-full border-2 border-dashed border-indigo-300 bg-white hover:bg-indigo-50 text-indigo-700 font-bold py-3.5 rounded-xl text-xs uppercase transition-colors">
-                            3. CHỌN SẢN PHẨM ÁP DỤNG (<span id="promoSelectedCount">0</span>)
+                            Chọn sản phẩm áp dụng (<span id="promoSelectedCount">0</span>)
                         </button>
                     </div>
                 </div>
 
                 <!-- RULE TỔNG ĐƠN -->
                 <div id="groupOrderPromo" class="space-y-4 hidden">
-                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                        <label class="text-[11px] font-black text-slate-700 mb-2 block">MỐC TỔNG ĐƠN (VNĐ):</label>
+                    <div class="promo-section bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <label class="text-[11px] font-black text-slate-700 mb-2 block">Mốc tổng đơn (VNĐ):</label>
                         
                        <input type="number" id="promoOrderMinAmount" placeholder="VD: 5000000" class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-base font-black outline-none mb-3">
                         <label class="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-white p-2 rounded border border-slate-200 mb-2"><input type="checkbox" id="promoOrderMultiply" class="w-4 h-4 rounded text-indigo-600"> Tự động nhân quà lũy tiến</label>
@@ -944,20 +1619,20 @@
                             Chỉ áp dụng tính tổng cho nhóm Thiết Bị Điện
                         </label>
                     </div>
-                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-                        <label class="text-[11px] font-black text-indigo-700 mb-2 block">ƯU ĐÃI NHẬN:</label>
-                        <select id="promoOrderType" class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-sm font-bold mb-3 outline-none text-indigo-900"><option value="gift">Tặng Hiện Vật (Quà)</option><option value="discount">Trừ Trực Tiếp Tiền</option><option value="discount_percent">Giảm Theo %</option></select>
-                        <label id="labelOrderValue" class="text-[11px] font-bold text-slate-700 block mb-1">Tên Hiện Vật/Số tiền:</label>
+                    <div class="promo-section promo-accent-section bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                        <label class="text-[11px] font-black text-indigo-700 mb-2 block">Ưu đãi nhận:</label>
+                        <select id="promoOrderType" class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-sm font-bold mb-3 outline-none text-indigo-900"><option value="gift">Tặng hiện vật</option><option value="discount">Trừ trực tiếp tiền</option><option value="discount_percent">Giảm theo %</option></select>
+                        <label id="labelOrderValue" class="text-[11px] font-bold text-slate-700 block mb-1">Tên hiện vật/Số tiền:</label>
                         <input type="text" id="promoOrderValue" placeholder="Tên quà..." class="w-full bg-white border border-indigo-200 rounded-lg p-2.5 text-base font-black text-indigo-700 outline-none">
                     </div>
                 </div>
                 
-                <button id="btnSavePromo" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl uppercase text-sm mt-5 shadow-lg active:scale-95 transition-transform">LƯU CHƯƠNG TRÌNH</button>
+                <button id="btnSavePromo" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl uppercase text-sm mt-5 shadow-lg active:scale-95 transition-transform">Lưu chương trình</button>
             </div>
 
             <div class="flex items-center gap-2 mb-3">
                 <div class="h-1 flex-1 bg-slate-200 rounded"></div>
-                <h3 class="font-black text-slate-400 text-xs uppercase tracking-widest">Danh Sách Đang Chạy</h3>
+                <h3 class="font-black text-slate-400 text-xs uppercase tracking-widest">Chương trình đang chạy</h3>
                 <div class="h-1 flex-1 bg-slate-200 rounded"></div>
             </div>
             <div id="promoListContainer" class="space-y-3"></div>
@@ -967,9 +1642,9 @@
     <!-- MODAL TÌM SP CHO KM -->
     <div id="promoProductSearchModal" class="fullscreen-modal" style="z-index: 110;">
         <div class="bg-white border-b border-slate-200 p-4 pt-12 flex items-center justify-between shrink-0 shadow-sm">
-            <button id="btnClosePromoSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl text-xs">TRỞ LẠI</button>
-            <h2 class="font-black text-slate-900 text-sm uppercase">Chọn SP Khuyến Mãi</h2>
-            <button id="btnFinishPromoSearch" class="bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">XONG</button>
+            <button id="btnClosePromoSearch" class="text-slate-500 bg-slate-100 font-bold px-4 py-2 rounded-xl text-xs">Trở lại</button>
+            <h2 class="font-black text-slate-900 text-sm uppercase">Chọn sản phẩm áp dụng</h2>
+            <button id="btnFinishPromoSearch" class="bg-indigo-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md">Xong</button>
         </div>
         <div class="p-3 bg-slate-50 border-b border-slate-200"><input type="text" id="promoSearchInput" placeholder="Tìm kiếm nhanh sản phẩm..." class="w-full bg-white border border-slate-300 rounded-xl p-3 text-sm font-bold outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all"></div>
         <div class="flex-grow overflow-y-auto bg-white pb-32"><div id="promoProductList" class="divide-y divide-slate-100"></div></div>
@@ -1245,7 +1920,7 @@
                 return { text: n.toFixed(2).replace(/\.?0+$/, '') + '%', type: isDecrease ? 'giảm' : 'tăng', value: isDecrease ? -n : n };
             },
             showToast: (msg, duration = 3000) => {
-                const toast = document.getElementById('customToast'); document.getElementById('toastMsg').textContent = msg;
+                const toast = document.getElementById('customToast'); document.getElementById('toastMsg').textContent = window.AppI18n ? AppI18n.t(msg) : msg;
                 toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), duration);
             },
             generateId: () => Math.random().toString(36).substr(2, 9),
@@ -1299,6 +1974,437 @@
         const DEFAULT_SAMPLE_WAREHOUSE = "BẢNG GIÁ 4.2026 FINAL";
         const DEFAULT_SAMPLE_DISABLED_KEY = "thuanstore_default_sample_disabled_v1";
         const GUIDE_SEEN_KEY = "thuanstore_guide_seen_v1";
+        const CAREER_LANG_KEY = "thuanstore_career_lang_v3";
+        const APP_LANG_KEY = "thuanstore_app_lang_v1";
+        const AppI18n = (() => {
+            const keyed = {
+                "landing.slogan": { vi: "CHẠM ĐẾN TƯƠNG LAI", en: "TOUCH THE FUTURE" },
+                "landing.mainTitle": { vi: "BẢNG<br>BÁO GIÁ", en: "QUOTE<br>BUILDER" },
+                "footer.copyright": { vi: "© 2026 Thuận Store. Bảo lưu mọi quyền.", en: "© 2026 Thuận Store. All rights reserved." }
+            };
+            const toEn = {
+                "Thông báo": "Notice",
+                "Thuận Store - Công Cụ Tạo Bảng Báo Giá": "Thuận Store - Quote Builder",
+                "Tạo Báo Giá Nhanh": "Quick Quote Builder",
+                "Có sẵn bảng giá mẫu, chọn sản phẩm là xuất gửi khách.": "Sample price data is ready. Select products and export for customers.",
+                "Dành cho người mới": "For first-time users",
+                "Đây là công cụ lập bảng báo giá: tìm sản phẩm, chỉnh số lượng/chiết khấu, thêm khuyến mãi và xuất ảnh, PDF hoặc Excel để gửi khách.": "This tool helps you build quotes: search products, adjust quantity/discounts, add promotions, and export image, PDF, or Excel files for customers.",
+                "Dùng dữ liệu có sẵn": "Use Sample Data",
+                "Web đã có sẵn bảng giá mẫu. Nếu không dùng mẫu, vào": "The app includes sample price data. To use your own data, open",
+                "Quản lý kho": "Warehouse",
+                "Xóa Kho": "Clear Warehouse",
+                "rồi upload Excel riêng.": "then upload your Excel file.",
+                "Thêm sản phẩm": "Add Products",
+                "Bấm": "Tap",
+                "BẢNG BÁO GIÁ": "QUOTE BUILDER",
+                "Thêm SP": "Add Product",
+                "tìm theo mã hoặc tên, rồi bấm": "search by code or name, then tap",
+                "Thêm": "Add",
+                "Có thể thêm thủ công nếu sản phẩm chưa có trong kho.": "You can add a product manually if it is not in the warehouse.",
+                "Chỉnh giá & chiết khấu": "Edit Prices & Discounts",
+                "Sửa": "Edit",
+                "Ô cuối là trừ tiền:": "The last field is a cash discount:",
+                "trừ từng sản phẩm,": "subtracts per product,",
+                "trừ cả dòng hàng.": "subtracts from the full line.",
+                "Tạo khuyến mãi": "Create Promotions",
+                "Mở": "Open",
+                "chọn loại theo sản phẩm hoặc tổng đơn, nhập điều kiện, chọn sản phẩm áp dụng, rồi bấm": "choose by product or order total, enter conditions, select products, then tap",
+                "Lưu chương trình": "Save Program",
+                "Xuất gửi khách": "Export for Customers",
+                "Nhập tên khách, người báo giá, SĐT và ghi chú nếu cần.": "Enter customer name, sender, phone number, and notes if needed.",
+                "Xuất": "Export",
+                "để lưu ảnh, PDF, Excel, in hoặc copy tin nhắn gửi khách.": "to save an image, PDF, Excel file, print, or copy a customer message.",
+                "Lưu ý an toàn": "Safety Note",
+                "Dữ liệu lưu trên trình duyệt hiện tại. Luôn giữ file Excel gốc.": "Data is stored in this browser. Always keep your original Excel file.",
+                "Bắt đầu lại": "Restart",
+                "chỉ xóa báo giá, còn": "only clears the current quote, while",
+                "Xóa kho": "Clear Warehouse",
+                "sẽ xóa toàn bộ sản phẩm đã nạp.": "removes all imported products.",
+                "Mẫu Excel tối thiểu khi upload file riêng": "Minimum Excel columns for your own file",
+                "Mã SP": "SKU",
+                "Tên SP": "Product Name",
+                "ĐVT": "Unit",
+                "Giá Bìa": "List Price",
+                "Đã Hiểu": "Got It",
+                "Bắt Đầu Báo Giá": "Start Quote",
+                "CHẠM ĐẾN TƯƠNG LAI": "TOUCH THE FUTURE",
+                "BẢNG BÁO GIÁ": "QUOTE",
+                "Tạo báo giá ngay": "Create quote now",
+                "Quản lý kho": "Warehouse",
+                "Khuyến mãi": "Promotions",
+                "Chiết khấu": "Discounts",
+                "Cấu hình": "Settings",
+                "Liên hệ & Góp ý": "Contact & Feedback",
+                "Lịch chăm sóc khách hàng": "Customer Care Schedule",
+                "QUẢN LÝ KHO DỮ LIỆU": "DATA WAREHOUSE",
+                "ĐÓNG": "CLOSE",
+                "Đóng": "Close",
+                "Kho Hàng Đã Tải": "Loaded Warehouses",
+                "Tạo Báo Giá": "Create Quote",
+                "Thêm Excel Mới": "Add New Excel",
+                "Chạm để chọn file (.xlsx)": "Tap to choose file (.xlsx)",
+                "Dùng dữ liệu mẫu": "Use Sample Data",
+                "Cấu Hình Cột": "Column Mapping",
+                "1. Tạo Kho Gốc": "1. Create Master Warehouse",
+                "2. Cập Nhật Giá Net": "2. Update Net Price",
+                "2. Cập Nhật (Kho Trống)": "2. Update (Empty Warehouse)",
+                "Cột Giá Chốt/Net *": "Final/Net Price Column *",
+                "CK Dự Phòng (%)": "Fallback Discount (%)",
+                "Lưu ý: Chỉ tính lại bù trừ tự động cho các SP đã có sẵn trong kho dựa theo Mã SP.": "Note: Only recalculates automatic offsets for existing products matched by SKU.",
+                "Tên SP *": "Product Name *",
+                "ĐVT / % Tăng": "Unit / % Change",
+                "Giá Bìa *": "List Price *",
+                "LƯU VÀO KHO": "SAVE TO WAREHOUSE",
+                "Giỏ Hàng": "Cart",
+                "Tổng:": "Total:",
+                "XUẤT BÁO GIÁ": "EXPORT QUOTE",
+                "Cấu hình khuyến mãi": "Promotion Setup",
+                "Theo sản phẩm": "By Product",
+                "Theo tổng đơn": "By Order Total",
+                "1. Điều kiện mua": "1. Purchase Condition",
+                "Số lượng tối thiểu để kích hoạt:": "Minimum quantity to activate:",
+                "Nhân quà lũy tiến theo số lượng": "Multiply rewards by quantity",
+                "2. Ưu đãi nhận được": "2. Reward Received",
+                "Loại hình khuyến mãi:": "Promotion type:",
+                "Giảm giá trực tiếp": "Direct discount",
+                "Giảm thêm (%)": "Extra discount (%)",
+                "Trừ thêm tiền / từng sản phẩm": "Extra cash off / per product",
+                "Trừ thêm tiền / tổng dòng": "Extra cash off / line total",
+                "Tặng hiện vật": "Gift item",
+                "Tặng thêm chính sản phẩm đó": "Gift the same product",
+                "Tặng sản phẩm khác (mua A tặng B)": "Gift another product (buy A get B)",
+                "Số lượng tặng:": "Gift quantity:",
+                "Tên sản phẩm tặng:": "Gift product name:",
+                "Chọn sản phẩm áp dụng (": "Select products (",
+                "Mốc tổng đơn (VNĐ):": "Order total threshold (VND):",
+                "Tự động nhân quà lũy tiến": "Auto multiply rewards",
+                "Chỉ áp dụng tính tổng cho nhóm Thiết Bị Điện": "Only include Electrical Products in order total",
+                "Ưu đãi nhận:": "Reward:",
+                "Trừ trực tiếp tiền": "Direct cash discount",
+                "Giảm theo %": "Percentage discount",
+                "Tên hiện vật/Số tiền:": "Gift name/Amount:",
+                "Chương trình đang chạy": "Active Programs",
+                "Trở lại": "Back",
+                "Xong": "Done",
+                "Chọn sản phẩm áp dụng": "Select Products",
+                "CẤU HÌNH BÁO GIÁ": "QUOTE SETTINGS",
+                "LƯU CẤU HÌNH": "SAVE SETTINGS",
+                "CHIẾT KHẤU MẶC ĐỊNH": "DEFAULT DISCOUNTS",
+                "CÔNG THỨC": "FORMULA",
+                "Lũy tiến (Nối tiếp)": "Sequential",
+                "Cộng dồn (%)": "Additive (%)",
+                "CK CHUNG (%)": "BASE DISCOUNT (%)",
+                "TRỪ TIỀN": "CASH DISCOUNT",
+                "Trừ theo SP": "Per product",
+                "Trừ tổng dòng": "Line total",
+                "LƯU MẶC ĐỊNH": "SAVE DEFAULTS",
+                "TÌM SẢN PHẨM": "FIND PRODUCTS",
+                "XONG (": "DONE (",
+                "🔄 Biến Động: Tất Cả": "🔄 Change: All",
+                "⬆ Tăng Cao Nhất": "⬆ Highest Increase",
+                "⬇ Giảm Cao Nhất": "⬇ Highest Decrease",
+                "+ Thêm Mới": "+ New Product",
+                "Thêm Sản Phẩm Mới": "Add New Product",
+                "Hủy": "Cancel",
+                "Thêm SP": "Add Product",
+                "ĐÓNG BẢNG": "CLOSE QUOTE",
+                "Công Cụ Xuất": "Export Tools",
+                "Đang xử lý xuất file...": "Exporting file...",
+                "Kính gửi khách hàng:": "Dear customer:",
+                "Tên Sản Phẩm": "Product Name",
+                "Đơn Giá": "Unit Price",
+                "Thành Tiền": "Line Total",
+                "Ghi Chú": "Notes",
+                "Tổng thanh toán:": "Total payable:",
+                "Đại diện bán hàng": "Sales Representative",
+                "© Báo giá được xử lý bởi Thuận Store Tool.": "© Quote processed by Thuận Store Tool.",
+                "Máy In": "Print",
+                "Lưu PDF": "Save PDF",
+                "Lưu Ảnh": "Save Image",
+                "Xuất Excel": "Export Excel",
+                "Mẫu tin nhắn nhanh": "Quick Message Template",
+                "Copy Tin Nhắn": "Copy Message",
+                "LƯU ẢNH": "SAVE IMAGE",
+                "CHẠM GIỮ VÀO ẢNH ĐỂ LƯU": "LONG-PRESS THE IMAGE TO SAVE",
+                "Chưa có sản phẩm nào trong báo giá": "No products in this quote yet",
+                "Xóa": "Remove",
+                "XÓA": "REMOVE",
+                "THÊM": "ADD",
+                "Giá Bìa Mặc Định:": "Default List Price:",
+                "Đơn Giá Ck": "Discounted Price",
+                "AUTO KM": "AUTO PROMO",
+                "TẤT CẢ": "ALL",
+                "Chưa có chương trình nào": "No active programs",
+                "Lũy tiến": "Progressive",
+                "Thiết bị điện": "Electrical",
+                "Tặng": "Gift",
+                "Giảm": "Discount",
+                "Trừ": "Subtract",
+                "-- Chọn Cột --": "-- Select Column --",
+                "Cột": "Column",
+                "Góp ý nhanh": "Quick Feedback",
+                "Chia sẻ tính năng bạn mong muốn hoặc khó khăn gặp phải...": "Share the feature you want or the issue you are facing...",
+                "Gửi góp ý": "Send Feedback"
+                ,
+                "Đang gửi...": "Sending...",
+                "Ví dụ: 5000 (trừ tiền)": "Example: 5000 (cash discount)",
+                "Ví dụ: 5 (%)": "Example: 5 (%)",
+                "Ví dụ: 5": "Example: 5",
+                "Tên hiện vật": "Gift name",
+                "Ví dụ: 1 thùng nước": "Example: 1 carton of water",
+                "Mức giảm (%)": "Discount (%)",
+                "Ví dụ: 10": "Example: 10",
+                "Số tiền trừ (VNĐ)": "Cash discount (VND)",
+                "Ví dụ: 500000": "Example: 500000",
+                "Quý khách hàng": "Valued customer",
+                "Ngày": "Date",
+                "tháng": "month",
+                "năm": "year",
+                "TỔNG ĐƠN TẶNG/GIẢM:": "ORDER PROMO:",
+                "Quà tặng tổng đơn:": "Order gift:",
+                "Ghi chú:": "Note:",
+                "Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng": "Quote is valid for 07 days. Thank you for trusting",
+                "Nếu ảnh không tải về, hãy CHẠM GIỮ vào ảnh để lưu nhé.": "If the image does not download, long-press it to save.",
+                "Đã đồng bộ mức": "Synced",
+                "cho TOÀN BỘ giỏ hàng!": "for the whole cart!",
+                "Đã thêm Sản phẩm mới!": "New product added!",
+                "Các SP của KM này đã có trong giỏ!": "Promotion products are already in the cart!",
+                "Hệ thống đã áp dụng khuyến mãi tự động!": "Automatic promotion applied!",
+                "Vui lòng nhập nội dung góp ý nhé!": "Please enter your feedback.",
+                "Đã gửi thành công! Cảm ơn ý kiến góp ý của bạn.": "Sent successfully. Thank you for your feedback.",
+                "Đã gửi thành công! Cảm ơn ý kiến đóng góp của bạn.": "Sent successfully. Thank you for your feedback.",
+                "Có lỗi xảy ra, vui lòng thử lại sau.": "Something went wrong. Please try again later.",
+                "Không thể kết nối. Vui lòng kiểm tra lại mạng.": "Cannot connect. Please check your network.",
+                "File Excel trống hoặc không hợp lệ!": "Excel file is empty or invalid!",
+                "Lỗi đọc file Excel.": "Error reading Excel file.",
+                "Vui lòng tải lên file Excel trước!": "Please upload an Excel file first!",
+                "Vui lòng đặt Tên Kho / Tên Hãng!": "Please enter a warehouse/brand name!",
+                "Cần ghép ít nhất cột Tên SP và Giá Bìa!": "Please map at least Product Name and List Price columns!",
+                "Cập Nhật Net yêu cầu phải chọn Cột Giá Chốt/Net!": "Net update requires selecting the Final/Net Price column!",
+                "Vui lòng nhập tên chương trình!": "Please enter a program name!",
+                "Vui lòng nhập số lượng tối thiểu lớn hơn 0!": "Minimum quantity must be greater than 0!",
+                "Vui lòng chọn ít nhất 1 sản phẩm áp dụng ở Bước 3!": "Please select at least one product in Step 3!",
+                "Giới hạn tối đa phải lớn hơn 0 hoặc để trống!": "Maximum cap must be greater than 0 or left blank!",
+                "Danh sách sản phẩm áp dụng không hợp lệ, vui lòng chọn lại!": "Product list is invalid. Please select again!",
+                "Vui lòng nhập Số lượng Tặng lớn hơn 0!": "Gift quantity must be greater than 0!",
+                "Vui lòng nhập tên Sản Phẩm đem tặng!": "Please enter the gift product name!",
+                "Vui lòng nhập mức giảm lớn hơn 0!": "Discount value must be greater than 0!",
+                "Mức giảm % không được vượt quá 100!": "Percentage discount cannot exceed 100%!",
+                "Vui lòng nhập mốc tổng thanh toán!": "Please enter an order total threshold!",
+                "Vui lòng nhập Quà tặng hoặc Số tiền trừ!": "Please enter a gift name or discount amount!",
+                "Số tiền trừ phải lớn hơn 0!": "Discount amount must be greater than 0!",
+                "Mức giảm % phải lớn hơn 0 và không vượt quá 100!": "Percentage discount must be greater than 0 and not exceed 100%!",
+                "Lỗi: Máy bạn bị thiếu RAM, hãy tắt bớt tab và thử lại!": "Error: low memory. Close some tabs and try again!",
+                "Lỗi khi xuất Excel!": "Excel export failed!",
+                "Lỗi xuất PDF!": "PDF export failed!",
+                "Đang chuẩn bị trang in...": "Preparing print page..."
+            };
+            const attrToEn = {
+                "Ngôn ngữ ứng dụng": "App language",
+                "Ngôn ngữ hồ sơ": "Profile language",
+                "Khám phá công cụ": "Explore tools",
+                "Chạm để tương tác": "Tap to interact",
+                "Hướng dẫn": "Guide",
+                "Hồ sơ cá nhân": "Profile",
+                "Hướng dẫn sử dụng": "User guide",
+                "Số lượng": "Quantity",
+                "Tên Danh Mục/Kho...": "Category/Warehouse name...",
+                "Tên chương trình, ví dụ: Mua 10 tặng 1": "Program name, e.g. Buy 10 get 1",
+                "Giới hạn tối đa (bỏ trống nếu không giới hạn)": "Maximum cap (leave blank for no limit)",
+                "Nhập mức giảm, ví dụ: 5": "Enter discount value, e.g. 5",
+                "Ví dụ: 5000 (trừ tiền)": "Example: 5000 (cash discount)",
+                "Ví dụ: 5 (%)": "Example: 5 (%)",
+                "Ví dụ: 5": "Example: 5",
+                "VD: 1": "E.g. 1",
+                "Gõ để tìm trong kho hoặc nhập quà tùy ý": "Search warehouse or enter a custom gift",
+                "VD: 5000000": "E.g. 5000000",
+                "Tên quà...": "Gift name...",
+                "Ví dụ: 1 thùng nước": "Example: 1 carton of water",
+                "Ví dụ: 10": "Example: 10",
+                "Ví dụ: 500000": "Example: 500000",
+                "Tìm kiếm nhanh sản phẩm...": "Quick product search...",
+                "Tên khách hàng / Công trình...": "Customer / Project name...",
+                "Ghi chú in báo giá...": "Quote note...",
+                "Tên thương hiệu...": "Brand name...",
+                "Khẩu hiệu...": "Slogan...",
+                "Tiêu đề tài liệu...": "Document title...",
+                "Tên người báo giá...": "Sender name...",
+                "Số điện thoại...": "Phone number...",
+                "Gõ mã hoặc tên SP...": "Enter SKU or product name...",
+                "Tên SP *": "Product name *",
+                "Giá Bìa *": "List price *",
+                "Mã SP": "SKU",
+                "Xóa chương trình": "Delete program"
+            };
+            const toVi = Object.fromEntries(Object.entries(toEn).map(([vi, en]) => [en, vi]));
+            const attrToVi = Object.fromEntries(Object.entries(attrToEn).map(([vi, en]) => [en, vi]));
+            const normalizeLang = (lang) => lang === "en" ? "en" : "vi";
+            let currentLang = "vi";
+            const exact = (value, lang, attr = false) => {
+                const dict = lang === "en" ? (attr ? attrToEn : toEn) : (attr ? attrToVi : toVi);
+                return dict[value] || value;
+            };
+            const translateText = (value, lang) => {
+                if (!value || !value.trim()) return value;
+                const leading = value.match(/^\s*/)[0];
+                const trailing = value.match(/\s*$/)[0];
+                let core = value.trim();
+                core = exact(core, lang, false);
+                if (lang === "en") {
+                    core = core.replace(/^Tiết kiệm:/, "Savings:")
+                        .replace(/^Tổng:/, "Total:")
+                        .replace(/^SL:/, "Qty:")
+                        .replace(/^Đơn:/, "Unit:")
+                        .replace(/^Hiển thị thêm\s*\(([^)]+)\)/, "Show more ($1)")
+                        .replace(/^(\d+)\s*SP$/, "$1 products")
+                        .replace(/^⬆ Tăng\s+(.+)$/, "⬆ Up $1")
+                        .replace(/^⬇ Giảm\s+(.+)$/, "⬇ Down $1")
+                        .replace(/^Từ\s+(.+?)\s+sản phẩm:/, "From $1 products:")
+                        .replace(/^Áp dụng cho\s+(\d+)\s+sản phẩm$/, "Applies to $1 products")
+                        .replace(/^Từ\s+(.+?):/, "From $1:")
+                        .replace(/^Đã sao chép vào khay nhớ tạm!$/, "Copied to clipboard!")
+                        .replace(/^Trình duyệt không hỗ trợ copy tự động.$/, "This browser does not support automatic copy.")
+                        .replace(/^Đã mở menu chia sẻ\/lưu tệp!$/, "Share/save menu opened!")
+                        .replace(/^Đã lưu cấu hình báo giá!$/, "Quote settings saved!")
+                        .replace(/^Đã lưu và tự động cập nhật giỏ hàng!$/, "Saved and cart updated automatically!")
+                        .replace(/^Đã làm mới báo giá!$/, "Quote reset!")
+                        .replace(/^Đã xóa chương trình!$/, "Program deleted!");
+                } else {
+                    core = core.replace(/^Savings:/, "Tiết kiệm:")
+                        .replace(/^Total:/, "Tổng:")
+                        .replace(/^Qty:/, "SL:")
+                        .replace(/^Unit:/, "Đơn:")
+                        .replace(/^Show more\s*\(([^)]+)\)/, "Hiển thị thêm ($1)")
+                        .replace(/^(\d+)\s*products$/, "$1 SP")
+                        .replace(/^⬆ Up\s+(.+)$/, "⬆ Tăng $1")
+                        .replace(/^⬇ Down\s+(.+)$/, "⬇ Giảm $1")
+                        .replace(/^From\s+(.+?)\s+products:/, "Từ $1 sản phẩm:")
+                        .replace(/^Applies to\s+(\d+)\s+products$/, "Áp dụng cho $1 sản phẩm")
+                        .replace(/^From\s+(.+?):/, "Từ $1:")
+                        .replace(/^Copied to clipboard!$/, "Đã sao chép vào khay nhớ tạm!")
+                        .replace(/^This browser does not support automatic copy.$/, "Trình duyệt không hỗ trợ copy tự động.")
+                        .replace(/^Share\/save menu opened!$/, "Đã mở menu chia sẻ/lưu tệp!")
+                        .replace(/^Quote settings saved!$/, "Đã lưu cấu hình báo giá!")
+                        .replace(/^Saved and cart updated automatically!$/, "Đã lưu và tự động cập nhật giỏ hàng!")
+                        .replace(/^Quote reset!$/, "Đã làm mới báo giá!")
+                        .replace(/^Program deleted!$/, "Đã xóa chương trình!");
+                }
+                if (lang === "en") {
+                    core = core.replace(/^Đã đồng bộ mức\s+(.+?)%\s+cho TOÀN BỘ giỏ hàng!$/, "Synced $1% for the whole cart!")
+                        .replace(/^Đã xóa kho\. Bấm Dùng dữ liệu mẫu để khôi phục khi cần\.$/, "Warehouse cleared. Tap Use Sample Data to restore when needed.")
+                        .replace(/^Kho đang có dữ liệu\. Hãy bấm Xóa Kho trước khi dùng lại dữ liệu mẫu\.$/, "Warehouse already has data. Tap Clear Warehouse before restoring sample data.")
+                        .replace(/^Không thể khôi phục dữ liệu mẫu\.$/, "Could not restore sample data.")
+                        .replace(/^Đã khôi phục\s+(\d+)\s+SP mẫu!$/, "Restored $1 sample products!")
+                        .replace(/^Đã thêm\s+(\d+)\s+SP vào kho "(.+)"!$/, "Added $1 products to \"$2\"!")
+                        .replace(/^Đã cập nhật bù trừ giá Net cho\s+(\d+)\s+SP!$/, "Updated net-price offsets for $1 products!")
+                        .replace(/^Vui lòng nhập Tên và Giá Bìa > 0$/, "Please enter Product Name and List Price > 0")
+                        .replace(/^Đã lưu Khuyến Mãi:\s+(.+)$/, "Promotion saved: $1")
+                        .replace(/^Đã thêm\s+(\d+)\s+SP vào giỏ!$/, "Added $1 products to cart!")
+                        .replace(/^Đã đồng bộ khách hàng:\s+(.+)$/, "Customer synced: $1")
+                        .replace(/^Tặng:\s+(.+)$/, "Gift: $1")
+                        .replace(/^Tặng\s+(\d+)\s+cùng loại$/, "Gift $1 same product")
+                        .replace(/^Tặng\s+(\d+)\s+(.+)$/, "Gift $1 $2")
+                        .replace(/^Giảm thêm\s+(.+)%$/, "Extra $1% off")
+                        .replace(/^Trừ\s+(.+)\/SP$/, "$1 off/product")
+                        .replace(/^Trừ\s+(.+)\s+tổng$/, "$1 off total")
+                        .replace(/^🎁 Tặng thêm\s+(\d+)\s+SP cùng loại$/, "🎁 Gift $1 same product")
+                        .replace(/^🎁 Tặng kèm\s+(\d+)\s+(.+)$/, "🎁 Gift $1 $2")
+                        .replace(/^Giảm thêm:\s+(.+)\(Tổng\)$/, "Extra discount: $1 (Total)")
+                        .replace(/^Giảm thêm:\s+(.+)\/SP$/, "Extra discount: $1/product");
+                } else {
+                    core = core.replace(/^Synced\s+(.+?)%\s+for the whole cart!$/, "Đã đồng bộ mức $1% cho TOÀN BỘ giỏ hàng!")
+                        .replace(/^Warehouse cleared\. Tap Use Sample Data to restore when needed\.$/, "Đã xóa kho. Bấm Dùng dữ liệu mẫu để khôi phục khi cần.")
+                        .replace(/^Warehouse already has data\. Tap Clear Warehouse before restoring sample data\.$/, "Kho đang có dữ liệu. Hãy bấm Xóa Kho trước khi dùng lại dữ liệu mẫu.")
+                        .replace(/^Could not restore sample data\.$/, "Không thể khôi phục dữ liệu mẫu.")
+                        .replace(/^Restored\s+(\d+)\s+sample products!$/, "Đã khôi phục $1 SP mẫu!")
+                        .replace(/^Added\s+(\d+)\s+products to "(.+)"!$/, "Đã thêm $1 SP vào kho \"$2\"!")
+                        .replace(/^Updated net-price offsets for\s+(\d+)\s+products!$/, "Đã cập nhật bù trừ giá Net cho $1 SP!")
+                        .replace(/^Please enter Product Name and List Price > 0$/, "Vui lòng nhập Tên và Giá Bìa > 0")
+                        .replace(/^Promotion saved:\s+(.+)$/, "Đã lưu Khuyến Mãi: $1")
+                        .replace(/^Added\s+(\d+)\s+products to cart!$/, "Đã thêm $1 SP vào giỏ!")
+                        .replace(/^Customer synced:\s+(.+)$/, "Đã đồng bộ khách hàng: $1")
+                        .replace(/^Gift:\s+(.+)$/, "Tặng: $1")
+                        .replace(/^Gift\s+(\d+)\s+same product$/, "Tặng $1 cùng loại")
+                        .replace(/^Gift\s+(\d+)\s+(.+)$/, "Tặng $1 $2")
+                        .replace(/^Extra\s+(.+)% off$/, "Giảm thêm $1%")
+                        .replace(/^(.+) off\/product$/, "Trừ $1/SP")
+                        .replace(/^(.+) off total$/, "Trừ $1 tổng")
+                        .replace(/^🎁 Gift\s+(\d+)\s+same product$/, "🎁 Tặng thêm $1 SP cùng loại")
+                        .replace(/^🎁 Gift\s+(\d+)\s+(.+)$/, "🎁 Tặng kèm $1 $2")
+                        .replace(/^Extra discount:\s+(.+) \(Total\)$/, "Giảm thêm: $1(Tổng)")
+                        .replace(/^Extra discount:\s+(.+)\/product$/, "Giảm thêm: $1/SP");
+                }
+                if (lang === "en") {
+                    core = core.replace(/^🎉 TỔNG ĐƠN TẶNG\/GIẢM:\s+(.+)$/, "🎉 ORDER PROMO: $1")
+                        .replace(/^📌 Ghi chú:$/, "📌 Note:")
+                        .replace(/^Báo giá có giá trị trong vòng 07 ngày\. Cảm ơn quý khách đã tin tưởng\s+(.+)!$/, "Quote is valid for 07 days. Thank you for trusting $1!")
+                        .replace(/^Ngày\s+(\d{2})\s+tháng\s+(\d{2})\s+năm\s+(\d{4})$/, "Date $1/$2/$3")
+                        .replace(/^Kính gửi khách hàng:\s*(.*)$/, "Dear customer: $1");
+                } else {
+                    core = core.replace(/^🎉 ORDER PROMO:\s+(.+)$/, "🎉 TỔNG ĐƠN TẶNG/GIẢM: $1")
+                        .replace(/^📌 Note:$/, "📌 Ghi chú:")
+                        .replace(/^Quote is valid for 07 days\. Thank you for trusting\s+(.+)!$/, "Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng $1!")
+                        .replace(/^Date\s+(\d{2})\/(\d{2})\/(\d{4})$/, "Ngày $1 tháng $2 năm $3")
+                        .replace(/^Dear customer:\s*(.*)$/, "Kính gửi khách hàng: $1");
+                }
+                return `${leading}${core}${trailing}`;
+            };
+            const translateAttr = (value, lang) => exact(value, lang, true);
+            const shouldSkip = (el) => !el || el.closest("script,style,textarea,input,#careerProfileModal");
+            const apply = (root = document.body) => {
+                if (!root) return;
+                document.documentElement.lang = currentLang;
+                document.body.classList.toggle("lang-en", currentLang === "en");
+                document.body.classList.toggle("lang-vi", currentLang === "vi");
+                document.title = currentLang === "en"
+                    ? "Thuận Store - Quote Builder & Store Management Tool"
+                    : "Thuận Store - Công Cụ Tạo Bảng Báo Giá & Quản Lý Cửa Hàng";
+                root.querySelectorAll?.("[data-i18n]").forEach(el => {
+                    const item = keyed[el.dataset.i18n];
+                    if (item) el.textContent = item[currentLang];
+                });
+                root.querySelectorAll?.("[data-i18n-html]").forEach(el => {
+                    const item = keyed[el.dataset.i18nHtml];
+                    if (item) el.innerHTML = item[currentLang];
+                });
+                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                    acceptNode(node) {
+                        const parent = node.parentElement;
+                        if (shouldSkip(parent) || parent.closest("[data-i18n],[data-i18n-html]")) return NodeFilter.FILTER_REJECT;
+                        return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+                    }
+                });
+                const nodes = [];
+                while (walker.nextNode()) nodes.push(walker.currentNode);
+                nodes.forEach(node => { node.nodeValue = translateText(node.nodeValue, currentLang); });
+                root.querySelectorAll?.("[placeholder],[title],[aria-label],optgroup[label]").forEach(el => {
+                    if (el.closest("#careerProfileModal")) return;
+                    ["placeholder", "title", "aria-label", "label"].forEach(attr => {
+                        if (el.hasAttribute(attr)) el.setAttribute(attr, translateAttr(el.getAttribute(attr), currentLang));
+                    });
+                });
+                document.querySelectorAll("[data-app-lang]").forEach(btn => {
+                    const active = btn.dataset.appLang === currentLang;
+                    btn.classList.toggle("is-active", active);
+                    btn.setAttribute("aria-pressed", active ? "true" : "false");
+                });
+            };
+            const set = (lang, options = {}) => {
+                currentLang = normalizeLang(lang);
+                localStorage.setItem(APP_LANG_KEY, currentLang);
+                apply(document.body);
+                if (options.syncCareer !== false && typeof setCareerLanguage === "function") setCareerLanguage(currentLang);
+            };
+            const init = () => {
+                currentLang = normalizeLang(localStorage.getItem(APP_LANG_KEY) || "vi");
+                document.querySelectorAll("[data-app-lang]").forEach(btn => {
+                    btn.addEventListener("click", () => set(btn.dataset.appLang));
+                });
+                set(currentLang);
+            };
+            return { init, set, apply, get: () => currentLang, t: (value) => translateText(String(value ?? ""), currentLang) };
+        })();
+        window.AppI18n = AppI18n;
         const DEFAULT_SAMPLE_ROWS = [
             [1,"MRL-10/3C","\u0110\u00e8n led chi\u1ebfu g\u01b0\u01a1ng 10W - 3CCT",313100,322500,0.0300223570744171],
             [2,"MRL-8/3C","\u0110\u00e8n led chi\u1ebfu g\u01b0\u01a1ng 8W - 3CCT",294700,303500,0.0298608754665762],
@@ -3514,6 +4620,9 @@
         const switchScreen = (screenId) => { 
             if (AppState.data.currentScreenId !== screenId) { previousScreenId = AppState.data.currentScreenId; AppState.data.currentScreenId = screenId; }
             Object.values(DOM.screens).forEach(s => s.classList.remove('active')); DOM.screens[screenId].classList.add('active'); 
+            document.body.classList.remove('screen-landing', 'screen-setup', 'screen-main');
+            document.body.classList.add(`screen-${screenId}`);
+            if (window.AppI18n) requestAnimationFrame(() => AppI18n.apply(DOM.screens[screenId]));
         };
 
         const setupFixedBrandIdentity = () => { document.documentElement.style.setProperty('--brand-color', BRAND_COLOR); };
@@ -3521,6 +4630,7 @@
             const brand = AppState.get('brand');
             DOM.brand.pName.textContent = brand.name; DOM.brand.pSlogan.textContent = brand.slogan; DOM.brand.pDocTitle.textContent = brand.docTitle; 
             DOM.main.senderName.value = DOM.main.senderName.value || brand.name; 
+            if (window.AppI18n) AppI18n.apply(document.body);
         };
 
         const PromoEngine = {
@@ -3732,6 +4842,7 @@
                     DOM.footer.orderAlert.classList.remove('hidden');
                     DOM.footer.orderAlert.innerHTML = `🎉 <strong>${Utils.escapeHTML(bestOrderPromo.name)}</strong>: ${Utils.escapeHTML(AppState.data.currentOrderPromoEffect.msg)}`;
                 } else { DOM.footer.orderAlert.classList.add('hidden'); }
+                if (window.AppI18n) AppI18n.apply(DOM.footer.bar);
             },
             
             renderFull: () => {
@@ -3740,7 +4851,7 @@
                 
                 if (cart.length === 0) { 
                     DOM.main.quoteList.innerHTML = '<div class="bg-white rounded-xl p-8 text-center text-slate-400 font-bold text-xs border border-slate-200">Chưa có sản phẩm nào trong báo giá</div>'; 
-                    DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0`; DOM.search.badge.textContent = `0`; return; 
+                    DOM.footer.bar.classList.add('translate-y-full'); DOM.main.itemCount.textContent = `0`; DOM.search.badge.textContent = `0`; if (window.AppI18n) AppI18n.apply(DOM.main.quoteList); return; 
                 }
                 
                 DOM.footer.bar.classList.remove('translate-y-full'); 
@@ -3819,6 +4930,7 @@
                 }).join('');
                 
                 DOM.main.quoteList.innerHTML = html; CartLogic.updateSummary();
+                if (window.AppI18n) AppI18n.apply(DOM.main.quoteList);
             },
             
             updateTargetedItemDOM: (item) => {
@@ -3867,6 +4979,7 @@
         const openGuideModal = () => {
             if (!guideModal) return;
             guideModal.classList.remove('hidden'); guideModal.classList.add('flex');
+            if (window.AppI18n) AppI18n.apply(guideModal);
             setTimeout(() => { guideModal.classList.remove('opacity-0'); guideModal.firstElementChild.classList.remove('scale-95'); }, 10);
         };
         const closeGuideModal = () => {
@@ -3899,17 +5012,41 @@
 
         const careerProfileModal = document.getElementById('careerProfileModal');
         let careerProfileHasOpened = false;
+        const setCareerLanguage = (lang) => {
+            if (!careerProfileModal) return;
+            const nextLang = lang === 'vi' ? 'vi' : 'en';
+            careerProfileModal.classList.toggle('lang-vi', nextLang === 'vi');
+            careerProfileModal.classList.toggle('lang-en', nextLang === 'en');
+            careerProfileModal.setAttribute('lang', nextLang);
+            careerProfileModal.querySelectorAll('[data-career-lang]').forEach(btn => {
+                const active = btn.dataset.careerLang === nextLang;
+                btn.classList.toggle('is-active', active);
+                btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+            localStorage.setItem(CAREER_LANG_KEY, nextLang);
+        };
         const openCareerProfileModal = () => {
             if (!careerProfileModal) return;
             careerProfileHasOpened = true;
+            careerProfileModal.classList.add('is-open');
             careerProfileModal.classList.remove('hidden'); careerProfileModal.classList.add('flex');
             setTimeout(() => { careerProfileModal.classList.remove('opacity-0'); careerProfileModal.firstElementChild.classList.remove('scale-95'); }, 10);
         };
         const closeCareerProfileModal = () => {
             if (!careerProfileModal) return;
             careerProfileModal.classList.add('opacity-0'); careerProfileModal.firstElementChild.classList.add('scale-95');
-            setTimeout(() => { careerProfileModal.classList.add('hidden'); careerProfileModal.classList.remove('flex'); }, 300);
+            setTimeout(() => { careerProfileModal.classList.add('hidden'); careerProfileModal.classList.remove('flex', 'is-open'); }, 300);
         };
+        if (careerProfileModal) {
+            const savedCareerLang = localStorage.getItem(CAREER_LANG_KEY);
+            setCareerLanguage(savedCareerLang || 'vi');
+            careerProfileModal.querySelectorAll('[data-career-lang]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.AppI18n) AppI18n.set(btn.dataset.careerLang);
+                    else setCareerLanguage(btn.dataset.careerLang);
+                });
+            });
+        }
         ['btnOpenCareerProfileFooter'].forEach(id => {
             const btn = document.getElementById(id); if (btn) btn.addEventListener('click', openCareerProfileModal);
         });
@@ -4014,7 +5151,7 @@
         DOM.main.btnOpenSetupManager.addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
         DOM.setup.btnStart.addEventListener('click', () => { CartLogic.renderFull(); switchScreen('main'); });
 
-        DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        DOM.brand.btnOpen.addEventListener('click', () => { DOM.brand.modal.classList.add('active'); if (window.AppI18n) AppI18n.apply(DOM.brand.modal); });
         DOM.brand.btnClose.addEventListener('click', () => { DOM.brand.modal.classList.remove('active'); });
         DOM.brand.btnSave.addEventListener('click', () => {
             const brand = AppState.get('brand');
@@ -4022,7 +5159,7 @@
             AppState.set('brand', brand, true); updateBrandText(); DOM.brand.modal.classList.remove('active'); Utils.showToast("Đã lưu cấu hình báo giá!");
         });
 
-        DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
+        DOM.discount.btnOpen.addEventListener('click', () => { DOM.discount.modal.classList.add('active'); if (window.AppI18n) AppI18n.apply(DOM.discount.modal); });
         DOM.discount.btnClose.addEventListener('click', () => { DOM.discount.modal.classList.remove('active'); });
         DOM.discount.btnSave.addEventListener('click', () => {
             const defaults = AppState.get('defaults');
@@ -4129,6 +5266,7 @@
                 DOM.setup.warehouseListSection.classList.remove('hidden'); DOM.setup.totalProductCount.textContent = `${AppState.get('productDB').length} SP`;
                 DOM.setup.warehouseBadges.innerHTML = warehouses.map(w => `<span class="bg-indigo-50 text-indigo-700 font-bold text-[10px] px-2 py-1 rounded border border-indigo-100">${Utils.escapeHTML(w)}</span>`).join('');
             }
+            if (window.AppI18n) AppI18n.apply(DOM.screens.setup);
         }
 
         document.querySelectorAll('input[name="importMode"]').forEach(radio => {
@@ -4170,6 +5308,7 @@
                     } else {
                         modeUpdateRadio.disabled = false; modeUpdateLabelDiv.classList.remove('opacity-50', 'cursor-not-allowed'); modeUpdateLabelDiv.innerText = "2. Cập Nhật Giá Net";
                     }
+                    if (window.AppI18n) AppI18n.apply(modeUpdateLabelDiv);
 
                     DOM.setup.mapping.classList.remove('hidden'); setTimeout(() => DOM.setup.mapping.classList.remove('opacity-0'), 50);
                     let priceColSet = false;
@@ -4182,6 +5321,7 @@
                         if(lower.includes('bán') || lower.includes('net') || lower.includes('05')) { const mapTgt = document.getElementById('mapTargetPrice'); if(mapTgt) mapTgt.value = h; }
                     });
                     let suggestedName = file.name.split('.')[0].substring(0, 15); DOM.setup.warehouseNameInput.value = suggestedName;
+                    if (window.AppI18n) AppI18n.apply(DOM.setup.mapping);
                 } catch (err) { Utils.showToast("Lỗi đọc file Excel."); }
             }; reader.readAsArrayBuffer(file);
         });
@@ -4266,6 +5406,7 @@
             let html = `<button data-w="All" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${cw === 'All' ? 'bg-slate-800 text-white' : 'bg-white text-slate-500 border border-slate-200'}">TẤT CẢ</button>`;
             whs.forEach(w => { html += `<button data-w="${Utils.escapeAttr(w)}" class="filter-w-btn px-4 py-1.5 rounded-lg text-[10px] font-bold shrink-0 ${cw === w ? 'bg-blue-600 text-white' : 'bg-white text-slate-500 border border-slate-200'}">${Utils.escapeHTML(w)}</button>`; });
             DOM.search.warehouseFilters.innerHTML = html;
+            if (window.AppI18n) AppI18n.apply(DOM.search.warehouseFilters);
         }
 
         DOM.search.warehouseFilters.addEventListener('click', (e) => { const btn = e.target.closest('.filter-w-btn'); if(!btn) return; AppState.set('currentFilterWarehouse', btn.dataset.w, true); renderWarehouseFilters(); applyFiltersAndSearch(); });
@@ -4276,6 +5417,7 @@
             if (s === 'normal') { btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1 shadow-sm'; btn.innerHTML = '🔄 Biến Động: Tất Cả'; } 
             else if (s === 'inc') { btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-red-50 text-red-600 border border-red-200 flex items-center gap-1 shadow-sm'; btn.innerHTML = '⬆ Tăng Cao Nhất'; } 
             else if (s === 'dec') { btn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center gap-1 shadow-sm'; btn.innerHTML = '⬇ Giảm Cao Nhất'; }
+            if (window.AppI18n) AppI18n.apply(btn);
         };
 
         const applyFiltersAndSearch = () => {
@@ -4293,7 +5435,7 @@
             AppState.set('filteredProducts', filtered, true); AppState.set('displayCount', 50, true); renderSearchList();
         };
 
-        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); };
+        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); if (window.AppI18n) AppI18n.apply(DOM.search.modal); };
         const closeSearch = () => DOM.search.modal.classList.remove('active');
         DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
         DOM.main.btnOpenSearch.addEventListener('click', openSearch);
@@ -4324,6 +5466,7 @@
 
                 btn.className = "btn-toggle-search text-red-500 bg-red-50 border border-red-100 px-5 py-2 rounded-xl text-xs font-bold shadow-sm transition-colors"; btn.textContent = "XÓA";
             }
+            if (window.AppI18n) AppI18n.apply(btn);
             AppState.set('cart', cart);
         });
 
@@ -4355,9 +5498,10 @@
             
             if (count < filtered.length) { html += `<div class="p-4 flex justify-center bg-slate-50"><button id="btnLoadMore" class="px-6 py-2 bg-blue-100 text-blue-700 font-bold rounded-full text-xs uppercase shadow-sm">Hiển thị thêm (${count}/${filtered.length})</button></div>`; }
             DOM.search.list.innerHTML = html;
+            if (window.AppI18n) AppI18n.apply(DOM.search.list);
         }
 
-        DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
+        DOM.manualAdd.btnOpen.addEventListener('click', () => { DOM.manualAdd.modal.classList.remove('hidden'); DOM.manualAdd.modal.classList.add('flex'); if (window.AppI18n) AppI18n.apply(DOM.manualAdd.modal); setTimeout(() => { DOM.manualAdd.modal.classList.remove('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.remove('scale-95'); }, 10); });
         DOM.manualAdd.btnClose.addEventListener('click', () => { DOM.manualAdd.modal.classList.add('opacity-0'); DOM.manualAdd.modal.firstElementChild.classList.add('scale-95'); setTimeout(() => { DOM.manualAdd.modal.classList.add('hidden'); DOM.manualAdd.modal.classList.remove('flex'); }, 300); });
         DOM.manualAdd.btnConfirm.addEventListener('click', () => {
             const name = DOM.manualAdd.name.value.trim(); const price = Utils.cleanNumber(DOM.manualAdd.price.value);
@@ -4385,12 +5529,13 @@
                     return `<option value="${Utils.escapeAttr(p.name || '')}">${codeDisplay}${Utils.escapeHTML(p.name || '')}</option>`;
                 }).join('');
             },
-            openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); },
+            openManager: () => { DOM.promo.managerModal.classList.add('active'); PromoLogic.resetForm(); PromoLogic.renderList(); if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal); },
             closeManager: () => { DOM.promo.managerModal.classList.remove('active'); PromoLogic.renderQuickButtons(); CartLogic.renderFull(); },
             switchTab: (tab) => {
                 currentPromoContext = tab;
-                if (tab === 'item') { DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupItem.classList.remove('hidden'); DOM.promo.groupOrder.classList.add('hidden'); } 
-                else { DOM.promo.tabOrder.className = "flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabItem.className = "flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupOrder.classList.remove('hidden'); DOM.promo.groupItem.classList.add('hidden'); }
+                if (tab === 'item') { DOM.promo.tabItem.className = "promo-tab flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabOrder.className = "promo-tab flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupItem.classList.remove('hidden'); DOM.promo.groupOrder.classList.add('hidden'); } 
+                else { DOM.promo.tabOrder.className = "promo-tab flex-1 py-2 text-xs font-bold bg-white shadow-sm rounded-lg text-indigo-700"; DOM.promo.tabItem.className = "promo-tab flex-1 py-2 text-xs font-bold text-slate-500 rounded-lg"; DOM.promo.groupOrder.classList.remove('hidden'); DOM.promo.groupItem.classList.add('hidden'); }
+                if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal);
             },
             
             handleTypeChange: () => {
@@ -4403,23 +5548,25 @@
                 } else {
                     DOM.promo.valueContainer.classList.remove('hidden');
                     DOM.promo.giftContainer.classList.add('hidden');
-                    if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'VD: 5000 (Trừ tiền)'; } 
-                    else { DOM.promo.valueIn.placeholder = 'VD: 5 (%)'; }
+                    if (val.includes('tien')) { DOM.promo.valueIn.placeholder = 'Ví dụ: 5000 (trừ tiền)'; } 
+                    else { DOM.promo.valueIn.placeholder = 'Ví dụ: 5 (%)'; }
                 }
+                if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal);
             },
 
             resetForm: () => { 
                 DOM.promo.nameIn.value = ''; DOM.promo.minQtyIn.value = 1; DOM.promo.typeIn.value = 'extra_percent'; DOM.promo.valueIn.value = ''; 
                 DOM.promo.giftQtyIn.value = ''; DOM.promo.giftNameIn.value = '';
-                editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'VD: 5'; 
+                editingPromoProductIds = []; DOM.promo.selectedCount.textContent = '0'; DOM.promo.valueIn.placeholder = 'Ví dụ: 5'; 
                DOM.promo.orderMinAmount.value = ''; DOM.promo.orderType.value = 'gift'; DOM.promo.orderValue.value = ''; DOM.promo.orderMultiply.checked = false; 
                 const elecCb = document.getElementById('promoOrderElectricalOnly'); if(elecCb) elecCb.checked = false;
                 PromoLogic.handleTypeChange(); PromoLogic.updateOrderLabel(); 
                 const multiCb = document.getElementById('promoItemMultiply'); if(multiCb) multiCb.checked = true;
                 const capIn = document.getElementById('promoItemMaxCap'); if(capIn) capIn.value = '';
+                if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal);
             },
             
-           updateOrderLabel: () => { const type = DOM.promo.orderType.value; if (type === 'gift') { DOM.promo.orderLabel.textContent = "Tên Hiện Vật"; DOM.promo.orderValue.placeholder = "VD: 1 Thùng Bia Heineken"; } else if (type === 'discount_percent') { DOM.promo.orderLabel.textContent = "Mức giảm (%)"; DOM.promo.orderValue.placeholder = "VD: 10"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "VD: 500000"; } },
+           updateOrderLabel: () => { const type = DOM.promo.orderType.value; if (type === 'gift') { DOM.promo.orderLabel.textContent = "Tên hiện vật"; DOM.promo.orderValue.placeholder = "Ví dụ: 1 thùng nước"; } else if (type === 'discount_percent') { DOM.promo.orderLabel.textContent = "Mức giảm (%)"; DOM.promo.orderValue.placeholder = "Ví dụ: 10"; } else { DOM.promo.orderLabel.textContent = "Số tiền trừ (VNĐ)"; DOM.promo.orderValue.placeholder = "Ví dụ: 500000"; } if (window.AppI18n) AppI18n.apply(DOM.promo.managerModal); },
             
             savePromo: () => {
                 const name = DOM.promo.nameIn.value.trim(); if (!name) return Utils.showToast("Vui lòng nhập tên chương trình!");
@@ -4493,35 +5640,37 @@
             
             renderList: () => {
                 const promos = AppState.get('promos');
-                if (promos.length === 0) { DOM.promo.listContainer.innerHTML = '<div class="text-center text-slate-400 text-xs py-4 font-bold border-2 border-dashed border-slate-200 rounded-xl">Chưa có chương trình nào</div>'; return; }
+                if (promos.length === 0) { DOM.promo.listContainer.innerHTML = '<div class="text-center text-slate-400 text-xs py-4 font-bold border-2 border-dashed border-slate-200 rounded-xl">Chưa có chương trình nào</div>'; if (window.AppI18n) AppI18n.apply(DOM.promo.listContainer); return; }
                 
                 const html = promos.map(p => {
                     let bodyHtml = '';
                     const safePromoName = Utils.escapeHTML(p.name || '');
                    if (p.isOrderPromo) {
                         let rewardTxt = p.rewardType === 'discount' ? `Trừ ${Utils.formatMoney(p.rewardValue)}` : (p.rewardType === 'discount_percent' ? `Giảm ${Utils.escapeHTML(p.rewardValue)}%` : `Tặng ${Utils.escapeHTML(p.rewardValue)}`);
-                        let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-black px-1.5 bg-indigo-50 rounded border border-indigo-100">(x Luỹ Tiến)</span>` : '';
-                        let elecBadge = p.isElectricalOnly ? `<span class="text-[9px] text-emerald-700 ml-1 font-black px-1.5 bg-emerald-100 rounded border border-emerald-200">[Chỉ TB Điện]</span>` : '';
-                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5">Mua >= ${Utils.formatMoney(p.minAmount)} 👉 <span class="text-emerald-600 font-bold">${rewardTxt}</span>${multiplyTxt}${elecBadge}</p>`;
+                        let multiplyTxt = p.isMultiply ? `<span class="text-[9px] text-indigo-600 ml-1 font-bold px-1.5 bg-indigo-50 rounded border border-indigo-100">Lũy tiến</span>` : '';
+                        let elecBadge = p.isElectricalOnly ? `<span class="text-[9px] text-emerald-700 ml-1 font-bold px-1.5 bg-emerald-100 rounded border border-emerald-200">Thiết bị điện</span>` : '';
+                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5">Từ ${Utils.formatMoney(p.minAmount)}: <span class="text-emerald-600 font-bold">${rewardTxt}</span>${multiplyTxt}${elecBadge}</p>`;
                     } else {
                         let logicTxt = '';
-                        if (p.type === 'gift_same') logicTxt = `🎁 Tặng ${p.giftQty} cùng loại`;
-                        else if (p.type === 'gift_other') logicTxt = `🎁 Tặng ${p.giftQty} ${Utils.escapeHTML(p.giftName || '')}`;
+                        if (p.type === 'gift_same') logicTxt = `Tặng ${p.giftQty} cùng loại`;
+                        else if (p.type === 'gift_other') logicTxt = `Tặng ${p.giftQty} ${Utils.escapeHTML(p.giftName || '')}`;
                         else if (p.type === 'extra_percent') logicTxt = `Giảm thêm ${p.value}%`;
                         else if (p.type === 'extra_tien_sp') logicTxt = `Trừ ${Utils.formatMoney(p.value)}/SP`;
                         else logicTxt = `Trừ ${Utils.formatMoney(p.value)} tổng`;
                         
-                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5 flex items-center flex-wrap gap-y-1">Mua >= ${p.minQty} 👉 <span class="text-indigo-600 font-bold ml-1">${logicTxt}</span></p><p class="text-[9px] font-bold mt-1 text-slate-400">ÁP DỤNG CHO: ${p.productIds ? p.productIds.length : 0} SẢN PHẨM</p>`;
+                        bodyHtml = `<p class="text-[11px] text-slate-600 font-medium mt-1.5 flex items-center flex-wrap gap-y-1">Từ ${p.minQty} sản phẩm: <span class="text-indigo-600 font-bold ml-1">${logicTxt}</span></p><p class="text-[9px] font-bold mt-1 text-slate-400">Áp dụng cho ${p.productIds ? p.productIds.length : 0} sản phẩm</p>`;
                     }
-                    return `<div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center"><div class="min-w-0 flex-1"><h4 class="text-[13px] font-black text-slate-900 truncate uppercase tracking-wide">${safePromoName}</h4>${bodyHtml}</div><button data-promo-action="delete" data-promo-id="${Utils.escapeAttr(p.id)}" class="ml-3 w-9 h-9 rounded-full bg-slate-50 text-red-500 border border-slate-100 hover:bg-red-50 hover:border-red-100 flex items-center justify-center shrink-0 transition-colors"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
+                    return `<div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex justify-between items-center"><div class="min-w-0 flex-1"><h4 class="text-[13px] font-black text-slate-900 truncate tracking-tight">${safePromoName}</h4>${bodyHtml}</div><button data-promo-action="delete" data-promo-id="${Utils.escapeAttr(p.id)}" class="ml-3 w-9 h-9 rounded-full bg-slate-50 text-red-500 border border-slate-100 hover:bg-red-50 hover:border-red-100 flex items-center justify-center shrink-0 transition-colors" aria-label="Xóa chương trình"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button></div>`;
                 }).join(''); DOM.promo.listContainer.innerHTML = html;
+                if (window.AppI18n) AppI18n.apply(DOM.promo.listContainer);
             },
             
             renderQuickButtons: () => {
                 const itemPromos = AppState.get('promos').filter(p => !p.isOrderPromo);
                 if (itemPromos.length === 0) { DOM.main.quickPromoRow.innerHTML = ''; return; }
-                const html = itemPromos.map(p => `<button data-promo-action="quick-add" data-promo-id="${Utils.escapeAttr(p.id)}" class="shrink-0 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm whitespace-nowrap active:scale-95 transition-transform"><span class="text-[10px] mr-1">🔥</span> ${Utils.escapeHTML(p.name || '')}</button>`).join('');
+                const html = itemPromos.map(p => `<button data-promo-action="quick-add" data-promo-id="${Utils.escapeAttr(p.id)}" class="shrink-0 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-sm whitespace-nowrap active:scale-95 transition-transform"><span class="text-[10px] mr-1">KM</span> ${Utils.escapeHTML(p.name || '')}</button>`).join('');
                 DOM.main.quickPromoRow.innerHTML = html;
+                if (window.AppI18n) AppI18n.apply(DOM.main.quickPromoRow);
             },
             
             quickAddProducts: (promoId) => {
@@ -4540,7 +5689,7 @@
                 if (addedCount > 0) { AppState.set('cart', cart); Utils.showToast(`Đã thêm ${addedCount} SP vào giỏ!`); } else { Utils.showToast("Các SP của KM này đã có trong giỏ!"); }
             },
             
-            openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); },
+            openSearchProducts: () => { DOM.promo.searchModal.classList.add('active'); DOM.promo.searchInput.value = ''; PromoLogic.searchProducts(); if (window.AppI18n) AppI18n.apply(DOM.promo.searchModal); },
             closeSearchProducts: () => { DOM.promo.searchModal.classList.remove('active'); },
             searchProducts: () => {
                 const term = Utils.normString(DOM.promo.searchInput.value.trim()); let list = AppState.get('productDB'); if (term) { list = list.filter(p => p.searchStr.includes(term)); }
@@ -4548,6 +5697,7 @@
                     const isChecked = editingPromoProductIds.includes(p.id);
                     return `<label class="p-3 flex justify-between items-center cursor-pointer hover:bg-slate-50 border-b border-slate-50"><div class="flex-1 min-w-0 pr-2"><div class="text-[13px] font-bold text-slate-800 truncate">${Utils.escapeHTML(p.name || '')}</div><div class="text-[11px] text-blue-600 font-bold">${Utils.formatMoney(p.price)}</div></div><div class="custom-checkbox relative w-6 h-6"><input type="checkbox" class="promo-product-checkbox opacity-0 absolute inset-0 z-10" value="${Utils.escapeAttr(p.id)}" ${isChecked ? 'checked' : ''}><div class="w-6 h-6 border-2 border-slate-300 rounded-lg flex items-center justify-center bg-white transition-colors"><svg class="w-4 h-4 text-white hidden pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div></label>`;
                 }).join(''); DOM.promo.productList.innerHTML = html;
+                if (window.AppI18n) AppI18n.apply(DOM.promo.productList);
             },
             
             toggleProduct: (checkbox) => { const pid = checkbox.value; if (checkbox.checked) { if (!editingPromoProductIds.includes(pid)) editingPromoProductIds.push(pid); } else { editingPromoProductIds = editingPromoProductIds.filter(id => id !== pid); } DOM.promo.selectedCount.textContent = editingPromoProductIds.length; },
@@ -4634,6 +5784,7 @@
                 const note = DOM.main.promoNote.value.trim();
                 document.getElementById('pFinalNote').innerHTML = note ? `<strong>📌 Ghi chú:</strong><br>${Utils.escapeHTML(note)}` : `Báo giá có giá trị trong vòng 07 ngày. Cảm ơn quý khách đã tin tưởng ${Utils.escapeHTML(AppState.get('brand').name)}!`;
                 const now = new Date(); document.getElementById('pDateDisplay').textContent = `Ngày ${now.getDate().toString().padStart(2,'0')} tháng ${(now.getMonth() + 1).toString().padStart(2,'0')} năm ${now.getFullYear()}`;
+                if (window.AppI18n) AppI18n.apply(document.getElementById('invoiceRenderArea'));
                 
                 return finalPayable;
             },
@@ -4643,8 +5794,19 @@
                 DOM.export.modal.classList.add('active');
                 const total = ExportLogic.generatePrintView();
                 const opEff = AppState.get('currentOrderPromoEffect');
-                let promoMsg = opEff ? `\n🎁 Quà tặng tổng đơn: ${opEff.msg.replace('Tặng: ', '')}` : '';
-                DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${AppState.get('brand').docTitle.toLowerCase()}.\n👉 Tổng thanh toán: ${Utils.formatMoney(total)}${promoMsg}\n\nAnh/chị xem chi tiết trong ảnh đính kèm nhé!`;
+                const currentLang = window.AppI18n ? AppI18n.get() : 'vi';
+                if (currentLang === 'en') {
+                    const customer = DOM.main.custName.value.trim() || "Customer";
+                    const sender = DOM.main.senderName.value.trim() || AppState.get('brand').name;
+                    const rawTitle = AppState.get('brand').docTitle || "quote";
+                    const docTitle = Utils.normString(rawTitle) === Utils.normString("BẢNG BÁO GIÁ") ? "quote" : rawTitle.toLowerCase();
+                    const promoMsg = opEff ? `\n🎁 Order promotion: ${opEff.msg.replace('Tặng: ', 'Gift: ')}` : '';
+                    DOM.export.msgBox.value = `Hello ${customer},\nThis is ${sender} sending you the ${docTitle}.\n👉 Total payable: ${Utils.formatMoney(total)}${promoMsg}\n\nPlease see the details in the attached image.`;
+                } else {
+                    let promoMsg = opEff ? `\n🎁 Quà tặng tổng đơn: ${opEff.msg.replace('Tặng: ', '')}` : '';
+                    DOM.export.msgBox.value = `Dạ chào ${DOM.main.custName.value.trim() || "Anh/Chị"},\nEm là ${DOM.main.senderName.value.trim()} gửi anh/chị ${AppState.get('brand').docTitle.toLowerCase()}.\n👉 Tổng thanh toán: ${Utils.formatMoney(total)}${promoMsg}\n\nAnh/chị xem chi tiết trong ảnh đính kèm nhé!`;
+                }
+                if (window.AppI18n) AppI18n.apply(DOM.export.modal);
 
                 setTimeout(() => {
                     const wrapper = document.getElementById('previewContainer'); const invoice = document.getElementById('invoiceRenderArea');
@@ -4689,19 +5851,23 @@
                 DOM.export.loading.classList.add('flex');
 
                 try {
+                    const lang = window.AppI18n ? AppI18n.get() : 'vi';
+                    const isEn = lang === 'en';
                     const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet('BaoGia'); 
                     const argbColor = 'FF0055A5'; 
                     worksheet.mergeCells('A1:H1'); const titleCell = worksheet.getCell('A1');
                     titleCell.value = document.getElementById('printDocTitle').textContent.trim().toUpperCase(); titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: argbColor } };
                     titleCell.alignment = { vertical: 'middle', horizontal: 'center' }; worksheet.getRow(1).height = 40;
                     
-                    worksheet.getCell('A3').value = 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true }; worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').textContent.trim() || "Khách Hàng"; worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
+                    worksheet.getCell('A3').value = isEn ? 'Dear:' : 'Kính gửi:'; worksheet.getCell('A3').font = { bold: true }; worksheet.getCell('B3').value = document.getElementById('pCustomerPrint').textContent.trim() || (isEn ? "Customer" : "Khách Hàng"); worksheet.getCell('B3').font = { bold: true, color: { argb: argbColor } };
                     worksheet.getCell('G3').value = document.getElementById('pDateDisplay').textContent.trim(); worksheet.getCell('G3').alignment = { horizontal: 'right' };
-                    worksheet.getCell('A4').value = 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true }; worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').textContent.trim();
-                    worksheet.getCell('G4').value = 'SĐT: ' + document.getElementById('pPhoneDisplay').textContent.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
+                    worksheet.getCell('A4').value = isEn ? 'Sender:' : 'Người báo giá:'; worksheet.getCell('A4').font = { bold: true }; worksheet.getCell('B4').value = document.getElementById('pSenderDisplay').textContent.trim();
+                    worksheet.getCell('G4').value = (isEn ? 'Phone: ' : 'SĐT: ') + document.getElementById('pPhoneDisplay').textContent.trim(); worksheet.getCell('G4').alignment = { horizontal: 'right' };
                     
                     const headerRow = worksheet.getRow(6);
-                    headerRow.values = ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
+                    headerRow.values = isEn
+                        ? ['No.', 'SKU', 'Product Name', 'Qty', 'List Price (VND)', 'Unit Price (VND)', 'Line Total (VND)', 'Notes']
+                        : ['STT', 'Mã SP', 'Tên Sản Phẩm', 'SL', 'Giá Bìa (VND)', 'Đơn Giá (VND)', 'Thành Tiền (VND)', 'Ghi Chú'];
                     headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }; headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
                     headerRow.eachCell((cell) => { cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argbColor } }; cell.border = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'} }; });
                     headerRow.height = 30;
@@ -4713,7 +5879,7 @@
                          const row = worksheet.getRow(currentRow);
                          let flucInfo = Utils.getIncreaseDecreaseInfo(item.unit);
                          let excelName = item.name;
-                         if (flucInfo) excelName += ` [${flucInfo.type === 'tăng' ? 'Tăng' : 'Giảm'} ${flucInfo.text}]`;
+                         if (flucInfo) excelName += ` [${flucInfo.type === 'tăng' ? (isEn ? 'Increase' : 'Tăng') : (isEn ? 'Decrease' : 'Giảm')} ${flucInfo.text}]`;
 
                          row.values = [ idx + 1, item.code || '-', excelName, item.qty, item.originalPrice || 0, item.priceAfterDiscount || 0, item.totalFinal || 0, item.note || '' ];
                          row.getCell(5).numFmt = '#,##0'; row.getCell(6).numFmt = '#,##0'; row.getCell(7).numFmt = '#,##0';
@@ -4735,13 +5901,13 @@
                     if (opEff) {
                         const promoRow = worksheet.getRow(currentRow); 
                         worksheet.mergeCells(`A${currentRow}:F${currentRow}`); 
-                        promoRow.getCell(1).value = `KM Tổng Đơn: ${opEff.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF4338CA' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
+                        promoRow.getCell(1).value = `${isEn ? 'Order Promo' : 'KM Tổng Đơn'}: ${opEff.name}`; promoRow.getCell(1).font = { italic: true, color: { argb: 'FF4338CA' } }; promoRow.getCell(1).alignment = { horizontal: 'right' };
                         promoRow.getCell(7).value = opEff.msg; promoRow.getCell(7).font = { bold: true, color: { argb: 'FF4338CA' } };
                         currentRow++;
                     }
 
                     const totalRow = worksheet.getRow(currentRow);
-                    totalRow.getCell(6).value = 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
+                    totalRow.getCell(6).value = isEn ? 'TOTAL:' : 'TỔNG CỘNG:'; totalRow.getCell(6).font = { bold: true, size: 12 }; totalRow.getCell(6).alignment = { horizontal: 'right' };
                     totalRow.getCell(7).value = Utils.cleanNumber(document.getElementById('pTotalPrint').textContent.trim()); totalRow.getCell(7).font = { bold: true, size: 12, color: { argb: 'FFDC2626' } }; totalRow.getCell(7).numFmt = '#,##0'; totalRow.getCell(7).alignment = { horizontal: 'right' };
                     worksheet.columns = [ { width: 6 }, { width: 15 }, { width: 45 }, { width: 8 }, { width: 18 }, { width: 18 }, { width: 20 }, { width: 35 } ];
                     
@@ -4934,7 +6100,9 @@
             const formulaRadio = document.querySelector(`input[name="discountFormula"][value="${formula}"]`);
             if(formulaRadio) formulaRadio.checked = true;
             
-            updateToggleViewUI(); setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons(); maybeShowFirstRunGuide();
+            updateToggleViewUI(); setupFixedBrandIdentity(); updateBrandText(); renderSetupWarehouseList(); PromoLogic.renderQuickButtons();
+            if (window.AppI18n) AppI18n.init();
+            maybeShowFirstRunGuide();
         };
 
         initApp();
