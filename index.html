@@ -741,6 +741,520 @@
                     padding: 1rem;
                 }
             }
+            .legacy-career-profile {
+                display: none !important;
+            }
+            #careerProfileModal .resume-profile-upgrade {
+                font-size: 16px;
+            }
+            #careerProfileModal .resume-profile-upgrade h4 {
+                font-size: 0.95rem !important;
+                line-height: 1.3 !important;
+                letter-spacing: 0 !important;
+            }
+            #careerProfileModal .resume-profile-upgrade .text-\[13px\],
+            #careerProfileModal .resume-profile-upgrade .text-\[14px\],
+            #careerProfileModal .resume-profile-upgrade a {
+                font-size: 0.86rem !important;
+                line-height: 1.5 !important;
+            }
+            #careerProfileModal .resume-profile-upgrade .resume-section-title {
+                font-size: clamp(1.02rem, 1.45vw, 1.18rem);
+            }
+            #careerProfileModal .resume-profile-upgrade .resume-pill {
+                white-space: nowrap;
+            }
+
+            #careerProfileModal .career-profile-shell {
+                background: #020617 !important;
+                border-color: rgba(34, 211, 238, 0.24) !important;
+            }
+            #careerProfileModal .career-profile-scroll {
+                background: #020617 !important;
+            }
+            #careerProfileModal .career-profile-header {
+                background: #020617 !important;
+                color: #ffffff !important;
+                border-bottom: 1px solid rgba(34, 211, 238, 0.18);
+            }
+            #careerProfileModal .career-profile-header .cyber-grid {
+                display: block !important;
+                opacity: 0.58 !important;
+            }
+            #careerProfileModal .career-profile-header h2 {
+                color: #ffffff !important;
+            }
+            #careerProfileModal .career-profile-header p {
+                color: #cbd5e1 !important;
+            }
+            #careerProfileModal .career-profile-header img {
+                border-color: rgba(34, 211, 238, 0.45) !important;
+                box-shadow: 0 18px 45px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.12) !important;
+            }
+            #careerProfileModal #btnCloseCareerProfile {
+                background: rgba(15, 23, 42, 0.88) !important;
+                color: #ffffff !important;
+                border: 1px solid rgba(148, 163, 184, 0.22);
+            }
+            #careerProfileModal .career-profile-shell > footer {
+                background: #020617 !important;
+                border-top: 1px solid rgba(34, 211, 238, 0.18) !important;
+                color: #94a3b8;
+            }
+            #careerProfileModal .career-profile-shell > footer p {
+                color: #94a3b8 !important;
+            }
+            #careerProfileModal #btnCareerProfileDone {
+                background: linear-gradient(135deg, #0f172a, #082f49) !important;
+                border: 1px solid rgba(34, 211, 238, 0.22);
+                box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+            }
+            #careerProfileModal .resume-lang-toggle {
+                background: rgba(15, 23, 42, 0.78);
+                border-color: rgba(148, 163, 184, 0.22);
+            }
+            #careerProfileModal .resume-lang-btn {
+                color: #94a3b8;
+            }
+            #careerProfileModal .resume-lang-btn.is-active {
+                background: #22d3ee;
+                color: #082f49;
+                box-shadow: 0 10px 24px rgba(34, 211, 238, 0.22);
+            }
+            .resume-command-center,
+            .resume-command-center * {
+                letter-spacing: 0 !important;
+            }
+            .resume-command-center {
+                --resume-surface: rgba(15, 23, 42, 0.86);
+                --resume-surface-strong: rgba(2, 6, 23, 0.92);
+                --resume-line: rgba(34, 211, 238, 0.18);
+                --resume-text: #e5f0ff;
+                --resume-muted: #94a3b8;
+                --resume-cyan: #22d3ee;
+                --resume-blue: #3b82f6;
+                --resume-green: #34d399;
+                color: var(--resume-text);
+            }
+            .resume-command-center .resume-card {
+                position: relative;
+                overflow: hidden;
+                border: 1px solid var(--resume-line);
+                background: var(--resume-surface);
+                color: var(--resume-text);
+                border-radius: 22px;
+                box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+            }
+            .resume-command-center .resume-card::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                background-image: linear-gradient(to right, rgba(34, 211, 238, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+                background-size: 34px 34px;
+                opacity: 0.55;
+                mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.28));
+                -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.28));
+            }
+            .resume-command-center .resume-card > * {
+                position: relative;
+                z-index: 1;
+            }
+            .resume-command-center .resume-section-title,
+            .resume-command-center h3,
+            .resume-command-center h4,
+            .resume-command-center strong {
+                color: #ffffff;
+            }
+            .resume-command-center .resume-body-text,
+            .resume-command-center p,
+            .resume-command-center li {
+                color: #cbd5e1;
+            }
+            .resume-eyebrow {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.45rem;
+                color: var(--resume-cyan);
+                font-size: 0.72rem;
+                font-weight: 760;
+                text-transform: uppercase;
+            }
+            .resume-eyebrow::before {
+                content: "";
+                width: 0.48rem;
+                height: 0.48rem;
+                border-radius: 999px;
+                background: var(--resume-green);
+                box-shadow: 0 0 16px rgba(52, 211, 153, 0.55);
+            }
+            .resume-hero-system {
+                display: grid;
+                gap: 1.2rem;
+                grid-template-columns: minmax(0, 1.25fr);
+                padding: 1.2rem;
+                background: linear-gradient(135deg, rgba(2, 6, 23, 0.98), rgba(8, 47, 73, 0.9)) !important;
+            }
+            @media (min-width: 900px) {
+                .resume-hero-system {
+                    grid-template-columns: minmax(0, 1.2fr) minmax(290px, 0.8fr);
+                    padding: 1.35rem;
+                }
+            }
+            .resume-hero-title {
+                margin-top: 0.55rem;
+                max-width: 48rem;
+                color: #ffffff;
+                font-size: clamp(1.65rem, 3.2vw, 3.35rem);
+                font-weight: 780;
+                line-height: 1.04;
+            }
+            .resume-hero-copy {
+                margin-top: 0.75rem;
+                max-width: 43rem;
+                color: #cbd5e1;
+                font-size: clamp(0.94rem, 1.4vw, 1.06rem);
+                line-height: 1.58;
+                font-weight: 520;
+            }
+            .resume-command-strip {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.48rem;
+                margin-top: 1rem;
+            }
+            .resume-command-chip,
+            .resume-pill {
+                border-color: rgba(34, 211, 238, 0.2) !important;
+                background: rgba(15, 23, 42, 0.72) !important;
+                color: #dbeafe !important;
+            }
+            .resume-command-chip {
+                display: inline-flex;
+                align-items: center;
+                min-height: 2rem;
+                border: 1px solid rgba(34, 211, 238, 0.2);
+                border-radius: 999px;
+                padding: 0.42rem 0.72rem;
+                color: #dbeafe;
+                font-size: 0.78rem;
+                font-weight: 700;
+            }
+            .resume-signal-grid {
+                display: grid;
+                gap: 0.65rem;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .resume-signal-tile {
+                min-height: 7.2rem;
+                border: 1px solid rgba(148, 163, 184, 0.18);
+                border-radius: 18px;
+                padding: 0.9rem;
+                background: rgba(255, 255, 255, 0.055);
+            }
+            .resume-signal-number {
+                display: block;
+                color: #ffffff;
+                font-size: clamp(1.45rem, 3vw, 2rem);
+                line-height: 1;
+                font-weight: 780;
+                font-variant-numeric: tabular-nums;
+            }
+            .resume-signal-label {
+                margin-top: 0.48rem;
+                color: #94a3b8;
+                font-size: 0.76rem;
+                line-height: 1.32;
+                font-weight: 650;
+            }
+            .resume-flow-card {
+                padding: 1rem;
+            }
+            .resume-flow-track {
+                display: grid;
+                gap: 0.65rem;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                margin-top: 0.9rem;
+            }
+            @media (min-width: 768px) {
+                .resume-flow-track {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+            }
+            .resume-flow-node {
+                border: 1px solid rgba(34, 211, 238, 0.18);
+                background: rgba(2, 6, 23, 0.72);
+                border-radius: 16px;
+                padding: 0.78rem;
+                min-height: 5.3rem;
+            }
+            .resume-flow-node span {
+                display: block;
+                color: var(--resume-cyan);
+                font-size: 0.72rem;
+                font-weight: 800;
+            }
+            .resume-flow-node strong {
+                display: block;
+                margin-top: 0.38rem;
+                font-size: 0.9rem;
+                line-height: 1.25;
+            }
+            .resume-operator-card {
+                min-height: 100%;
+                padding: 1rem;
+            }
+            .resume-operator-card p {
+                margin-top: 0.6rem;
+                font-size: 0.86rem;
+                line-height: 1.48;
+                font-weight: 520;
+            }
+            .resume-mini-bars {
+                display: grid;
+                gap: 0.45rem;
+                margin-top: 0.85rem;
+            }
+            .resume-mini-bar {
+                height: 0.42rem;
+                border-radius: 999px;
+                background: rgba(148, 163, 184, 0.18);
+                overflow: hidden;
+            }
+            .resume-mini-bar i {
+                display: block;
+                height: 100%;
+                width: var(--level, 70%);
+                border-radius: inherit;
+                background: linear-gradient(90deg, var(--resume-cyan), var(--resume-blue));
+            }
+            .resume-proof-card {
+                display: grid;
+                gap: 1rem;
+                grid-template-columns: minmax(0, 1fr);
+                padding: 1rem;
+            }
+            @media (min-width: 920px) {
+                .resume-proof-card {
+                    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+                }
+            }
+            .resume-product-screen {
+                border: 1px solid rgba(34, 211, 238, 0.22);
+                border-radius: 20px;
+                background: #020617;
+                overflow: hidden;
+            }
+            .resume-product-topbar {
+                display: flex;
+                gap: 0.35rem;
+                padding: 0.7rem;
+                border-bottom: 1px solid rgba(34, 211, 238, 0.14);
+            }
+            .resume-product-topbar i {
+                width: 0.55rem;
+                height: 0.55rem;
+                border-radius: 999px;
+                background: #22d3ee;
+            }
+            .resume-product-lines {
+                display: grid;
+                gap: 0.62rem;
+                padding: 0.85rem;
+            }
+            .resume-product-line {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 0.8rem;
+                align-items: center;
+                border: 1px solid rgba(148, 163, 184, 0.14);
+                border-radius: 14px;
+                padding: 0.72rem;
+                color: #dbeafe;
+                font-size: 0.78rem;
+                font-weight: 700;
+            }
+            .resume-product-line b {
+                color: var(--resume-green);
+                font-variant-numeric: tabular-nums;
+            }
+            .resume-case-list {
+                display: grid;
+                gap: 0.6rem;
+                margin-top: 0.9rem;
+            }
+            .resume-case-list li {
+                display: flex;
+                gap: 0.58rem;
+                align-items: flex-start;
+                font-size: 0.88rem;
+                line-height: 1.48;
+            }
+            .resume-case-list li::before {
+                content: "";
+                width: 0.46rem;
+                height: 0.46rem;
+                margin-top: 0.45rem;
+                border-radius: 999px;
+                background: var(--resume-cyan);
+                flex: 0 0 auto;
+            }
+            .resume-career-card {
+                padding: 1rem;
+            }
+            .resume-career-grid {
+                display: grid;
+                gap: 0.82rem;
+                margin-top: 1rem;
+            }
+            .resume-command-center .resume-timeline-item {
+                border: 1px solid rgba(148, 163, 184, 0.14);
+                border-left: 3px solid var(--resume-cyan);
+                border-radius: 16px;
+                background: rgba(2, 6, 23, 0.52);
+                padding: 0.88rem;
+            }
+            .resume-command-center .resume-timeline-date {
+                background: rgba(34, 211, 238, 0.12);
+                color: #67e8f9;
+            }
+            .resume-stack-grid {
+                display: grid;
+                gap: 0.55rem;
+                margin-top: 0.9rem;
+            }
+            .resume-stack-row {
+                display: grid;
+                grid-template-columns: minmax(6.8rem, 0.8fr) 1fr;
+                gap: 0.6rem;
+                align-items: center;
+                font-size: 0.82rem;
+            }
+            .resume-stack-row span {
+                color: #94a3b8;
+                font-weight: 700;
+            }
+            .resume-stack-row strong {
+                font-size: 0.84rem;
+                line-height: 1.35;
+            }
+            .resume-contact-grid {
+                display: grid;
+                gap: 0.55rem;
+                margin-top: 0.85rem;
+            }
+            .resume-contact-grid a {
+                display: flex;
+                justify-content: space-between;
+                gap: 0.7rem;
+                border: 1px solid rgba(148, 163, 184, 0.16);
+                border-radius: 14px;
+                background: rgba(2, 6, 23, 0.55);
+                padding: 0.72rem;
+                color: #dbeafe;
+                font-size: 0.84rem !important;
+                font-weight: 700;
+            }
+            .resume-command-center .resume-impact-list li::before {
+                background: var(--resume-cyan);
+            }
+            @media screen and (max-width: 767px) {
+                .resume-command-center {
+                    padding-bottom: 0.4rem;
+                }
+                .resume-hero-system,
+                .resume-flow-card,
+                .resume-proof-card,
+                .resume-operator-card,
+                .resume-career-card {
+                    border-radius: 20px !important;
+                    padding: 0.92rem !important;
+                }
+                .resume-hero-title {
+                    font-size: 1.72rem;
+                }
+                .resume-signal-grid,
+                .resume-flow-track {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+                .resume-stack-row {
+                    grid-template-columns: 1fr;
+                    gap: 0.16rem;
+                }
+            }
+
+            #quoteList .quote-edit-grid {
+                align-items: end;
+            }
+            #quoteList .quote-edit-cell {
+                min-width: 0;
+            }
+            #quoteList [data-action="toggleKmType"] {
+                min-height: 1.72rem;
+                min-width: 3.85rem;
+                touch-action: manipulation;
+            }
+            #mainScroll {
+                scroll-padding-bottom: 44vh;
+            }
+            .cart-input,
+            .cart-input-text {
+                scroll-margin-bottom: 46vh;
+                touch-action: manipulation;
+            }
+            @media screen and (max-width: 1024px) {
+                #quoteList .quote-edit-grid {
+                    grid-template-columns: repeat(5, minmax(4.35rem, 1fr));
+                    gap: 0.48rem;
+                    overflow-x: auto;
+                    overscroll-behavior-x: contain;
+                    -webkit-overflow-scrolling: touch;
+                    padding: 0.1rem 0.05rem 0.45rem;
+                }
+                #quoteList .quote-edit-cell {
+                    min-width: 4.35rem;
+                }
+                #quoteList .cart-input,
+                #quoteList .cart-input-text,
+                #screenMain input,
+                #screenMain textarea,
+                #screenMain select {
+                    min-height: 44px;
+                    font-size: 16px !important;
+                }
+                #quoteList .cart-input {
+                    padding-top: 0.62rem !important;
+                    padding-bottom: 0.62rem !important;
+                }
+                #quoteList .cart-input-text {
+                    border-radius: 0.85rem;
+                    padding-top: 0.7rem !important;
+                    padding-bottom: 0.7rem !important;
+                }
+                #quoteList .quote-edit-cell label,
+                #quoteList [data-action="sync"],
+                #quoteList [data-action="toggleKmType"] {
+                    font-size: 0.72rem !important;
+                    line-height: 1.15 !important;
+                    white-space: nowrap;
+                }
+            }
+            body.input-focus #bottomFooter {
+                transform: translateY(115%) !important;
+                pointer-events: none;
+            }
+            body.input-focus #mainScroll {
+                scroll-padding-bottom: 58vh;
+            }
+            @media screen and (max-height: 520px) and (orientation: landscape) {
+                body.input-focus #screenMain .sticky {
+                    transform: translateY(-100%);
+                    transition: transform 0.22s var(--ui-ease);
+                }
+                body.input-focus #quoteList {
+                    padding-bottom: 55vh;
+                }
+            }
 	    </style>
 </head>
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -843,7 +1357,7 @@
                             <div class="min-w-0">
                                 <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="en">Professional Resume</span><span data-lang="vi">Hồ sơ nghề nghiệp</span></p>
                                 <h2 class="mt-1 text-2xl md:text-4xl font-black uppercase tracking-wide leading-tight">Huỳnh Minh Thuận</h2>
-                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Supervisor | Field Sales | Dealer & Distributor Channels</span><span data-lang="vi">Giám sát bán hàng | Bán hàng thị trường | Kênh đại lý và nhà phân phối</span></p>
+                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Operations | Field Execution | Retail Technology</span><span data-lang="vi">Vận hành bán hàng | Triển khai thị trường | Công nghệ bán lẻ</span></p>
                                 <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-bold">
                                     <span class="resume-pill">My Tho, Tien Giang</span>
                                     <span class="resume-pill"><span data-lang="en">Electrical products</span><span data-lang="vi">Thiết bị điện</span></span>
@@ -866,17 +1380,209 @@
 
             <div class="career-profile-scroll flex-grow overflow-y-auto bg-slate-50">
                 <div class="resume-profile-upgrade p-4 md:p-6 lg:p-8">
-                    <div class="mx-auto max-w-6xl space-y-5">
+                    <div class="mx-auto max-w-6xl resume-command-center space-y-5">
+                        <section class="resume-card resume-hero-system">
+                            <div>
+                                <p class="resume-eyebrow"><span data-lang="en">Operator Profile</span><span data-lang="vi">Hồ sơ vận hành</span></p>
+                                <h3 class="resume-hero-title"><span data-lang="en">Turns field sales into repeatable operating systems.</span><span data-lang="vi">Biến vận hành bán hàng thành hệ thống có thể nhân rộng.</span></h3>
+                                <p class="resume-hero-copy"><span data-lang="en">Sales operations professional with 10+ years across dealer/distributor channels, retail execution, electrical products, consumer electronics, FMCG, digital TV, and retail SaaS. Strongest fit: Sales Operations, Channel Operations, Retail Tech Implementation, or Product Operations for sales tools.</span><span data-lang="vi">Nhân sự sales operations có hơn 10 năm trong kênh đại lý/NPP, vận hành bán lẻ, thiết bị điện, điện máy, FMCG, truyền hình kỹ thuật số và retail SaaS. Phù hợp nhất với Sales Operations, Channel Operations, Retail Tech Implementation hoặc Product Operations cho công cụ bán hàng.</span></p>
+                                <div class="resume-command-strip">
+                                    <span class="resume-command-chip"><span data-lang="en">Field execution</span><span data-lang="vi">Triển khai thị trường</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Pricing logic</span><span data-lang="vi">Logic giá</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Quote automation</span><span data-lang="vi">Tự động hóa báo giá</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Retail SaaS / POS</span><span data-lang="vi">Retail SaaS / POS</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">AI workflow</span><span data-lang="vi">Workflow AI</span></span>
+                                </div>
+                            </div>
+                            <div class="resume-signal-grid">
+                                <div class="resume-signal-tile">
+                                    <span class="resume-signal-number">10+</span>
+                                    <p class="resume-signal-label"><span data-lang="en">Years across sales execution and retail operations</span><span data-lang="vi">Năm triển khai bán hàng và vận hành bán lẻ</span></p>
+                                </div>
+                                <div class="resume-signal-tile">
+                                    <span class="resume-signal-number">5</span>
+                                    <p class="resume-signal-label"><span data-lang="en">Mekong Delta provinces with route/channel exposure</span><span data-lang="vi">Tỉnh Miền Tây từng phụ trách tuyến/kênh</span></p>
+                                </div>
+                                <div class="resume-signal-tile">
+                                    <span class="resume-signal-number">POS</span>
+                                    <p class="resume-signal-label"><span data-lang="en">Retail SaaS, store workflow, website, SEO, ads</span><span data-lang="vi">Retail SaaS, quy trình cửa hàng, web, SEO, ads</span></p>
+                                </div>
+                                <div class="resume-signal-tile">
+                                    <span class="resume-signal-number">AI</span>
+                                    <p class="resume-signal-label"><span data-lang="en">Documentation, product data, translation, workflow drafting</span><span data-lang="vi">Tài liệu, dữ liệu sản phẩm, dịch thuật, phác thảo quy trình</span></p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="resume-card resume-flow-card">
+                            <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                                <div>
+                                    <p class="resume-eyebrow"><span data-lang="en">Operating Model</span><span data-lang="vi">Mô hình vận hành</span></p>
+                                    <h3 class="resume-section-title mt-2"><span data-lang="en">The value is not only selling. It is making selling easier to repeat.</span><span data-lang="vi">Giá trị không chỉ là bán hàng. Giá trị là làm cho việc bán hàng dễ lặp lại hơn.</span></h3>
+                                </div>
+                                <span class="resume-command-chip"><span data-lang="en">Field -> System -> Customer-ready output</span><span data-lang="vi">Thị trường -> Hệ thống -> Tài liệu gửi khách</span></span>
+                            </div>
+                            <div class="resume-flow-track">
+                                <div class="resume-flow-node"><span>01</span><strong><span data-lang="en">Capture field friction</span><span data-lang="vi">Ghi nhận điểm nghẽn thị trường</span></strong></div>
+                                <div class="resume-flow-node"><span>02</span><strong><span data-lang="en">Structure product and price data</span><span data-lang="vi">Chuẩn hóa dữ liệu sản phẩm và giá</span></strong></div>
+                                <div class="resume-flow-node"><span>03</span><strong><span data-lang="en">Build quote and promo logic</span><span data-lang="vi">Xây logic báo giá và khuyến mãi</span></strong></div>
+                                <div class="resume-flow-node"><span>04</span><strong><span data-lang="en">Export clean customer documents</span><span data-lang="vi">Xuất tài liệu sạch gửi khách</span></strong></div>
+                            </div>
+                        </section>
+
+                        <section class="grid gap-5 lg:grid-cols-3">
+                            <article class="resume-card resume-operator-card">
+                                <p class="resume-eyebrow"><span data-lang="en">Tech Company Signal</span><span data-lang="vi">Tín hiệu cho công ty công nghệ</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Understands messy real-world workflows.</span><span data-lang="vi">Hiểu quy trình thực tế nhiều biến số.</span></h3>
+                                <p><span data-lang="en">Dealer follow-up, distributor coordination, price exceptions, promotion execution, and customer documents are treated as operating problems, not random manual tasks.</span><span data-lang="vi">Chăm đại lý, phối hợp NPP, ngoại lệ giá, khuyến mãi và tài liệu gửi khách được nhìn như bài toán vận hành, không phải thao tác thủ công rời rạc.</span></p>
+                                <div class="resume-mini-bars">
+                                    <div class="resume-mini-bar"><i style="--level:92%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:86%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:78%"></i></div>
+                                </div>
+                            </article>
+                            <article class="resume-card resume-operator-card">
+                                <p class="resume-eyebrow"><span data-lang="en">Retail Tech</span><span data-lang="vi">Công nghệ bán lẻ</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Bridges stores, sales teams, and software.</span><span data-lang="vi">Kết nối cửa hàng, đội bán hàng và phần mềm.</span></h3>
+                                <p><span data-lang="en">Sapo experience created practical exposure to POS software, store management, websites, SEO, digital ads, customer onboarding, and requirements discovery.</span><span data-lang="vi">Kinh nghiệm Sapo tạo nền tảng thực tế về POS, quản lý cửa hàng, website, SEO, quảng cáo số, onboarding khách hàng và khai thác yêu cầu.</span></p>
+                                <div class="resume-mini-bars">
+                                    <div class="resume-mini-bar"><i style="--level:82%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:78%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:74%"></i></div>
+                                </div>
+                            </article>
+                            <article class="resume-card resume-operator-card">
+                                <p class="resume-eyebrow"><span data-lang="en">AI + Product Thinking</span><span data-lang="vi">AI + tư duy sản phẩm</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Uses tools to remove repetitive work.</span><span data-lang="vi">Dùng công cụ để giảm việc lặp lại.</span></h3>
+                                <p><span data-lang="en">Applies AI and structured thinking to translation, product naming, data cleanup, sales documentation, bilingual content, and workflow drafting.</span><span data-lang="vi">Ứng dụng AI và tư duy cấu trúc vào dịch thuật, đặt tên sản phẩm, làm sạch dữ liệu, tài liệu bán hàng, nội dung song ngữ và phác thảo workflow.</span></p>
+                                <div class="resume-mini-bars">
+                                    <div class="resume-mini-bar"><i style="--level:84%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:80%"></i></div>
+                                    <div class="resume-mini-bar"><i style="--level:76%"></i></div>
+                                </div>
+                            </article>
+                        </section>
+
+                        <section class="resume-card resume-proof-card">
+                            <div>
+                                <p class="resume-eyebrow"><span data-lang="en">Proof of Work</span><span data-lang="vi">Bằng chứng năng lực</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Thuận Store Quote Builder is the portfolio, not decoration.</span><span data-lang="vi">Thuận Store Quote Builder là portfolio thật, không phải trang trí.</span></h3>
+                                <ul class="resume-case-list">
+                                    <li><span data-lang="en">Transforms product lists, discounts, promotions, notes, and exports into a structured quote workflow.</span><span data-lang="vi">Chuyển danh sách sản phẩm, chiết khấu, khuyến mãi, ghi chú và xuất file thành một quy trình báo giá có cấu trúc.</span></li>
+                                    <li><span data-lang="en">Supports bilingual UI, English product naming, USD display, Excel/PDF/image output, and practical mobile input handling.</span><span data-lang="vi">Hỗ trợ giao diện song ngữ, tên sản phẩm tiếng Anh, hiển thị USD, xuất Excel/PDF/hình ảnh và nhập liệu mobile thực tế.</span></li>
+                                    <li><span data-lang="en">Shows product sense: search, pricing controls, quote preview, customer-ready output, and field-first UX.</span><span data-lang="vi">Thể hiện tư duy sản phẩm: tìm kiếm, kiểm soát giá, preview báo giá, tài liệu gửi khách và UX xuất phát từ người đi thị trường.</span></li>
+                                </ul>
+                            </div>
+                            <div class="resume-product-screen" aria-hidden="true">
+                                <div class="resume-product-topbar"><i></i><i></i><i></i></div>
+                                <div class="resume-product-lines">
+                                    <div class="resume-product-line"><span>Quote Engine</span><b>Live</b></div>
+                                    <div class="resume-product-line"><span>Discount + Promo Logic</span><b>37%</b></div>
+                                    <div class="resume-product-line"><span>Bilingual Product Data</span><b>EN/VI</b></div>
+                                    <div class="resume-product-line"><span>Export Workflow</span><b>XLSX/PDF</b></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
+                            <aside class="space-y-5">
+                                <section class="resume-card resume-operator-card">
+                                    <p class="resume-eyebrow"><span data-lang="en">Capability Stack</span><span data-lang="vi">Ngăn xếp năng lực</span></p>
+                                    <div class="resume-stack-grid">
+                                        <div class="resume-stack-row"><span>Operations</span><strong><span data-lang="en">Territory execution, channel rhythm, distributor coordination</span><span data-lang="vi">Triển khai tuyến, nhịp kênh, phối hợp NPP</span></strong></div>
+                                        <div class="resume-stack-row"><span>Retail Tech</span><strong><span data-lang="en">POS, retail SaaS, web, SEO, ads, customer onboarding</span><span data-lang="vi">POS, retail SaaS, web, SEO, ads, onboarding khách hàng</span></strong></div>
+                                        <div class="resume-stack-row"><span>Data</span><strong><span data-lang="en">Product data hygiene, Excel workflow, price structure</span><span data-lang="vi">Chuẩn hóa dữ liệu sản phẩm, quy trình Excel, cấu trúc giá</span></strong></div>
+                                        <div class="resume-stack-row"><span>AI</span><strong><span data-lang="en">Documentation, translation, naming, workflow drafting</span><span data-lang="vi">Tài liệu, dịch thuật, đặt tên, phác thảo workflow</span></strong></div>
+                                    </div>
+                                </section>
+                                <section class="resume-card resume-operator-card">
+                                    <p class="resume-eyebrow"><span data-lang="en">Contact</span><span data-lang="vi">Liên hệ</span></p>
+                                    <div class="resume-contact-grid">
+                                        <a href="tel:0939125128"><span><span data-lang="en">Phone</span><span data-lang="vi">Điện thoại</span></span><strong>0939 125 128</strong></a>
+                                        <a href="mailto:huynhthuanhmt@gmail.com"><span>Email</span><strong>huynhthuanhmt@gmail.com</strong></a>
+                                        <a href="https://thuanstore.com" target="_blank" rel="noopener"><span>Website</span><strong>thuanstore.com</strong></a>
+                                    </div>
+                                </section>
+                            </aside>
+                            <main class="space-y-5">
+                                <section class="resume-card resume-career-card">
+                                    <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+                                        <div>
+                                            <p class="resume-eyebrow"><span data-lang="en">Execution History</span><span data-lang="vi">Lịch sử triển khai</span></p>
+                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Experience written for scanning, not storytelling.</span><span data-lang="vi">Kinh nghiệm viết để đọc nhanh, không kể lể.</span></h3>
+                                        </div>
+                                        <span class="resume-command-chip">2014 - 2026</span>
+                                    </div>
+                                    <div class="resume-career-grid">
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4><span class="resume-timeline-date">06/2024 - Present</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Electrical products</span><span data-lang="vi">Giám sát bán hàng | Thiết bị điện</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Manage Tien Giang territory execution, dealer follow-up, distributor sell-out coordination, and monthly target rhythm.</span><span data-lang="vi">Quản lý triển khai khu vực Tiền Giang, chăm sóc đại lý, phối hợp sell-out với NPP và nhịp mục tiêu tháng.</span></li><li><span data-lang="en">Standardize quote response with pricing, discount, and product feedback loops.</span><span data-lang="vi">Chuẩn hóa phản hồi báo giá bằng vòng lặp giá, chiết khấu và phản hồi sản phẩm.</span></li></ul>
+                                        </article>
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>Thành Hoàng Long</h4><span class="resume-timeline-date">02/2023 - 05/2024</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | FMCG, mother-baby channel</span><span data-lang="vi">Giám sát bán hàng | FMCG, hàng mẹ và bé</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Executed customer development, store visit rhythm, promotion rollout, POS visibility, and market feedback.</span><span data-lang="vi">Triển khai phát triển khách hàng, lịch ghé điểm bán, khuyến mãi, hình ảnh điểm bán và phản hồi thị trường.</span></li></ul>
+                                        </article>
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>Điện máy Long Hải</h4><span class="resume-timeline-date">11/2021 - 01/2023</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Store Manager | Retail operations</span><span data-lang="vi">Quản lý cửa hàng | Vận hành bán lẻ</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Managed daily store operations, sales growth, customer service, after-sales flow, and dealer relationships.</span><span data-lang="vi">Quản lý vận hành cửa hàng, tăng trưởng doanh số, chăm sóc khách hàng, sau bán và quan hệ đại lý.</span></li></ul>
+                                        </article>
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>AVG - Công ty CP Nghe Nhìn Toàn Cầu</h4><span class="resume-timeline-date">09/2019 - 10/2021</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Digital TV</span><span data-lang="vi">Giám sát bán hàng | Truyền hình kỹ thuật số</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Expanded Mekong Delta coverage, supported dealer channels, tracked targets, and maintained field reporting.</span><span data-lang="vi">Mở rộng bao phủ Miền Tây, hỗ trợ kênh đại lý, theo dõi mục tiêu và duy trì báo cáo thị trường.</span></li></ul>
+                                        </article>
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>Vũ Hồng Minh</h4><span class="resume-timeline-date">03/2017 - 08/2019</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Market Development Representative | Electronics</span><span data-lang="vi">Phát triển thị trường | Điện tử, điện máy</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Owned Tien Giang and Ben Tre territory; maintained dealer relationships; received Outstanding Employee recognition in 2018.</span><span data-lang="vi">Phụ trách Tiền Giang và Bến Tre; duy trì quan hệ đại lý; nhận ghi nhận Nhân viên xuất sắc năm 2018.</span></li></ul>
+                                        </article>
+                                        <article class="resume-timeline-item">
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>Sapo</h4><span class="resume-timeline-date">03/2014 - 01/2016</span></div>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Business Development Representative | Retail SaaS</span><span data-lang="vi">Nhân viên kinh doanh | Retail SaaS</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Consulted retailers on POS software, websites, SEO, digital ads, POS devices, and store-management workflows.</span><span data-lang="vi">Tư vấn nhà bán lẻ về POS, website, SEO, quảng cáo số, thiết bị bán hàng và quy trình quản lý cửa hàng.</span></li></ul>
+                                        </article>
+                                    </div>
+                                </section>
+                            </main>
+                        </section>
+
+                        <section class="grid gap-5 md:grid-cols-2">
+                            <section class="resume-card resume-operator-card">
+                                <p class="resume-eyebrow"><span data-lang="en">Positioning</span><span data-lang="vi">Định vị ứng tuyển</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Best-fit roles</span><span data-lang="vi">Nhóm vị trí phù hợp</span></h3>
+                                <div class="resume-command-strip">
+                                    <span class="resume-command-chip">Sales Operations</span>
+                                    <span class="resume-command-chip">Channel Operations</span>
+                                    <span class="resume-command-chip">Retail Tech Consultant</span>
+                                    <span class="resume-command-chip">Implementation Specialist</span>
+                                    <span class="resume-command-chip">Product Operations</span>
+                                </div>
+                            </section>
+                            <section class="resume-card resume-operator-card">
+                                <p class="resume-eyebrow"><span data-lang="en">Education & Recognition</span><span data-lang="vi">Học vấn & ghi nhận</span></p>
+                                <div class="resume-stack-grid">
+                                    <div class="resume-stack-row"><span><span data-lang="en">Education</span><span data-lang="vi">Học vấn</span></span><strong><span data-lang="en">HCMC College of Industry and Trade - Accounting and auditing, 10/2010 - 05/2013</span><span data-lang="vi">Cao đẳng Công Thương TP.HCM - Kế toán kiểm toán, 10/2010 - 05/2013</span></strong></div>
+                                    <div class="resume-stack-row"><span><span data-lang="en">Recognition</span><span data-lang="vi">Ghi nhận</span></span><strong><span data-lang="en">Outstanding Employee, Vũ Hồng Minh, 2018</span><span data-lang="vi">Nhân viên xuất sắc, Vũ Hồng Minh, 2018</span></strong></div>
+                                    <div class="resume-stack-row"><span><span data-lang="en">English</span><span data-lang="vi">Tiếng Anh</span></span><strong><span data-lang="en">Basic workplace communication; improving for customer-facing and technical contexts</span><span data-lang="vi">Giao tiếp công việc cơ bản; đang cải thiện cho bối cảnh khách hàng và kỹ thuật</span></strong></div>
+                                </div>
+                            </section>
+                        </section>
+                    </div>
+
+                    <div class="mx-auto max-w-6xl space-y-5 legacy-career-profile" aria-hidden="true">
                         <section class="resume-card">
                             <div data-lang="en" class="space-y-4">
                                 <p class="text-[12px] font-bold uppercase tracking-[0.16em] text-blue-600">Professional Summary</p>
-                                <h3 class="resume-section-title">Field Sales Supervisor with AI, online sales, and product-design thinking.</h3>
-                                <p class="resume-body-text">10+ years in electrical products, consumer electronics, FMCG, digital TV, and retail SaaS. Combines dealer/distributor execution with AI-assisted workflow, quote automation, online marketing awareness, and practical UX thinking for sales tools.</p>
+                                <h3 class="resume-section-title">Sales operations profile across field execution, channel management, and retail technology.</h3>
+                                <p class="resume-body-text">10+ years across electrical products, consumer electronics, FMCG, digital TV, and retail SaaS. Practical strength in turning field workflows into structured tools: pricing rules, quote automation, promotion logic, product data, Excel-based reporting, and customer-facing documents.</p>
                             </div>
                             <div data-lang="vi" class="space-y-4">
                                 <p class="text-[12px] font-bold uppercase tracking-[0.16em] text-blue-600">Tóm tắt năng lực</p>
-                                <h3 class="resume-section-title">Giám sát bán hàng thị trường có năng lực AI, online sales và tư duy thiết kế sản phẩm.</h3>
-                                <p class="resume-body-text">Hơn 10 năm trong thiết bị điện, điện máy, FMCG, truyền hình kỹ thuật số và phần mềm bán lẻ. Kết hợp triển khai đại lý/NPP với workflow có AI hỗ trợ, tự động hóa báo giá, hiểu online marketing và tư duy UX thực tế cho công cụ bán hàng.</p>
+                                <h3 class="resume-section-title">Hồ sơ sales operations kết hợp triển khai thị trường, quản lý kênh và công nghệ bán lẻ.</h3>
+                                <p class="resume-body-text">Hơn 10 năm trong thiết bị điện, điện máy, FMCG, truyền hình kỹ thuật số và phần mềm bán lẻ. Thế mạnh thực tế là chuyển quy trình ngoài thị trường thành công cụ có cấu trúc: quy tắc giá, tự động hóa báo giá, logic khuyến mãi, dữ liệu sản phẩm, báo cáo Excel và tài liệu gửi khách hàng.</p>
                             </div>
 
                             <div class="resume-metric-grid mt-5">
@@ -890,30 +1596,30 @@
                                 </div>
                                 <div class="resume-metric-card" style="--i:2">
                                     <span class="resume-kpi-number">AI</span>
-                                    <p class="resume-kpi-label"><span data-lang="en">AI-assisted workflow and content thinking</span><span data-lang="vi">Workflow và nội dung có AI hỗ trợ</span></p>
+                                    <p class="resume-kpi-label"><span data-lang="en">AI-assisted documentation and workflow</span><span data-lang="vi">Tài liệu và workflow có AI hỗ trợ</span></p>
                                 </div>
                                 <div class="resume-metric-card" style="--i:3">
                                     <span class="resume-kpi-number">Web</span>
-                                    <p class="resume-kpi-label"><span data-lang="en">Online sales, SEO, ads, and quote automation</span><span data-lang="vi">Online sales, SEO, ads và tự động hóa báo giá</span></p>
+                                    <p class="resume-kpi-label"><span data-lang="en">Retail tech, POS, web, SEO, ads, and quoting</span><span data-lang="vi">Retail tech, POS, web, SEO, ads và báo giá</span></p>
                                 </div>
                             </div>
 
                             <div class="resume-evidence-grid mt-5">
                                 <div class="resume-evidence-card">
-                                    <strong><span data-lang="en">AI Workflow</span><span data-lang="vi">AI Workflow</span></strong>
-                                    <p><span data-lang="en">Uses AI for translation, product naming, CV content, and faster sales-document preparation.</span><span data-lang="vi">Dùng AI cho dịch thuật, đặt tên sản phẩm, nội dung CV và chuẩn bị tài liệu bán hàng nhanh hơn.</span></p>
+                                    <strong><span data-lang="en">AI-enabled Operations</span><span data-lang="vi">Vận hành có AI hỗ trợ</span></strong>
+                                    <p><span data-lang="en">Uses AI to speed up translation, product data cleanup, sales documentation, and workflow drafting.</span><span data-lang="vi">Dùng AI để tăng tốc dịch thuật, làm sạch dữ liệu sản phẩm, tài liệu bán hàng và phác thảo quy trình.</span></p>
                                 </div>
                                 <div class="resume-evidence-card">
-                                    <strong><span data-lang="en">Online Sales</span><span data-lang="vi">Online Sales</span></strong>
-                                    <p><span data-lang="en">Understands website, SEO, Google/Facebook ads, TikTok awareness, and digital customer flow.</span><span data-lang="vi">Hiểu website, SEO, quảng cáo Google/Facebook, TikTok và luồng khách hàng số.</span></p>
+                                    <strong><span data-lang="en">Retail Technology</span><span data-lang="vi">Công nghệ bán lẻ</span></strong>
+                                    <p><span data-lang="en">Hands-on exposure to POS software, retail websites, SEO, digital ads, and online customer flow.</span><span data-lang="vi">Có trải nghiệm thực tế với phần mềm POS, website bán lẻ, SEO, quảng cáo số và luồng khách hàng online.</span></p>
                                 </div>
                                 <div class="resume-evidence-card">
-                                    <strong><span data-lang="en">Design Thinking</span><span data-lang="vi">Design Thinking</span></strong>
-                                    <p><span data-lang="en">Turns field pain points into cleaner UX for quoting, search, discounts, and exports.</span><span data-lang="vi">Biến vấn đề đi tuyến thành UX gọn hơn cho báo giá, tìm kiếm, chiết khấu và xuất file.</span></p>
+                                    <strong><span data-lang="en">Product/UX Thinking</span><span data-lang="vi">Tư duy Product/UX</span></strong>
+                                    <p><span data-lang="en">Translates field pain points into clearer flows for quoting, search, discounts, and exports.</span><span data-lang="vi">Chuyển vấn đề thực tế ngoài thị trường thành luồng rõ hơn cho báo giá, tìm kiếm, chiết khấu và xuất file.</span></p>
                                 </div>
                                 <div class="resume-evidence-card">
-                                    <strong><span data-lang="en">Channel Execution</span><span data-lang="vi">Channel Execution</span></strong>
-                                    <p><span data-lang="en">Dealer visits, distributor coordination, POS visibility, and monthly target follow-up.</span><span data-lang="vi">Đi tuyến đại lý, phối hợp NPP, hình ảnh điểm bán và theo sát mục tiêu tháng.</span></p>
+                                    <strong><span data-lang="en">Field Execution</span><span data-lang="vi">Triển khai thị trường</span></strong>
+                                    <p><span data-lang="en">Dealer follow-up, distributor coordination, POS visibility, route discipline, and target tracking.</span><span data-lang="vi">Chăm sóc đại lý, phối hợp NPP, hình ảnh điểm bán, kỷ luật tuyến và theo dõi mục tiêu.</span></p>
                                 </div>
                             </div>
                         </section>
@@ -933,19 +1639,19 @@
                                     <h3 class="resume-section-title"><span data-lang="en">Capability Dashboard</span><span data-lang="vi">Biểu đồ năng lực</span></h3>
                                     <div class="resume-chart mt-4">
                                         <div class="resume-chart-row">
-                                            <div class="resume-chart-head"><span data-lang="en">Territory coverage & route discipline</span><span data-lang="vi">Bao phủ tuyến & kỷ luật đi thị trường</span><span class="resume-chart-value"><span data-lang="en">10+ yrs</span><span data-lang="vi">10+ năm</span></span></div>
+                                            <div class="resume-chart-head"><span data-lang="en">Field execution & channel coverage</span><span data-lang="vi">Triển khai thị trường & bao phủ kênh</span><span class="resume-chart-value"><span data-lang="en">10+ yrs</span><span data-lang="vi">10+ năm</span></span></div>
                                             <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:92%; --i:0"></div></div>
                                         </div>
                                         <div class="resume-chart-row">
-                                            <div class="resume-chart-head"><span data-lang="en">AI-assisted sales workflow</span><span data-lang="vi">Workflow bán hàng có AI hỗ trợ</span><span class="resume-chart-value"><span data-lang="en">AI</span><span data-lang="vi">AI</span></span></div>
+                                            <div class="resume-chart-head"><span data-lang="en">Sales operations process</span><span data-lang="vi">Quy trình sales operations</span><span class="resume-chart-value"><span data-lang="en">Ops</span><span data-lang="vi">Ops</span></span></div>
                                             <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:84%; --i:1"></div></div>
                                         </div>
                                         <div class="resume-chart-row">
-                                            <div class="resume-chart-head"><span data-lang="en">Online sales: web, SEO, ads, TikTok</span><span data-lang="vi">Online sales: web, SEO, ads, TikTok</span><span class="resume-chart-value"><span data-lang="en">Online</span><span data-lang="vi">Online</span></span></div>
+                                            <div class="resume-chart-head"><span data-lang="en">Retail tech: POS, web, SEO, ads</span><span data-lang="vi">Retail tech: POS, web, SEO, ads</span><span class="resume-chart-value"><span data-lang="en">Tech</span><span data-lang="vi">Tech</span></span></div>
                                             <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:78%; --i:2"></div></div>
                                         </div>
                                         <div class="resume-chart-row">
-                                            <div class="resume-chart-head"><span data-lang="en">UX thinking for quote automation</span><span data-lang="vi">Tư duy UX cho tự động hóa báo giá</span><span class="resume-chart-value"><span data-lang="en">Product</span><span data-lang="vi">Product</span></span></div>
+                                            <div class="resume-chart-head"><span data-lang="en">AI-assisted documentation & workflow</span><span data-lang="vi">Tài liệu & workflow có AI hỗ trợ</span><span class="resume-chart-value"><span data-lang="en">AI</span><span data-lang="vi">AI</span></span></div>
                                             <div class="resume-bar-track"><div class="resume-bar-fill" style="--level:82%; --i:3"></div></div>
                                         </div>
                                     </div>
@@ -954,15 +1660,18 @@
                                 <section class="resume-card">
                                     <h3 class="resume-section-title"><span data-lang="en">Core Skills</span><span data-lang="vi">Năng lực chính</span></h3>
                                     <div class="mt-4 flex flex-wrap gap-2">
-                                        <span class="resume-pill"><span data-lang="en">Territory planning</span><span data-lang="vi">Hoạch định tuyến</span></span>
-                                        <span class="resume-pill"><span data-lang="en">Dealer activation</span><span data-lang="vi">Kích hoạt đại lý</span></span>
-                                        <span class="resume-pill"><span data-lang="en">Distributor coordination</span><span data-lang="vi">Phối hợp nhà phân phối</span></span>
-                                        <span class="resume-pill"><span data-lang="en">AI workflow</span><span data-lang="vi">AI workflow</span></span>
-                                        <span class="resume-pill"><span data-lang="en">Online sales</span><span data-lang="vi">Online sales</span></span>
-                                        <span class="resume-pill"><span data-lang="en">UX thinking</span><span data-lang="vi">Tư duy UX</span></span>
-                                        <span class="resume-pill"><span data-lang="en">Promotion execution</span><span data-lang="vi">Triển khai khuyến mãi</span></span>
-                                        <span class="resume-pill"><span data-lang="en">POS visibility</span><span data-lang="vi">Hình ảnh điểm bán</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Sales operations</span><span data-lang="vi">Sales operations</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Field execution</span><span data-lang="vi">Triển khai thị trường</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Dealer/distributor channels</span><span data-lang="vi">Kênh đại lý/NPP</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Retail SaaS</span><span data-lang="vi">Retail SaaS</span></span>
+                                        <span class="resume-pill"><span data-lang="en">POS workflow</span><span data-lang="vi">Quy trình POS</span></span>
+                                        <span class="resume-pill"><span data-lang="en">AI-assisted documentation</span><span data-lang="vi">Tài liệu có AI hỗ trợ</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Online sales operations</span><span data-lang="vi">Vận hành bán hàng online</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Product/UX thinking</span><span data-lang="vi">Tư duy Product/UX</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Promotion logic</span><span data-lang="vi">Logic khuyến mãi</span></span>
                                         <span class="resume-pill"><span data-lang="en">Quote automation</span><span data-lang="vi">Tự động hóa báo giá</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Data hygiene</span><span data-lang="vi">Chuẩn hóa dữ liệu</span></span>
+                                        <span class="resume-pill"><span data-lang="en">Excel workflows</span><span data-lang="vi">Quy trình Excel</span></span>
                                     </div>
                                 </section>
                             </aside>
@@ -985,8 +1694,8 @@
                                             </div>
                                             <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor - Electrical products</span><span data-lang="vi">Giám sát bán hàng - Thiết bị điện</span></p>
                                             <ul class="resume-impact-list">
-                                                <li><span data-lang="en">Represent electrical products in Tien Giang; coordinate distributor sell-out, dealer visits, product introduction, and monthly target follow-up.</span><span data-lang="vi">Đại diện sản phẩm thiết bị điện tại Tiền Giang; phối hợp sell-out cùng NPP, đi tuyến đại lý, giới thiệu sản phẩm và theo dõi mục tiêu tháng.</span></li>
-                                                <li><span data-lang="en">Use quotation workflows and field feedback to reduce response time for dealers and improve customer-facing execution.</span><span data-lang="vi">Ứng dụng quy trình báo giá và phản hồi thị trường để phản hồi đại lý nhanh hơn, chuyên nghiệp hơn khi làm việc với khách.</span></li>
+                                                <li><span data-lang="en">Manage territory execution for electrical products in Tien Giang, coordinating distributor sell-out, dealer follow-up, product introduction, and monthly target tracking.</span><span data-lang="vi">Quản lý triển khai thị trường thiết bị điện tại Tiền Giang, phối hợp sell-out cùng NPP, chăm sóc đại lý, giới thiệu sản phẩm và theo dõi mục tiêu tháng.</span></li>
+                                                <li><span data-lang="en">Apply structured quote workflow, pricing/discount logic, and field feedback to improve dealer response quality.</span><span data-lang="vi">Ứng dụng quy trình báo giá, logic giá/chiết khấu và phản hồi thị trường để nâng chất lượng phản hồi cho đại lý.</span></li>
                                             </ul>
                                         </article>
 
@@ -1046,7 +1755,7 @@
                                             <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Business Development Representative</span><span data-lang="vi">Nhân viên kinh doanh</span></p>
                                             <ul class="resume-impact-list">
                                                 <li><span data-lang="en">Consulted retailers on POS software, websites, SEO, digital ads, POS devices, and store management workflows.</span><span data-lang="vi">Tư vấn nhà bán lẻ về phần mềm POS, website, SEO, quảng cáo số, thiết bị bán hàng và quy trình quản lý cửa hàng.</span></li>
-                                                <li><span data-lang="en">Built early experience in digital sales tools that later became useful for practical quote and workflow automation.</span><span data-lang="vi">Tích lũy nền tảng công cụ bán hàng số, sau này ứng dụng vào tự động hóa báo giá và quy trình làm việc thực tế.</span></li>
+                                                <li><span data-lang="en">Built practical exposure to SaaS onboarding, customer requirements, POS workflows, and digital retail operations.</span><span data-lang="vi">Tích lũy trải nghiệm thực tế về onboarding SaaS, yêu cầu khách hàng, quy trình POS và vận hành bán lẻ số.</span></li>
                                             </ul>
                                         </article>
                                     </div>
@@ -1056,9 +1765,9 @@
                                     <div class="resume-card">
                                         <h3 class="resume-section-title"><span data-lang="en">Strengths</span><span data-lang="vi">Điểm mạnh</span></h3>
                                         <ul class="mt-4 space-y-2 resume-body-text">
-                                            <li><span data-lang="en">Sales execution grounded in real dealer, distributor, and store workflows.</span><span data-lang="vi">Triển khai bán hàng dựa trên quy trình thật của đại lý, NPP và cửa hàng.</span></li>
-                                            <li><span data-lang="en">Technology mindset: AI, online channels, UX, Excel, web, and quote automation.</span><span data-lang="vi">Tư duy công nghệ: AI, kênh online, UX, Excel, web và tự động hóa báo giá.</span></li>
-                                            <li><span data-lang="en">Can translate field problems into simple systems that sales teams actually use.</span><span data-lang="vi">Có thể biến vấn đề thị trường thành hệ thống đơn giản mà đội bán hàng dùng được.</span></li>
+                                            <li><span data-lang="en">Builds practical workflows from field constraints, not generic theory.</span><span data-lang="vi">Xây dựng quy trình thực dụng từ ràng buộc ngoài thị trường, không viết theo lý thuyết chung chung.</span></li>
+                                            <li><span data-lang="en">Connects sales execution with tools: Excel, online channels, AI documentation, POS/retail SaaS, and quote automation.</span><span data-lang="vi">Kết nối triển khai bán hàng với công cụ: Excel, kênh online, tài liệu có AI hỗ trợ, POS/retail SaaS và tự động hóa báo giá.</span></li>
+                                            <li><span data-lang="en">Works across dealers, distributors, retail owners, and customer-facing documents.</span><span data-lang="vi">Làm việc được xuyên suốt với đại lý, NPP, chủ cửa hàng và tài liệu gửi khách hàng.</span></li>
                                         </ul>
                                     </div>
                                     <div class="resume-card">
@@ -1074,7 +1783,7 @@
                         </section>
                     </div>
                 </div>
-                <section class="md:hidden p-4 pb-7 space-y-4">
+                <section class="legacy-career-profile md:hidden p-4 pb-7 space-y-4" aria-hidden="true">
                     <article class="career-premium-card rounded-[28px] p-5">
                         <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Tóm tắt hồ sơ</p>
                         <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950 leading-tight">Giám sát bán hàng có kinh nghiệm triển khai thị trường và hỗ trợ kênh đại lý.</h3>
@@ -1168,7 +1877,7 @@
                     </section>
                 </section>
 
-                <div class="hidden md:grid lg:grid-cols-[0.9fr_1.35fr] gap-0">
+                <div class="legacy-career-profile hidden md:grid lg:grid-cols-[0.9fr_1.35fr] gap-0" aria-hidden="true">
                     <aside class="bg-white border-r border-slate-200 p-5 md:p-7 space-y-5">
                         <section>
                             <h3 class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-3">Giới thiệu nhanh</h3>
@@ -1312,7 +2021,7 @@
 
             <footer class="bg-white border-t border-slate-200 p-3 md:p-4 shrink-0">
                 <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-center md:justify-between">
-                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Resume version prepared for sales supervisor applications and English screening.</span><span data-lang="vi">Phiên bản hồ sơ dùng cho ứng tuyển giám sát bán hàng và sàng lọc tiếng Anh.</span></p>
+                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Executive profile for Sales Operations, Channel Operations, Retail Tech, and implementation-facing roles.</span><span data-lang="vi">Hồ sơ executive cho Sales Operations, Channel Operations, Retail Tech và các vị trí triển khai giải pháp.</span></p>
                     <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-sm active:scale-95 transition-transform"><span data-lang="en">Close profile</span><span data-lang="vi">Đóng hồ sơ</span></button>
                 </div>
             </footer>
@@ -5743,6 +6452,7 @@ led=>LED
                     const promo2Label = Utils.term('KM2(%)', 'Promo 2 (%)', lang);
                     const unitLabel = Utils.term('Đơn', 'Unit', lang);
                     const removeLabel = Utils.term('Xóa', 'Remove', lang);
+                    const notePlaceholder = Utils.term('Ghi chú in báo giá...', 'Quote note...', lang);
                     const cashTypeLabel = item.kmTienType === 'total'
                         ? Utils.term('-TỔNG', '- Total', lang)
                         : Utils.term('- /SP', '- /Item', lang);
@@ -5764,7 +6474,7 @@ led=>LED
                                 </div>
                                 <div class="text-right shrink-0">
                                     <div class="text-base font-black text-slate-900 linetotal-display">${Utils.formatMoney(item.totalFinal)}</div>
-                                    <button data-action="remove" class="text-[10px] text-red-500 font-bold mt-1 uppercase">${removeLabel}</button>
+                                    <button type="button" data-action="remove" class="text-[10px] text-red-500 font-bold mt-1 uppercase">${removeLabel}</button>
                                 </div>
                             </div>
                         </article>`;
@@ -5780,23 +6490,23 @@ led=>LED
                                     </div>
 	                                    <h4 class="text-[15px] md:text-lg font-black text-slate-900 leading-snug break-words">${safeName} ${flucBadge}</h4>
                                 </div>
-                                <button data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
+                                <button type="button" data-action="remove" class="w-8 h-8 rounded-full bg-slate-50 border border-slate-100 text-slate-400 flex items-center justify-center hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shrink-0"><svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16"></path></svg></button>
                             </div>
                             
                             <div class="flex flex-col gap-2 mb-4">
                                 <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1.5 rounded-md self-start">${listPriceLabel} <span class="text-slate-900">${Utils.formatMoney(item.originalPrice)}</span></span>
                                 <div class="relative w-full">
-	                                    <input type="text" data-field="note" value="${safeNoteAttr}" placeholder="Ghi chú in báo giá..." class="cart-input-text w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-[11px] font-medium outline-none focus:border-blue-400 text-slate-700">
+	                                    <input type="text" data-field="note" value="${safeNoteAttr}" placeholder="${notePlaceholder}" autocomplete="off" enterkeyhint="done" class="cart-input-text w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-2 text-[11px] font-medium outline-none focus:border-blue-400 text-slate-700">
                                 </div>
                             </div>
 
                             <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
-                                <div class="grid grid-cols-5 gap-2">
-	                                    <div class="flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">${qtyLabel}</label><input type="number" min="1" data-field="qty" value="${safeQty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
-	                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="baseDiscount">${baseDiscountLabel}</label></div><input type="number" data-field="baseDiscount" value="${safeBaseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 px-0 appearance-none"></div>
-	                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km1">${promo1Label}</label></div><input type="number" data-field="km1" value="${safeKm1}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
-	                                    <div class="flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km2">${promo2Label}</label></div><input type="number" data-field="km2" value="${safeKm2}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
-	                                    <div class="flex flex-col"><div class="flex justify-center mb-1.5"><button data-action="toggleKmType" class="text-[9px] font-black px-1 py-0.5 rounded border ${item.kmTienType==='total'?'border-rose-400 bg-rose-100 text-rose-800':'border-indigo-400 bg-indigo-100 text-indigo-800'}">${cashTypeLabel}</button></div><input type="number" data-field="kmTien" value="${safeKmTien}" class="cart-input w-full bg-white border-2 border-indigo-200 rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:border-indigo-500 px-0 appearance-none"></div>
+                                <div class="quote-edit-grid grid grid-cols-5 gap-2">
+	                                    <div class="quote-edit-cell flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">${qtyLabel}</label><input type="number" inputmode="numeric" autocomplete="off" enterkeyhint="done" min="1" data-field="qty" value="${safeQty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
+	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="baseDiscount">${baseDiscountLabel}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="baseDiscount" value="${safeBaseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 px-0 appearance-none"></div>
+	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km1">${promo1Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km1" value="${safeKm1}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
+	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km2">${promo2Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km2" value="${safeKm2}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
+	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center mb-1.5"><button type="button" data-action="toggleKmType" class="text-[9px] font-black px-1 py-0.5 rounded border ${item.kmTienType==='total'?'border-rose-400 bg-rose-100 text-rose-800':'border-indigo-400 bg-indigo-100 text-indigo-800'}">${cashTypeLabel}</button></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="kmTien" value="${safeKmTien}" class="cart-input w-full bg-white border-2 border-indigo-200 rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:border-indigo-500 px-0 appearance-none"></div>
                                 </div>
                             </div>
                             <div class="flex justify-between items-end px-1 mt-1">
@@ -5814,14 +6524,22 @@ led=>LED
             updateTargetedItemDOM: (item) => {
                 const article = DOM.main.quoteList.querySelector(`article[data-id="${item.id}"]`);
                 if(article) {
+                    const lang = Utils.getLang();
                     const priceEl = article.querySelector('.price-display');
                     const lineTotalEl = article.querySelector('.linetotal-display');
                     const noteInput = article.querySelector('.cart-input-text');
-                    const displayNote = Utils.formatQuoteNote(item.note || '');
+                    const toggleKmTypeBtn = article.querySelector('[data-action="toggleKmType"]');
+                    const displayNote = Utils.formatQuoteNote(item.note || '', lang);
                     
                     if(priceEl) priceEl.textContent = Utils.formatMoney(item.priceAfterDiscount);
                     if(lineTotalEl) lineTotalEl.textContent = Utils.formatMoney(item.totalFinal);
                     if(noteInput && noteInput.value !== displayNote) noteInput.value = displayNote;
+                    if(toggleKmTypeBtn) {
+                        const isTotalDiscount = item.kmTienType === 'total';
+                        toggleKmTypeBtn.textContent = isTotalDiscount ? Utils.term('-TỔNG', '- Total', lang) : Utils.term('- /SP', '- /Item', lang);
+                        toggleKmTypeBtn.classList.remove('border-rose-400', 'bg-rose-100', 'text-rose-800', 'border-indigo-400', 'bg-indigo-100', 'text-indigo-800');
+                        toggleKmTypeBtn.classList.add(...(isTotalDiscount ? ['border-rose-400', 'bg-rose-100', 'text-rose-800'] : ['border-indigo-400', 'bg-indigo-100', 'text-indigo-800']));
+                    }
                     
                     if (item.appliedPromoId) {
                         article.classList.add('ring-2', 'ring-indigo-400/50', 'border-indigo-300');
@@ -6102,7 +6820,9 @@ led=>LED
 
         DOM.main.quoteList.addEventListener('click', (e) => {
             const btn = e.target.closest('button, label'); if(!btn || !btn.dataset.action) return;
-            const card = btn.closest('article'); const id = card.dataset.id; const action = btn.dataset.action;
+            e.preventDefault();
+            const card = btn.closest('article[data-id]'); if (!card) return;
+            const id = card.dataset.id; const action = btn.dataset.action;
 
             if(action === 'remove') {
                 AppState.set('cart', AppState.get('cart').filter(i => i.id !== id)); applyFiltersAndSearch();
@@ -6132,7 +6852,40 @@ led=>LED
             });
         });
 
-        DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) e.target.value = ''; else e.target.select(); } });
+        const isFinePointer = () => window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        const isMainFormControl = (target) => target && target.matches && target.matches('#screenMain input, #screenMain textarea, #screenMain select');
+        const syncVisualViewportHeight = () => {
+            const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            document.documentElement.style.setProperty('--visual-vh', `${Math.round(height)}px`);
+        };
+        const keepFocusedControlVisible = (target) => {
+            if (!isMainFormControl(target)) return;
+            document.body.classList.add('input-focus');
+            window.requestAnimationFrame(() => {
+                setTimeout(() => {
+                    try {
+                        target.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+                    } catch (_) {
+                        target.scrollIntoView(false);
+                    }
+                }, 80);
+            });
+        };
+        syncVisualViewportHeight();
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', syncVisualViewportHeight);
+            window.visualViewport.addEventListener('scroll', syncVisualViewportHeight);
+        } else {
+            window.addEventListener('resize', syncVisualViewportHeight);
+        }
+        document.addEventListener('focusin', (e) => keepFocusedControlVisible(e.target));
+        document.addEventListener('focusout', () => {
+            setTimeout(() => {
+                if (!isMainFormControl(document.activeElement)) document.body.classList.remove('input-focus');
+            }, 140);
+        });
+
+        DOM.main.quoteList.addEventListener('focusin', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '0' || (field === 'qty' && e.target.value === '1')) e.target.value = ''; else if (isFinePointer()) e.target.select(); } });
         DOM.main.quoteList.addEventListener('focusout', (e) => { if(e.target.classList.contains('cart-input')) { const field = e.target.dataset.field; if (e.target.value === '' || (field === 'qty' && Number(e.target.value) === 0)) { e.target.value = field === 'qty' ? '1' : '0'; e.target.dispatchEvent(new Event('input', { bubbles: true })); } } });
 
         // 8. KHO DỮ LIỆU
