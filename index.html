@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-title" content="Thuận Store">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E">
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
@@ -89,11 +88,7 @@
         }
     </script>
     
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Heavy export/import libraries are loaded on demand to keep the first screen fast. -->
 	    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&amp;display=swap" rel="stylesheet">
     
     <style>
@@ -4381,6 +4376,49 @@
             }
         };
 
+        const LazyAssets = (() => {
+            const sources = {
+                html2canvas: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+                jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                exceljs: 'https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js',
+                filesaver: 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js',
+                xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+            };
+            const pending = {};
+            const ready = (key) => {
+                if (key === 'html2canvas') return typeof window.html2canvas === 'function';
+                if (key === 'jspdf') return !!(window.jspdf && window.jspdf.jsPDF);
+                if (key === 'exceljs') return typeof window.ExcelJS !== 'undefined';
+                if (key === 'filesaver') return typeof window.saveAs === 'function';
+                if (key === 'xlsx') return typeof window.XLSX !== 'undefined';
+                return false;
+            };
+            const load = (key) => {
+                if (ready(key)) return Promise.resolve();
+                if (!sources[key]) return Promise.reject(new Error(`Unknown asset: ${key}`));
+                if (pending[key]) return pending[key];
+                pending[key] = new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = sources[key];
+                    script.async = true;
+                    script.crossOrigin = 'anonymous';
+                    script.onload = () => resolve();
+                    script.onerror = () => {
+                        delete pending[key];
+                        reject(new Error(`Cannot load ${key}`));
+                    };
+                    document.head.appendChild(script);
+                });
+                return pending[key];
+            };
+            const ensure = async (keys) => {
+                const list = Array.isArray(keys) ? keys : [keys];
+                for (const key of list) await load(key);
+            };
+            return { ensure, ready };
+        })();
+        window.LazyAssets = LazyAssets;
+
         const CurrencyDisplay = (() => {
             const CACHE_KEY = 'thuan_store_usd_vnd_rate_v1';
             const API_URL = 'https://api.frankfurter.dev/v1/latest?base=USD&symbols=VND';
@@ -4506,7 +4544,10 @@
                     }
                 }
                 
-                // 2. Nếu share thất bại, dùng FileSaver hoặc Fallback truyền thống
+                // 2. Nếu share thất bại, dùng FileSaver hoặc fallback truyền thống
+                if (!window.saveAs && window.LazyAssets) {
+                    try { await LazyAssets.ensure('filesaver'); } catch (err) { /* fallback anchor download below */ }
+                }
                 if (window.saveAs) {
                     window.saveAs(blob, filename);
                 } else {
@@ -8676,8 +8717,18 @@ led=>LED
             });
         });
 
-        DOM.setup.fileIn.addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return; DOM.setup.fileName.textContent = file.name; const reader = new FileReader(); 
+        DOM.setup.fileIn.addEventListener('change', async (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            DOM.setup.fileName.textContent = file.name;
+            try {
+                await LazyAssets.ensure('xlsx');
+            } catch (err) {
+                DOM.setup.fileName.textContent = "Chạm để chọn file (.xlsx)";
+                e.target.value = '';
+                Utils.showToast("Không tải được trình đọc Excel. Kiểm tra mạng rồi thử lại.");
+                return;
+            }
+            const reader = new FileReader(); 
             reader.onload = (evt) => {
                 try {
                     const workbook = XLSX.read(evt.target.result, { type: 'array' }); 
@@ -9366,10 +9417,11 @@ led=>LED
                 await new Promise(resolve => setTimeout(resolve, 50));
 
                 try { 
+                    await LazyAssets.ensure('html2canvas');
                     return await html2canvas(invoice, { scale: 1.5, backgroundColor: "#ffffff", useCORS: true, allowTaint: true, logging: false }); 
                 } 
                 catch (e) { 
-                    Utils.showToast("Lỗi: Máy bạn bị thiếu RAM, hãy tắt bớt tab và thử lại!"); 
+                    Utils.showToast("Không thể chuẩn bị ảnh xuất. Kiểm tra mạng hoặc thử lại sau."); 
                     return null; 
                 } 
                 finally { 
@@ -9391,12 +9443,13 @@ led=>LED
 	                    const isEn = lang === 'en';
 	                    const currencyCode = isEn ? 'USD' : 'VND';
 	                    const moneyValue = (value) => isEn && window.CurrencyDisplay ? CurrencyDisplay.displayNumber(value) : (Number(value) || 0);
-	                    const moneyFormat = isEn ? '$#,##0.00' : '#,##0';
-	                    const cleanCust = DOM.main.custName.value.trim() ? Utils.cleanFileName(DOM.main.custName.value) : (isEn ? 'Customer' : 'KhachHang');
-	                    const filename = `${isEn ? 'Quote' : 'BaoGia'}_${cleanCust}_${Utils.getShortDate()}.xlsx`;
-	                    if (typeof ExcelJS === 'undefined') {
-	                        await DownloadHelper.save(ExportLogic.buildSimpleXlsxBlob(isEn), filename);
-	                        return;
+		                    const moneyFormat = isEn ? '$#,##0.00' : '#,##0';
+		                    const cleanCust = DOM.main.custName.value.trim() ? Utils.cleanFileName(DOM.main.custName.value) : (isEn ? 'Customer' : 'KhachHang');
+		                    const filename = `${isEn ? 'Quote' : 'BaoGia'}_${cleanCust}_${Utils.getShortDate()}.xlsx`;
+		                    try { await LazyAssets.ensure('exceljs'); } catch (err) { /* fallback simple workbook below */ }
+		                    if (typeof ExcelJS === 'undefined') {
+		                        await DownloadHelper.save(ExportLogic.buildSimpleXlsxBlob(isEn), filename);
+		                        return;
 	                    }
 	                    const workbook = new ExcelJS.Workbook(); const worksheet = workbook.addWorksheet(isEn ? 'Quote' : 'BaoGia'); 
                     const argbColor = 'FF0055A5'; 
@@ -9477,10 +9530,11 @@ led=>LED
                 
                 DOM.export.loading.classList.remove('hidden'); 
                 DOM.export.loading.classList.add('flex');
-                
-                try {
-                    const imgData = canvas.toDataURL("image/jpeg", 0.95); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p', 'mm', 'a4'); 
-                    const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
+	                
+	                try {
+	                    await LazyAssets.ensure('jspdf');
+	                    const imgData = canvas.toDataURL("image/jpeg", 0.95); const { jsPDF } = window.jspdf || {}; if (!jsPDF) throw new Error('jsPDF unavailable'); const pdf = new jsPDF('p', 'mm', 'a4'); 
+	                    const pdfWidth = pdf.internal.pageSize.getWidth(); const pdfHeight = pdf.internal.pageSize.getHeight();
                     const imgRatio = canvas.height / canvas.width; const scaledImgHeight = pdfWidth * imgRatio;
                     let heightLeft = scaledImgHeight; let position = 0;
                     pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, scaledImgHeight); heightLeft -= pdfHeight;
