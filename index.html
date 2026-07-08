@@ -692,7 +692,7 @@
                 50% { box-shadow: 0 0 34px rgba(34, 211, 238, 0.24), inset 0 0 20px rgba(34, 211, 238, 0.12); }
             }
             @keyframes storeLogoMarquee {
-                to { transform: translateX(-50%); }
+                to { transform: translateX(-33.3333%); }
             }
             @keyframes storeReactorSpin {
                 to { transform: rotate(360deg); }
@@ -720,7 +720,8 @@
                 align-items: center;
                 gap: 2rem;
                 flex: 1;
-                padding: 1.4rem 3.2rem 1rem;
+                min-height: 0;
+                padding: 0.9rem 3.2rem 0.55rem;
             }
             .store-os-copy {
                 max-width: 40rem;
@@ -739,12 +740,12 @@
                 font-weight: 780;
             }
             .store-os-title {
-                margin-top: 1.55rem;
+                margin-top: 1.18rem;
                 max-width: 39rem;
                 color: #ffffff;
-                font-size: 4.25rem;
+                font-size: clamp(3.45rem, 4.45vw, 4.05rem);
                 font-weight: 820;
-                line-height: 1.05;
+                line-height: 1.025;
             }
             .store-os-title-line {
                 display: inline;
@@ -756,19 +757,19 @@
                 text-shadow: 0 0 28px rgba(56, 189, 248, 0.32);
             }
             .store-os-copy-text {
-                margin-top: 1.6rem;
+                margin-top: 1.18rem;
                 max-width: 35rem;
                 color: var(--os-muted);
-                font-size: 1.08rem;
+                font-size: 1.02rem;
                 font-weight: 510;
-                line-height: 1.68;
+                line-height: 1.58;
             }
             .store-os-cta-row {
                 display: flex;
                 align-items: center;
                 flex-wrap: wrap;
                 gap: 0.9rem;
-                margin-top: 2rem;
+                margin-top: 1.45rem;
             }
             .store-os-primary,
             .store-os-secondary,
@@ -819,7 +820,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, minmax(0, 1fr));
                 gap: 0.65rem;
-                margin-top: 2rem;
+                margin-top: 1.35rem;
                 max-width: 38rem;
             }
             .store-os-metric {
@@ -828,23 +829,23 @@
                 align-items: center;
                 gap: 0.62rem;
                 min-width: 0;
-                min-height: 4.45rem;
-                padding: 0.8rem 0.82rem;
+                min-height: 3.85rem;
+                padding: 0.65rem 0.75rem;
                 border: 1px solid rgba(34, 211, 238, 0.13);
                 border-radius: 8px;
                 background: rgba(2, 6, 23, 0.28);
                 box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
             }
             .store-os-metric svg {
-                width: 1.55rem;
-                height: 1.55rem;
+                width: 1.38rem;
+                height: 1.38rem;
                 color: var(--os-cyan);
                 filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.32));
             }
             .store-os-metric strong {
                 display: block;
                 color: #ffffff;
-                font-size: 1.26rem;
+                font-size: 1.12rem;
                 font-weight: 800;
                 line-height: 1.05;
                 font-variant-numeric: tabular-nums;
@@ -861,7 +862,7 @@
                 position: relative;
                 display: grid;
                 place-items: center;
-                min-height: 38rem;
+                min-height: clamp(34rem, 40vw, 36rem);
                 overflow: visible;
             }
             .store-os-orbit {
@@ -1153,13 +1154,13 @@
             .store-os-trust {
                 position: relative;
                 z-index: 2;
-                padding: 0.55rem 0 1.65rem;
+                padding: 0.25rem 0 0.78rem;
                 text-align: center;
                 overflow: hidden;
             }
             .store-os-trust p {
                 color: rgba(203, 213, 225, 0.6);
-                font-size: 0.8rem;
+                font-size: 0.74rem;
                 font-weight: 710;
                 text-transform: uppercase;
                 letter-spacing: 0.12em !important;
@@ -1167,7 +1168,7 @@
             .store-os-logo-marquee {
                 position: relative;
                 width: 100%;
-                margin-top: 1.05rem;
+                margin-top: 0.68rem;
                 overflow: hidden;
                 mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
                 -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
@@ -1187,7 +1188,7 @@
                 min-width: max(100vw, 72rem);
                 display: flex;
                 align-items: center;
-                justify-content: space-around;
+                justify-content: space-evenly;
                 gap: clamp(1.8rem, 4vw, 3.4rem);
                 padding: 0 1.5rem;
             }
@@ -1197,7 +1198,7 @@
             .store-os-logo-row span {
                 flex: 0 0 auto;
                 color: rgba(226, 232, 240, 0.52);
-                font-size: 1.15rem;
+                font-size: 1rem;
                 font-weight: 820;
                 line-height: 1;
                 text-transform: uppercase;
@@ -1210,7 +1211,7 @@
             .store-os-footer {
                 position: relative;
                 z-index: 2;
-                padding: 0 1.5rem calc(1.05rem + env(safe-area-inset-bottom));
+                padding: 0 1.5rem calc(0.48rem + env(safe-area-inset-bottom));
                 text-align: center;
                 color: rgba(148, 163, 184, 0.72);
                 font-size: 0.72rem;
@@ -1331,9 +1332,10 @@
                     display: grid;
                     grid-template-rows: minmax(0, 1fr);
                     gap: 0;
-                    padding: 0.35rem 0.18rem 0.18rem;
+                    padding: clamp(2.05rem, 7svh, 3.35rem) 0.18rem 0.18rem;
                     justify-items: center;
-                    align-items: center;
+                    align-items: start;
+                    align-content: start;
                 }
                 .store-os-copy {
                     display: contents;
@@ -1410,12 +1412,12 @@
                 }
                 .store-os-visual {
                     grid-row: 1;
-                    min-height: clamp(27.2rem, 108vw, 30.7rem);
+                    min-height: clamp(23.8rem, 98vw, 29rem);
                     overflow: visible;
                     place-items: center;
                     margin-inline: auto;
                     width: min(100%, 25.15rem);
-                    align-self: center;
+                    align-self: start;
                 }
                 .store-os-orbit {
                     width: min(24rem, calc(100vw - 0.1rem));
@@ -1460,7 +1462,7 @@
                 }
                 .store-os-trust {
                     margin-top: 0;
-                    padding: 0.1rem 0 0.44rem;
+                    padding: 0.08rem 0 0.38rem;
                     overflow: hidden;
                 }
                 .store-os-trust p {
@@ -3616,11 +3618,11 @@
                         <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
                     </nav>
                     <a class="store-os-top-cta" href="#store-os-start">Bắt đầu</a>
-                    <details class="store-os-menu">
-                        <summary class="store-os-mobile-summary" aria-label="Mở menu">
+                    <details id="storeOsMenu" class="store-os-menu">
+                        <summary id="storeOsMenuToggle" class="store-os-mobile-summary" aria-label="Mở menu" aria-controls="storeOsMenuPanel">
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 7h16M4 12h16M4 17h16"></path></svg>
                         </summary>
-                        <div class="store-os-menu-panel">
+                        <div id="storeOsMenuPanel" class="store-os-menu-panel">
                             <button type="button" data-landing-action="features">Tính năng</button>
                             <button type="button" data-landing-action="pricing">Bảng giá</button>
                             <button type="button" data-landing-action="demo">Demo</button>
@@ -3758,6 +3760,15 @@
                 <div class="store-os-logo-marquee" aria-hidden="true">
                     <div class="store-os-logo-row">
                         <div class="store-os-logo-set">
+                            <span>DAIKIN</span>
+                            <span class="thin">Panasonic</span>
+                            <span>MITSUBISHI<br>ELECTRIC</span>
+                            <span>LG</span>
+                            <span>TOSHIBA</span>
+                            <span class="thin">Electrolux</span>
+                            <span>CADIVI</span>
+                        </div>
+                        <div class="store-os-logo-set" aria-hidden="true">
                             <span>DAIKIN</span>
                             <span class="thin">Panasonic</span>
                             <span>MITSUBISHI<br>ELECTRIC</span>
