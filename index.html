@@ -431,8 +431,13 @@
             }
             .store-os-brand-lockup {
                 display: grid;
-                gap: 0.28rem;
+                gap: 0.36rem;
                 justify-items: start;
+                line-height: 1;
+            }
+            .store-os-brand-lockup > span {
+                display: block;
+                line-height: 1.08;
             }
             .store-os-brand-lockup small {
                 position: relative;
@@ -450,15 +455,15 @@
                 font-size: 0.56rem;
                 font-weight: 820;
                 letter-spacing: 0.16em !important;
-                line-height: 1;
+                line-height: 1.35;
                 text-shadow: 0 0 14px rgba(34, 211, 238, 0.42);
             }
             .store-os-brand-lockup small::after {
                 content: "";
-                display: block;
+                display: none;
                 width: 100%;
                 height: 1px;
-                margin-top: 0.28rem;
+                margin-top: 0.2rem;
                 background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.7), rgba(52, 211, 153, 0.55), transparent);
                 opacity: 0.72;
             }
@@ -611,6 +616,14 @@
             }
             @keyframes storeOrbitSpinReverse {
                 to { transform: rotate(-360deg); }
+            }
+            @keyframes storeFeatureOrbit {
+                from {
+                    transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(0deg - var(--orbit-angle)));
+                }
+                to {
+                    transform: translate(-50%, -50%) rotate(calc(var(--orbit-angle) + 360deg)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(-360deg - var(--orbit-angle)));
+                }
             }
             @keyframes storeNodeGlow {
                 0%, 100% { box-shadow: 0 0 28px rgba(59, 130, 246, 0.16), inset 0 0 18px rgba(34, 211, 238, 0.08); }
@@ -998,9 +1011,14 @@
                 justify-items: center;
                 gap: 0.5rem;
                 width: 6.1rem;
-                transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--orbit-angle)));
+                transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(0deg - var(--orbit-angle)));
                 transform-origin: center;
                 text-align: center;
+                animation: storeFeatureOrbit 42s linear infinite;
+                will-change: transform;
+            }
+            .store-os-orbit:hover .store-os-feature {
+                animation-play-state: paused;
             }
             .store-os-feature[style*="--x: 50%; --y: 10%"] { --orbit-angle: 0deg; }
             .store-os-feature[style*="--x: 78%; --y: 22%"] { --orbit-angle: 45deg; }
@@ -1428,6 +1446,7 @@
                 .store-os-reactor-core,
                 .store-os-reactor-core::before,
                 .store-os-reactor-blade,
+                .store-os-feature,
                 .store-os-feature .orbit-node,
                 .store-os-feature-orb {
                     animation: none !important;
@@ -2782,8 +2801,8 @@
                         <section class="resume-card resume-hero-system">
                             <div>
                                 <p class="resume-eyebrow"><span data-lang="en">Professional Profile</span><span data-lang="vi">Hồ sơ nghề nghiệp</span></p>
-                                <h3 class="resume-hero-title"><span data-lang="en">Sales operations with a practical technology mindset.</span><span data-lang="vi">Vận hành bán hàng với tư duy công nghệ thực tế.</span></h3>
-                                <p class="resume-hero-copy"><span data-lang="en">10+ years across dealers, distributors, retail stores, electrical products, FMCG, consumer electronics, and retail SaaS. I help sales teams quote faster, manage discounts clearly, and send customers cleaner documents.</span><span data-lang="vi">Hơn 10 năm làm việc với đại lý, nhà phân phối, cửa hàng bán lẻ, thiết bị điện, FMCG, điện máy và retail SaaS. Tôi tập trung vào những việc tạo giá trị rõ ràng: báo giá nhanh hơn, quản lý chiết khấu chặt hơn và gửi khách tài liệu chuyên nghiệp hơn.</span></p>
+                                <h3 class="resume-hero-title"><span data-lang="en">Sales Operations candidate who connects field execution with retail technology.</span><span data-lang="vi">Ứng viên Sales Operations biết nối triển khai thị trường với công nghệ bán lẻ.</span></h3>
+                                <p class="resume-hero-copy"><span data-lang="en">10+ years across dealer/distributor channels, retail stores, electrical products, FMCG, consumer electronics, and retail SaaS. Strength: turning daily sales friction into clear operating habits, including cleaner product data, faster quotes, visible discount logic, and professional customer documents.</span><span data-lang="vi">Hơn 10 năm đi qua kênh đại lý/NPP, cửa hàng bán lẻ, thiết bị điện, FMCG, điện máy và retail SaaS. Thế mạnh: biến vướng mắc bán hàng hằng ngày thành quy trình rõ, gồm dữ liệu sản phẩm sạch hơn, báo giá nhanh hơn, chiết khấu minh bạch hơn và tài liệu gửi khách chuyên nghiệp hơn.</span></p>
                                 <div class="resume-command-strip">
                                     <span class="resume-command-chip"><span data-lang="en">Sales operations</span><span data-lang="vi">Vận hành doanh số</span></span>
                                     <span class="resume-command-chip"><span data-lang="en">Retail technology</span><span data-lang="vi">Công nghệ bán lẻ</span></span>
@@ -2794,19 +2813,19 @@
                             <div class="resume-signal-grid">
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">10+</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Years across sales execution and retail operations</span><span data-lang="vi">Năm bám kênh bán hàng và vận hành bán lẻ</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Years in sales, channel, and store operations</span><span data-lang="vi">Năm trong sales, kênh phân phối và vận hành cửa hàng</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">5</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Mekong Delta provinces with channel-growth exposure</span><span data-lang="vi">Tỉnh/khu vực từng phát triển kênh bán hàng</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Mekong Delta markets handled directly</span><span data-lang="vi">Thị trường miền Tây từng trực tiếp phụ trách</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">POS</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Retail SaaS, store workflow, website, SEO, ads</span><span data-lang="vi">POS, retail SaaS, web, SEO, quảng cáo số</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">POS, retail SaaS, website, SEO, digital ads</span><span data-lang="vi">POS, retail SaaS, website, SEO, quảng cáo số</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">AI</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Documentation, product data, translation, workflow automation</span><span data-lang="vi">Tăng tốc tài liệu, dữ liệu sản phẩm và báo giá</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Quote automation, Excel workflow, AI documentation</span><span data-lang="vi">Tự động báo giá, Excel workflow, tài liệu có AI hỗ trợ</span></p>
                                 </div>
                             </div>
                         </section>
@@ -2814,44 +2833,44 @@
                         <section class="resume-card resume-flow-card">
                             <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                                 <div>
-                                    <p class="resume-eyebrow"><span data-lang="en">Value</span><span data-lang="vi">Giá trị</span></p>
-                                    <h3 class="resume-section-title mt-2"><span data-lang="en">Simple, measurable, useful to a sales team.</span><span data-lang="vi">Đơn giản, đo được và có ích cho đội bán hàng.</span></h3>
+                                    <p class="resume-eyebrow"><span data-lang="en">Recruiter Signal</span><span data-lang="vi">Điểm nhà tuyển dụng cần thấy</span></p>
+                                    <h3 class="resume-section-title mt-2"><span data-lang="en">Field-tested, structured, and useful from day one.</span><span data-lang="vi">Đã qua thị trường, có quy trình và dùng được ngay.</span></h3>
                                 </div>
                                 <span class="resume-command-chip"><span data-lang="en">Faster quotes. Cleaner margins.</span><span data-lang="vi">Báo giá nhanh. Biên lợi nhuận rõ.</span></span>
                             </div>
                             <div class="resume-value-grid">
-                                <div class="resume-value-item"><strong><span data-lang="en">Quote faster</span><span data-lang="vi">Báo giá nhanh hơn</span></strong><p><span data-lang="en">Turn product and price data into a cleaner customer response.</span><span data-lang="vi">Biến dữ liệu sản phẩm và giá thành phản hồi gọn, dễ gửi khách.</span></p></div>
-                                <div class="resume-value-item"><strong><span data-lang="en">Control discounts</span><span data-lang="vi">Kiểm soát chiết khấu</span></strong><p><span data-lang="en">Keep discount logic visible so margin decisions are clearer.</span><span data-lang="vi">Giữ logic chiết khấu rõ để quyết định giá ít rủi ro hơn.</span></p></div>
-                                <div class="resume-value-item"><strong><span data-lang="en">Use technology well</span><span data-lang="vi">Dùng công nghệ đúng việc</span></strong><p><span data-lang="en">Apply POS, web, Excel, and AI where they reduce manual work.</span><span data-lang="vi">Dùng POS, web, Excel và AI ở nơi giúp giảm thao tác lặp lại.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Field-tested sales execution</span><span data-lang="vi">Triển khai sales thực chiến</span></strong><p><span data-lang="en">Worked directly with dealers, distributors, retail buyers, and market feedback.</span><span data-lang="vi">Từng trực tiếp làm thị trường, chăm đại lý/NPP, xử lý phản hồi điểm bán.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Operational discipline</span><span data-lang="vi">Kỷ luật vận hành</span></strong><p><span data-lang="en">Structures price, product, promotion, and quote data to reduce manual errors.</span><span data-lang="vi">Biết chuẩn hóa giá, sản phẩm, khuyến mãi và tài liệu để giảm lỗi thủ công.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Retail-tech bridge</span><span data-lang="vi">Cầu nối retail-tech</span></strong><p><span data-lang="en">Turns POS, web, SEO, ads, Excel, and AI knowledge into practical sales workflows.</span><span data-lang="vi">Có nền tảng POS/web/SEO/ads và biến hiểu biết đó thành workflow thực dụng.</span></p></div>
                             </div>
                         </section>
 
                         <section class="grid gap-5 lg:grid-cols-3">
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Sales</span><span data-lang="vi">Bán hàng</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Understands real channels.</span><span data-lang="vi">Hiểu kênh bán hàng thật.</span></h3>
-                                <p><span data-lang="en">Dealer work, distributor coordination, price exceptions, and sales programs are handled with one goal: easier selling.</span><span data-lang="vi">Đại lý, NPP, ngoại lệ giá và chương trình bán hàng đều được xử lý theo một mục tiêu: bán dễ hơn.</span></p>
+                                <p class="resume-eyebrow"><span data-lang="en">Channel Growth</span><span data-lang="vi">Phát triển kênh</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Builds trust with dealers and distributors.</span><span data-lang="vi">Xây niềm tin với đại lý và NPP.</span></h3>
+                                <p><span data-lang="en">Comfortable with sell-out pressure, price objections, route follow-up, product introduction, and practical market reporting.</span><span data-lang="vi">Quen áp lực sell-out, phản hồi giá, chăm tuyến, giới thiệu sản phẩm và báo cáo thị trường thực tế.</span></p>
                             </article>
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Retail Tech</span><span data-lang="vi">Công nghệ bán lẻ</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Knows how stores use software.</span><span data-lang="vi">Hiểu cửa hàng dùng phần mềm thế nào.</span></h3>
-                                <p><span data-lang="en">POS, websites, SEO, ads, and onboarding are viewed through practical store operations, not theory.</span><span data-lang="vi">POS, website, SEO, quảng cáo và onboarding được nhìn từ vận hành cửa hàng thực tế, không phải lý thuyết.</span></p>
+                                <p class="resume-eyebrow"><span data-lang="en">Sales Operations</span><span data-lang="vi">Vận hành doanh số</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Keeps selling work organized.</span><span data-lang="vi">Giữ công việc bán hàng có trật tự.</span></h3>
+                                <p><span data-lang="en">Connects product data, price rules, discount logic, and customer documents into repeatable sales routines.</span><span data-lang="vi">Kết nối dữ liệu sản phẩm, quy tắc giá, chiết khấu và tài liệu khách hàng thành quy trình lặp lại được.</span></p>
                             </article>
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">AI</span><span data-lang="vi">AI</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Uses AI to save time.</span><span data-lang="vi">Dùng AI để tiết kiệm thời gian.</span></h3>
-                                <p><span data-lang="en">AI supports product naming, translation, data cleanup, and sales documents where speed and consistency matter.</span><span data-lang="vi">AI hỗ trợ đặt tên sản phẩm, dịch thuật, chuẩn hóa dữ liệu và tài liệu bán hàng khi cần nhanh và nhất quán.</span></p>
+                                <p class="resume-eyebrow"><span data-lang="en">Retail Technology</span><span data-lang="vi">Công nghệ bán lẻ</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Uses technology where it helps sales.</span><span data-lang="vi">Dùng công nghệ đúng chỗ sales cần.</span></h3>
+                                <p><span data-lang="en">Applies POS, web, SEO, ads, Excel, and AI to reduce repetitive work and improve customer-facing output.</span><span data-lang="vi">Ứng dụng POS, web, SEO, ads, Excel và AI để giảm việc lặp lại và nâng chất lượng tài liệu gửi khách.</span></p>
                             </article>
                         </section>
 
                         <section class="resume-card resume-proof-card">
                             <div>
                                 <p class="resume-eyebrow"><span data-lang="en">Proof</span><span data-lang="vi">Minh chứng</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">A real tool built from real sales work.</span><span data-lang="vi">Một công cụ thật, xuất phát từ công việc bán hàng thật.</span></h3>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">A real product mindset, built from sales pain points.</span><span data-lang="vi">Tư duy sản phẩm thật, xuất phát từ điểm đau bán hàng.</span></h3>
                                 <ul class="resume-case-list">
-                                    <li><span data-lang="en">Faster quoting with clearer discount control.</span><span data-lang="vi">Báo giá nhanh hơn, chiết khấu rõ hơn.</span></li>
-                                    <li><span data-lang="en">Cleaner Excel, PDF, and image outputs for customers.</span><span data-lang="vi">Xuất Excel, PDF và hình ảnh gọn hơn để gửi khách.</span></li>
-                                    <li><span data-lang="en">Bilingual UI and USD display for broader customer use.</span><span data-lang="vi">Song ngữ và USD để dễ phục vụ khách rộng hơn.</span></li>
+                                    <li><span data-lang="en">Designed a quote workflow that reduces repetitive pricing and document work.</span><span data-lang="vi">Thiết kế workflow báo giá giúp giảm thao tác lặp lại về giá và tài liệu.</span></li>
+                                    <li><span data-lang="en">Built customer-ready exports across Excel, PDF, image, and message formats.</span><span data-lang="vi">Tạo đầu ra sẵn gửi khách qua Excel, PDF, hình ảnh và nội dung tin nhắn.</span></li>
+                                    <li><span data-lang="en">Supported bilingual UI, USD display, product data, and promotion logic for broader usage.</span><span data-lang="vi">Hỗ trợ song ngữ, USD, dữ liệu sản phẩm và logic khuyến mãi để dùng linh hoạt hơn.</span></li>
                                 </ul>
                             </div>
                             <div class="resume-product-screen" aria-hidden="true">
@@ -2870,9 +2889,9 @@
                                 <section class="resume-card resume-operator-card">
                                     <p class="resume-eyebrow"><span data-lang="en">Strengths</span><span data-lang="vi">Điểm mạnh</span></p>
                                     <ul class="resume-simple-list">
-                                        <li><span data-lang="en">Channel sales and dealer/distributor work</span><span data-lang="vi">Bán hàng kênh đại lý và nhà phân phối</span></li>
-                                        <li><span data-lang="en">Quote, discount, and product-data control</span><span data-lang="vi">Báo giá, chiết khấu và dữ liệu sản phẩm</span></li>
-                                        <li><span data-lang="en">Retail technology, POS, web, and AI-assisted work</span><span data-lang="vi">Công nghệ bán lẻ, POS, web và AI hỗ trợ công việc</span></li>
+                                        <li><span data-lang="en">Channel development across dealers and distributors</span><span data-lang="vi">Phát triển kênh đại lý và nhà phân phối</span></li>
+                                        <li><span data-lang="en">Price, discount, promotion, and product-data discipline</span><span data-lang="vi">Kỷ luật giá, chiết khấu, khuyến mãi và dữ liệu sản phẩm</span></li>
+                                        <li><span data-lang="en">Retail SaaS, POS, Excel, web, SEO, and AI-assisted documentation</span><span data-lang="vi">Retail SaaS, POS, Excel, web, SEO và tài liệu có AI hỗ trợ</span></li>
                                     </ul>
                                 </section>
                                 <section class="resume-card resume-operator-card">
@@ -2889,7 +2908,7 @@
                                     <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                                         <div>
                                             <p class="resume-eyebrow"><span data-lang="en">Experience</span><span data-lang="vi">Kinh nghiệm</span></p>
-                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Sales, retail operations, and practical technology.</span><span data-lang="vi">Bán hàng, vận hành bán lẻ và công nghệ thực tế.</span></h3>
+                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Progression across field sales, retail operations, and retail technology.</span><span data-lang="vi">Lộ trình qua sales thị trường, vận hành bán lẻ và công nghệ retail.</span></h3>
                                         </div>
                                         <span class="resume-command-chip">2014 - 2026</span>
                                     </div>
@@ -2897,32 +2916,32 @@
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4><span class="resume-timeline-date">06/2024 - Present</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Electrical products</span><span data-lang="vi">Giám sát bán hàng | Thiết bị điện</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop electrical-product channels, coordinate distributors/dealers, and improve quote response.</span><span data-lang="vi">Phát triển kênh thiết bị điện, phối hợp NPP/đại lý và cải thiện tốc độ phản hồi báo giá.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop electrical-product channels in Tien Giang, coordinate distributor/dealer activity, handle price feedback, and support faster quote response.</span><span data-lang="vi">Phát triển kênh thiết bị điện tại Tiền Giang, phối hợp NPP/đại lý để đẩy sản phẩm, phản hồi giá và xử lý nhu cầu báo giá nhanh hơn.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Thành Hoàng Long</h4><span class="resume-timeline-date">02/2023 - 05/2024</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | FMCG, mother-baby channel</span><span data-lang="vi">Giám sát bán hàng | FMCG, hàng mẹ và bé</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop customers, roll out sales programs, and track market feedback.</span><span data-lang="vi">Mở rộng khách hàng, triển khai chương trình bán hàng và theo dõi phản hồi thị trường.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Roll out FMCG and mother-baby sales programs, expand customer coverage, capture market feedback, and adjust execution by area.</span><span data-lang="vi">Triển khai chương trình bán hàng FMCG/mẹ và bé, mở rộng khách hàng, ghi nhận phản hồi thị trường và điều chỉnh hoạt động theo khu vực.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Điện máy Long Hải</h4><span class="resume-timeline-date">11/2021 - 01/2023</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Store Manager | Retail operations</span><span data-lang="vi">Quản lý cửa hàng | Vận hành bán lẻ</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Manage store operations, sales, customer service, and after-sales work.</span><span data-lang="vi">Quản lý vận hành cửa hàng, doanh số, chăm sóc khách hàng và sau bán.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Manage store operations, sales consultation, after-sales service, and promotion coordination to keep the buying experience clear.</span><span data-lang="vi">Quản lý vận hành cửa hàng, tư vấn bán hàng, chăm sóc sau bán và phối hợp khuyến mãi để giữ trải nghiệm mua hàng rõ ràng.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>AVG - Công ty CP Nghe Nhìn Toàn Cầu</h4><span class="resume-timeline-date">09/2019 - 10/2021</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Digital TV</span><span data-lang="vi">Giám sát bán hàng | Truyền hình kỹ thuật số</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Expand dealer channels, track targets, and maintain market reporting.</span><span data-lang="vi">Mở rộng kênh đại lý, theo dõi mục tiêu và duy trì báo cáo thị trường.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Expand digital-TV dealer channels, monitor regional targets, and maintain market reporting for the sales team.</span><span data-lang="vi">Mở rộng kênh đại lý truyền hình kỹ thuật số, theo dõi mục tiêu khu vực và duy trì báo cáo thị trường cho đội bán hàng.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Vũ Hồng Minh</h4><span class="resume-timeline-date">03/2017 - 08/2019</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Market Development Representative | Electronics</span><span data-lang="vi">Phát triển thị trường | Điện tử, điện máy</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop dealer revenue in Tien Giang and Ben Tre; Outstanding Employee 2018.</span><span data-lang="vi">Phát triển doanh số đại lý tại Tiền Giang/Bến Tre; Nhân viên xuất sắc 2018.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop dealer sales in Tien Giang and Ben Tre for electronics and home-appliance categories; recognized as Outstanding Employee 2018.</span><span data-lang="vi">Phát triển doanh số đại lý tại Tiền Giang/Bến Tre cho nhóm điện tử, điện máy; được ghi nhận Nhân viên xuất sắc 2018.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Sapo</h4><span class="resume-timeline-date">03/2014 - 01/2016</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Business Development Representative | Retail SaaS</span><span data-lang="vi">Nhân viên kinh doanh | Retail SaaS</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Consult retailers on POS, websites, SEO, ads, and store-management workflows.</span><span data-lang="vi">Tư vấn POS, website, SEO, quảng cáo số và quy trình quản lý cửa hàng.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Consult retailers on POS, websites, SEO, digital ads, sales devices, and store-management workflows; built a practical foundation in retail SaaS.</span><span data-lang="vi">Tư vấn POS, website, SEO, quảng cáo số và thiết bị bán hàng cho chủ cửa hàng; tích lũy nền tảng SaaS/retail workflow.</span></li></ul>
                                         </article>
                                     </div>
                                 </section>
@@ -3498,7 +3517,7 @@
                     <a href="#store-os-orbit">Tính năng</a>
                     <a href="#store-os-trust">Bảng giá</a>
                     <a href="#store-os-start">Demo</a>
-                    <a href="#store-os-trust">Khách hàng</a>
+                    <a href="https://thuanstore.com/lichdituyen">Khách hàng</a>
                     <button id="demoHotlineTrigger" type="button">Liên hệ</button>
                 </nav>
 
@@ -3510,7 +3529,6 @@
                         <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
                         <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
                     </nav>
-                    <button id="btnOpenCareerProfileFooter" type="button" class="store-os-outline" title="Hồ sơ cá nhân">CV</button>
                     <a class="store-os-top-cta" href="#store-os-start">Bắt đầu</a>
                     <details class="store-os-menu">
                         <summary class="store-os-mobile-summary" aria-label="Mở menu">
@@ -3520,7 +3538,7 @@
                             <button type="button" data-landing-action="features">Tính năng</button>
                             <button type="button" data-landing-action="pricing">Bảng giá</button>
                             <button type="button" data-landing-action="demo">Demo</button>
-                            <button type="button" data-landing-action="profile">CV</button>
+                            <a href="https://thuanstore.com/lichdituyen">Khách hàng</a>
                             <button type="button" data-landing-action="contact">Liên hệ</button>
                             <div class="store-os-menu-lang">
                                 <span>Ngôn ngữ</span>
@@ -3598,7 +3616,7 @@
                         </div>
 
                         <div class="store-os-feature" style="--x: 78%; --y: 22%;">
-                            <button id="satBrand" type="button" class="orbit-node" title="Nhập thông tin khách hàng" aria-label="Nhập thông tin khách hàng">
+                            <button id="satBrand" type="button" class="orbit-node" title="Lịch chăm sóc khách hàng" aria-label="Lịch chăm sóc khách hàng">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zM20 19a4 4 0 00-3-3.87M17 5.13a4 4 0 010 7.75"></path></svg>
                             </button>
                             <span class="store-os-feature-label">Khách hàng</span>
@@ -4407,6 +4425,8 @@
         const GUIDE_SEEN_KEY = "thuanstore_guide_seen_v1";
         const CAREER_LANG_KEY = "thuanstore_career_lang_v3";
         const APP_LANG_KEY = "thuanstore_app_lang_v1";
+        const CUSTOMER_SCHEDULE_URL = "https://thuanstore.com/lichdituyen";
+        const CAREER_PROFILE_ENABLED = false;
         const AppI18n = (() => {
             const keyed = {
                 "landing.slogan": { vi: "CHẠM ĐẾN TƯƠNG LAI", en: "TOUCH THE FUTURE" },
@@ -8158,16 +8178,8 @@ led=>LED
         const openBrandManager = () => {
             if (DOM.brand?.modal) DOM.brand.modal.classList.add('active');
         };
-        const openCustomerWorkspace = () => {
-            openQuoteWorkspace();
-            setTimeout(() => {
-                const input = DOM.main?.custName;
-                if (!input) return;
-                try { input.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }); } catch (_) { input.scrollIntoView(false); }
-                input.focus({ preventScroll: true });
-                input.classList.add('ring-2', 'ring-cyan-300', 'border-cyan-400');
-                setTimeout(() => input.classList.remove('ring-2', 'ring-cyan-300', 'border-cyan-400'), 1600);
-            }, 180);
+        const openCustomerSchedule = () => {
+            window.location.href = CUSTOMER_SCHEDULE_URL;
         };
         const showUpdatingFeature = () => {
             Utils.showToast("Tính năng đang update");
@@ -8181,7 +8193,7 @@ led=>LED
         bindClick('satSetup', openSetupManager);
         bindClick('satPromo', openPromoManager);
         bindClick('satDiscount', openDiscountManager);
-        bindClick('satBrand', openCustomerWorkspace);
+        bindClick('satBrand', openCustomerSchedule);
         bindClick('orbitQuoteTrigger', openQuoteWorkspace);
         bindClick('orbitOrderTrigger', showUpdatingFeature);
         bindClick('orbitReportTrigger', showUpdatingFeature);
@@ -8262,7 +8274,7 @@ led=>LED
             targets.forEach(el => careerRevealObserver.observe(el));
         };
         const openCareerProfileModal = () => {
-            if (!careerProfileModal) return;
+            if (!careerProfileModal || !CAREER_PROFILE_ENABLED) return;
             careerProfileHasOpened = true;
             careerProfileModal.classList.add('is-open');
             careerProfileModal.classList.remove('hidden'); careerProfileModal.classList.add('flex');
@@ -8288,15 +8300,17 @@ led=>LED
                 });
             });
         }
-        ['btnOpenCareerProfileFooter'].forEach(id => {
-            const btn = document.getElementById(id); if (btn) btn.addEventListener('click', openCareerProfileModal);
-        });
+        if (CAREER_PROFILE_ENABLED) {
+            ['btnOpenCareerProfileFooter'].forEach(id => {
+                const btn = document.getElementById(id); if (btn) btn.addEventListener('click', openCareerProfileModal);
+            });
+        }
         ['btnCloseCareerProfile', 'btnCareerProfileDone'].forEach(id => {
             const btn = document.getElementById(id); if (btn) btn.addEventListener('click', closeCareerProfileModal);
         });
         if (careerProfileModal) careerProfileModal.addEventListener('click', (e) => { if (e.target === careerProfileModal) closeCareerProfileModal(); });
 
-        // Hồ sơ chỉ mở khi người dùng chủ động bấm nút CV, để landing tập trung vào công cụ báo giá.
+        // Hồ sơ cá nhân đang tắt để landing tập trung hoàn toàn vào trải nghiệm ứng dụng.
         
         const logoTrigger = document.getElementById('brandLogoTrigger');
         const modalStory = document.getElementById('seoStoryModal');
@@ -8346,7 +8360,7 @@ led=>LED
                 if (action === 'features') document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 if (action === 'pricing') document.getElementById('store-os-trust')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 if (action === 'demo') openGuideModal();
-                if (action === 'profile') openCareerProfileModal();
+                if (action === 'profile' && CAREER_PROFILE_ENABLED) openCareerProfileModal();
                 if (action === 'contact') openFeedbackModal();
             });
         });
