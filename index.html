@@ -7,6 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Thuận Store">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- TỐI ƯU SEO HIỆN ĐẠI -->
     <title>Thuận Store - Công Cụ Tạo Bảng Báo Giá &amp; Quản Lý Cửa Hàng</title>
@@ -22,11 +27,11 @@
         }
     </script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 	    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&amp;family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700&amp;display=swap" rel="stylesheet">
     
     <style>
@@ -309,6 +314,1124 @@
             @keyframes resumeStatusPulse {
                 0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.28); }
                 50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+            }
+
+            .landing-os {
+                --os-bg: #030712;
+                --os-panel: rgba(2, 6, 23, 0.88);
+                --os-panel-soft: rgba(15, 23, 42, 0.58);
+                --os-line: rgba(34, 211, 238, 0.18);
+                --os-line-strong: rgba(56, 189, 248, 0.38);
+                --os-text: #f8fafc;
+                --os-muted: rgba(203, 213, 225, 0.76);
+                --os-cyan: #22d3ee;
+                --os-blue: #60a5fa;
+                --os-indigo: #818cf8;
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                color: var(--os-text);
+                background: var(--os-bg) !important;
+            }
+            .landing-os * {
+                box-sizing: border-box;
+                letter-spacing: 0 !important;
+            }
+            .landing-os *::before,
+            .landing-os *::after {
+                box-sizing: border-box;
+            }
+            .landing-os .sr-only {
+                position: absolute !important;
+                width: 1px !important;
+                height: 1px !important;
+                padding: 0 !important;
+                margin: -1px !important;
+                overflow: hidden !important;
+                clip: rect(0, 0, 0, 0) !important;
+                white-space: nowrap !important;
+                border: 0 !important;
+            }
+            .landing-os :where(a) {
+                color: inherit;
+                text-decoration: none;
+            }
+            .landing-os :where(button) {
+                font: inherit;
+                appearance: none;
+                -webkit-appearance: none;
+                border: 0;
+                background: transparent;
+                padding: 0;
+                color: inherit;
+            }
+            .store-os-shell {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                flex: 0 0 auto;
+                width: min(100% - 2rem, 92rem);
+                min-height: calc(100dvh - 2rem);
+                margin: 1rem auto;
+                overflow: hidden;
+                border: 1px solid rgba(34, 211, 238, 0.16);
+                border-radius: 26px;
+                background:
+                    radial-gradient(circle at 72% 42%, rgba(34, 211, 238, 0.14), transparent 32rem),
+                    linear-gradient(135deg, rgba(2, 6, 23, 0.98), rgba(2, 8, 23, 0.94));
+                box-shadow: 0 24px 80px rgba(0, 0, 0, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            }
+            .store-os-bg {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                z-index: 0;
+            }
+            .store-os-grid {
+                position: absolute;
+                inset: 0;
+                background-image:
+                    linear-gradient(to right, rgba(34, 211, 238, 0.055) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
+                background-size: 48px 48px;
+                opacity: 0.7;
+                mask-image: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0.95) 45%, rgba(0,0,0,0.82));
+                -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0.95) 45%, rgba(0,0,0,0.82));
+            }
+            .store-os-vignette {
+                position: absolute;
+                inset: 0;
+                background:
+                    linear-gradient(180deg, rgba(2, 6, 23, 0.1), rgba(2, 6, 23, 0.38)),
+                    radial-gradient(circle at 54% 45%, transparent 0, rgba(2, 6, 23, 0.24) 45rem);
+            }
+            .store-os-nav {
+                position: relative;
+                z-index: 3;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1.25rem;
+                min-height: 5.5rem;
+                padding: 1.1rem 2.25rem 0.8rem;
+            }
+            .store-os-brand {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.7rem;
+                min-width: max-content;
+                border: 0;
+                background: transparent;
+                padding: 0;
+                color: #ffffff;
+                cursor: pointer;
+                font-size: 1.18rem;
+                font-weight: 790;
+                line-height: 1;
+            }
+            .store-os-brand-lockup {
+                display: grid;
+                gap: 0.28rem;
+                justify-items: start;
+            }
+            .store-os-brand-lockup small {
+                position: relative;
+                display: inline-block;
+                width: max-content;
+                min-height: 0;
+                padding: 0;
+                border: 0;
+                border-radius: 0;
+                color: transparent;
+                background: linear-gradient(90deg, #22d3ee 0%, #d8fbff 48%, #34d399 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                box-shadow: none;
+                font-size: 0.56rem;
+                font-weight: 820;
+                letter-spacing: 0.16em !important;
+                line-height: 1;
+                text-shadow: 0 0 14px rgba(34, 211, 238, 0.42);
+            }
+            .store-os-brand-lockup small::after {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 1px;
+                margin-top: 0.28rem;
+                background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.7), rgba(52, 211, 153, 0.55), transparent);
+                opacity: 0.72;
+            }
+            .store-os-brand svg {
+                width: 1.7rem;
+                height: 1.7rem;
+                color: var(--os-cyan);
+                filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.64));
+            }
+            .store-os-navlinks {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 2.45rem;
+                flex: 1;
+            }
+            .store-os-navlinks a,
+            .store-os-navlinks button {
+                border: 0;
+                background: transparent;
+                padding: 0;
+                color: rgba(226, 232, 240, 0.72);
+                font-size: 0.92rem;
+                font-weight: 620;
+                transition: color 0.2s ease, transform 0.2s ease;
+            }
+            .store-os-navlinks a:hover,
+            .store-os-navlinks button:hover {
+                color: #ffffff;
+                transform: translateY(-1px);
+            }
+            .store-os-actions {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+            .store-os-icon-btn,
+            .store-os-outline,
+            .store-os-top-cta,
+            .store-os-mobile-summary {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 2.75rem;
+                border-radius: 10px;
+                border: 1px solid rgba(148, 163, 184, 0.26);
+                color: #f8fafc;
+                background: rgba(2, 6, 23, 0.28);
+                transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            }
+            .store-os-icon-btn {
+                width: 2.75rem;
+                border-color: transparent;
+                background: transparent;
+            }
+            .store-os-icon-btn svg,
+            .store-os-mobile-summary svg {
+                width: 1.28rem;
+                height: 1.28rem;
+            }
+            .store-os-outline {
+                padding: 0 1.25rem;
+                font-size: 0.9rem;
+                font-weight: 720;
+            }
+            .store-os-top-cta {
+                min-width: 8.6rem;
+                padding: 0 1.25rem;
+                border-color: rgba(34, 211, 238, 0.38);
+                color: #05111f;
+                background: linear-gradient(135deg, #22d3ee, #60a5fa);
+                box-shadow: 0 16px 32px rgba(14, 165, 233, 0.24);
+                font-size: 0.9rem;
+                font-weight: 760;
+            }
+            .store-os-top-cta {
+                display: none;
+            }
+            .store-os-icon-btn:hover,
+            .store-os-outline:hover,
+            .store-os-mobile-summary:hover {
+                border-color: rgba(34, 211, 238, 0.36);
+                background: rgba(15, 23, 42, 0.58);
+                transform: translateY(-1px);
+            }
+            .store-os-top-cta:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 18px 38px rgba(14, 165, 233, 0.3);
+            }
+            .store-os-menu {
+                display: none;
+                position: relative;
+            }
+            .store-os-menu summary {
+                list-style: none;
+            }
+            .store-os-menu summary::-webkit-details-marker {
+                display: none;
+            }
+            .store-os-menu-panel {
+                position: absolute;
+                top: calc(100% + 0.65rem);
+                right: 0;
+                width: min(17rem, calc(100vw - 2rem));
+                padding: 0.55rem;
+                border-radius: 16px;
+                border: 1px solid rgba(34, 211, 238, 0.2);
+                background: rgba(2, 6, 23, 0.96);
+                box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4);
+            }
+            .store-os-menu-panel a,
+            .store-os-menu-panel button {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                min-height: 2.65rem;
+                border-radius: 11px;
+                padding: 0 0.8rem;
+                color: rgba(226, 232, 240, 0.86);
+                font-size: 0.9rem;
+                font-weight: 680;
+            }
+            .store-os-menu-panel a:hover,
+            .store-os-menu-panel button:hover {
+                background: rgba(34, 211, 238, 0.1);
+                color: #ffffff;
+            }
+            .store-os-menu-lang {
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
+                gap: 0.75rem;
+                margin-top: 0.35rem;
+                padding: 0.55rem 0.65rem 0.2rem;
+                border-top: 1px solid rgba(148, 163, 184, 0.16);
+            }
+            .store-os-menu-lang span {
+                color: rgba(203, 213, 225, 0.7);
+                font-size: 0.76rem;
+                font-weight: 680;
+            }
+            .store-os-menu-lang .os-language-switcher {
+                display: inline-flex !important;
+            }
+            .store-os-actions .store-os-menu-lang .os-language-switcher {
+                display: inline-flex !important;
+            }
+            @keyframes storeOrbitSpin {
+                to { transform: rotate(360deg); }
+            }
+            @keyframes storeOrbitSpinReverse {
+                to { transform: rotate(-360deg); }
+            }
+            @keyframes storeNodeGlow {
+                0%, 100% { box-shadow: 0 0 28px rgba(59, 130, 246, 0.16), inset 0 0 18px rgba(34, 211, 238, 0.08); }
+                50% { box-shadow: 0 0 34px rgba(34, 211, 238, 0.24), inset 0 0 20px rgba(34, 211, 238, 0.12); }
+            }
+            @keyframes storeLogoMarquee {
+                to { transform: translateX(-50%); }
+            }
+            @keyframes storeReactorSpin {
+                to { transform: rotate(360deg); }
+            }
+            @keyframes storeReactorSpinReverse {
+                to { transform: rotate(-360deg); }
+            }
+            @keyframes storeReactorPulse {
+                0%, 100% {
+                    opacity: 0.82;
+                    transform: scale(0.94);
+                    box-shadow: 0 0 18px rgba(34, 211, 238, 0.55), 0 0 42px rgba(34, 211, 238, 0.18);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.04);
+                    box-shadow: 0 0 26px rgba(34, 211, 238, 0.78), 0 0 64px rgba(52, 211, 153, 0.22);
+                }
+            }
+            .store-os-hero {
+                position: relative;
+                z-index: 2;
+                display: grid;
+                grid-template-columns: minmax(0, 0.88fr) minmax(33rem, 1.12fr);
+                align-items: center;
+                gap: 2rem;
+                flex: 1;
+                padding: 1.4rem 3.2rem 1rem;
+            }
+            .store-os-copy {
+                max-width: 40rem;
+            }
+            .store-os-chip {
+                display: inline-flex;
+                align-items: center;
+                min-height: 2.1rem;
+                padding: 0 0.75rem;
+                border: 1px solid rgba(34, 211, 238, 0.22);
+                border-radius: 11px;
+                color: var(--os-cyan);
+                background: rgba(8, 145, 178, 0.14);
+                box-shadow: inset 0 0 18px rgba(34, 211, 238, 0.08);
+                font-size: 0.82rem;
+                font-weight: 780;
+            }
+            .store-os-title {
+                margin-top: 1.55rem;
+                max-width: 39rem;
+                color: #ffffff;
+                font-size: 4.25rem;
+                font-weight: 820;
+                line-height: 1.05;
+            }
+            .store-os-title-line {
+                display: inline;
+            }
+            .store-os-title strong {
+                display: inline-block;
+                color: #38bdf8;
+                font-weight: inherit;
+                text-shadow: 0 0 28px rgba(56, 189, 248, 0.32);
+            }
+            .store-os-copy-text {
+                margin-top: 1.6rem;
+                max-width: 35rem;
+                color: var(--os-muted);
+                font-size: 1.08rem;
+                font-weight: 510;
+                line-height: 1.68;
+            }
+            .store-os-cta-row {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 0.9rem;
+                margin-top: 2rem;
+            }
+            .store-os-primary,
+            .store-os-secondary,
+            .store-os-text-link {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.65rem;
+                min-height: 3.5rem;
+                border-radius: 10px;
+                font-size: 1rem;
+                font-weight: 760;
+                transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            }
+            .store-os-primary {
+                min-width: 12.8rem;
+                padding: 0 1.45rem;
+                color: #04111f;
+                background: linear-gradient(135deg, #22d3ee, #60a5fa);
+                box-shadow: 0 18px 42px rgba(14, 165, 233, 0.28);
+            }
+            .store-os-primary {
+                display: none;
+            }
+            .store-os-secondary {
+                min-width: 12.8rem;
+                padding: 0 1.35rem;
+                border: 1px solid rgba(148, 163, 184, 0.24);
+                color: #f8fafc;
+                background: rgba(2, 6, 23, 0.34);
+            }
+            .store-os-text-link {
+                min-width: 10rem;
+                padding: 0 0.5rem;
+                color: #7dd3fc;
+                background: transparent;
+            }
+            .store-os-primary:hover,
+            .store-os-secondary:hover,
+            .store-os-text-link:hover {
+                transform: translateY(-1px);
+            }
+            .store-os-secondary:hover {
+                border-color: rgba(34, 211, 238, 0.42);
+                background: rgba(15, 23, 42, 0.62);
+            }
+            .store-os-metrics {
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 0.65rem;
+                margin-top: 2rem;
+                max-width: 38rem;
+            }
+            .store-os-metric {
+                display: grid;
+                grid-template-columns: auto minmax(0, 1fr);
+                align-items: center;
+                gap: 0.62rem;
+                min-width: 0;
+                min-height: 4.45rem;
+                padding: 0.8rem 0.82rem;
+                border: 1px solid rgba(34, 211, 238, 0.13);
+                border-radius: 8px;
+                background: rgba(2, 6, 23, 0.28);
+                box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+            }
+            .store-os-metric svg {
+                width: 1.55rem;
+                height: 1.55rem;
+                color: var(--os-cyan);
+                filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.32));
+            }
+            .store-os-metric strong {
+                display: block;
+                color: #ffffff;
+                font-size: 1.26rem;
+                font-weight: 800;
+                line-height: 1.05;
+                font-variant-numeric: tabular-nums;
+            }
+            .store-os-metric span {
+                display: block;
+                margin-top: 0.22rem;
+                color: rgba(203, 213, 225, 0.76);
+                font-size: 0.75rem;
+                font-weight: 540;
+                line-height: 1.2;
+            }
+            .store-os-visual {
+                position: relative;
+                display: grid;
+                place-items: center;
+                min-height: 38rem;
+                overflow: visible;
+            }
+            .store-os-orbit {
+                position: relative;
+                width: 36rem;
+                max-width: 100%;
+                aspect-ratio: 1;
+                isolation: isolate;
+                --orbit-radius: 14.85rem;
+            }
+            .store-os-orbit::before {
+                content: "";
+                position: absolute;
+                inset: 16%;
+                border-radius: 50%;
+                background:
+                    radial-gradient(circle at 50% 50%, rgba(34, 211, 238, 0.18), transparent 24%),
+                    radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.08), transparent 48%),
+                    linear-gradient(135deg, rgba(34, 211, 238, 0.04), rgba(59, 130, 246, 0.02));
+                filter: blur(18px);
+                opacity: 0.82;
+            }
+            .store-os-orbit::after {
+                content: "";
+                position: absolute;
+                inset: 8%;
+                border-radius: 28%;
+                background-image:
+                    linear-gradient(to right, rgba(34, 211, 238, 0.06) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
+                background-size: 3.2rem 3.2rem;
+                opacity: 0.28;
+                mask-image: radial-gradient(circle, #000 0 44%, transparent 70%);
+                -webkit-mask-image: radial-gradient(circle, #000 0 44%, transparent 70%);
+                pointer-events: none;
+            }
+            .store-os-ring {
+                position: absolute;
+                border-radius: 50%;
+                pointer-events: none;
+                display: none !important;
+            }
+            .store-os-ring::before,
+            .store-os-ring::after {
+                content: "";
+                position: absolute;
+                inset: -1px;
+                border-radius: inherit;
+                pointer-events: none;
+            }
+            .store-os-ring.outer {
+                inset: 12%;
+                border: 1px solid rgba(34, 211, 238, 0.28);
+                box-shadow: 0 0 34px rgba(59, 130, 246, 0.08);
+                animation: storeOrbitSpin 64s linear infinite;
+            }
+            .store-os-ring.outer::before {
+                background: conic-gradient(from 0deg, rgba(34, 211, 238, 0.9) 0 12deg, transparent 13deg 180deg, rgba(96, 165, 250, 0.58) 181deg 191deg, transparent 192deg 360deg);
+                -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+                filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.48));
+            }
+            .store-os-ring.middle {
+                inset: 24%;
+                border: 1px solid rgba(96, 165, 250, 0.17);
+                opacity: 0.72;
+                animation: storeOrbitSpinReverse 96s linear infinite;
+                display: none;
+            }
+            .store-os-ring.middle::after {
+                background: conic-gradient(from 112deg, transparent 0 58deg, rgba(96, 165, 250, 0.55) 59deg 66deg, transparent 67deg 360deg);
+                -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+                filter: drop-shadow(0 0 7px rgba(96, 165, 250, 0.36));
+            }
+            .store-os-ring.inner {
+                inset: 30%;
+                border: 2px solid rgba(34, 211, 238, 0.62);
+                box-shadow: inset 0 0 28px rgba(34, 211, 238, 0.1), 0 0 24px rgba(59, 130, 246, 0.22);
+            }
+            .store-os-ring-dots {
+                position: absolute;
+                inset: 12%;
+                border-radius: 50%;
+                background:
+                    radial-gradient(circle at 50% 0%, var(--os-cyan) 0 3px, transparent 4px),
+                    radial-gradient(circle at 100% 50%, var(--os-cyan) 0 3px, transparent 4px),
+                    radial-gradient(circle at 50% 100%, var(--os-cyan) 0 3px, transparent 4px),
+                    radial-gradient(circle at 0% 50%, var(--os-cyan) 0 3px, transparent 4px);
+                opacity: 0.58;
+                pointer-events: none;
+                animation: storeOrbitSpin 54s linear infinite;
+                display: none;
+            }
+            .store-os-center {
+                position: absolute;
+                inset: 31%;
+                z-index: 4;
+                appearance: none;
+                padding: 0;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                border: 0;
+                background: transparent;
+                box-shadow: none;
+                text-align: center;
+                transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+            }
+            .store-os-center:hover,
+            .store-os-center:focus-visible {
+                transform: scale(1.025);
+                background: transparent;
+                box-shadow: none;
+                outline: none;
+            }
+            .store-os-reactor {
+                position: relative;
+                display: grid;
+                place-items: center;
+                width: 5.35rem;
+                height: 5.35rem;
+                border-radius: 50%;
+                color: #22d3ee;
+                filter: drop-shadow(0 0 18px rgba(34, 211, 238, 0.46));
+            }
+            .store-os-reactor::before,
+            .store-os-reactor::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                pointer-events: none;
+            }
+            .store-os-reactor::before {
+                background:
+                    conic-gradient(from 0deg, transparent 0 18deg, rgba(34, 211, 238, 0.92) 19deg 30deg, transparent 31deg 72deg, rgba(52, 211, 153, 0.78) 73deg 84deg, transparent 85deg 132deg, rgba(96, 165, 250, 0.85) 133deg 146deg, transparent 147deg 216deg, rgba(34, 211, 238, 0.72) 217deg 230deg, transparent 231deg 360deg);
+                -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 0.48rem), #000 calc(100% - 0.42rem));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 0.48rem), #000 calc(100% - 0.42rem));
+                animation: storeReactorSpin 9.5s linear infinite;
+            }
+            .store-os-reactor::after {
+                inset: 0.68rem;
+                border: 1px solid rgba(34, 211, 238, 0.36);
+                background:
+                    conic-gradient(from 180deg, rgba(34, 211, 238, 0.12), transparent 44deg, rgba(52, 211, 153, 0.2) 95deg, transparent 140deg, rgba(96, 165, 250, 0.18) 220deg, transparent 300deg, rgba(34, 211, 238, 0.12)),
+                    radial-gradient(circle, rgba(34, 211, 238, 0.12), transparent 58%);
+                animation: storeReactorSpinReverse 14s linear infinite;
+            }
+            .store-os-reactor-core {
+                position: relative;
+                z-index: 2;
+                width: 2.28rem;
+                height: 2.28rem;
+                border-radius: 50%;
+                background:
+                    radial-gradient(circle at 50% 50%, #ecfeff 0 12%, #67e8f9 13% 34%, rgba(34, 211, 238, 0.24) 35% 58%, transparent 59%),
+                    radial-gradient(circle, rgba(34, 211, 238, 0.5), transparent 68%);
+                animation: storeReactorPulse 2.8s ease-in-out infinite;
+            }
+            .store-os-reactor-core::before {
+                content: "";
+                position: absolute;
+                inset: -0.98rem;
+                border-radius: 50%;
+                background:
+                    linear-gradient(90deg, transparent 46%, rgba(34, 211, 238, 0.72) 47% 53%, transparent 54%),
+                    linear-gradient(0deg, transparent 46%, rgba(34, 211, 238, 0.58) 47% 53%, transparent 54%);
+                opacity: 0.45;
+                animation: storeReactorSpin 18s linear infinite;
+            }
+            .store-os-reactor-blade {
+                position: absolute;
+                z-index: 1;
+                inset: 1.25rem;
+                border-radius: 50%;
+                background: conic-gradient(from 12deg, transparent 0 18deg, rgba(34, 211, 238, 0.5) 19deg 42deg, transparent 43deg 120deg, rgba(34, 211, 238, 0.42) 121deg 144deg, transparent 145deg 240deg, rgba(52, 211, 153, 0.44) 241deg 264deg, transparent 265deg 360deg);
+                -webkit-mask: radial-gradient(farthest-side, transparent 0 42%, #000 43% 62%, transparent 63%);
+                mask: radial-gradient(farthest-side, transparent 0 42%, #000 43% 62%, transparent 63%);
+                animation: storeReactorSpinReverse 7s linear infinite;
+            }
+            .store-os-center .store-os-center-text {
+                margin-top: 0.72rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 1.65rem;
+                padding: 0.28rem 0.58rem;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+                color: #22d3ee;
+                font-size: 0.72rem;
+                font-weight: 790;
+                text-transform: uppercase;
+                letter-spacing: 0.12em !important;
+                line-height: 1.2;
+                max-width: 9.4rem;
+            }
+            .store-os-feature {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                z-index: 6;
+                display: grid;
+                justify-items: center;
+                gap: 0.5rem;
+                width: 6.1rem;
+                transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(-1 * var(--orbit-radius))) rotate(calc(-1 * var(--orbit-angle)));
+                transform-origin: center;
+                text-align: center;
+            }
+            .store-os-feature[style*="--x: 50%; --y: 10%"] { --orbit-angle: 0deg; }
+            .store-os-feature[style*="--x: 78%; --y: 22%"] { --orbit-angle: 45deg; }
+            .store-os-feature[style*="--x: 90%; --y: 50%"] { --orbit-angle: 90deg; }
+            .store-os-feature[style*="--x: 78%; --y: 78%"] { --orbit-angle: 135deg; }
+            .store-os-feature[style*="--x: 50%; --y: 90%"] { --orbit-angle: 180deg; }
+            .store-os-feature[style*="--x: 22%; --y: 78%"] { --orbit-angle: 225deg; }
+            .store-os-feature[style*="--x: 10%; --y: 50%"] { --orbit-angle: 270deg; }
+            .store-os-feature[style*="--x: 22%; --y: 22%"] { --orbit-angle: 315deg; }
+            .store-os-feature .orbit-node,
+            .store-os-feature-orb {
+                width: 3.9rem;
+                height: 3.9rem;
+                border-radius: 50% !important;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(34, 211, 238, 0.24) !important;
+                color: #38bdf8;
+                background:
+                    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.12), transparent 34%),
+                    linear-gradient(145deg, rgba(8, 47, 73, 0.8), rgba(2, 6, 23, 0.82)) !important;
+                box-shadow:
+                    inset 0 0 18px rgba(34, 211, 238, 0.1),
+                    0 14px 32px rgba(0, 0, 0, 0.28),
+                    0 0 18px color-mix(in srgb, currentColor 24%, transparent) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                backdrop-filter: blur(10px) !important;
+                cursor: pointer;
+                animation: none;
+                filter: none;
+                transition: transform 0.22s ease, color 0.22s ease, filter 0.22s ease, opacity 0.22s ease;
+            }
+            .store-os-feature-orb {
+                cursor: default;
+            }
+            .store-os-feature .orbit-node:hover {
+                transform: translateY(-2px) scale(1.08);
+                color: #67e8f9;
+                background:
+                    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.18), transparent 34%),
+                    linear-gradient(145deg, rgba(8, 80, 98, 0.9), rgba(2, 6, 23, 0.86)) !important;
+                border-color: rgba(103, 232, 249, 0.58) !important;
+                box-shadow:
+                    inset 0 0 20px rgba(34, 211, 238, 0.14),
+                    0 18px 38px rgba(0, 0, 0, 0.32),
+                    0 0 24px color-mix(in srgb, currentColor 38%, transparent) !important;
+                filter: none;
+            }
+            #satPromo { color: #34d399; }
+            #satDiscount { color: #60a5fa; }
+            #calendarTrigger { color: #22d3ee; }
+            #orbitReportTrigger { color: #2dd4bf; }
+            #orbitOrderTrigger { color: #f59e0b; }
+            #satSetup { color: #38bdf8; }
+            #satBrand { color: #67e8f9; }
+            .store-os-feature svg {
+                width: 2rem;
+                height: 2rem;
+                stroke-width: 2.2;
+                display: block;
+            }
+            .store-os-feature-label {
+                color: rgba(248, 250, 252, 0.92);
+                font-size: 0.82rem;
+                font-weight: 680;
+                line-height: 1.18;
+                text-shadow: 0 2px 14px rgba(2, 6, 23, 0.8);
+            }
+            .store-os-trust {
+                position: relative;
+                z-index: 2;
+                padding: 0.55rem 0 1.65rem;
+                text-align: center;
+                overflow: hidden;
+            }
+            .store-os-trust p {
+                color: rgba(203, 213, 225, 0.6);
+                font-size: 0.8rem;
+                font-weight: 710;
+                text-transform: uppercase;
+                letter-spacing: 0.12em !important;
+            }
+            .store-os-logo-marquee {
+                position: relative;
+                width: 100%;
+                margin-top: 1.05rem;
+                overflow: hidden;
+                mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+                -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+            }
+            .store-os-logo-row {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                gap: 0;
+                width: max-content;
+                animation: storeLogoMarquee 26s linear infinite;
+                will-change: transform;
+            }
+            .store-os-logo-set {
+                flex: 0 0 auto;
+                min-width: max(100vw, 72rem);
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                gap: clamp(1.8rem, 4vw, 3.4rem);
+                padding: 0 1.5rem;
+            }
+            .store-os-logo-marquee:hover .store-os-logo-row {
+                animation-play-state: paused;
+            }
+            .store-os-logo-row span {
+                flex: 0 0 auto;
+                color: rgba(226, 232, 240, 0.52);
+                font-size: 1.15rem;
+                font-weight: 820;
+                line-height: 1;
+                text-transform: uppercase;
+                filter: grayscale(1);
+            }
+            .store-os-logo-row .thin {
+                font-weight: 660;
+                text-transform: none;
+            }
+            .store-os-footer {
+                position: relative;
+                z-index: 2;
+                padding: 0 1.5rem calc(1.05rem + env(safe-area-inset-bottom));
+                text-align: center;
+                color: rgba(148, 163, 184, 0.72);
+                font-size: 0.72rem;
+                font-weight: 640;
+            }
+            .landing-os .app-language-switcher.os-language-switcher {
+                border: 1px solid rgba(148, 163, 184, 0.2);
+                background: rgba(15, 23, 42, 0.52);
+                padding: 0.14rem;
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn {
+                min-width: 1.9rem;
+                height: 1.9rem;
+                color: rgba(226, 232, 240, 0.72);
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn.is-active {
+                background: rgba(248, 250, 252, 0.95);
+                color: #020617;
+            }
+
+            @media (max-width: 1180px) {
+                .store-os-title { font-size: 3.55rem; }
+                .store-os-hero {
+                    grid-template-columns: minmax(0, 0.92fr) minmax(29rem, 1.08fr);
+                    padding-inline: 2.2rem;
+                }
+                .store-os-orbit { width: 31.5rem; }
+                .store-os-orbit { --orbit-radius: 13rem; }
+                .store-os-feature .orbit-node,
+                .store-os-feature-orb {
+                    width: 4rem;
+                    height: 4rem;
+                }
+            }
+            @media (max-width: 980px) {
+                .store-os-shell {
+                    width: 100%;
+                    min-height: 100dvh;
+                    margin: 0;
+                    overflow: visible;
+                    border-radius: 0;
+                    border-left: 0;
+                    border-right: 0;
+                }
+                .store-os-nav {
+                    min-height: 4.7rem;
+                    padding: max(1rem, env(safe-area-inset-top)) 1.35rem 0.8rem;
+                    border-bottom: 1px solid rgba(34, 211, 238, 0.1);
+                }
+                .store-os-navlinks,
+                .store-os-actions .store-os-outline,
+                .store-os-actions .store-os-top-cta,
+                .store-os-actions .os-language-switcher {
+                    display: none !important;
+                }
+                .store-os-menu {
+                    display: block;
+                }
+                .store-os-hero {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 1.2rem;
+                    flex: 0 0 auto;
+                    padding: 1.55rem 1.35rem 0.5rem;
+                    overflow-x: hidden;
+                }
+                .store-os-copy {
+                    max-width: 42rem;
+                    margin: 0 auto;
+                    width: 100%;
+                }
+                .store-os-visual {
+                    min-height: 32rem;
+                    margin-top: 0.25rem;
+                    justify-self: center;
+                    width: 100%;
+                    overflow: visible;
+                }
+                .store-os-orbit {
+                    width: min(34rem, 88vw);
+                    --orbit-radius: 13.6rem;
+                }
+            }
+            @media (max-width: 640px) {
+                .store-os-shell {
+                    min-height: 100svh;
+                    display: flex;
+                    overflow-x: hidden;
+                    background:
+                        radial-gradient(circle at 50% 46%, rgba(34, 211, 238, 0.13), transparent 19rem),
+                        linear-gradient(180deg, rgba(2, 6, 23, 0.99), rgba(2, 8, 23, 0.96));
+                }
+                .store-os-nav {
+                    min-height: 4.1rem;
+                    padding: max(0.72rem, env(safe-area-inset-top)) 1rem 0.55rem;
+                }
+                .store-os-hero {
+                    flex: 1 1 auto;
+                    display: grid;
+                    grid-template-rows: minmax(0, 1fr);
+                    gap: 0;
+                    padding: 0.35rem 0.18rem 0.18rem;
+                    justify-items: center;
+                    align-items: center;
+                }
+                .store-os-copy {
+                    display: contents;
+                    max-width: min(100%, 22.8rem);
+                    min-width: 0;
+                    margin: 0 auto;
+                    justify-self: center;
+                    text-align: center;
+                }
+                .store-os-brand {
+                    align-items: center;
+                    font-size: 1.08rem;
+                    gap: 0.58rem;
+                }
+                .store-os-brand svg {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                }
+                .store-os-brand-lockup small {
+                    display: inline-block;
+                    font-size: 0.52rem;
+                    padding-inline: 0;
+                }
+                .store-os-icon-btn {
+                    display: none;
+                }
+                .store-os-icon-btn,
+                .store-os-mobile-summary {
+                    width: 2.65rem;
+                    min-height: 2.65rem;
+                    border-radius: 9px;
+                }
+                .store-os-chip {
+                    display: none;
+                }
+                .store-os-title {
+                    display: none;
+                }
+                .store-os-title-line {
+                    display: inline;
+                }
+                .store-os-title strong {
+                    display: block;
+                }
+                .store-os-copy-text {
+                    display: none;
+                }
+                .store-os-cta-row {
+                    display: none;
+                }
+                .store-os-primary,
+                .store-os-secondary {
+                    min-width: 0;
+                    min-height: 3.15rem;
+                    padding: 0 1.15rem;
+                    font-size: 0.9rem;
+                    gap: 0.5rem;
+                    white-space: nowrap;
+                }
+                .store-os-primary {
+                    min-width: 11.4rem;
+                    box-shadow: 0 14px 30px rgba(14, 165, 233, 0.24);
+                }
+                .store-os-secondary,
+                .store-os-text-link {
+                    display: none;
+                }
+                .store-os-primary span,
+                .store-os-secondary span {
+                    min-width: 0;
+                }
+                .store-os-metrics {
+                    display: none;
+                }
+                .store-os-visual {
+                    grid-row: 1;
+                    min-height: clamp(27.2rem, 108vw, 30.7rem);
+                    overflow: visible;
+                    place-items: center;
+                    margin-inline: auto;
+                    width: min(100%, 25.15rem);
+                    align-self: center;
+                }
+                .store-os-orbit {
+                    width: min(24rem, calc(100vw - 0.1rem));
+                    --orbit-radius: 9.68rem;
+                }
+                .store-os-feature {
+                    width: 4.55rem;
+                    gap: 0.34rem;
+                }
+                .store-os-feature .orbit-node,
+                .store-os-feature-orb {
+                    width: 2.85rem;
+                    height: 2.85rem;
+                }
+                .store-os-feature svg {
+                    width: 1.68rem;
+                    height: 1.68rem;
+                }
+                .store-os-feature-label {
+                    font-size: 0.68rem;
+                    line-height: 1.12;
+                    text-wrap: balance;
+                }
+                .store-os-center {
+                    inset: 31%;
+                }
+                .store-os-reactor {
+                    width: 4.58rem;
+                    height: 4.58rem;
+                }
+                .store-os-reactor-core {
+                    width: 1.96rem;
+                    height: 1.96rem;
+                }
+                .store-os-center .store-os-center-text {
+                    margin-top: 0.78rem;
+                    min-height: 1.42rem;
+                    max-width: 7.2rem;
+                    padding: 0.22rem 0;
+                    font-size: 0.56rem;
+                    letter-spacing: 0.08em !important;
+                }
+                .store-os-trust {
+                    margin-top: 0;
+                    padding: 0.1rem 0 0.44rem;
+                    overflow: hidden;
+                }
+                .store-os-trust p {
+                    display: none;
+                }
+                .store-os-logo-row {
+                    animation-duration: 19s;
+                }
+                .store-os-logo-set {
+                    min-width: 44rem;
+                    gap: 1.85rem;
+                    padding: 0 0.9rem;
+                }
+                .store-os-logo-row span {
+                    font-size: 0.82rem;
+                    color: rgba(226, 232, 240, 0.44);
+                }
+                .store-os-footer {
+                    padding: 0.2rem 1rem calc(0.78rem + env(safe-area-inset-bottom));
+                    font-size: 0.66rem;
+                }
+            }
+            @media (max-width: 390px) {
+                .store-os-visual {
+                    min-height: 26.15rem;
+                }
+                .store-os-orbit {
+                    width: min(23.25rem, calc(100vw - 0.22rem));
+                    --orbit-radius: 9.3rem;
+                }
+                .store-os-feature {
+                    width: 4.45rem;
+                }
+                .store-os-feature .orbit-node,
+                .store-os-feature-orb {
+                    width: 2.68rem;
+                    height: 2.68rem;
+                }
+                .store-os-feature svg {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                }
+                .store-os-feature-label {
+                    font-size: 0.63rem;
+                }
+                .store-os-brand {
+                    font-size: 1rem;
+                }
+                .store-os-brand-lockup small {
+                    font-size: 0.49rem;
+                }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .landing-os *,
+                .landing-os *::before,
+                .landing-os *::after {
+                    transition: none !important;
+                }
+                .store-os-logo-row {
+                    animation: storeLogoMarquee 44s linear infinite !important;
+                }
+                .store-os-reactor,
+                .store-os-reactor::before,
+                .store-os-reactor::after,
+                .store-os-reactor-core,
+                .store-os-reactor-core::before,
+                .store-os-reactor-blade,
+                .store-os-feature .orbit-node,
+                .store-os-feature-orb {
+                    animation: none !important;
+                }
             }
 
             #promoManagerModal,
@@ -657,14 +1780,19 @@
             }
             .resume-reveal {
                 opacity: 0;
-                transform: translateY(18px);
-                transition: opacity 0.72s var(--ui-ease), transform 0.72s var(--ui-ease);
-                transition-delay: calc(var(--reveal-i, 0) * 55ms);
+                transform: translateY(12px);
+                transition: opacity 0.58s var(--ui-ease), transform 0.58s var(--ui-ease);
+                transition-delay: calc(var(--reveal-i, 0) * 45ms);
                 will-change: opacity, transform;
             }
             .resume-reveal.is-visible {
                 opacity: 1;
                 transform: translateY(0);
+            }
+            #careerProfileModal .resume-reveal {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
             }
             .resume-timeline-item {
                 border-left: 3px solid #dbeafe;
@@ -689,11 +1817,13 @@
             @media (prefers-reduced-motion: reduce) {
                 .resume-status-dot,
                 #careerProfileModal.is-open .resume-metric-card,
-                #careerProfileModal.is-open .resume-bar-fill {
+                #careerProfileModal.is-open .resume-bar-fill,
+                #careerProfileModal.is-open .resume-business-meter i {
                     animation: none !important;
                 }
                 .resume-metric-card { opacity: 1; transform: none; }
-                .resume-bar-fill { width: var(--level, 70%); }
+                .resume-bar-fill,
+                .resume-business-meter i { width: var(--level, 70%); }
                 .resume-reveal { opacity: 1; transform: none; transition: none; }
             }
             @media screen and (max-width: 767px) {
@@ -771,6 +1901,9 @@
             }
             #careerProfileModal .career-profile-scroll {
                 background: #020617 !important;
+                scroll-padding-bottom: 7rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-gutter: stable;
             }
             #careerProfileModal .career-profile-header {
                 background: #020617 !important;
@@ -800,6 +1933,8 @@
                 background: #020617 !important;
                 border-top: 1px solid rgba(34, 211, 238, 0.18) !important;
                 color: #94a3b8;
+                position: relative;
+                z-index: 5;
             }
             #careerProfileModal .career-profile-shell > footer p {
                 color: #94a3b8 !important;
@@ -903,18 +2038,18 @@
             }
             .resume-hero-title {
                 margin-top: 0.55rem;
-                max-width: 48rem;
+                max-width: 44rem;
                 color: #ffffff;
-                font-size: clamp(1.65rem, 3.2vw, 3.35rem);
+                font-size: clamp(1.58rem, 3vw, 2.85rem);
                 font-weight: 780;
-                line-height: 1.04;
+                line-height: 1.08;
             }
             .resume-hero-copy {
                 margin-top: 0.75rem;
-                max-width: 43rem;
+                max-width: 40rem;
                 color: #cbd5e1;
-                font-size: clamp(0.94rem, 1.4vw, 1.06rem);
-                line-height: 1.58;
+                font-size: clamp(0.92rem, 1.2vw, 1rem);
+                line-height: 1.5;
                 font-weight: 520;
             }
             .resume-command-strip {
@@ -932,12 +2067,12 @@
             .resume-command-chip {
                 display: inline-flex;
                 align-items: center;
-                min-height: 2rem;
+                min-height: 1.88rem;
                 border: 1px solid rgba(34, 211, 238, 0.2);
                 border-radius: 999px;
-                padding: 0.42rem 0.72rem;
+                padding: 0.36rem 0.66rem;
                 color: #dbeafe;
-                font-size: 0.78rem;
+                font-size: 0.74rem;
                 font-weight: 700;
             }
             .resume-signal-grid {
@@ -946,10 +2081,10 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
             .resume-signal-tile {
-                min-height: 7.2rem;
+                min-height: 6rem;
                 border: 1px solid rgba(148, 163, 184, 0.18);
-                border-radius: 18px;
-                padding: 0.9rem;
+                border-radius: 16px;
+                padding: 0.8rem;
                 background: rgba(255, 255, 255, 0.055);
             }
             .resume-signal-number {
@@ -969,6 +2104,33 @@
             }
             .resume-flow-card {
                 padding: 1rem;
+            }
+            .resume-value-grid {
+                display: grid;
+                gap: 0.7rem;
+                margin-top: 0.95rem;
+                grid-template-columns: minmax(0, 1fr);
+            }
+            @media (min-width: 760px) {
+                .resume-value-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+            }
+            .resume-value-item {
+                border-top: 1px solid rgba(34, 211, 238, 0.22);
+                padding-top: 0.72rem;
+            }
+            .resume-value-item strong {
+                display: block;
+                color: #ffffff;
+                font-size: 0.96rem;
+                line-height: 1.25;
+            }
+            .resume-value-item p {
+                margin-top: 0.34rem;
+                color: #94a3b8;
+                font-size: 0.8rem;
+                line-height: 1.42;
             }
             .resume-flow-track {
                 display: grid;
@@ -1001,7 +2163,7 @@
                 line-height: 1.25;
             }
             .resume-operator-card {
-                min-height: 100%;
+                min-height: auto;
                 padding: 1rem;
             }
             .resume-operator-card p {
@@ -1027,6 +2189,46 @@
                 width: var(--level, 70%);
                 border-radius: inherit;
                 background: linear-gradient(90deg, var(--resume-cyan), var(--resume-blue));
+            }
+            .resume-business-bars {
+                display: grid;
+                gap: 0.66rem;
+                margin-top: 0.95rem;
+            }
+            .resume-business-row {
+                display: grid;
+                gap: 0.34rem;
+            }
+            .resume-business-row > div {
+                display: flex;
+                justify-content: space-between;
+                gap: 0.75rem;
+                color: #dbeafe;
+                font-size: 0.74rem;
+                line-height: 1.25;
+                font-weight: 760;
+            }
+            .resume-business-row b {
+                color: var(--resume-green);
+                font-variant-numeric: tabular-nums;
+                white-space: nowrap;
+            }
+            .resume-business-meter {
+                height: 0.46rem;
+                overflow: hidden;
+                border-radius: 999px;
+                background: rgba(148, 163, 184, 0.18);
+            }
+            .resume-business-meter i {
+                display: block;
+                height: 100%;
+                width: 0;
+                border-radius: inherit;
+                background: linear-gradient(90deg, var(--resume-cyan), var(--resume-green));
+            }
+            #careerProfileModal.is-open .resume-business-meter i {
+                animation: resumeBarGrow 0.96s var(--ui-ease) forwards;
+                animation-delay: calc(var(--i, 0) * 90ms + 120ms);
             }
             .resume-proof-card {
                 display: grid;
@@ -1138,14 +2340,32 @@
                 font-size: 0.84rem;
                 line-height: 1.35;
             }
-            .resume-contact-grid {
+            .resume-simple-list {
                 display: grid;
                 gap: 0.55rem;
                 margin-top: 0.85rem;
             }
+            .resume-simple-list li {
+                border-top: 1px solid rgba(148, 163, 184, 0.16);
+                padding-top: 0.55rem;
+                color: #cbd5e1;
+                font-size: 0.84rem;
+                line-height: 1.42;
+                font-weight: 650;
+            }
+            .resume-contact-grid {
+                display: grid;
+                gap: 0.55rem;
+                margin-top: 0.85rem;
+                min-width: 0;
+            }
             .resume-contact-grid a {
                 display: flex;
+                align-items: center;
                 justify-content: space-between;
+                min-width: 0;
+                max-width: 100%;
+                overflow: hidden;
                 gap: 0.7rem;
                 border: 1px solid rgba(148, 163, 184, 0.16);
                 border-radius: 14px;
@@ -1154,6 +2374,34 @@
                 color: #dbeafe;
                 font-size: 0.84rem !important;
                 font-weight: 700;
+            }
+            .resume-contact-grid a span,
+            .resume-contact-grid a strong {
+                min-width: 0;
+                max-width: 100%;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+            }
+            .resume-contact-grid a > span:first-child {
+                flex: 0 0 auto;
+                color: #94a3b8;
+            }
+            .resume-contact-grid a strong {
+                flex: 1 1 auto;
+                color: #ffffff;
+                text-align: right;
+                font-size: 0.82rem;
+            }
+            @media screen and (max-width: 520px) {
+                .resume-contact-grid a {
+                    align-items: flex-start;
+                    flex-direction: column;
+                    gap: 0.22rem;
+                }
+                .resume-contact-grid a strong {
+                    text-align: left;
+                    font-size: 0.8rem;
+                }
             }
             .resume-command-center .resume-impact-list li::before {
                 background: var(--resume-cyan);
@@ -1180,6 +2428,156 @@
                 .resume-stack-row {
                     grid-template-columns: 1fr;
                     gap: 0.16rem;
+                }
+            }
+
+            #careerProfileModal .career-profile-shell {
+                max-width: min(1040px, calc(100vw - 1.5rem)) !important;
+                border-radius: 24px !important;
+                border: 1px solid rgba(34, 211, 238, 0.2) !important;
+            }
+            #careerProfileModal .career-profile-header > div.relative {
+                padding: 1rem 1.15rem !important;
+            }
+            #careerProfileModal .career-profile-header img {
+                width: 4.8rem !important;
+                height: 4.8rem !important;
+                border-radius: 1.1rem !important;
+            }
+            #careerProfileModal .career-profile-header h2 {
+                font-size: 1.62rem !important;
+                line-height: 1.06 !important;
+            }
+            #careerProfileModal .career-profile-header h2 + p {
+                font-size: 0.86rem !important;
+                line-height: 1.35 !important;
+            }
+            #careerProfileModal .resume-profile-upgrade {
+                padding: 0.9rem !important;
+            }
+            #careerProfileModal .resume-command-center {
+                max-width: 960px !important;
+                display: grid !important;
+                gap: 0.85rem !important;
+            }
+            #careerProfileModal .resume-command-center,
+            #careerProfileModal .resume-command-center > section,
+            #careerProfileModal .resume-command-center .space-y-5 {
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+            }
+            #careerProfileModal .resume-command-center > section:nth-of-type(3),
+            #careerProfileModal .resume-proof-card {
+                display: none !important;
+            }
+            #careerProfileModal .resume-card {
+                border-radius: 18px !important;
+                padding: 0.95rem !important;
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18) !important;
+            }
+            #careerProfileModal .resume-hero-system {
+                grid-template-columns: minmax(0, 1.05fr) minmax(17rem, 0.95fr) !important;
+                gap: 1rem !important;
+            }
+            #careerProfileModal .resume-hero-title {
+                font-size: 1.72rem !important;
+                line-height: 1.12 !important;
+            }
+            #careerProfileModal .resume-hero-copy,
+            #careerProfileModal .resume-command-center p,
+            #careerProfileModal .resume-command-center li {
+                font-size: 0.86rem !important;
+                line-height: 1.48 !important;
+            }
+            #careerProfileModal .resume-command-strip,
+            #careerProfileModal .resume-value-grid,
+            #careerProfileModal .resume-signal-grid,
+            #careerProfileModal .resume-stack-grid,
+            #careerProfileModal .resume-career-grid {
+                gap: 0.65rem !important;
+            }
+            #careerProfileModal .resume-value-grid,
+            #careerProfileModal .resume-signal-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+            #careerProfileModal .resume-signal-tile,
+            #careerProfileModal .resume-value-item,
+            #careerProfileModal .resume-timeline-item,
+            #careerProfileModal .resume-stack-row {
+                border-radius: 14px !important;
+                padding: 0.68rem !important;
+            }
+            #careerProfileModal .resume-signal-number {
+                font-size: 1.34rem !important;
+            }
+            #careerProfileModal .resume-section-title {
+                font-size: 1.08rem !important;
+                line-height: 1.24 !important;
+            }
+            #careerProfileModal .resume-career-grid .resume-timeline-item:nth-of-type(n+5) {
+                display: none !important;
+            }
+            #careerProfileModal .resume-contact-grid a {
+                min-height: 2.7rem;
+                border-radius: 13px !important;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.035);
+            }
+            #careerProfileModal .career-profile-shell > footer {
+                padding: 0.8rem 1rem !important;
+            }
+
+            @media screen and (max-width: 767px) {
+                #careerProfileModal {
+                    padding: 0 !important;
+                }
+                #careerProfileModal .career-profile-shell {
+                    max-width: 100vw !important;
+                    height: 100dvh !important;
+                    max-height: 100dvh !important;
+                    border-radius: 0 !important;
+                    border-left: 0 !important;
+                    border-right: 0 !important;
+                }
+                #careerProfileModal .career-profile-header > div.relative {
+                    padding: max(0.85rem, env(safe-area-inset-top)) 0.9rem 0.75rem !important;
+                }
+                #careerProfileModal .career-profile-header .flex.items-start.justify-between {
+                    gap: 0.7rem !important;
+                }
+                #careerProfileModal .career-profile-header img {
+                    width: 3.85rem !important;
+                    height: 3.85rem !important;
+                }
+                #careerProfileModal .career-profile-header h2 {
+                    font-size: 1.12rem !important;
+                    max-width: 12rem !important;
+                }
+                #careerProfileModal .career-profile-header h2 + p {
+                    font-size: 0.72rem !important;
+                    max-width: 12rem !important;
+                }
+                #careerProfileModal .resume-profile-upgrade {
+                    padding: 0.72rem !important;
+                    padding-bottom: 1.2rem !important;
+                }
+                #careerProfileModal .resume-hero-system {
+                    grid-template-columns: 1fr !important;
+                }
+                #careerProfileModal .resume-value-grid,
+                #careerProfileModal .resume-signal-grid,
+                #careerProfileModal .resume-command-center > section:nth-of-type(5) {
+                    grid-template-columns: 1fr !important;
+                }
+                #careerProfileModal .resume-hero-title {
+                    font-size: 1.38rem !important;
+                }
+                #careerProfileModal .resume-card {
+                    border-radius: 16px !important;
+                    padding: 0.82rem !important;
+                }
+                #careerProfileModal .resume-contact-grid a {
+                    min-height: 3.05rem;
+                    padding: 0.76rem !important;
                 }
             }
 
@@ -1353,11 +2751,11 @@
                 <div class="relative px-5 md:px-8 py-5 md:py-7">
                     <div class="flex items-start justify-between gap-4">
                         <div class="flex items-center gap-4 min-w-0">
-                            <img src="data:image/jpeg;base64,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" alt="Huỳnh Minh Thuận" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-white/80 shadow-2xl shrink-0">
+                            <img src="assets/thuan-profile.jpg" alt="Huỳnh Minh Thuận" loading="lazy" decoding="async" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-white/80 shadow-2xl shrink-0">
                             <div class="min-w-0">
                                 <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="en">Professional Resume</span><span data-lang="vi">Hồ sơ nghề nghiệp</span></p>
                                 <h2 class="mt-1 text-2xl md:text-4xl font-black uppercase tracking-wide leading-tight">Huỳnh Minh Thuận</h2>
-                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Operations | Field Execution | Retail Technology</span><span data-lang="vi">Vận hành bán hàng | Triển khai thị trường | Công nghệ bán lẻ</span></p>
+                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Operations | Channel Growth | Retail Technology</span><span data-lang="vi">Vận hành doanh số | Phát triển kênh | Công nghệ bán lẻ</span></p>
                                 <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-bold">
                                     <span class="resume-pill">My Tho, Tien Giang</span>
                                     <span class="resume-pill"><span data-lang="en">Electrical products</span><span data-lang="vi">Thiết bị điện</span></span>
@@ -1383,33 +2781,32 @@
                     <div class="mx-auto max-w-6xl resume-command-center space-y-5">
                         <section class="resume-card resume-hero-system">
                             <div>
-                                <p class="resume-eyebrow"><span data-lang="en">Operator Profile</span><span data-lang="vi">Hồ sơ vận hành</span></p>
-                                <h3 class="resume-hero-title"><span data-lang="en">Turns field sales into repeatable operating systems.</span><span data-lang="vi">Biến vận hành bán hàng thành hệ thống có thể nhân rộng.</span></h3>
-                                <p class="resume-hero-copy"><span data-lang="en">Sales operations professional with 10+ years across dealer/distributor channels, retail execution, electrical products, consumer electronics, FMCG, digital TV, and retail SaaS. Strongest fit: Sales Operations, Channel Operations, Retail Tech Implementation, or Product Operations for sales tools.</span><span data-lang="vi">Nhân sự sales operations có hơn 10 năm trong kênh đại lý/NPP, vận hành bán lẻ, thiết bị điện, điện máy, FMCG, truyền hình kỹ thuật số và retail SaaS. Phù hợp nhất với Sales Operations, Channel Operations, Retail Tech Implementation hoặc Product Operations cho công cụ bán hàng.</span></p>
+                                <p class="resume-eyebrow"><span data-lang="en">Professional Profile</span><span data-lang="vi">Hồ sơ nghề nghiệp</span></p>
+                                <h3 class="resume-hero-title"><span data-lang="en">Sales operations with a practical technology mindset.</span><span data-lang="vi">Vận hành bán hàng với tư duy công nghệ thực tế.</span></h3>
+                                <p class="resume-hero-copy"><span data-lang="en">10+ years across dealers, distributors, retail stores, electrical products, FMCG, consumer electronics, and retail SaaS. I help sales teams quote faster, manage discounts clearly, and send customers cleaner documents.</span><span data-lang="vi">Hơn 10 năm làm việc với đại lý, nhà phân phối, cửa hàng bán lẻ, thiết bị điện, FMCG, điện máy và retail SaaS. Tôi tập trung vào những việc tạo giá trị rõ ràng: báo giá nhanh hơn, quản lý chiết khấu chặt hơn và gửi khách tài liệu chuyên nghiệp hơn.</span></p>
                                 <div class="resume-command-strip">
-                                    <span class="resume-command-chip"><span data-lang="en">Field execution</span><span data-lang="vi">Triển khai thị trường</span></span>
-                                    <span class="resume-command-chip"><span data-lang="en">Pricing logic</span><span data-lang="vi">Logic giá</span></span>
-                                    <span class="resume-command-chip"><span data-lang="en">Quote automation</span><span data-lang="vi">Tự động hóa báo giá</span></span>
-                                    <span class="resume-command-chip"><span data-lang="en">Retail SaaS / POS</span><span data-lang="vi">Retail SaaS / POS</span></span>
-                                    <span class="resume-command-chip"><span data-lang="en">AI workflow</span><span data-lang="vi">Workflow AI</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Sales operations</span><span data-lang="vi">Vận hành doanh số</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Retail technology</span><span data-lang="vi">Công nghệ bán lẻ</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Quote workflow</span><span data-lang="vi">Quy trình báo giá</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">AI-assisted work</span><span data-lang="vi">AI hỗ trợ công việc</span></span>
                                 </div>
                             </div>
                             <div class="resume-signal-grid">
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">10+</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Years across sales execution and retail operations</span><span data-lang="vi">Năm triển khai bán hàng và vận hành bán lẻ</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Years across sales execution and retail operations</span><span data-lang="vi">Năm bám kênh bán hàng và vận hành bán lẻ</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">5</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Mekong Delta provinces with route/channel exposure</span><span data-lang="vi">Tỉnh Miền Tây từng phụ trách tuyến/kênh</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Mekong Delta provinces with channel-growth exposure</span><span data-lang="vi">Tỉnh/khu vực từng phát triển kênh bán hàng</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">POS</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Retail SaaS, store workflow, website, SEO, ads</span><span data-lang="vi">Retail SaaS, quy trình cửa hàng, web, SEO, ads</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Retail SaaS, store workflow, website, SEO, ads</span><span data-lang="vi">POS, retail SaaS, web, SEO, quảng cáo số</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">AI</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Documentation, product data, translation, workflow drafting</span><span data-lang="vi">Tài liệu, dữ liệu sản phẩm, dịch thuật, phác thảo quy trình</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Documentation, product data, translation, workflow automation</span><span data-lang="vi">Tăng tốc tài liệu, dữ liệu sản phẩm và báo giá</span></p>
                                 </div>
                             </div>
                         </section>
@@ -1417,60 +2814,44 @@
                         <section class="resume-card resume-flow-card">
                             <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                                 <div>
-                                    <p class="resume-eyebrow"><span data-lang="en">Operating Model</span><span data-lang="vi">Mô hình vận hành</span></p>
-                                    <h3 class="resume-section-title mt-2"><span data-lang="en">The value is not only selling. It is making selling easier to repeat.</span><span data-lang="vi">Giá trị không chỉ là bán hàng. Giá trị là làm cho việc bán hàng dễ lặp lại hơn.</span></h3>
+                                    <p class="resume-eyebrow"><span data-lang="en">Value</span><span data-lang="vi">Giá trị</span></p>
+                                    <h3 class="resume-section-title mt-2"><span data-lang="en">Simple, measurable, useful to a sales team.</span><span data-lang="vi">Đơn giản, đo được và có ích cho đội bán hàng.</span></h3>
                                 </div>
-                                <span class="resume-command-chip"><span data-lang="en">Field -> System -> Customer-ready output</span><span data-lang="vi">Thị trường -> Hệ thống -> Tài liệu gửi khách</span></span>
+                                <span class="resume-command-chip"><span data-lang="en">Faster quotes. Cleaner margins.</span><span data-lang="vi">Báo giá nhanh. Biên lợi nhuận rõ.</span></span>
                             </div>
-                            <div class="resume-flow-track">
-                                <div class="resume-flow-node"><span>01</span><strong><span data-lang="en">Capture field friction</span><span data-lang="vi">Ghi nhận điểm nghẽn thị trường</span></strong></div>
-                                <div class="resume-flow-node"><span>02</span><strong><span data-lang="en">Structure product and price data</span><span data-lang="vi">Chuẩn hóa dữ liệu sản phẩm và giá</span></strong></div>
-                                <div class="resume-flow-node"><span>03</span><strong><span data-lang="en">Build quote and promo logic</span><span data-lang="vi">Xây logic báo giá và khuyến mãi</span></strong></div>
-                                <div class="resume-flow-node"><span>04</span><strong><span data-lang="en">Export clean customer documents</span><span data-lang="vi">Xuất tài liệu sạch gửi khách</span></strong></div>
+                            <div class="resume-value-grid">
+                                <div class="resume-value-item"><strong><span data-lang="en">Quote faster</span><span data-lang="vi">Báo giá nhanh hơn</span></strong><p><span data-lang="en">Turn product and price data into a cleaner customer response.</span><span data-lang="vi">Biến dữ liệu sản phẩm và giá thành phản hồi gọn, dễ gửi khách.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Control discounts</span><span data-lang="vi">Kiểm soát chiết khấu</span></strong><p><span data-lang="en">Keep discount logic visible so margin decisions are clearer.</span><span data-lang="vi">Giữ logic chiết khấu rõ để quyết định giá ít rủi ro hơn.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Use technology well</span><span data-lang="vi">Dùng công nghệ đúng việc</span></strong><p><span data-lang="en">Apply POS, web, Excel, and AI where they reduce manual work.</span><span data-lang="vi">Dùng POS, web, Excel và AI ở nơi giúp giảm thao tác lặp lại.</span></p></div>
                             </div>
                         </section>
 
                         <section class="grid gap-5 lg:grid-cols-3">
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Tech Company Signal</span><span data-lang="vi">Tín hiệu cho công ty công nghệ</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Understands messy real-world workflows.</span><span data-lang="vi">Hiểu quy trình thực tế nhiều biến số.</span></h3>
-                                <p><span data-lang="en">Dealer follow-up, distributor coordination, price exceptions, promotion execution, and customer documents are treated as operating problems, not random manual tasks.</span><span data-lang="vi">Chăm đại lý, phối hợp NPP, ngoại lệ giá, khuyến mãi và tài liệu gửi khách được nhìn như bài toán vận hành, không phải thao tác thủ công rời rạc.</span></p>
-                                <div class="resume-mini-bars">
-                                    <div class="resume-mini-bar"><i style="--level:92%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:86%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:78%"></i></div>
-                                </div>
+                                <p class="resume-eyebrow"><span data-lang="en">Sales</span><span data-lang="vi">Bán hàng</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Understands real channels.</span><span data-lang="vi">Hiểu kênh bán hàng thật.</span></h3>
+                                <p><span data-lang="en">Dealer work, distributor coordination, price exceptions, and sales programs are handled with one goal: easier selling.</span><span data-lang="vi">Đại lý, NPP, ngoại lệ giá và chương trình bán hàng đều được xử lý theo một mục tiêu: bán dễ hơn.</span></p>
                             </article>
                             <article class="resume-card resume-operator-card">
                                 <p class="resume-eyebrow"><span data-lang="en">Retail Tech</span><span data-lang="vi">Công nghệ bán lẻ</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Bridges stores, sales teams, and software.</span><span data-lang="vi">Kết nối cửa hàng, đội bán hàng và phần mềm.</span></h3>
-                                <p><span data-lang="en">Sapo experience created practical exposure to POS software, store management, websites, SEO, digital ads, customer onboarding, and requirements discovery.</span><span data-lang="vi">Kinh nghiệm Sapo tạo nền tảng thực tế về POS, quản lý cửa hàng, website, SEO, quảng cáo số, onboarding khách hàng và khai thác yêu cầu.</span></p>
-                                <div class="resume-mini-bars">
-                                    <div class="resume-mini-bar"><i style="--level:82%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:78%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:74%"></i></div>
-                                </div>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Knows how stores use software.</span><span data-lang="vi">Hiểu cửa hàng dùng phần mềm thế nào.</span></h3>
+                                <p><span data-lang="en">POS, websites, SEO, ads, and onboarding are viewed through practical store operations, not theory.</span><span data-lang="vi">POS, website, SEO, quảng cáo và onboarding được nhìn từ vận hành cửa hàng thực tế, không phải lý thuyết.</span></p>
                             </article>
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">AI + Product Thinking</span><span data-lang="vi">AI + tư duy sản phẩm</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Uses tools to remove repetitive work.</span><span data-lang="vi">Dùng công cụ để giảm việc lặp lại.</span></h3>
-                                <p><span data-lang="en">Applies AI and structured thinking to translation, product naming, data cleanup, sales documentation, bilingual content, and workflow drafting.</span><span data-lang="vi">Ứng dụng AI và tư duy cấu trúc vào dịch thuật, đặt tên sản phẩm, làm sạch dữ liệu, tài liệu bán hàng, nội dung song ngữ và phác thảo workflow.</span></p>
-                                <div class="resume-mini-bars">
-                                    <div class="resume-mini-bar"><i style="--level:84%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:80%"></i></div>
-                                    <div class="resume-mini-bar"><i style="--level:76%"></i></div>
-                                </div>
+                                <p class="resume-eyebrow"><span data-lang="en">AI</span><span data-lang="vi">AI</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">Uses AI to save time.</span><span data-lang="vi">Dùng AI để tiết kiệm thời gian.</span></h3>
+                                <p><span data-lang="en">AI supports product naming, translation, data cleanup, and sales documents where speed and consistency matter.</span><span data-lang="vi">AI hỗ trợ đặt tên sản phẩm, dịch thuật, chuẩn hóa dữ liệu và tài liệu bán hàng khi cần nhanh và nhất quán.</span></p>
                             </article>
                         </section>
 
                         <section class="resume-card resume-proof-card">
                             <div>
-                                <p class="resume-eyebrow"><span data-lang="en">Proof of Work</span><span data-lang="vi">Bằng chứng năng lực</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Thuận Store Quote Builder is the portfolio, not decoration.</span><span data-lang="vi">Thuận Store Quote Builder là portfolio thật, không phải trang trí.</span></h3>
+                                <p class="resume-eyebrow"><span data-lang="en">Proof</span><span data-lang="vi">Minh chứng</span></p>
+                                <h3 class="resume-section-title mt-2"><span data-lang="en">A real tool built from real sales work.</span><span data-lang="vi">Một công cụ thật, xuất phát từ công việc bán hàng thật.</span></h3>
                                 <ul class="resume-case-list">
-                                    <li><span data-lang="en">Transforms product lists, discounts, promotions, notes, and exports into a structured quote workflow.</span><span data-lang="vi">Chuyển danh sách sản phẩm, chiết khấu, khuyến mãi, ghi chú và xuất file thành một quy trình báo giá có cấu trúc.</span></li>
-                                    <li><span data-lang="en">Supports bilingual UI, English product naming, USD display, Excel/PDF/image output, and practical mobile input handling.</span><span data-lang="vi">Hỗ trợ giao diện song ngữ, tên sản phẩm tiếng Anh, hiển thị USD, xuất Excel/PDF/hình ảnh và nhập liệu mobile thực tế.</span></li>
-                                    <li><span data-lang="en">Shows product sense: search, pricing controls, quote preview, customer-ready output, and field-first UX.</span><span data-lang="vi">Thể hiện tư duy sản phẩm: tìm kiếm, kiểm soát giá, preview báo giá, tài liệu gửi khách và UX xuất phát từ người đi thị trường.</span></li>
+                                    <li><span data-lang="en">Faster quoting with clearer discount control.</span><span data-lang="vi">Báo giá nhanh hơn, chiết khấu rõ hơn.</span></li>
+                                    <li><span data-lang="en">Cleaner Excel, PDF, and image outputs for customers.</span><span data-lang="vi">Xuất Excel, PDF và hình ảnh gọn hơn để gửi khách.</span></li>
+                                    <li><span data-lang="en">Bilingual UI and USD display for broader customer use.</span><span data-lang="vi">Song ngữ và USD để dễ phục vụ khách rộng hơn.</span></li>
                                 </ul>
                             </div>
                             <div class="resume-product-screen" aria-hidden="true">
@@ -1487,13 +2868,12 @@
                         <section class="grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
                             <aside class="space-y-5">
                                 <section class="resume-card resume-operator-card">
-                                    <p class="resume-eyebrow"><span data-lang="en">Capability Stack</span><span data-lang="vi">Ngăn xếp năng lực</span></p>
-                                    <div class="resume-stack-grid">
-                                        <div class="resume-stack-row"><span>Operations</span><strong><span data-lang="en">Territory execution, channel rhythm, distributor coordination</span><span data-lang="vi">Triển khai tuyến, nhịp kênh, phối hợp NPP</span></strong></div>
-                                        <div class="resume-stack-row"><span>Retail Tech</span><strong><span data-lang="en">POS, retail SaaS, web, SEO, ads, customer onboarding</span><span data-lang="vi">POS, retail SaaS, web, SEO, ads, onboarding khách hàng</span></strong></div>
-                                        <div class="resume-stack-row"><span>Data</span><strong><span data-lang="en">Product data hygiene, Excel workflow, price structure</span><span data-lang="vi">Chuẩn hóa dữ liệu sản phẩm, quy trình Excel, cấu trúc giá</span></strong></div>
-                                        <div class="resume-stack-row"><span>AI</span><strong><span data-lang="en">Documentation, translation, naming, workflow drafting</span><span data-lang="vi">Tài liệu, dịch thuật, đặt tên, phác thảo workflow</span></strong></div>
-                                    </div>
+                                    <p class="resume-eyebrow"><span data-lang="en">Strengths</span><span data-lang="vi">Điểm mạnh</span></p>
+                                    <ul class="resume-simple-list">
+                                        <li><span data-lang="en">Channel sales and dealer/distributor work</span><span data-lang="vi">Bán hàng kênh đại lý và nhà phân phối</span></li>
+                                        <li><span data-lang="en">Quote, discount, and product-data control</span><span data-lang="vi">Báo giá, chiết khấu và dữ liệu sản phẩm</span></li>
+                                        <li><span data-lang="en">Retail technology, POS, web, and AI-assisted work</span><span data-lang="vi">Công nghệ bán lẻ, POS, web và AI hỗ trợ công việc</span></li>
+                                    </ul>
                                 </section>
                                 <section class="resume-card resume-operator-card">
                                     <p class="resume-eyebrow"><span data-lang="en">Contact</span><span data-lang="vi">Liên hệ</span></p>
@@ -1508,8 +2888,8 @@
                                 <section class="resume-card resume-career-card">
                                     <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                                         <div>
-                                            <p class="resume-eyebrow"><span data-lang="en">Execution History</span><span data-lang="vi">Lịch sử triển khai</span></p>
-                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Experience written for scanning, not storytelling.</span><span data-lang="vi">Kinh nghiệm viết để đọc nhanh, không kể lể.</span></h3>
+                                            <p class="resume-eyebrow"><span data-lang="en">Experience</span><span data-lang="vi">Kinh nghiệm</span></p>
+                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Sales, retail operations, and practical technology.</span><span data-lang="vi">Bán hàng, vận hành bán lẻ và công nghệ thực tế.</span></h3>
                                         </div>
                                         <span class="resume-command-chip">2014 - 2026</span>
                                     </div>
@@ -1517,58 +2897,45 @@
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4><span class="resume-timeline-date">06/2024 - Present</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Electrical products</span><span data-lang="vi">Giám sát bán hàng | Thiết bị điện</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Manage Tien Giang territory execution, dealer follow-up, distributor sell-out coordination, and monthly target rhythm.</span><span data-lang="vi">Quản lý triển khai khu vực Tiền Giang, chăm sóc đại lý, phối hợp sell-out với NPP và nhịp mục tiêu tháng.</span></li><li><span data-lang="en">Standardize quote response with pricing, discount, and product feedback loops.</span><span data-lang="vi">Chuẩn hóa phản hồi báo giá bằng vòng lặp giá, chiết khấu và phản hồi sản phẩm.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop electrical-product channels, coordinate distributors/dealers, and improve quote response.</span><span data-lang="vi">Phát triển kênh thiết bị điện, phối hợp NPP/đại lý và cải thiện tốc độ phản hồi báo giá.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Thành Hoàng Long</h4><span class="resume-timeline-date">02/2023 - 05/2024</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | FMCG, mother-baby channel</span><span data-lang="vi">Giám sát bán hàng | FMCG, hàng mẹ và bé</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Executed customer development, store visit rhythm, promotion rollout, POS visibility, and market feedback.</span><span data-lang="vi">Triển khai phát triển khách hàng, lịch ghé điểm bán, khuyến mãi, hình ảnh điểm bán và phản hồi thị trường.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop customers, roll out sales programs, and track market feedback.</span><span data-lang="vi">Mở rộng khách hàng, triển khai chương trình bán hàng và theo dõi phản hồi thị trường.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Điện máy Long Hải</h4><span class="resume-timeline-date">11/2021 - 01/2023</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Store Manager | Retail operations</span><span data-lang="vi">Quản lý cửa hàng | Vận hành bán lẻ</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Managed daily store operations, sales growth, customer service, after-sales flow, and dealer relationships.</span><span data-lang="vi">Quản lý vận hành cửa hàng, tăng trưởng doanh số, chăm sóc khách hàng, sau bán và quan hệ đại lý.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Manage store operations, sales, customer service, and after-sales work.</span><span data-lang="vi">Quản lý vận hành cửa hàng, doanh số, chăm sóc khách hàng và sau bán.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>AVG - Công ty CP Nghe Nhìn Toàn Cầu</h4><span class="resume-timeline-date">09/2019 - 10/2021</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Digital TV</span><span data-lang="vi">Giám sát bán hàng | Truyền hình kỹ thuật số</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Expanded Mekong Delta coverage, supported dealer channels, tracked targets, and maintained field reporting.</span><span data-lang="vi">Mở rộng bao phủ Miền Tây, hỗ trợ kênh đại lý, theo dõi mục tiêu và duy trì báo cáo thị trường.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Expand dealer channels, track targets, and maintain market reporting.</span><span data-lang="vi">Mở rộng kênh đại lý, theo dõi mục tiêu và duy trì báo cáo thị trường.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Vũ Hồng Minh</h4><span class="resume-timeline-date">03/2017 - 08/2019</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Market Development Representative | Electronics</span><span data-lang="vi">Phát triển thị trường | Điện tử, điện máy</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Owned Tien Giang and Ben Tre territory; maintained dealer relationships; received Outstanding Employee recognition in 2018.</span><span data-lang="vi">Phụ trách Tiền Giang và Bến Tre; duy trì quan hệ đại lý; nhận ghi nhận Nhân viên xuất sắc năm 2018.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Develop dealer revenue in Tien Giang and Ben Tre; Outstanding Employee 2018.</span><span data-lang="vi">Phát triển doanh số đại lý tại Tiền Giang/Bến Tre; Nhân viên xuất sắc 2018.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Sapo</h4><span class="resume-timeline-date">03/2014 - 01/2016</span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Business Development Representative | Retail SaaS</span><span data-lang="vi">Nhân viên kinh doanh | Retail SaaS</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Consulted retailers on POS software, websites, SEO, digital ads, POS devices, and store-management workflows.</span><span data-lang="vi">Tư vấn nhà bán lẻ về POS, website, SEO, quảng cáo số, thiết bị bán hàng và quy trình quản lý cửa hàng.</span></li></ul>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Consult retailers on POS, websites, SEO, ads, and store-management workflows.</span><span data-lang="vi">Tư vấn POS, website, SEO, quảng cáo số và quy trình quản lý cửa hàng.</span></li></ul>
                                         </article>
                                     </div>
                                 </section>
                             </main>
                         </section>
 
-                        <section class="grid gap-5 md:grid-cols-2">
-                            <section class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Positioning</span><span data-lang="vi">Định vị ứng tuyển</span></p>
-                                <h3 class="resume-section-title mt-2"><span data-lang="en">Best-fit roles</span><span data-lang="vi">Nhóm vị trí phù hợp</span></h3>
-                                <div class="resume-command-strip">
-                                    <span class="resume-command-chip">Sales Operations</span>
-                                    <span class="resume-command-chip">Channel Operations</span>
-                                    <span class="resume-command-chip">Retail Tech Consultant</span>
-                                    <span class="resume-command-chip">Implementation Specialist</span>
-                                    <span class="resume-command-chip">Product Operations</span>
-                                </div>
-                            </section>
-                            <section class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Education & Recognition</span><span data-lang="vi">Học vấn & ghi nhận</span></p>
-                                <div class="resume-stack-grid">
-                                    <div class="resume-stack-row"><span><span data-lang="en">Education</span><span data-lang="vi">Học vấn</span></span><strong><span data-lang="en">HCMC College of Industry and Trade - Accounting and auditing, 10/2010 - 05/2013</span><span data-lang="vi">Cao đẳng Công Thương TP.HCM - Kế toán kiểm toán, 10/2010 - 05/2013</span></strong></div>
-                                    <div class="resume-stack-row"><span><span data-lang="en">Recognition</span><span data-lang="vi">Ghi nhận</span></span><strong><span data-lang="en">Outstanding Employee, Vũ Hồng Minh, 2018</span><span data-lang="vi">Nhân viên xuất sắc, Vũ Hồng Minh, 2018</span></strong></div>
-                                    <div class="resume-stack-row"><span><span data-lang="en">English</span><span data-lang="vi">Tiếng Anh</span></span><strong><span data-lang="en">Basic workplace communication; improving for customer-facing and technical contexts</span><span data-lang="vi">Giao tiếp công việc cơ bản; đang cải thiện cho bối cảnh khách hàng và kỹ thuật</span></strong></div>
-                                </div>
-                            </section>
+                        <section class="resume-card resume-operator-card">
+                            <p class="resume-eyebrow"><span data-lang="en">Education & Recognition</span><span data-lang="vi">Học vấn & ghi nhận</span></p>
+                            <div class="resume-stack-grid">
+                                <div class="resume-stack-row"><span><span data-lang="en">Education</span><span data-lang="vi">Học vấn</span></span><strong><span data-lang="en">HCMC College of Industry and Trade - Accounting and auditing, 10/2010 - 05/2013</span><span data-lang="vi">Cao đẳng Công Thương TP.HCM - Kế toán kiểm toán, 10/2010 - 05/2013</span></strong></div>
+                                <div class="resume-stack-row"><span><span data-lang="en">Recognition</span><span data-lang="vi">Ghi nhận</span></span><strong><span data-lang="en">Outstanding Employee, Vũ Hồng Minh, 2018</span><span data-lang="vi">Nhân viên xuất sắc, Vũ Hồng Minh, 2018</span></strong></div>
+                                <div class="resume-stack-row"><span><span data-lang="en">English</span><span data-lang="vi">Tiếng Anh</span></span><strong><span data-lang="en">Basic workplace communication; improving for customer and technical contexts</span><span data-lang="vi">Giao tiếp công việc cơ bản; đang cải thiện cho bối cảnh khách hàng và kỹ thuật</span></strong></div>
+                            </div>
                         </section>
                     </div>
 
@@ -1592,7 +2959,7 @@
                                 </div>
                                 <div class="resume-metric-card" style="--i:1">
                                     <span class="resume-kpi-number">5</span>
-                                    <p class="resume-kpi-label"><span data-lang="en">Mekong Delta provinces covered</span><span data-lang="vi">Tỉnh từng phụ trách tuyến bán hàng</span></p>
+                                    <p class="resume-kpi-label"><span data-lang="en">Mekong Delta channel-growth coverage</span><span data-lang="vi">Tỉnh/khu vực từng phát triển kênh bán hàng</span></p>
                                 </div>
                                 <div class="resume-metric-card" style="--i:2">
                                     <span class="resume-kpi-number">AI</span>
@@ -1607,7 +2974,7 @@
                             <div class="resume-evidence-grid mt-5">
                                 <div class="resume-evidence-card">
                                     <strong><span data-lang="en">AI-enabled Operations</span><span data-lang="vi">Vận hành có AI hỗ trợ</span></strong>
-                                    <p><span data-lang="en">Uses AI to speed up translation, product data cleanup, sales documentation, and workflow drafting.</span><span data-lang="vi">Dùng AI để tăng tốc dịch thuật, làm sạch dữ liệu sản phẩm, tài liệu bán hàng và phác thảo quy trình.</span></p>
+                                    <p><span data-lang="en">Uses AI to speed up translation, product data cleanup, sales documentation, and revenue workflow design.</span><span data-lang="vi">Dùng AI để tăng tốc dịch thuật, chuẩn hóa dữ liệu sản phẩm, tài liệu bán hàng và thiết kế workflow phục vụ doanh số.</span></p>
                                 </div>
                                 <div class="resume-evidence-card">
                                     <strong><span data-lang="en">Retail Technology</span><span data-lang="vi">Công nghệ bán lẻ</span></strong>
@@ -1619,7 +2986,7 @@
                                 </div>
                                 <div class="resume-evidence-card">
                                     <strong><span data-lang="en">Field Execution</span><span data-lang="vi">Triển khai thị trường</span></strong>
-                                    <p><span data-lang="en">Dealer follow-up, distributor coordination, POS visibility, route discipline, and target tracking.</span><span data-lang="vi">Chăm sóc đại lý, phối hợp NPP, hình ảnh điểm bán, kỷ luật tuyến và theo dõi mục tiêu.</span></p>
+                                    <p><span data-lang="en">Dealer follow-up, distributor coordination, sales visibility, target tracking, and revenue execution.</span><span data-lang="vi">Chăm sóc đại lý, phối hợp NPP, theo dõi mục tiêu và thúc đẩy doanh số.</span></p>
                                 </div>
                             </div>
                         </section>
@@ -1706,7 +3073,7 @@
                                             </div>
                                             <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor - FMCG and mother-baby products</span><span data-lang="vi">Giám sát bán hàng - FMCG, hàng mẹ và bé</span></p>
                                             <ul class="resume-impact-list">
-                                                <li><span data-lang="en">Managed customer development, scheduled store visits, promotion rollout, and POS visibility for FMCG and mother-baby channels.</span><span data-lang="vi">Phát triển khách hàng, ghé thăm điểm bán định kỳ, triển khai khuyến mãi và cải thiện hình ảnh sản phẩm cho kênh FMCG, mẹ và bé.</span></li>
+                                                <li><span data-lang="en">Developed customers, rolled out sales programs, improved retail visibility, and supported revenue momentum for FMCG and mother-baby channels.</span><span data-lang="vi">Mở rộng khách hàng, triển khai chương trình bán hàng và cải thiện hiện diện sản phẩm để giữ nhịp doanh số kênh FMCG, mẹ và bé.</span></li>
                                                 <li><span data-lang="en">Captured market feedback and supported channel actions by area to protect sales rhythm and store-level execution.</span><span data-lang="vi">Ghi nhận phản hồi thị trường và đề xuất hành động theo khu vực để giữ nhịp bán hàng và chất lượng triển khai điểm bán.</span></li>
                                             </ul>
                                         </article>
@@ -1731,7 +3098,7 @@
                                             <p class="mt-1 text-[13px] font-semibold text-slate-500"><span data-lang="en">Sales Supervisor</span><span data-lang="vi">Giám sát bán hàng</span></p>
                                             <ul class="resume-impact-list">
                                                 <li><span data-lang="en">Built Mekong Delta market coverage, supported dealer channels, tracked targets, and maintained regular field reporting.</span><span data-lang="vi">Mở rộng bao phủ thị trường Miền Tây, chăm sóc kênh đại lý, theo dõi mục tiêu và duy trì báo cáo thị trường định kỳ.</span></li>
-                                                <li><span data-lang="en">Assisted recruitment and field training so salespeople could understand products, routes, and dealer follow-up standards.</span><span data-lang="vi">Hỗ trợ tuyển dụng và đào tạo đội bán hàng thị trường về sản phẩm, tuyến bán hàng và tiêu chuẩn chăm sóc đại lý.</span></li>
+                                                <li><span data-lang="en">Assisted recruitment and field training so salespeople could understand products, revenue targets, and dealer follow-up standards.</span><span data-lang="vi">Hỗ trợ tuyển dụng và đào tạo đội bán hàng về sản phẩm, mục tiêu doanh số và tiêu chuẩn chăm sóc đại lý.</span></li>
                                             </ul>
                                         </article>
 
@@ -1787,7 +3154,7 @@
                     <article class="career-premium-card rounded-[28px] p-5">
                         <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">Tóm tắt hồ sơ</p>
                         <h3 class="mt-2 text-2xl font-black tracking-tight text-slate-950 leading-tight">Giám sát bán hàng có kinh nghiệm triển khai thị trường và hỗ trợ kênh đại lý.</h3>
-                        <p class="mt-3 text-[14px] leading-relaxed text-slate-600 font-medium">Kinh nghiệm tập trung vào đi tuyến, chăm sóc đại lý, phối hợp nhà phân phối, triển khai khuyến mãi, trưng bày điểm bán và tối ưu quy trình báo giá.</p>
+                        <p class="mt-3 text-[14px] leading-relaxed text-slate-600 font-medium">Kinh nghiệm tập trung vào phát triển kênh, chăm sóc đại lý, phối hợp nhà phân phối, triển khai chương trình bán hàng và tối ưu quy trình báo giá để tăng cơ hội chốt đơn.</p>
                     </article>
 
                     <section class="grid grid-cols-3 gap-2">
@@ -1801,7 +3168,7 @@
                         </div>
                         <div class="career-premium-card rounded-3xl px-3 py-4 text-center">
                             <p class="text-2xl font-black text-slate-950">5</p>
-                            <p class="mt-1 text-[9px] font-black uppercase tracking-wider text-slate-400">Tỉnh tuyến</p>
+                            <p class="mt-1 text-[9px] font-black uppercase tracking-wider text-slate-400">Khu vực</p>
                         </div>
                     </section>
 
@@ -1810,7 +3177,7 @@
                         <div class="mt-4 space-y-3">
                             <div class="flex gap-3">
                                 <div class="mt-1 h-2 w-2 rounded-full bg-slate-950 shrink-0"></div>
-                                <p class="text-[13px] leading-relaxed text-slate-600 font-medium"><strong class="text-slate-950">Bám thị trường thật:</strong> quen làm tuyến, ghé điểm bán, xử lý phản hồi và giữ quan hệ đại lý.</p>
+                                <p class="text-[13px] leading-relaxed text-slate-600 font-medium"><strong class="text-slate-950">Bám thị trường thật:</strong> hiểu khách hàng, xử lý phản hồi và giữ quan hệ đại lý bằng mục tiêu doanh số rõ ràng.</p>
                             </div>
                             <div class="flex gap-3">
                                 <div class="mt-1 h-2 w-2 rounded-full bg-slate-950 shrink-0"></div>
@@ -1862,7 +3229,7 @@
 
                     <article class="rounded-[28px] bg-slate-950 p-5 text-white shadow-[0_20px_60px_rgba(15,23,42,0.28)]">
                         <p class="text-[11px] font-black uppercase tracking-[0.2em] text-cyan-300">Interview Focus</p>
-                        <h3 class="mt-2 text-xl font-black leading-tight">Kinh nghiệm nổi bật ở triển khai tuyến, dữ liệu bán hàng, quan hệ đại lý và tốc độ xử lý công việc.</h3>
+                        <h3 class="mt-2 text-xl font-black leading-tight">Kinh nghiệm nổi bật ở phát triển kênh, dữ liệu bán hàng, quan hệ đại lý và tốc độ phản hồi báo giá.</h3>
                         <div class="mt-4 grid grid-cols-2 gap-2 text-[12px] font-bold text-slate-200">
                             <span class="rounded-2xl bg-white/10 px-3 py-2">Đàm phán đại lý</span>
                             <span class="rounded-2xl bg-white/10 px-3 py-2">Chăm NPP</span>
@@ -1882,7 +3249,7 @@
                         <section>
                             <h3 class="text-[11px] font-black uppercase tracking-[0.22em] text-slate-400 mb-3">Giới thiệu nhanh</h3>
                             <p class="text-[14px] leading-relaxed text-slate-700 font-medium">
-                                Tôi là người làm thị trường thực chiến, có kinh nghiệm xây dựng tuyến bán hàng, chăm sóc đại lý, làm việc với nhà phân phối và triển khai sản phẩm đến điểm bán. Thuận Store được tạo ra từ chính những thao tác tôi cần mỗi ngày: báo giá nhanh, chính xác và đủ chuyên nghiệp để gửi khách ngay.
+                                Tôi có kinh nghiệm phát triển kênh bán hàng, chăm sóc đại lý, làm việc với nhà phân phối và triển khai sản phẩm đến điểm bán. Thuận Store được tạo ra từ nhu cầu rất thực tế: báo giá nhanh, kiểm soát chiết khấu tốt hơn và gửi khách tài liệu đủ chuyên nghiệp để tăng cơ hội chốt đơn.
                             </p>
                         </section>
 
@@ -1893,7 +3260,7 @@
                             </div>
                             <div class="rounded-2xl bg-blue-50 text-blue-900 p-3 text-center border border-blue-100">
                                 <div class="text-xl font-black">5</div>
-                                <div class="mt-1 text-[9px] font-bold uppercase tracking-wider text-blue-500">Tỉnh tuyến</div>
+                                <div class="mt-1 text-[9px] font-bold uppercase tracking-wider text-blue-500">Khu vực</div>
                             </div>
                             <div class="rounded-2xl bg-cyan-50 text-cyan-900 p-3 text-center border border-cyan-100">
                                 <div class="text-xl font-black">B2B</div>
@@ -1906,7 +3273,7 @@
                             <div class="space-y-2">
                                 <div class="rounded-2xl border border-slate-200 p-3">
                                     <div class="text-[13px] font-black text-slate-900">Phát triển thị trường</div>
-                                    <p class="mt-1 text-[12px] leading-relaxed text-slate-500 font-medium">Thông thạo tuyến Tiền Giang, Bến Tre, Trà Vinh, Vĩnh Long, Cần Thơ; có kinh nghiệm ghé thăm định kỳ và mở rộng tệp khách hàng.</p>
+                                    <p class="mt-1 text-[12px] leading-relaxed text-slate-500 font-medium">Có kinh nghiệm phát triển kênh tại Tiền Giang, Bến Tre, Trà Vinh, Vĩnh Long, Cần Thơ; hiểu cách mở rộng tệp khách hàng và duy trì quan hệ đại lý.</p>
                                 </div>
                                 <div class="rounded-2xl border border-slate-200 p-3">
                                     <div class="text-[13px] font-black text-slate-900">Kênh đại lý & nhà phân phối</div>
@@ -1955,7 +3322,7 @@
                                         <span class="text-[11px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">02/2023 - 05/2024</span>
                                     </div>
                                     <p class="text-[12px] font-bold text-slate-500 mt-1">Giám sát bán hàng - Hàng mẹ và bé, FMCG</p>
-                                    <p class="text-[13px] leading-relaxed text-slate-600 mt-2">Tìm kiếm khách hàng, ghé thăm định kỳ, triển khai chương trình khuyến mãi, ghi nhận phản hồi, xây dựng hình ảnh sản phẩm tại điểm bán và chịu trách nhiệm doanh số khu vực.</p>
+                                    <p class="text-[13px] leading-relaxed text-slate-600 mt-2">Mở rộng khách hàng, triển khai chương trình bán hàng, ghi nhận phản hồi thị trường, xây dựng hiện diện sản phẩm và chịu trách nhiệm doanh số khu vực.</p>
                                 </article>
 
                                 <article class="border-l-4 border-cyan-500 pl-4">
@@ -2021,7 +3388,7 @@
 
             <footer class="bg-white border-t border-slate-200 p-3 md:p-4 shrink-0">
                 <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-center md:justify-between">
-                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Executive profile for Sales Operations, Channel Operations, Retail Tech, and implementation-facing roles.</span><span data-lang="vi">Hồ sơ executive cho Sales Operations, Channel Operations, Retail Tech và các vị trí triển khai giải pháp.</span></p>
+                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Revenue-focused profile for Sales Operations, Channel Growth, Retail Tech, and product implementation roles.</span><span data-lang="vi">Hồ sơ định vị theo Sales Operations, Channel Growth, Retail Tech và các vị trí triển khai giúp tăng doanh số.</span></p>
                     <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-sm active:scale-95 transition-transform"><span data-lang="en">Close profile</span><span data-lang="vi">Đóng hồ sơ</span></button>
                 </div>
             </footer>
@@ -2109,96 +3476,208 @@
     </div>
 
     <!-- SCREEN 0: LANDING PAGE -->
-    <main id="screenLanding" class="app-screen active bg-slate-950 overflow-hidden" style="background-color: #020617;">
-        <h1 class="sr-only">Thuận Store - Công Cụ Tạo Bảng Báo Giá</h1>
+    <main id="screenLanding" class="app-screen active landing-os">
+        <h1 class="sr-only">Thuận Store - Operating System dành cho cửa hàng hiện đại</h1>
 
-        <!-- BACKGROUNDS -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <div class="cyber-grid"></div>
-            <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.08)_0%,transparent_60%)] animate-blob"></div>
-            <div class="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] min-w-[600px] min-h-[600px] bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.08)_0%,transparent_60%)] animate-blob" style="animation-delay: 2s;"></div>
-        </div>
-
-        <!-- HEADER CỐ ĐỊNH PHÍA TRÊN -->
-        <header class="w-full flex flex-col items-center justify-center pt-8 md:pt-12 pb-4 z-50 shrink-0 pointer-events-none">
-            <div id="brandLogoTrigger" class="flex flex-col items-center cursor-pointer pointer-events-auto group select-none px-4 py-2" title="Khám phá công cụ">
-                <div class="flex items-center justify-center gap-2">
-                    <svg class="w-6 h-6 md:w-7 md:h-7 text-cyan-400 logo-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-300 tracking-wider uppercase drop-shadow-md">Thuận Store</span>
-                </div>
-                <div class="flex items-center gap-2 mt-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
-                    <div class="h-[1px] w-5 bg-gradient-to-r from-transparent to-cyan-500"></div>
-                    <span class="text-[9px] md:text-[10px] text-cyan-400 font-bold tracking-[0.18em] uppercase" data-i18n="landing.slogan">CHẠM ĐẾN TƯƠNG LAI</span>
-                    <div class="h-[1px] w-5 bg-gradient-to-l from-transparent to-cyan-500"></div>
-                </div>
+        <div class="store-os-shell">
+            <div class="store-os-bg" aria-hidden="true">
+                <div class="store-os-grid"></div>
+                <div class="store-os-vignette"></div>
             </div>
-        </header>
 
-        <!-- CENTER: VÒNG QUỸ ĐẠO (TỰ ĐỘNG CHIA KHÔNG GIAN) -->
-        <div class="flex-1 flex flex-col items-center justify-center w-full px-6 min-h-0 z-10 relative">
-            <div class="relative w-[240px] h-[240px] md:w-[320px] md:h-[320px] shrink-0 rounded-full flex items-center justify-center">
-                <!-- QUỸ ĐẠO LỚN -->
-                <div class="orbit-track cursor-pointer" title="Chạm để tương tác">
-                    <div class="sat-wrapper sat-1-pos group"><div id="satSetup" class="orbit-node text-blue-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg></div><span class="sat-tooltip tooltip-top">Quản lý kho</span></div>
-                    <div class="sat-wrapper sat-2-pos group"><div id="satPromo" class="orbit-node text-indigo-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path></svg></div><span class="sat-tooltip tooltip-right">Khuyến mãi</span></div>
-                    <div class="sat-wrapper sat-3-pos group"><div id="satDiscount" class="orbit-node text-teal-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 14l6-6m-4 8h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><span class="sat-tooltip tooltip-bottom">Chiết khấu</span></div>
-                    <div class="sat-wrapper sat-4-pos group"><div id="satBrand" class="orbit-node text-slate-400"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg></div><span class="sat-tooltip tooltip-left">Cấu hình</span></div>
-                </div>
+            <header class="store-os-nav">
+                <button id="brandLogoTrigger" type="button" class="store-os-brand" title="Khám phá Thuận Store">
+                    <svg class="logo-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="store-os-brand-lockup">
+                        <span>THUẬN STORE</span>
+                        <small data-i18n="landing.slogan">CHẠM ĐẾN TƯƠNG LAI</small>
+                    </span>
+                </button>
 
-              <!-- QUỸ ĐẠO NHỎ BÊN TRONG -->
-                <div class="inner-orbit-track cursor-pointer">
-                    <!-- Vệ tinh 1: Liên hệ cũ -->
-                    <div class="inner-sat-wrapper group">
-                        <div id="demoHotlineTrigger" class="orbit-node sat-hotline text-emerald-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                        </div>
-                        <span class="sat-tooltip tooltip-bottom">Liên hệ & Góp ý</span>
-                    </div>
-                    
-                    <!-- Vệ tinh 2: Lịch CSKH mới -->
-                    <div class="inner-sat-wrapper-2 group">
-                        <div id="calendarTrigger" class="orbit-node sat-calendar text-amber-400">
-                            <!-- Icon quyển lịch -->
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        </div>
-                        <span class="sat-tooltip tooltip-top">Lịch chăm sóc khách hàng</span>
-                    </div>
-                </div>
+                <nav class="store-os-navlinks" aria-label="Điều hướng chính">
+                    <a href="#store-os-orbit">Tính năng</a>
+                    <a href="#store-os-trust">Bảng giá</a>
+                    <a href="#store-os-start">Demo</a>
+                    <a href="#store-os-trust">Khách hàng</a>
+                    <button id="demoHotlineTrigger" type="button">Liên hệ</button>
+                </nav>
 
-                <div id="btnStartApp" class="group absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center cursor-pointer transition-transform duration-500 hover:scale-105 active:scale-95 z-[60] pointer-events-auto">
-                    <div class="absolute top-0 left-0 right-0 bottom-0 rounded-full bg-[conic-gradient(from_0deg,transparent_0_300deg,#06b6d4_360deg)] animate-spin opacity-80" style="animation-duration: 2.5s;"></div>
-                    <div class="absolute top-2 left-2 right-2 bottom-2 rounded-full bg-[conic-gradient(from_180deg,transparent_0_300deg,#3b82f6_360deg)] animate-spin opacity-80" style="animation-duration: 3s; animation-direction: reverse;"></div>
-                    <div class="absolute top-[16px] left-[16px] right-[16px] bottom-[16px] bg-slate-950/98 -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); rounded-full border border-cyan-500/40 flex items-center justify-center overflow-hidden shadow-[inset_0_0_50px_rgba(6,182,212,0.2)] group-hover:border-cyan-400/60 transition-colors duration-300">
-                         <div class="relative z-10 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
-                             <span class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-cyan-300 tracking-wider mb-3" style="line-height: 1.2; text-shadow: 0 0 30px rgba(6, 182, 212, 0.6);" data-i18n-html="landing.mainTitle">BẢNG<br>BÁO GIÁ</span>
-                             <div class="h-[2px] w-12 bg-gradient-to-r from-transparent via-cyan-500 to-transparent mb-3 opacity-70"></div>
-                             <span id="btnStartText" class="text-[9px] md:text-[10px] font-bold text-cyan-400 uppercase tracking-[0.25em] animate-pulse">Tạo báo giá ngay</span>
-	                         </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-
-        <!-- FOOTER CỐ ĐỊNH PHÍA DƯỚI -->
-        <footer class="w-full text-center z-50 pb-4 md:pb-8 pt-2 shrink-0 pointer-events-none">
-            <div class="landing-footer-stack pointer-events-auto">
-                <div class="landing-footer-shell">
-                    <button id="btnOpenGuideLanding" class="landing-tool-button active:scale-95" title="Hướng dẫn" aria-label="Hướng dẫn">
-                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M8.228 9c.549-1.165 1.979-2 3.772-2 2.21 0 4 1.343 4 3 0 1.305-1.112 2.416-2.666 2.83-.798.213-1.334.922-1.334 1.748V15m0 3h.01"></path></svg>
+                <div class="store-os-actions">
+                    <button type="button" class="store-os-icon-btn" title="Giao diện tối" aria-label="Giao diện tối">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A8.5 8.5 0 1111.21 3 6.7 6.7 0 0021 12.79z"></path></svg>
                     </button>
-                    <span class="h-4 w-px bg-slate-400/20"></span>
-                    <nav id="appLanguageSwitcher" class="app-language-switcher" aria-label="Ngôn ngữ ứng dụng">
+                    <nav id="appLanguageSwitcher" class="app-language-switcher os-language-switcher" aria-label="Ngôn ngữ ứng dụng">
                         <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
                         <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
                     </nav>
-                    <span class="h-4 w-px bg-slate-400/20"></span>
-                    <button id="btnOpenCareerProfileFooter" class="resume-launch-button cv-footer-pulse active:scale-95" title="Hồ sơ cá nhân" aria-label="Hồ sơ cá nhân">
-                        <svg class="shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.25" d="M15.75 7.5a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0"></path></svg>
-                    </button>
+                    <button id="btnOpenCareerProfileFooter" type="button" class="store-os-outline" title="Hồ sơ cá nhân">CV</button>
+                    <a class="store-os-top-cta" href="#store-os-start">Bắt đầu</a>
+                    <details class="store-os-menu">
+                        <summary class="store-os-mobile-summary" aria-label="Mở menu">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 7h16M4 12h16M4 17h16"></path></svg>
+                        </summary>
+                        <div class="store-os-menu-panel">
+                            <button type="button" data-landing-action="features">Tính năng</button>
+                            <button type="button" data-landing-action="pricing">Bảng giá</button>
+                            <button type="button" data-landing-action="demo">Demo</button>
+                            <button type="button" data-landing-action="profile">CV</button>
+                            <button type="button" data-landing-action="contact">Liên hệ</button>
+                            <div class="store-os-menu-lang">
+                                <span>Ngôn ngữ</span>
+                                <nav class="app-language-switcher os-language-switcher" aria-label="Ngôn ngữ ứng dụng">
+                                    <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
+                                    <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+                                </nav>
+                            </div>
+                        </div>
+                    </details>
                 </div>
-                <div class="landing-footer-copy" data-i18n="footer.copyright">© 2026 Thuận Huỳnh. All rights reserved.</div>
-            </div>
-        </footer>
+            </header>
+
+            <section class="store-os-hero" aria-label="Thuận Store OS">
+                <div class="store-os-copy">
+                    <span class="store-os-chip">STORE OS</span>
+                    <h2 class="store-os-title" data-i18n-html="landing.heroTitle"><span class="store-os-title-line">Operating System </span><span class="store-os-title-line">dành cho cửa hàng </span><strong>hiện đại</strong></h2>
+                    <p class="store-os-copy-text">Tất cả những gì bạn cần để quản lý, vận hành và phát triển doanh nghiệp - tất cả trong một nền tảng.</p>
+
+                    <div id="store-os-start" class="store-os-cta-row">
+                        <button id="btnStartApp" type="button" class="store-os-primary active:scale-95">
+                            <span id="btnStartText">Chạm bắt đầu</span>
+                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.3" d="M5 12h14m-6-6 6 6-6 6"></path></svg>
+                        </button>
+                        <button id="btnOpenGuideLanding" type="button" class="store-os-secondary active:scale-95">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 5v14l11-7L8 5z"></path></svg>
+                            <span>Xem demo 30s</span>
+                        </button>
+                        <a class="store-os-text-link" href="#store-os-orbit">
+                            <span>Khám phá tính năng</span>
+                            <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="m9 18 6-6-6-6"></path></svg>
+                        </a>
+                    </div>
+
+                    <div class="store-os-metrics" aria-label="Chỉ số vận hành">
+                        <div class="store-os-metric">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 4h7l4 4v12H8a3 3 0 01-3-3V7a3 3 0 013-3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 4v5h5M9 13h6M9 17h4"></path></svg>
+                            <div><strong>10.000+</strong><span>Báo giá đã tạo</span></div>
+                        </div>
+                        <div class="store-os-metric">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 10h16l-1.2-5H5.2L4 10zM6 10v9h12v-9M9 19v-5h6v5"></path></svg>
+                            <div><strong>500+</strong><span>Cửa hàng tin dùng</span></div>
+                        </div>
+                        <div class="store-os-metric">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 3 19 6v5c0 4.3-2.7 8-7 10-4.3-2-7-5.7-7-10V6l7-3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="m9 12 2 2 4-5"></path></svg>
+                            <div><strong>99,9%</strong><span>Uptime</span></div>
+                        </div>
+                        <div class="store-os-metric">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8V4m-5 8H4m16 0h-3m-8 7h6a4 4 0 004-4v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2a4 4 0 004 4z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 14h.01M15 14h.01"></path></svg>
+                            <div><strong>24/7</strong><span>AI hỗ trợ</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="store-os-orbit" class="store-os-visual">
+                    <div class="store-os-orbit" aria-label="Hệ sinh thái tính năng Thuận Store">
+                        <div class="store-os-ring outer"></div>
+                        <div class="store-os-ring middle"></div>
+                        <div class="store-os-ring inner"></div>
+                        <div class="store-os-ring-dots"></div>
+
+                        <button id="orbitCenterStart" type="button" class="store-os-center" title="Vào công cụ báo giá" aria-label="Vào công cụ báo giá">
+                            <span class="store-os-reactor" aria-hidden="true">
+                                <span class="store-os-reactor-blade"></span>
+                                <span class="store-os-reactor-core"></span>
+                            </span>
+                            <span class="store-os-center-text" data-i18n="landing.centerCta">CHẠM BẮT ĐẦU</span>
+                        </button>
+
+                        <div class="store-os-feature" style="--x: 50%; --y: 10%;">
+                            <button id="orbitQuoteTrigger" type="button" class="orbit-node" title="Mở báo giá" aria-label="Mở báo giá">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 4h7l4 4v12H8a3 3 0 01-3-3V7a3 3 0 013-3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14 4v5h5M9 13h6M9 17h4"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Báo giá</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 78%; --y: 22%;">
+                            <button id="satBrand" type="button" class="orbit-node" title="Nhập thông tin khách hàng" aria-label="Nhập thông tin khách hàng">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zM20 19a4 4 0 00-3-3.87M17 5.13a4 4 0 010 7.75"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Khách hàng</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 90%; --y: 50%;">
+                            <button id="satPromo" type="button" class="orbit-node" title="Khuyến mãi" aria-label="Khuyến mãi">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7M4 8h16v4H4zM12 8v13M12 8H9.5A2.5 2.5 0 119.5 3C11 3 12 5 12 8zM12 8h2.5A2.5 2.5 0 1014.5 3C13 3 12 5 12 8z"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Khuyến mãi</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 78%; --y: 78%;">
+                            <button id="satDiscount" type="button" class="orbit-node" title="Tài chính và chiết khấu" aria-label="Tài chính và chiết khấu">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v10M15 9.5c-.65-.72-1.55-1.05-2.7-1.05-1.38 0-2.3.68-2.3 1.75 0 1.18 1.05 1.57 2.5 1.9 1.46.33 2.5.75 2.5 1.95 0 1.12-.96 1.82-2.55 1.82-1.22 0-2.25-.38-3.05-1.2"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Tài chính</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 50%; --y: 90%;">
+                            <button id="calendarTrigger" type="button" class="orbit-node" title="AI Assistant đang update" aria-label="AI Assistant đang update">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="8" width="12" height="10" rx="3"></rect><path stroke-linecap="round" stroke-linejoin="round" d="M12 8V5M9.5 5h5M9.5 13h.01M14.5 13h.01M8 18l-1.5 2M16 18l1.5 2"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">AI Assistant</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 22%; --y: 78%;">
+                            <button id="orbitReportTrigger" type="button" class="orbit-node" title="Báo cáo đang update" aria-label="Báo cáo đang update">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Báo cáo</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 10%; --y: 50%;">
+                            <button id="orbitOrderTrigger" type="button" class="orbit-node" title="Đơn hàng đang update" aria-label="Đơn hàng đang update">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h2l2.2 10.5a2 2 0 002 1.5H17a2 2 0 001.9-1.4L21 8H6M10 21h.01M17 21h.01"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Đơn hàng</span>
+                        </div>
+
+                        <div class="store-os-feature" style="--x: 22%; --y: 22%;">
+                            <button id="satSetup" type="button" class="orbit-node" title="Kho hàng" aria-label="Kho hàng">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 12 4.5 7.8M12 12l7.5-4.2M12 12v8.5"></path></svg>
+                            </button>
+                            <span class="store-os-feature-label">Kho hàng</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="store-os-trust" class="store-os-trust" aria-label="Khách hàng tin dùng">
+                <p>Được tin dùng bởi các cửa hàng &amp; doanh nghiệp</p>
+                <div class="store-os-logo-marquee" aria-hidden="true">
+                    <div class="store-os-logo-row">
+                        <div class="store-os-logo-set">
+                            <span>DAIKIN</span>
+                            <span class="thin">Panasonic</span>
+                            <span>MITSUBISHI<br>ELECTRIC</span>
+                            <span>LG</span>
+                            <span>TOSHIBA</span>
+                            <span class="thin">Electrolux</span>
+                            <span>CADIVI</span>
+                        </div>
+                        <div class="store-os-logo-set" aria-hidden="true">
+                            <span>DAIKIN</span>
+                            <span class="thin">Panasonic</span>
+                            <span>MITSUBISHI<br>ELECTRIC</span>
+                            <span>LG</span>
+                            <span>TOSHIBA</span>
+                            <span class="thin">Electrolux</span>
+                            <span>CADIVI</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="store-os-footer">
+                <span data-i18n="footer.copyright">© 2026 Thuận Huỳnh. All rights reserved.</span>
+            </footer>
+        </div>
     </main>
 
     <!-- SCREEN 1: SETUP EXCEL -->
@@ -2763,7 +4242,13 @@
                 return { text: n.toFixed(2).replace(/\.?0+$/, '') + '%', type: isDecrease ? 'giảm' : 'tăng', value: isDecrease ? -n : n };
             },
             showToast: (msg, duration = 3000) => {
-                const toast = document.getElementById('customToast'); document.getElementById('toastMsg').textContent = window.AppI18n ? AppI18n.t(msg) : msg;
+                const toast = document.getElementById('customToast');
+                const toastMsg = document.getElementById('toastMsg');
+                if (!toast || !toastMsg) {
+                    console.warn(msg);
+                    return;
+                }
+                toastMsg.textContent = window.AppI18n ? AppI18n.t(msg) : msg;
                 toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), duration);
             },
             generateId: () => Math.random().toString(36).substr(2, 9),
@@ -2925,6 +4410,9 @@
         const AppI18n = (() => {
             const keyed = {
                 "landing.slogan": { vi: "CHẠM ĐẾN TƯƠNG LAI", en: "TOUCH THE FUTURE" },
+                "landing.centerCta": { vi: "CHẠM BẮT ĐẦU", en: "TAP TO START" },
+                "landing.heroTitle": { vi: "<span class=\"store-os-title-line\">Operating System </span><span class=\"store-os-title-line\">dành cho cửa hàng </span><strong>hiện đại</strong>", en: "<span class=\"store-os-title-line\">Operating System </span><span class=\"store-os-title-line\">for modern stores</span>" },
+                "landing.mobileTitle": { vi: "BẢNG<br><strong>BÁO GIÁ</strong>", en: "QUOTE<br><strong>BUILDER</strong>" },
                 "landing.mainTitle": { vi: "BẢNG<br>BÁO GIÁ", en: "QUOTE<br>BUILDER" },
                 "footer.copyright": { vi: "© 2026 Thuận Huỳnh. All rights reserved.", en: "© 2026 Thuận Huỳnh. All rights reserved." }
             };
@@ -2978,8 +4466,44 @@
                 "Đã Hiểu": "Got It",
                 "Bắt Đầu Báo Giá": "Start Quote",
                 "CHẠM ĐẾN TƯƠNG LAI": "TOUCH THE FUTURE",
+                "CHẠM ĐỂ BẮT ĐẦU": "TAP TO START",
                 "BẢNG BÁO GIÁ": "QUOTE",
                 "Tạo báo giá ngay": "Create quote now",
+                "Thuận Store - Operating System dành cho cửa hàng hiện đại": "Thuận Store - Operating System for modern stores",
+                "Tính năng": "Features",
+                "Bảng giá": "Pricing",
+                "Khách hàng": "Customers",
+                "Liên hệ": "Contact",
+                "Đăng nhập": "Log in",
+                "CV": "CV",
+                "Ngôn ngữ": "Language",
+                "Dùng miễn phí": "Start free",
+                "Operating System dành cho cửa hàng": "Operating System for stores",
+                "hiện đại": "modern",
+                "Tất cả những gì bạn cần để quản lý, vận hành và phát triển doanh nghiệp - tất cả trong một nền tảng.": "Everything you need to manage, operate, and grow your business - all in one platform.",
+                "Xem demo 30s": "Watch 30s demo",
+                "Khám phá tính năng": "Explore features",
+                "Tính năng đang update": "Feature is being updated",
+                "Báo giá đã tạo": "Quotes created",
+                "Cửa hàng tin dùng": "Trusted stores",
+                "AI hỗ trợ": "AI support",
+                "AI Assistant": "AI Assistant",
+                "Báo giá": "Quotes",
+                "Kho hàng": "Warehouse",
+                "Tài chính": "Finance",
+                "Báo cáo": "Reports",
+                "Đơn hàng": "Orders",
+                "Được tin dùng bởi các cửa hàng & doanh nghiệp": "Trusted by stores & businesses",
+                "Giao diện tối": "Dark mode",
+                "Mở menu": "Open menu",
+                "Mở báo giá": "Open quote",
+                "Nhập thông tin khách hàng": "Enter customer information",
+                "Mở giỏ hàng báo giá": "Open quote cart",
+                "Xem báo giá và xuất báo cáo": "Open quote and export report",
+                "Vào công cụ báo giá": "Open quote workspace",
+                "Cấu hình khách hàng và thương hiệu": "Customer and brand settings",
+                "Tài chính và chiết khấu": "Finance and discounts",
+                "Khách hàng tin dùng": "Trusted customers",
                 "Quản lý kho": "Warehouse",
                 "Khuyến mãi": "Promotions",
                 "Chiết khấu": "Discounts",
@@ -3164,10 +4688,19 @@
             const attrToEn = {
                 "Ngôn ngữ ứng dụng": "App language",
                 "Ngôn ngữ hồ sơ": "Profile language",
+                "Điều hướng chính": "Primary navigation",
                 "Khám phá công cụ": "Explore tools",
                 "Chạm để tương tác": "Tap to interact",
                 "Hướng dẫn": "Guide",
                 "Hồ sơ cá nhân": "Profile",
+                "Mở báo giá": "Open quote",
+                "Mở giỏ hàng báo giá": "Open quote cart",
+                "Xem báo giá và xuất báo cáo": "Open quote and export report",
+                "Vào công cụ báo giá": "Open quote workspace",
+                "AI Assistant": "AI Assistant",
+                "AI Assistant đang update": "AI Assistant is being updated",
+                "Báo cáo đang update": "Reports are being updated",
+                "Đơn hàng đang update": "Orders are being updated",
                 "Hướng dẫn sử dụng": "User guide",
                 "Số lượng": "Quantity",
                 "Tên Danh Mục/Kho...": "Category/Warehouse name...",
@@ -3203,6 +4736,9 @@
             const attrToVi = Object.fromEntries(Object.entries(attrToEn).map(([vi, en]) => [en, vi]));
             const normalizeLang = (lang) => lang === "en" ? "en" : "vi";
             let currentLang = "vi";
+            const persistLang = () => {
+                try { localStorage.setItem(APP_LANG_KEY, currentLang); } catch (err) { /* ignore blocked storage */ }
+            };
             const exact = (value, lang, attr = false) => {
                 const dict = lang === "en" ? (attr ? attrToEn : toEn) : (attr ? attrToVi : toVi);
                 return dict[value] || value;
@@ -3370,14 +4906,15 @@
             };
         const set = (lang, options = {}) => {
             currentLang = normalizeLang(lang);
-            localStorage.setItem(APP_LANG_KEY, currentLang);
+            persistLang();
             apply(document.body);
             if (window.ProductLanguage) ProductLanguage.refreshVisible();
             if (window.CurrencyDisplay) CurrencyDisplay.syncForLanguage();
             if (options.syncCareer !== false && typeof setCareerLanguage === "function") setCareerLanguage(currentLang);
         };
             const init = () => {
-                currentLang = normalizeLang(localStorage.getItem(APP_LANG_KEY) || "vi");
+                currentLang = "vi";
+                persistLang();
                 document.querySelectorAll("[data-app-lang]").forEach(btn => {
                     btn.addEventListener("click", () => set(btn.dataset.appLang));
                 });
@@ -6089,25 +7626,45 @@ led=>LED
         };
 
         const LocalDB = {
+            key: 'thuanstore_state_v3',
+            normalizePayload: (payload) => {
+                if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null;
+                const plainObject = (value) => value && typeof value === 'object' && !Array.isArray(value);
+                const arrayOfObjects = (value) => Array.isArray(value) ? value.filter(plainObject) : [];
+                const stringArray = (value) => Array.isArray(value) ? value.map(item => String(item || '').trim()).filter(Boolean) : [];
+                return {
+                    productDB: arrayOfObjects(payload.productDB),
+                    warehouses: stringArray(payload.warehouses),
+                    cart: arrayOfObjects(payload.cart),
+                    brand: { ...AppState.data.brand, ...(plainObject(payload.brand) ? payload.brand : {}) },
+                    defaults: { ...AppState.data.defaults, ...(plainObject(payload.defaults) ? payload.defaults : {}) },
+                    promos: arrayOfObjects(payload.promos),
+                    isCompactView: payload.isCompactView === true
+                };
+            },
             save: () => {
                 try {
                     const toSave = { 
-                        productDB: AppState.data.productDB, warehouses: AppState.data.warehouses, 
-                        cart: AppState.data.cart, brand: AppState.data.brand, 
-                        defaults: AppState.data.defaults, promos: AppState.data.promos, 
+                        productDB: Array.isArray(AppState.data.productDB) ? AppState.data.productDB : [],
+                        warehouses: Array.isArray(AppState.data.warehouses) ? AppState.data.warehouses : [],
+                        cart: Array.isArray(AppState.data.cart) ? AppState.data.cart : [],
+                        brand: AppState.data.brand,
+                        defaults: AppState.data.defaults,
+                        promos: Array.isArray(AppState.data.promos) ? AppState.data.promos : [],
                         isCompactView: AppState.data.isCompactView 
                     };
-                    localStorage.setItem('thuanstore_state_v3', JSON.stringify(toSave));
-                } catch(e) { if (e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn. Hãy dùng file Excel nhẹ hơn."); }
+                    localStorage.setItem(LocalDB.key, JSON.stringify(toSave));
+                } catch(e) { if (e && e.name === 'QuotaExceededError') Utils.showToast("Dữ liệu quá lớn. Hãy dùng file Excel nhẹ hơn."); }
             },
             load: () => {
                 try {
-                    const dataStr = localStorage.getItem('thuanstore_state_v3');
+                    const dataStr = localStorage.getItem(LocalDB.key);
                     if (dataStr) {
-                        const p = JSON.parse(dataStr);
-                        AppState.data.productDB = p.productDB || []; AppState.data.warehouses = p.warehouses || []; AppState.data.cart = p.cart || [];
-                        AppState.data.brand = p.brand || AppState.data.brand; AppState.data.defaults = p.defaults || AppState.data.defaults; 
-                        AppState.data.promos = p.promos || []; AppState.data.isCompactView = p.isCompactView || false;
+                        const p = LocalDB.normalizePayload(JSON.parse(dataStr));
+                        if (!p) return false;
+                        AppState.data.productDB = p.productDB; AppState.data.warehouses = p.warehouses; AppState.data.cart = p.cart;
+                        AppState.data.brand = p.brand; AppState.data.defaults = p.defaults; 
+                        AppState.data.promos = p.promos; AppState.data.isCompactView = p.isCompactView;
                         ProductLanguage.hydrateState(AppState.data);
                         
                         if (AppState.data.productDB.length > 0 && AppState.data.warehouses.length === 0) { 
@@ -6118,7 +7675,10 @@ led=>LED
                         PromoLogic.updateDataList();
                         return true;
                     }
-                } catch(e) {}
+                } catch(e) {
+                    console.warn("Không thể đọc dữ liệu cũ, hệ thống sẽ dùng trạng thái mặc định.", e);
+                    try { localStorage.removeItem(LocalDB.key); } catch (storageErr) { /* ignore blocked storage */ }
+                }
                 return false;
             }
         };
@@ -6151,7 +7711,9 @@ led=>LED
 
             seedIfNeeded: () => {
                 if (AppState.get('productDB').length > 0) return false;
-                if (localStorage.getItem(DEFAULT_SAMPLE_DISABLED_KEY) === 'true') return false;
+                try {
+                    if (localStorage.getItem(DEFAULT_SAMPLE_DISABLED_KEY) === 'true') return false;
+                } catch (err) { /* ignore blocked storage */ }
                 const sampleProducts = DefaultSample.buildProducts();
                 if (sampleProducts.length === 0) return false;
                 AppState.data.productDB = sampleProducts;
@@ -6163,11 +7725,11 @@ led=>LED
             },
 
             disableAutoSeed: () => {
-                localStorage.setItem(DEFAULT_SAMPLE_DISABLED_KEY, 'true');
+                try { localStorage.setItem(DEFAULT_SAMPLE_DISABLED_KEY, 'true'); } catch (err) { /* ignore blocked storage */ }
             },
 
             enableAutoSeed: () => {
-                localStorage.removeItem(DEFAULT_SAMPLE_DISABLED_KEY);
+                try { localStorage.removeItem(DEFAULT_SAMPLE_DISABLED_KEY); } catch (err) { /* ignore blocked storage */ }
             }
         };
 
@@ -6567,35 +8129,85 @@ led=>LED
         };
 
         // 7. EVENT BINDING & CONTROLLERS
-        document.getElementById('satSetup').addEventListener('click', () => { switchScreen('setup'); renderSetupWarehouseList(); });
-        document.getElementById('satPromo').addEventListener('click', () => { PromoLogic.openManager(); });
-        document.getElementById('satDiscount').addEventListener('click', () => { DOM.discount.modal.classList.add('active'); });
-        document.getElementById('satBrand').addEventListener('click', () => { DOM.brand.modal.classList.add('active'); });
+        const bindClick = (id, handler) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', handler);
+        };
+        const openQuoteWorkspace = () => {
+            switchScreen('main');
+            CartLogic.renderFull();
+            requestAnimationFrame(() => {
+                const mainScreen = DOM.screens?.main;
+                if (mainScreen && typeof mainScreen.scrollTo === 'function') mainScreen.scrollTo({ top: 0, behavior: 'smooth' });
+                else window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        };
+        const openSetupManager = () => {
+            switchScreen('setup');
+            renderSetupWarehouseList();
+        };
+        const openPromoManager = () => {
+            if (window.PromoLogic || typeof PromoLogic !== 'undefined') PromoLogic.openManager();
+        };
+        const openDiscountManager = () => {
+            if (DOM.discount?.modal) {
+                DOM.discount.modal.classList.add('active');
+                if (window.AppI18n) AppI18n.apply(DOM.discount.modal);
+            }
+        };
+        const openBrandManager = () => {
+            if (DOM.brand?.modal) DOM.brand.modal.classList.add('active');
+        };
+        const openCustomerWorkspace = () => {
+            openQuoteWorkspace();
+            setTimeout(() => {
+                const input = DOM.main?.custName;
+                if (!input) return;
+                try { input.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }); } catch (_) { input.scrollIntoView(false); }
+                input.focus({ preventScroll: true });
+                input.classList.add('ring-2', 'ring-cyan-300', 'border-cyan-400');
+                setTimeout(() => input.classList.remove('ring-2', 'ring-cyan-300', 'border-cyan-400'), 1600);
+            }, 180);
+        };
+        const showUpdatingFeature = () => {
+            Utils.showToast("Tính năng đang update");
+        };
+        const openReportWorkspace = () => {
+            openQuoteWorkspace();
+            if (typeof ExportLogic !== 'undefined' && AppState.get('cart').length > 0) {
+                requestAnimationFrame(() => ExportLogic.prepareExport());
+            }
+        };
+        bindClick('satSetup', openSetupManager);
+        bindClick('satPromo', openPromoManager);
+        bindClick('satDiscount', openDiscountManager);
+        bindClick('satBrand', openCustomerWorkspace);
+        bindClick('orbitQuoteTrigger', openQuoteWorkspace);
+        bindClick('orbitOrderTrigger', showUpdatingFeature);
+        bindClick('orbitReportTrigger', showUpdatingFeature);
+        bindClick('calendarTrigger', showUpdatingFeature);
+        bindClick('orbitCenterStart', openQuoteWorkspace);
 
         const guideModal = document.getElementById('userGuideModal');
         const openGuideModal = () => {
             if (!guideModal) return;
             guideModal.classList.remove('hidden'); guideModal.classList.add('flex');
             if (window.AppI18n) AppI18n.apply(guideModal);
-            setTimeout(() => { guideModal.classList.remove('opacity-0'); guideModal.firstElementChild.classList.remove('scale-95'); }, 10);
+            setTimeout(() => { guideModal.classList.remove('opacity-0'); guideModal.firstElementChild?.classList.remove('scale-95'); }, 10);
         };
         const closeGuideModal = () => {
             if (!guideModal) return;
-            localStorage.setItem(GUIDE_SEEN_KEY, 'true');
-            guideModal.classList.add('opacity-0'); guideModal.firstElementChild.classList.add('scale-95');
+            try { localStorage.setItem(GUIDE_SEEN_KEY, 'true'); } catch (err) { /* ignore blocked storage */ }
+            guideModal.classList.add('opacity-0'); guideModal.firstElementChild?.classList.add('scale-95');
             setTimeout(() => { guideModal.classList.add('hidden'); guideModal.classList.remove('flex'); }, 300);
         };
         const startQuoteFromGuide = () => {
             closeGuideModal();
-            switchScreen('main');
-            CartLogic.renderFull();
+            openQuoteWorkspace();
         };
         const maybeShowFirstRunGuide = () => {
-            if (!guideModal || localStorage.getItem(GUIDE_SEEN_KEY) === 'true') return;
-            if (AppState.data.currentScreenId !== 'landing') return;
-            setTimeout(() => {
-                if (AppState.data.currentScreenId === 'landing') openGuideModal();
-            }, 700);
+            if (!guideModal) return;
+            try { localStorage.setItem(GUIDE_SEEN_KEY, 'true'); } catch (err) { /* ignore blocked storage */ }
         };
         ['btnOpenGuideLanding', 'btnOpenGuideMain'].forEach(id => {
             const btn = document.getElementById(id); if (btn) btn.addEventListener('click', openGuideModal);
@@ -6621,7 +8233,7 @@ led=>LED
                 btn.classList.toggle('is-active', active);
                 btn.setAttribute('aria-pressed', active ? 'true' : 'false');
             });
-            localStorage.setItem(CAREER_LANG_KEY, nextLang);
+            try { localStorage.setItem(CAREER_LANG_KEY, nextLang); } catch (err) { /* ignore blocked storage */ }
         };
         const setupCareerReveal = () => {
             if (!careerProfileModal) return;
@@ -6657,16 +8269,17 @@ led=>LED
             const scroller = careerProfileModal.querySelector('.career-profile-scroll');
             if (scroller) scroller.scrollTop = 0;
             requestAnimationFrame(setupCareerReveal);
-            setTimeout(() => { careerProfileModal.classList.remove('opacity-0'); careerProfileModal.firstElementChild.classList.remove('scale-95'); }, 10);
+            setTimeout(() => { careerProfileModal.classList.remove('opacity-0'); careerProfileModal.firstElementChild?.classList.remove('scale-95'); }, 10);
         };
         const closeCareerProfileModal = () => {
             if (!careerProfileModal) return;
-            careerProfileModal.classList.add('opacity-0'); careerProfileModal.firstElementChild.classList.add('scale-95');
+            careerProfileModal.classList.add('opacity-0'); careerProfileModal.firstElementChild?.classList.add('scale-95');
             if (careerRevealObserver) careerRevealObserver.disconnect();
             setTimeout(() => { careerProfileModal.classList.add('hidden'); careerProfileModal.classList.remove('flex', 'is-open'); }, 300);
         };
         if (careerProfileModal) {
-            const savedCareerLang = localStorage.getItem(CAREER_LANG_KEY);
+            let savedCareerLang = null;
+            try { savedCareerLang = localStorage.getItem(CAREER_LANG_KEY); } catch (err) { savedCareerLang = null; }
             setCareerLanguage(savedCareerLang || 'vi');
             careerProfileModal.querySelectorAll('[data-career-lang]').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -6687,52 +8300,60 @@ led=>LED
         
         const logoTrigger = document.getElementById('brandLogoTrigger');
         const modalStory = document.getElementById('seoStoryModal');
-        if(logoTrigger) {
+        if(logoTrigger && modalStory) {
             logoTrigger.addEventListener('click', () => {
                 modalStory.classList.remove('hidden'); modalStory.classList.add('flex');
                 if (window.AppI18n) AppI18n.apply(modalStory);
-                setTimeout(() => { modalStory.classList.remove('opacity-0'); modalStory.firstElementChild.classList.remove('scale-95'); }, 10);
+                setTimeout(() => { modalStory.classList.remove('opacity-0'); modalStory.firstElementChild?.classList.remove('scale-95'); }, 10);
             });
         }
         const closeStoryModal = () => {
-            modalStory.classList.add('opacity-0'); modalStory.firstElementChild.classList.add('scale-95');
+            if (!modalStory) return;
+            modalStory.classList.add('opacity-0'); modalStory.firstElementChild?.classList.add('scale-95');
             setTimeout(() => { modalStory.classList.add('hidden'); modalStory.classList.remove('flex'); }, 300);
         };
-        document.getElementById('btnCloseStory').addEventListener('click', closeStoryModal);
-        document.getElementById('btnReadMoreClose').addEventListener('click', closeStoryModal);
+        bindClick('btnCloseStory', closeStoryModal);
+        bindClick('btnReadMoreClose', closeStoryModal);
 
       const demoHotlineTrigger = document.getElementById('demoHotlineTrigger');
         const demoFeedbackModal = document.getElementById('demoFeedbackModal');
 
-        // --- BẮT ĐẦU: LỆNH CHO VỆ TINH LỊCH CSKH ---
         const calendarTrigger = document.getElementById('calendarTrigger');
-        if(calendarTrigger) {
-            calendarTrigger.addEventListener('click', () => {
-                // Mở link trong tab mới để khách không mất dữ liệu báo giá đang làm
-                window.open('https://thuanstore.com/lichdituyen', '_blank'); 
-            });
-        }
-        // --- KẾT THÚC: LỆNH CHO VỆ TINH LỊCH CSKH ---
         const btnCloseFeedback = document.getElementById('btnCloseFeedback');
         const btnSubmitFeedback = document.getElementById('btnSubmitFeedback');
         const feedbackText = document.getElementById('feedbackText');
 
         const openFeedbackModal = () => {
+            if (!demoFeedbackModal) return;
             demoFeedbackModal.classList.remove('hidden'); demoFeedbackModal.classList.add('flex');
             if (window.AppI18n) AppI18n.apply(demoFeedbackModal);
-            setTimeout(() => { demoFeedbackModal.classList.remove('opacity-0'); demoFeedbackModal.firstElementChild.classList.remove('scale-95'); }, 10);
+            setTimeout(() => { demoFeedbackModal.classList.remove('opacity-0'); demoFeedbackModal.firstElementChild?.classList.remove('scale-95'); }, 10);
         };
 
         const closeFeedbackModal = () => {
-            demoFeedbackModal.classList.add('opacity-0'); demoFeedbackModal.firstElementChild.classList.add('scale-95');
+            if (!demoFeedbackModal) return;
+            demoFeedbackModal.classList.add('opacity-0'); demoFeedbackModal.firstElementChild?.classList.add('scale-95');
             setTimeout(() => { demoFeedbackModal.classList.add('hidden'); demoFeedbackModal.classList.remove('flex'); }, 300);
         };
 
         if(demoHotlineTrigger) demoHotlineTrigger.addEventListener('click', openFeedbackModal);
         if(btnCloseFeedback) btnCloseFeedback.addEventListener('click', closeFeedbackModal);
 
+        document.querySelectorAll('[data-landing-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.landingAction;
+                btn.closest('details')?.removeAttribute('open');
+                if (action === 'features') document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (action === 'pricing') document.getElementById('store-os-trust')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (action === 'demo') openGuideModal();
+                if (action === 'profile') openCareerProfileModal();
+                if (action === 'contact') openFeedbackModal();
+            });
+        });
+
         if(btnSubmitFeedback) {
             btnSubmitFeedback.addEventListener('click', async () => {
+                if (!feedbackText) return;
                 const content = feedbackText.value.trim();
                 if(!content) { Utils.showToast("Vui lòng nhập nội dung góp ý nhé!"); return; }
 
