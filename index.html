@@ -1230,6 +1230,610 @@
                 transform: translateY(-1px);
                 outline: none;
             }
+
+            /* TAX TOOL 2026: isolated footer entry + responsive calculator. */
+            .store-os-footer-bar {
+                width: fit-content;
+                max-width: min(100%, calc(100vw - 1.25rem));
+                margin: 0 auto;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.28rem;
+                padding: 0.18rem 0.28rem;
+                border: 1px solid rgba(148, 163, 184, 0.16);
+                border-radius: 999px;
+                background: rgba(15, 23, 42, 0.54);
+                box-shadow: 0 10px 28px rgba(2, 6, 23, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                -webkit-backdrop-filter: blur(16px);
+                backdrop-filter: blur(16px);
+            }
+            .store-os-footer-divider {
+                width: 1px;
+                height: 1.05rem;
+                flex: 0 0 1px;
+                background: rgba(148, 163, 184, 0.2);
+            }
+            .store-os-footer-tool {
+                min-width: 0;
+                min-height: 2rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.36rem;
+                padding: 0 0.48rem;
+                border: 0;
+                border-radius: 999px;
+                color: #a5f3fc;
+                background: transparent;
+                font-size: inherit;
+                font-weight: 760;
+                white-space: nowrap;
+                cursor: pointer;
+                transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+            }
+            .store-os-footer-tool:hover,
+            .store-os-footer-tool:focus-visible {
+                color: #ecfeff;
+                background: rgba(34, 211, 238, 0.1);
+                transform: translateY(-1px);
+                outline: none;
+            }
+            .store-os-footer-tool svg {
+                width: 0.95rem;
+                height: 0.95rem;
+                flex: 0 0 auto;
+            }
+            .store-os-footer-tool-short { display: none; }
+            .store-os-footer-hot {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 1rem;
+                padding: 0.05rem 0.3rem;
+                border-radius: 999px;
+                color: #052e16;
+                background: #86efac;
+                font-size: 0.48rem;
+                font-weight: 900;
+                line-height: 1;
+            }
+            body.tax-tool-open { overflow: hidden !important; }
+            .tax-tool-modal {
+                position: fixed;
+                inset: 0;
+                z-index: 190;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+                overflow: hidden;
+                background: rgba(2, 6, 23, 0.84);
+                -webkit-backdrop-filter: blur(18px);
+                backdrop-filter: blur(18px);
+                opacity: 0;
+                transition: opacity 0.22s ease;
+            }
+            .tax-tool-modal.is-open {
+                display: flex;
+                opacity: 1;
+            }
+            .tax-tool-shell {
+                width: min(70rem, calc(100vw - 1.5rem));
+                max-width: 100%;
+                max-height: min(92dvh, 54rem);
+                display: flex;
+                flex-direction: column;
+                min-width: 0;
+                overflow: hidden;
+                border: 1px solid rgba(34, 211, 238, 0.2);
+                border-radius: 24px;
+                color: #e2e8f0;
+                background: #071120;
+                box-shadow: 0 34px 100px rgba(0, 0, 0, 0.52), inset 0 1px 0 rgba(255, 255, 255, 0.055);
+                transform: translateY(12px) scale(0.985);
+                transition: transform 0.24s ease;
+            }
+            .tax-tool-modal.is-open .tax-tool-shell { transform: translateY(0) scale(1); }
+            .tax-tool-header {
+                position: relative;
+                z-index: 3;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: 1rem 1.1rem;
+                border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+                background: rgba(7, 17, 32, 0.96);
+            }
+            .tax-tool-heading {
+                min-width: 0;
+                display: flex;
+                align-items: center;
+                gap: 0.72rem;
+            }
+            .tax-tool-heading-icon {
+                width: 2.65rem;
+                height: 2.65rem;
+                flex: 0 0 2.65rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(34, 211, 238, 0.22);
+                border-radius: 14px;
+                color: #67e8f9;
+                background: linear-gradient(145deg, rgba(8, 145, 178, 0.22), rgba(15, 23, 42, 0.76));
+                box-shadow: 0 12px 30px rgba(8, 145, 178, 0.12);
+            }
+            .tax-tool-heading-icon svg { width: 1.35rem; height: 1.35rem; }
+            .tax-tool-heading-copy { min-width: 0; }
+            .tax-tool-heading-copy h2 {
+                margin: 0;
+                color: #f8fafc;
+                font-size: clamp(1rem, 2vw, 1.22rem);
+                font-weight: 820;
+                line-height: 1.2;
+            }
+            .tax-tool-heading-copy p {
+                margin: 0.2rem 0 0;
+                color: #94a3b8;
+                font-size: 0.72rem;
+                font-weight: 580;
+                line-height: 1.35;
+            }
+            .tax-tool-year {
+                display: inline-flex;
+                margin-left: 0.38rem;
+                padding: 0.12rem 0.38rem;
+                border: 1px solid rgba(74, 222, 128, 0.22);
+                border-radius: 999px;
+                color: #86efac;
+                background: rgba(22, 163, 74, 0.1);
+                font-size: 0.58rem;
+                font-weight: 850;
+                vertical-align: 0.1rem;
+            }
+            .tax-tool-close {
+                width: 2.45rem;
+                height: 2.45rem;
+                flex: 0 0 2.45rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid rgba(148, 163, 184, 0.16);
+                border-radius: 12px;
+                color: #cbd5e1;
+                background: rgba(15, 23, 42, 0.72);
+                cursor: pointer;
+            }
+            .tax-tool-close:hover,
+            .tax-tool-close:focus-visible { color: #fff; border-color: rgba(34, 211, 238, 0.34); outline: none; }
+            .tax-tool-close svg { width: 1.15rem; height: 1.15rem; }
+            .tax-tool-scroll {
+                min-width: 0;
+                overflow: auto;
+                overflow-x: hidden;
+                overscroll-behavior: contain;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tax-tool-layout {
+                display: grid;
+                grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+                min-width: 0;
+            }
+            .tax-tool-form,
+            .tax-tool-results { min-width: 0; padding: 1.15rem; }
+            .tax-tool-form {
+                border-right: 1px solid rgba(148, 163, 184, 0.12);
+                background: rgba(15, 23, 42, 0.36);
+            }
+            .tax-tool-section-title {
+                display: flex;
+                align-items: center;
+                gap: 0.48rem;
+                margin: 0 0 0.9rem;
+                color: #f8fafc;
+                font-size: 0.82rem;
+                font-weight: 780;
+            }
+            .tax-tool-section-title > span:first-child {
+                width: 1.35rem;
+                height: 1.35rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 7px;
+                color: #083344;
+                background: #67e8f9;
+                font-size: 0.66rem;
+                font-weight: 900;
+            }
+            .tax-tool-field { min-width: 0; margin-bottom: 0.88rem; }
+            .tax-tool-field-label,
+            .tax-tool-field > label {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+                margin-bottom: 0.4rem;
+                color: #cbd5e1;
+                font-size: 0.69rem;
+                font-weight: 700;
+            }
+            .tax-tool-select-wrap,
+            .tax-tool-money-wrap { position: relative; min-width: 0; }
+            .tax-tool-select,
+            .tax-tool-money {
+                width: 100%;
+                min-width: 0;
+                height: 3rem;
+                border: 1px solid rgba(148, 163, 184, 0.2);
+                border-radius: 13px;
+                outline: none;
+                color: #f8fafc;
+                background: rgba(2, 6, 23, 0.72);
+                font-size: 0.84rem;
+                font-weight: 680;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            }
+            .tax-tool-select { appearance: none; padding: 0 2.55rem 0 0.88rem; }
+            .tax-tool-select option { color: #0f172a; background: #fff; }
+            .tax-tool-select-wrap svg {
+                position: absolute;
+                top: 50%;
+                right: 0.86rem;
+                width: 1rem;
+                height: 1rem;
+                color: #67e8f9;
+                pointer-events: none;
+                transform: translateY(-50%);
+            }
+            .tax-tool-money { padding: 0 3.15rem 0 0.88rem; }
+            .tax-tool-money:focus,
+            .tax-tool-select:focus {
+                border-color: rgba(34, 211, 238, 0.68);
+                box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+            }
+            .tax-tool-currency {
+                position: absolute;
+                top: 50%;
+                right: 0.82rem;
+                color: #67e8f9;
+                font-size: 0.64rem;
+                font-weight: 850;
+                pointer-events: none;
+                transform: translateY(-50%);
+            }
+            .tax-tool-period {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.35rem;
+                padding: 0.25rem;
+                border: 1px solid rgba(148, 163, 184, 0.15);
+                border-radius: 13px;
+                background: rgba(2, 6, 23, 0.55);
+            }
+            .tax-tool-period label { min-width: 0; margin: 0; cursor: pointer; }
+            .tax-tool-period input { position: absolute; opacity: 0; pointer-events: none; }
+            .tax-tool-period span {
+                min-height: 2.35rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 9px;
+                color: #94a3b8;
+                font-size: 0.7rem;
+                font-weight: 760;
+                transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+            }
+            .tax-tool-period input:checked + span {
+                color: #083344;
+                background: #67e8f9;
+                box-shadow: 0 7px 18px rgba(6, 182, 212, 0.18);
+            }
+            .tax-tool-hint {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.55rem;
+                margin-top: 0.4rem;
+                color: #64748b;
+                font-size: 0.62rem;
+                font-weight: 600;
+                line-height: 1.4;
+            }
+            .tax-tool-suggest {
+                flex: 0 0 auto;
+                padding: 0;
+                border: 0;
+                color: #67e8f9;
+                background: transparent;
+                font-size: inherit;
+                font-weight: 760;
+                cursor: pointer;
+            }
+            .tax-tool-rate-preview {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.45rem;
+                margin-bottom: 0.95rem;
+            }
+            .tax-tool-rate-preview div {
+                min-width: 0;
+                padding: 0.62rem 0.7rem;
+                border: 1px solid rgba(148, 163, 184, 0.13);
+                border-radius: 12px;
+                background: rgba(2, 6, 23, 0.48);
+            }
+            .tax-tool-rate-preview span { display: block; color: #64748b; font-size: 0.58rem; font-weight: 700; }
+            .tax-tool-rate-preview strong { display: block; margin-top: 0.16rem; color: #e2e8f0; font-size: 0.76rem; font-weight: 800; }
+            .tax-tool-error {
+                display: none;
+                margin: 0 0 0.75rem;
+                padding: 0.58rem 0.68rem;
+                border: 1px solid rgba(248, 113, 113, 0.22);
+                border-radius: 10px;
+                color: #fecaca;
+                background: rgba(127, 29, 29, 0.14);
+                font-size: 0.66rem;
+                font-weight: 650;
+                line-height: 1.4;
+            }
+            .tax-tool-error.is-visible { display: block; }
+            .tax-tool-actions { display: flex; gap: 0.48rem; }
+            .tax-tool-submit,
+            .tax-tool-reset {
+                min-height: 2.85rem;
+                border-radius: 13px;
+                font-size: 0.76rem;
+                font-weight: 820;
+                cursor: pointer;
+            }
+            .tax-tool-submit {
+                flex: 1 1 auto;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.45rem;
+                border: 1px solid rgba(103, 232, 249, 0.44);
+                color: #083344;
+                background: linear-gradient(135deg, #a5f3fc, #22d3ee);
+                box-shadow: 0 14px 28px rgba(6, 182, 212, 0.17);
+            }
+            .tax-tool-submit svg { width: 1rem; height: 1rem; }
+            .tax-tool-reset {
+                flex: 0 0 auto;
+                padding: 0 0.86rem;
+                border: 1px solid rgba(148, 163, 184, 0.17);
+                color: #94a3b8;
+                background: rgba(15, 23, 42, 0.7);
+            }
+            .tax-tool-submit:focus-visible,
+            .tax-tool-reset:focus-visible,
+            .tax-tool-suggest:focus-visible { outline: 2px solid rgba(103, 232, 249, 0.72); outline-offset: 2px; }
+            .tax-tool-results { background: radial-gradient(circle at 85% 0%, rgba(8, 145, 178, 0.1), transparent 38%); }
+            .tax-tool-empty {
+                min-height: 25rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 2rem 1rem;
+            }
+            .tax-tool-empty-icon {
+                width: 4.2rem;
+                height: 4.2rem;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 0.9rem;
+                border: 1px solid rgba(34, 211, 238, 0.17);
+                border-radius: 22px;
+                color: #67e8f9;
+                background: rgba(8, 145, 178, 0.09);
+            }
+            .tax-tool-empty-icon svg { width: 2rem; height: 2rem; }
+            .tax-tool-empty h3 { margin: 0; color: #e2e8f0; font-size: 0.9rem; font-weight: 780; }
+            .tax-tool-empty p { max-width: 24rem; margin: 0.42rem 0 0; color: #64748b; font-size: 0.68rem; font-weight: 580; line-height: 1.55; }
+            .tax-tool-result-content { min-width: 0; }
+            .tax-tool-result-content[hidden] { display: none !important; }
+            .tax-tool-result-top {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                gap: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            .tax-tool-result-group {
+                display: inline-flex;
+                align-items: center;
+                min-height: 1.55rem;
+                padding: 0.16rem 0.54rem;
+                border: 1px solid rgba(34, 211, 238, 0.2);
+                border-radius: 999px;
+                color: #67e8f9;
+                background: rgba(8, 145, 178, 0.1);
+                font-size: 0.62rem;
+                font-weight: 820;
+            }
+            .tax-tool-result-industry {
+                min-width: 0;
+                color: #64748b;
+                font-size: 0.62rem;
+                font-weight: 650;
+                text-align: right;
+                overflow-wrap: anywhere;
+            }
+            .tax-tool-total-card {
+                position: relative;
+                overflow: hidden;
+                padding: 1rem;
+                border: 1px solid rgba(34, 211, 238, 0.2);
+                border-radius: 17px;
+                background: linear-gradient(135deg, rgba(8, 145, 178, 0.17), rgba(15, 23, 42, 0.74));
+            }
+            .tax-tool-total-card::after {
+                content: "";
+                position: absolute;
+                right: -2.2rem;
+                bottom: -2.2rem;
+                width: 7rem;
+                height: 7rem;
+                border-radius: 50%;
+                background: rgba(34, 211, 238, 0.08);
+                pointer-events: none;
+            }
+            .tax-tool-total-label { display: block; color: #94a3b8; font-size: 0.64rem; font-weight: 690; }
+            .tax-tool-total-card strong {
+                position: relative;
+                z-index: 1;
+                display: block;
+                margin-top: 0.22rem;
+                color: #ecfeff;
+                font-size: clamp(1.35rem, 3vw, 2rem);
+                font-weight: 900;
+                letter-spacing: -0.04em;
+                line-height: 1.08;
+                overflow-wrap: anywhere;
+            }
+            .tax-tool-total-period { display: block; margin-top: 0.36rem; color: #67e8f9; font-size: 0.64rem; font-weight: 700; }
+            .tax-tool-breakdown {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.45rem;
+                margin-top: 0.55rem;
+            }
+            .tax-tool-breakdown > div {
+                min-width: 0;
+                padding: 0.66rem 0.7rem;
+                border: 1px solid rgba(148, 163, 184, 0.12);
+                border-radius: 12px;
+                background: rgba(2, 6, 23, 0.48);
+            }
+            .tax-tool-breakdown span { display: block; color: #64748b; font-size: 0.58rem; font-weight: 690; }
+            .tax-tool-breakdown strong { display: block; margin-top: 0.18rem; color: #e2e8f0; font-size: 0.73rem; font-weight: 820; overflow-wrap: anywhere; }
+            .tax-tool-compare {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.48rem;
+                margin-top: 0.55rem;
+            }
+            .tax-tool-method {
+                min-width: 0;
+                padding: 0.72rem;
+                border: 1px solid rgba(148, 163, 184, 0.14);
+                border-radius: 13px;
+                background: rgba(15, 23, 42, 0.6);
+            }
+            .tax-tool-method.is-lower { border-color: rgba(74, 222, 128, 0.34); background: rgba(22, 101, 52, 0.1); }
+            .tax-tool-method-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.4rem; }
+            .tax-tool-method h4 { margin: 0; color: #cbd5e1; font-size: 0.66rem; font-weight: 780; line-height: 1.35; }
+            .tax-tool-method-badge { display: none; flex: 0 0 auto; padding: 0.11rem 0.32rem; border-radius: 999px; color: #052e16; background: #86efac; font-size: 0.47rem; font-weight: 900; }
+            .tax-tool-method.is-lower .tax-tool-method-badge { display: inline-flex; }
+            .tax-tool-method strong { display: block; margin-top: 0.38rem; color: #f8fafc; font-size: 0.92rem; font-weight: 880; overflow-wrap: anywhere; }
+            .tax-tool-method p { margin: 0.3rem 0 0; color: #64748b; font-size: 0.57rem; font-weight: 580; line-height: 1.42; }
+            .tax-tool-obligations {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.45rem;
+                margin-top: 0.55rem;
+            }
+            .tax-tool-obligation {
+                min-width: 0;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.5rem;
+                padding: 0.66rem;
+                border: 1px solid rgba(148, 163, 184, 0.11);
+                border-radius: 12px;
+                background: rgba(2, 6, 23, 0.38);
+            }
+            .tax-tool-obligation svg { width: 1rem; height: 1rem; flex: 0 0 1rem; margin-top: 0.06rem; color: #67e8f9; }
+            .tax-tool-obligation strong { display: block; color: #cbd5e1; font-size: 0.61rem; font-weight: 790; }
+            .tax-tool-obligation span { display: block; margin-top: 0.14rem; color: #64748b; font-size: 0.56rem; font-weight: 580; line-height: 1.4; }
+            .tax-tool-details {
+                margin-top: 0.55rem;
+                border: 1px solid rgba(148, 163, 184, 0.11);
+                border-radius: 12px;
+                background: rgba(2, 6, 23, 0.34);
+            }
+            .tax-tool-details summary {
+                min-height: 2.4rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.5rem;
+                padding: 0.48rem 0.68rem;
+                color: #94a3b8;
+                font-size: 0.62rem;
+                font-weight: 740;
+                list-style: none;
+                cursor: pointer;
+            }
+            .tax-tool-details summary::-webkit-details-marker { display: none; }
+            .tax-tool-details summary::after { content: "+"; color: #67e8f9; font-size: 0.9rem; }
+            .tax-tool-details[open] summary::after { content: "−"; }
+            .tax-tool-formula { padding: 0 0.68rem 0.68rem; color: #64748b; font-size: 0.58rem; font-weight: 580; line-height: 1.55; }
+            .tax-tool-formula p { margin: 0.22rem 0; }
+            .tax-tool-legal {
+                padding: 0.75rem 1.15rem calc(0.75rem + env(safe-area-inset-bottom));
+                border-top: 1px solid rgba(148, 163, 184, 0.11);
+                color: #64748b;
+                background: rgba(2, 6, 23, 0.42);
+                font-size: 0.56rem;
+                font-weight: 580;
+                line-height: 1.5;
+                text-align: center;
+            }
+            .tax-tool-legal a { color: #67e8f9; text-decoration: underline; text-decoration-color: rgba(103, 232, 249, 0.28); text-underline-offset: 2px; }
+
+            @media (max-width: 760px) {
+                .tax-tool-modal { align-items: flex-end; padding: 0; }
+                .tax-tool-shell {
+                    width: 100%;
+                    max-width: 100%;
+                    height: 100dvh;
+                    max-height: 100dvh;
+                    border-width: 0;
+                    border-radius: 0;
+                    transform: translateY(20px);
+                }
+                .tax-tool-header { padding: calc(0.78rem + env(safe-area-inset-top)) 0.82rem 0.78rem; }
+                .tax-tool-heading { gap: 0.58rem; }
+                .tax-tool-heading-icon { width: 2.35rem; height: 2.35rem; flex-basis: 2.35rem; border-radius: 12px; }
+                .tax-tool-heading-copy p { display: none; }
+                .tax-tool-layout { grid-template-columns: minmax(0, 1fr); }
+                .tax-tool-form,
+                .tax-tool-results { padding: 0.88rem; }
+                .tax-tool-form { border-right: 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+                .tax-tool-empty { min-height: 13.5rem; }
+                .tax-tool-legal { padding: 0.68rem 0.88rem calc(0.68rem + env(safe-area-inset-bottom)); }
+            }
+            @media (max-width: 460px) {
+                .store-os-footer-bar { gap: 0.12rem; padding: 0.14rem 0.2rem; }
+                .store-os-footer-tool { gap: 0.28rem; padding: 0 0.34rem; }
+                .store-os-footer-tool-full { display: none; }
+                .store-os-footer-tool-short { display: inline; }
+                .store-os-footer-hot { display: none; }
+                .store-os-footer-divider { height: 0.9rem; }
+                .store-os-footer-link { padding: 0 0.24rem; }
+                .tax-tool-rate-preview,
+                .tax-tool-obligations { grid-template-columns: minmax(0, 1fr); }
+                .tax-tool-breakdown { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+                .tax-tool-breakdown > div:first-child { grid-column: 1 / -1; }
+                .tax-tool-compare { grid-template-columns: minmax(0, 1fr); }
+                .tax-tool-total-card strong { font-size: 1.45rem; }
+            }
+            @media (max-width: 350px) {
+                .store-os-footer-tool svg { display: none; }
+                .tax-tool-heading-copy h2 { font-size: 0.91rem; }
+                .tax-tool-year { display: none; }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                .tax-tool-modal,
+                .tax-tool-shell { transition: none !important; }
+            }
             .landing-os .app-language-switcher.os-language-switcher {
                 border: 1px solid rgba(148, 163, 184, 0.2);
                 background: rgba(15, 23, 42, 0.52);
@@ -3029,6 +3633,211 @@
                     font-size: 0.58rem;
                 }
             }
+
+            /* MOBILE NEWS RAIL: isolated layout filler; quote/tax core remains untouched. */
+            .store-os-news { display: none; }
+            @media (max-width: 640px) {
+                .store-os-shell {
+                    min-height: 100svh;
+                    min-height: 100dvh;
+                }
+                .store-os-news {
+                    position: relative;
+                    z-index: 2;
+                    flex: 1 0 clamp(13.75rem, 31svh, 17rem);
+                    min-height: clamp(13.75rem, 31svh, 17rem);
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.55rem;
+                    padding: 0.48rem 0 0.55rem;
+                    overflow: hidden;
+                }
+                .store-os-news::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0.2rem 0.7rem 0.2rem;
+                    border-radius: 22px;
+                    background:
+                        radial-gradient(circle at 12% 12%, rgba(34, 211, 238, 0.09), transparent 36%),
+                        linear-gradient(180deg, rgba(15, 23, 42, 0.12), rgba(2, 6, 23, 0.02));
+                    pointer-events: none;
+                }
+                .store-os-news-head {
+                    position: relative;
+                    z-index: 1;
+                    padding: 0 1rem;
+                    display: flex;
+                    align-items: end;
+                    justify-content: space-between;
+                    gap: 0.8rem;
+                    flex: 0 0 auto;
+                }
+                .store-os-news-kicker {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.42rem;
+                    color: #67e8f9;
+                    font-size: 0.59rem;
+                    font-weight: 850;
+                    letter-spacing: 0.1em !important;
+                    text-transform: uppercase;
+                }
+                .store-os-news-kicker::before {
+                    content: "";
+                    width: 0.42rem;
+                    height: 0.42rem;
+                    border-radius: 999px;
+                    background: #34d399;
+                    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12), 0 0 14px rgba(52, 211, 153, 0.58);
+                }
+                .store-os-news-title {
+                    margin-top: 0.14rem;
+                    color: #f8fafc;
+                    font-size: 0.91rem;
+                    font-weight: 780;
+                    line-height: 1.18;
+                }
+                .store-os-news-hint {
+                    color: rgba(148, 163, 184, 0.66);
+                    font-size: 0.57rem;
+                    font-weight: 680;
+                    white-space: nowrap;
+                }
+                .store-os-news-rail {
+                    position: relative;
+                    z-index: 1;
+                    min-height: 0;
+                    flex: 1 1 auto;
+                    display: flex;
+                    align-items: stretch;
+                    gap: 0.72rem;
+                    padding: 0 1rem 0.2rem;
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    scroll-snap-type: x mandatory;
+                    scroll-padding-inline: 1rem;
+                    scrollbar-width: none;
+                    overscroll-behavior-inline: contain;
+                    -webkit-overflow-scrolling: touch;
+                }
+                .store-os-news-rail::-webkit-scrollbar { display: none; }
+                .store-os-news-card {
+                    --news-accent: #22d3ee;
+                    position: relative;
+                    isolation: isolate;
+                    flex: 0 0 min(80vw, 19.25rem);
+                    min-width: 0;
+                    min-height: 9.6rem;
+                    padding: 0.85rem 0.88rem 0.78rem;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    scroll-snap-align: start;
+                    border: 1px solid rgba(34, 211, 238, 0.2);
+                    border: 1px solid color-mix(in srgb, var(--news-accent) 24%, rgba(148, 163, 184, 0.12));
+                    border-radius: 20px;
+                    background: rgba(8, 15, 31, 0.94);
+                    background:
+                        linear-gradient(145deg, color-mix(in srgb, var(--news-accent) 10%, rgba(15, 23, 42, 0.92)), rgba(3, 10, 24, 0.92) 66%),
+                        rgba(8, 15, 31, 0.94);
+                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 16px 34px rgba(2, 6, 23, 0.2);
+                    -webkit-backdrop-filter: blur(18px) saturate(135%);
+                    backdrop-filter: blur(18px) saturate(135%);
+                }
+                .store-os-news-card::before {
+                    content: "";
+                    position: absolute;
+                    z-index: -1;
+                    width: 8.5rem;
+                    height: 8.5rem;
+                    right: -3.1rem;
+                    top: -3.8rem;
+                    border-radius: 999px;
+                    background: radial-gradient(circle, color-mix(in srgb, var(--news-accent) 34%, transparent), transparent 69%);
+                    opacity: 0.9;
+                }
+                .store-os-news-card:nth-child(2) { --news-accent: #818cf8; }
+                .store-os-news-card:nth-child(3) { --news-accent: #34d399; }
+                .store-os-news-card-top {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 0.6rem;
+                }
+                .store-os-news-tag {
+                    color: color-mix(in srgb, var(--news-accent) 86%, white);
+                    font-size: 0.53rem;
+                    font-weight: 850;
+                    letter-spacing: 0.08em !important;
+                    text-transform: uppercase;
+                }
+                .store-os-news-icon {
+                    width: 1.72rem;
+                    height: 1.72rem;
+                    display: grid;
+                    place-items: center;
+                    flex: 0 0 auto;
+                    border: 1px solid rgba(34, 211, 238, 0.24);
+                    border: 1px solid color-mix(in srgb, var(--news-accent) 28%, transparent);
+                    border-radius: 10px;
+                    color: #a5f3fc;
+                    color: color-mix(in srgb, var(--news-accent) 88%, white);
+                    background: rgba(34, 211, 238, 0.09);
+                    background: color-mix(in srgb, var(--news-accent) 11%, transparent);
+                }
+                .store-os-news-icon svg { width: 0.92rem; height: 0.92rem; }
+                .store-os-news-card h3 {
+                    margin-top: 0.55rem;
+                    color: #f8fafc;
+                    font-size: 0.91rem;
+                    font-weight: 780;
+                    line-height: 1.18;
+                    text-wrap: balance;
+                }
+                .store-os-news-card p {
+                    margin-top: 0.36rem;
+                    display: -webkit-box;
+                    overflow: hidden;
+                    color: rgba(203, 213, 225, 0.72);
+                    font-size: 0.64rem;
+                    font-weight: 540;
+                    line-height: 1.42;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+                }
+                .store-os-news-action {
+                    width: fit-content;
+                    min-height: 1.9rem;
+                    margin-top: auto;
+                    padding: 0.36rem 0.58rem;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.35rem;
+                    border: 1px solid rgba(34, 211, 238, 0.22) !important;
+                    border: 1px solid color-mix(in srgb, var(--news-accent) 24%, transparent) !important;
+                    border-radius: 999px;
+                    color: #a5f3fc !important;
+                    color: color-mix(in srgb, var(--news-accent) 86%, white) !important;
+                    background: rgba(34, 211, 238, 0.08) !important;
+                    background: color-mix(in srgb, var(--news-accent) 9%, transparent) !important;
+                    font-size: 0.58rem !important;
+                    font-weight: 800 !important;
+                    cursor: pointer;
+                    transition: transform 0.2s ease, background 0.2s ease !important;
+                }
+                .store-os-news-action:active { transform: scale(0.96); }
+                .store-os-news-action svg { width: 0.72rem; height: 0.72rem; }
+                .store-os-footer { flex: 0 0 auto; }
+            }
+            @media (max-width: 980px) and (max-height: 520px) and (orientation: landscape) {
+                .store-os-news { display: none !important; }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .store-os-news-rail { scroll-behavior: auto; }
+                .store-os-news-action { transition: none !important; }
+            }
 	    </style>
 </head>
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -3718,9 +4527,241 @@
                 </div>
             </section>
 
+            <section id="store-os-news" class="store-os-news" aria-labelledby="storeOsNewsTitle">
+                <div class="store-os-news-head">
+                    <div>
+                        <div class="store-os-news-kicker"><span data-lang="vi">Tin mới &amp; cập nhật</span><span data-lang="en">What's new</span></div>
+                        <h2 id="storeOsNewsTitle" class="store-os-news-title"><span data-lang="vi">Cải tiến nhỏ, bán hàng nhanh hơn.</span><span data-lang="en">Small updates. Faster selling.</span></h2>
+                    </div>
+                    <span class="store-os-news-hint"><span data-lang="vi">Vuốt để xem</span><span data-lang="en">Swipe to explore</span> →</span>
+                </div>
+
+                <div class="store-os-news-rail" aria-label="Tin mới Thuận Store">
+                    <article class="store-os-news-card">
+                        <div class="store-os-news-card-top">
+                            <span class="store-os-news-tag"><span data-lang="vi">Mới · Công cụ</span><span data-lang="en">New · Tool</span></span>
+                            <span class="store-os-news-icon" aria-hidden="true">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" stroke-width="1.9"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-width="1.9" stroke-linecap="round"></path></svg>
+                            </span>
+                        </div>
+                        <h3><span data-lang="vi">Tính thuế hộ kinh doanh 2026</span><span data-lang="en">2026 household business tax calculator</span></h3>
+                        <p><span data-lang="vi">Ước tính tham khảo theo doanh thu và ngành nghề, ngay trên trình duyệt.</span><span data-lang="en">Get a quick reference estimate by revenue and business category, right in your browser.</span></p>
+                        <button id="newsOpenTaxTool" type="button" class="store-os-news-action">
+                            <span data-lang="vi">Mở công cụ</span><span data-lang="en">Open tool</span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </button>
+                    </article>
+
+                    <article class="store-os-news-card">
+                        <div class="store-os-news-card-top">
+                            <span class="store-os-news-tag"><span data-lang="vi">Cập nhật · Mobile</span><span data-lang="en">Updated · Mobile</span></span>
+                            <span class="store-os-news-icon" aria-hidden="true">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="7" y="2.8" width="10" height="18.4" rx="2.3" stroke-width="1.9"></rect><path d="M10 6h4M11 17.8h2" stroke-width="1.9" stroke-linecap="round"></path></svg>
+                            </span>
+                        </div>
+                        <h3><span data-lang="vi">Báo giá gọn hơn trên điện thoại</span><span data-lang="en">A cleaner quote flow on mobile</span></h3>
+                        <p><span data-lang="vi">Tìm sản phẩm, áp dụng chiết khấu và xuất file bằng ít thao tác hơn.</span><span data-lang="en">Find products, apply discounts, and export with fewer taps.</span></p>
+                        <button id="newsOpenQuoteTool" type="button" class="store-os-news-action">
+                            <span data-lang="vi">Dùng thử</span><span data-lang="en">Try demo</span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </button>
+                    </article>
+
+                    <article class="store-os-news-card">
+                        <div class="store-os-news-card-top">
+                            <span class="store-os-news-tag"><span data-lang="vi">Trải nghiệm · VI/EN</span><span data-lang="en">Experience · VI/EN</span></span>
+                            <span class="store-os-news-icon" aria-hidden="true">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="1.9"></circle><path d="M3.5 12h17M12 3c2.2 2.45 3.3 5.45 3.3 9s-1.1 6.55-3.3 9c-2.2-2.45-3.3-5.45-3.3-9S9.8 5.45 12 3Z" stroke-width="1.7"></path></svg>
+                            </span>
+                        </div>
+                        <h3><span data-lang="vi">Song ngữ xuyên suốt</span><span data-lang="en">Bilingual from start to finish</span></h3>
+                        <p><span data-lang="vi">Chuyển landing, công cụ và nội dung hướng dẫn bằng một chạm.</span><span data-lang="en">Switch the landing page, tools, and guides with one tap.</span></p>
+                        <button id="newsOpenGuide" type="button" class="store-os-news-action">
+                            <span data-lang="vi">Xem hướng dẫn</span><span data-lang="en">View guide</span>
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </button>
+                    </article>
+                </div>
+            </section>
+
             <footer class="store-os-footer">
-                <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở CV Thuận Huỳnh">© Thuận Huỳnh</button>
+                <div class="store-os-footer-bar" aria-label="Công cụ và thông tin chân trang">
+                    <button id="btnOpenTaxCalculatorFooter" type="button" class="store-os-footer-tool" aria-haspopup="dialog" aria-controls="taxCalculatorModal">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3" stroke-width="2"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-width="2" stroke-linecap="round"></path></svg>
+                        <span class="store-os-footer-tool-full"><span data-lang="vi">Công cụ tính thuế 2026</span><span data-lang="en">2026 tax calculator</span></span>
+                        <span class="store-os-footer-tool-short"><span data-lang="vi">Tính thuế 2026</span><span data-lang="en">Tax 2026</span></span>
+                        <span class="store-os-footer-hot" aria-hidden="true">NEW</span>
+                    </button>
+                    <span class="store-os-footer-divider" aria-hidden="true"></span>
+                    <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở CV Thuận Huỳnh">© Thuận Huỳnh</button>
+                </div>
             </footer>
+        </div>
+
+        <!-- FOOTER TAX TOOL: isolated from quote-builder core. -->
+        <div id="taxCalculatorModal" class="tax-tool-modal" role="dialog" aria-modal="true" aria-labelledby="taxToolTitle" aria-hidden="true">
+            <div class="tax-tool-shell" tabindex="-1">
+                <header class="tax-tool-header">
+                    <div class="tax-tool-heading">
+                        <span class="tax-tool-heading-icon" aria-hidden="true">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" stroke-width="2"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-width="2" stroke-linecap="round"></path></svg>
+                        </span>
+                        <div class="tax-tool-heading-copy">
+                            <h2 id="taxToolTitle"><span data-lang="vi">Ước tính thuế hộ kinh doanh</span><span data-lang="en">Household business tax estimate</span><span class="tax-tool-year">2026</span></h2>
+                            <p><span data-lang="vi">Xác định nhóm doanh thu, GTGT, TNCN và nghĩa vụ chính</span><span data-lang="en">Estimate revenue group, VAT, PIT and key obligations</span></p>
+                        </div>
+                    </div>
+                    <button id="btnCloseTaxCalculator" type="button" class="tax-tool-close" aria-label="Đóng công cụ tính thuế">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-width="2.2" stroke-linecap="round"></path></svg>
+                    </button>
+                </header>
+
+                <div class="tax-tool-scroll">
+                    <div class="tax-tool-layout">
+                        <form id="taxToolForm" class="tax-tool-form" novalidate>
+                            <h3 class="tax-tool-section-title"><span>1</span><span data-lang="vi">Thông tin tính thuế</span><span data-lang="en">Tax inputs</span></h3>
+
+                            <div class="tax-tool-field">
+                                <label for="taxToolIndustry"><span data-lang="vi">Ngành nghề kinh doanh</span><span data-lang="en">Business category</span></label>
+                                <div class="tax-tool-select-wrap">
+                                    <select id="taxToolIndustry" class="tax-tool-select" required>
+                                        <option value="" data-vi="Chọn ngành nghề" data-en="Choose a category">Chọn ngành nghề</option>
+                                        <option value="grocery" data-vi="Tạp hóa, siêu thị mini" data-en="Grocery &amp; mini mart">Tạp hóa, siêu thị mini</option>
+                                        <option value="fashion" data-vi="Quần áo, thời trang" data-en="Clothing &amp; fashion">Quần áo, thời trang</option>
+                                        <option value="cosmetics" data-vi="Mỹ phẩm" data-en="Cosmetics">Mỹ phẩm</option>
+                                        <option value="baby" data-vi="Mẹ và bé" data-en="Mother &amp; baby">Mẹ và bé</option>
+                                        <option value="food" data-vi="Thực phẩm" data-en="Food retail">Thực phẩm</option>
+                                        <option value="household" data-vi="Gia dụng, sinh hoạt" data-en="Household goods">Gia dụng, sinh hoạt</option>
+                                        <option value="electronics" data-vi="Điện tử, điện máy" data-en="Electronics &amp; appliances">Điện tử, điện máy</option>
+                                        <option value="pharmacy" data-vi="Thuốc, thực phẩm chức năng" data-en="Pharmacy &amp; supplements">Thuốc, thực phẩm chức năng</option>
+                                        <option value="furniture" data-vi="Nội thất, trang trí" data-en="Furniture &amp; decor">Nội thất, trang trí</option>
+                                        <option value="restaurant" data-vi="Nhà hàng, quán ăn" data-en="Restaurant &amp; food service">Nhà hàng, quán ăn</option>
+                                        <option value="billiards" data-vi="Bida" data-en="Billiards">Bida</option>
+                                        <option value="beauty" data-vi="Spa, dịch vụ làm đẹp" data-en="Spa &amp; beauty services">Spa, dịch vụ làm đẹp</option>
+                                        <option value="lodging" data-vi="Homestay, nhà nghỉ" data-en="Homestay &amp; lodging">Homestay, nhà nghỉ</option>
+                                        <option value="other" data-vi="Hoạt động kinh doanh khác" data-en="Other business activities">Hoạt động kinh doanh khác</option>
+                                    </select>
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </div>
+                            </div>
+
+                            <div class="tax-tool-field">
+                                <span class="tax-tool-field-label"><span data-lang="vi">Kỳ doanh thu đang nhập</span><span data-lang="en">Revenue input period</span></span>
+                                <div class="tax-tool-period" role="radiogroup" aria-label="Kỳ doanh thu">
+                                    <label><input type="radio" name="taxToolPeriod" value="month"><span><span data-lang="vi">Tháng</span><span data-lang="en">Month</span></span></label>
+                                    <label><input type="radio" name="taxToolPeriod" value="quarter" checked><span><span data-lang="vi">Quý</span><span data-lang="en">Quarter</span></span></label>
+                                    <label><input type="radio" name="taxToolPeriod" value="year"><span><span data-lang="vi">Năm</span><span data-lang="en">Year</span></span></label>
+                                </div>
+                            </div>
+
+                            <div class="tax-tool-field">
+                                <label for="taxToolRevenue"><span data-lang="vi">Doanh thu trong kỳ</span><span data-lang="en">Revenue for the period</span></label>
+                                <div class="tax-tool-money-wrap">
+                                    <input id="taxToolRevenue" class="tax-tool-money" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-describedby="taxToolRevenueHint" required>
+                                    <span class="tax-tool-currency">VND</span>
+                                </div>
+                                <div id="taxToolRevenueHint" class="tax-tool-hint"><span><span data-lang="vi">Hệ thống tự quy đổi về doanh thu năm.</span><span data-lang="en">Automatically annualized for calculation.</span></span></div>
+                            </div>
+
+                            <div class="tax-tool-field">
+                                <label for="taxToolCost"><span data-lang="vi">Chi phí hợp lý trong kỳ</span><span data-lang="en">Eligible costs for the period</span></label>
+                                <div class="tax-tool-money-wrap">
+                                    <input id="taxToolCost" class="tax-tool-money" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-describedby="taxToolCostHint">
+                                    <span class="tax-tool-currency">VND</span>
+                                </div>
+                                <div id="taxToolCostHint" class="tax-tool-hint">
+                                    <span><span data-lang="vi">Chỉ nhập chi phí có chứng từ hợp lệ.</span><span data-lang="en">Enter documented eligible costs only.</span></span>
+                                    <button id="taxToolApplyCostSuggestion" type="button" class="tax-tool-suggest"><span data-lang="vi">Dùng gợi ý</span><span data-lang="en">Use estimate</span></button>
+                                </div>
+                            </div>
+
+                            <div class="tax-tool-rate-preview" aria-label="Tỷ lệ thuế theo ngành">
+                                <div><span><span data-lang="vi">Tỷ lệ GTGT</span><span data-lang="en">VAT rate</span></span><strong id="taxToolVatRate">—</strong></div>
+                                <div><span><span data-lang="vi">TNCN trực tiếp</span><span data-lang="en">Direct PIT rate</span></span><strong id="taxToolPitRate">—</strong></div>
+                            </div>
+
+                            <p id="taxToolError" class="tax-tool-error" role="alert"></p>
+
+                            <div class="tax-tool-actions">
+                                <button type="submit" class="tax-tool-submit">
+                                    <span><span data-lang="vi">Tính thuế phải nộp</span><span data-lang="en">Calculate tax</span></span>
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </button>
+                                <button id="taxToolReset" type="button" class="tax-tool-reset"><span data-lang="vi">Làm lại</span><span data-lang="en">Reset</span></button>
+                            </div>
+                        </form>
+
+                        <section class="tax-tool-results" aria-labelledby="taxToolResultHeading" aria-live="polite">
+                            <h3 id="taxToolResultHeading" class="tax-tool-section-title"><span>2</span><span data-lang="vi">Kết quả ước tính</span><span data-lang="en">Estimated result</span></h3>
+
+                            <div id="taxToolEmpty" class="tax-tool-empty">
+                                <span class="tax-tool-empty-icon" aria-hidden="true">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke-width="1.8"></path><path d="M7 7h10M7 12h3m4 0h3m-10 5h3m4 0h3" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                                </span>
+                                <h3><span data-lang="vi">Nhập thông tin để xem kết quả</span><span data-lang="en">Enter details to see your estimate</span></h3>
+                                <p><span data-lang="vi">Công cụ sẽ xác định nhóm hộ kinh doanh, tính GTGT, TNCN và hiển thị nghĩa vụ chính theo quy định 2026.</span><span data-lang="en">The calculator identifies your revenue group, estimates VAT and PIT, and shows key 2026 obligations.</span></p>
+                            </div>
+
+                            <div id="taxToolResultContent" class="tax-tool-result-content" hidden>
+                                <div class="tax-tool-result-top">
+                                    <span id="taxToolResultGroup" class="tax-tool-result-group">—</span>
+                                    <span id="taxToolResultIndustry" class="tax-tool-result-industry">—</span>
+                                </div>
+
+                                <div class="tax-tool-total-card">
+                                    <span id="taxToolTotalLabel" class="tax-tool-total-label">—</span>
+                                    <strong id="taxToolTotalAnnual">0 ₫</strong>
+                                    <span id="taxToolTotalPeriod" class="tax-tool-total-period">—</span>
+                                </div>
+
+                                <div class="tax-tool-breakdown">
+                                    <div><span><span data-lang="vi">Doanh thu/năm</span><span data-lang="en">Annual revenue</span></span><strong id="taxToolAnnualRevenue">0 ₫</strong></div>
+                                    <div><span><span data-lang="vi">Thuế GTGT</span><span data-lang="en">VAT</span></span><strong id="taxToolVat">0 ₫</strong></div>
+                                    <div><span id="taxToolPitLabel"><span data-lang="vi">Thuế TNCN</span><span data-lang="en">PIT</span></span><strong id="taxToolPit">0 ₫</strong></div>
+                                </div>
+
+                                <div id="taxToolCompare" class="tax-tool-compare" hidden>
+                                    <article id="taxToolDirectCard" class="tax-tool-method">
+                                        <div class="tax-tool-method-head"><h4><span data-lang="vi">TNCN theo doanh thu trực tiếp</span><span data-lang="en">PIT on direct revenue</span></h4><span class="tax-tool-method-badge"><span data-lang="vi">THẤP HƠN</span><span data-lang="en">LOWER</span></span></div>
+                                        <strong id="taxToolDirectTotal">0 ₫</strong>
+                                        <p id="taxToolDirectFormula">—</p>
+                                    </article>
+                                    <article id="taxToolProfitCard" class="tax-tool-method">
+                                        <div class="tax-tool-method-head"><h4><span data-lang="vi">TNCN theo thu nhập tính thuế</span><span data-lang="en">PIT on taxable income</span></h4><span class="tax-tool-method-badge"><span data-lang="vi">THẤP HƠN</span><span data-lang="en">LOWER</span></span></div>
+                                        <strong id="taxToolProfitTotal">0 ₫</strong>
+                                        <p id="taxToolProfitFormula">—</p>
+                                    </article>
+                                </div>
+
+                                <div class="tax-tool-obligations">
+                                    <div class="tax-tool-obligation">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h8l4 4v14H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke-width="1.8"></path><path d="M14 3v5h5M9 13h6m-6 4h4" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                                        <div><strong><span data-lang="vi">Hóa đơn điện tử</span><span data-lang="en">E-invoices</span></strong><span id="taxToolInvoice">—</span></div>
+                                    </div>
+                                    <div class="tax-tool-obligation">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Z" stroke-width="1.8"></path><path d="M8 8h8M8 12h8M8 16h5" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                                        <div><strong><span data-lang="vi">Kê khai &amp; sổ sách</span><span data-lang="en">Filing &amp; records</span></strong><span id="taxToolRecords">—</span></div>
+                                    </div>
+                                </div>
+
+                                <details class="tax-tool-details">
+                                    <summary><span data-lang="vi">Xem cách tính</span><span data-lang="en">View calculation</span></summary>
+                                    <div id="taxToolFormula" class="tax-tool-formula">—</div>
+                                </details>
+                            </div>
+                        </section>
+                    </div>
+
+                    <footer class="tax-tool-legal">
+                        <span data-lang="vi">Kết quả chỉ mang tính tham khảo, không thay thế tư vấn thuế. Căn cứ: NĐ 68/2026, NĐ 141/2026 và Luật TNCN 109/2025.</span>
+                        <span data-lang="en">Estimates are for reference only and do not replace professional tax advice. Based on Decrees 68/2026, 141/2026 and PIT Law 109/2025.</span>
+                        <span aria-hidden="true"> · </span>
+                        <a href="https://xaydungchinhsach.chinhphu.vn/toan-van-nghi-dinh-so-141-2026-nd-cp-nang-nguong-doanh-thu-khong-phai-chiu-thue-len-1-ty-dong-119260504154326455.htm" target="_blank" rel="noopener noreferrer"><span data-lang="vi">Nguồn Chính phủ</span><span data-lang="en">Government source</span></a>
+                        <span aria-hidden="true"> · </span>
+                        <a href="https://thuehkd.vn/cong-cu-tinh-thue-ke-khai" target="_blank" rel="noopener noreferrer"><span data-lang="vi">Đối chiếu Sapo</span><span data-lang="en">Sapo reference</span></a>
+                    </footer>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -8406,6 +9447,348 @@ led=>LED
         if (careerProfileModal) careerProfileModal.addEventListener('click', (e) => { if (e.target === careerProfileModal) closeCareerProfileModal(); });
 
         // CV chỉ mở từ bản quyền ở chân trang để landing vẫn tập trung vào trải nghiệm ứng dụng.
+
+        // --- FOOTER TAX TOOL 2026 (isolated from quote-builder state/currency) ---
+        const TaxCalculator2026 = (() => {
+            const modal = document.getElementById('taxCalculatorModal');
+            const trigger = document.getElementById('btnOpenTaxCalculatorFooter');
+            const closeButton = document.getElementById('btnCloseTaxCalculator');
+            const form = document.getElementById('taxToolForm');
+            if (!modal || !trigger || !closeButton || !form) return null;
+
+            const industrySelect = document.getElementById('taxToolIndustry');
+            const revenueInput = document.getElementById('taxToolRevenue');
+            const costInput = document.getElementById('taxToolCost');
+            const suggestCostButton = document.getElementById('taxToolApplyCostSuggestion');
+            const resetButton = document.getElementById('taxToolReset');
+            const errorBox = document.getElementById('taxToolError');
+            const emptyState = document.getElementById('taxToolEmpty');
+            const resultContent = document.getElementById('taxToolResultContent');
+            const compareBox = document.getElementById('taxToolCompare');
+            const directCard = document.getElementById('taxToolDirectCard');
+            const profitCard = document.getElementById('taxToolProfitCard');
+            let lastFocus = null;
+            let hasResult = false;
+
+            const ONE_BILLION = 1000000000;
+            const THREE_BILLION = 3000000000;
+            const FIFTY_BILLION = 50000000000;
+
+            // Rates mirror the public 2026 calculator categories. "Other" uses the
+            // general direct-rate bucket; users with mixed activities should verify
+            // revenue allocation with their tax authority.
+            const industryRates = {
+                grocery:     { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                fashion:     { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                cosmetics:   { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                baby:        { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                food:        { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                household:   { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                electronics: { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                pharmacy:    { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                furniture:   { vat: 0.01, pit: 0.005, costRatio: 0.80 },
+                restaurant:  { vat: 0.03, pit: 0.015, costRatio: 0.85 },
+                billiards:   { vat: 0.05, pit: 0.02,  costRatio: 0.675 },
+                beauty:      { vat: 0.05, pit: 0.02,  costRatio: 0.675 },
+                lodging:     { vat: 0.05, pit: 0.02,  costRatio: 0.675 },
+                other:       { vat: 0.02, pit: 0.01,  costRatio: 0.60 }
+            };
+
+            const copy = {
+                vi: {
+                    close: 'Đóng công cụ tính thuế',
+                    chooseIndustry: 'Vui lòng chọn ngành nghề kinh doanh.',
+                    enterRevenue: 'Vui lòng nhập doanh thu lớn hơn 0.',
+                    enterCost: 'Doanh thu trên 3 tỷ đồng cần nhập chi phí hợp lý để tính TNCN theo thu nhập.',
+                    suggestNeedsRevenue: 'Hãy nhập doanh thu trước khi dùng mức chi phí gợi ý.',
+                    suggestNeedsIndustry: 'Hãy chọn ngành nghề trước khi dùng mức chi phí gợi ý.',
+                    group1: 'NHÓM 1 · DOANH THU ≤ 1 TỶ',
+                    group2: 'NHÓM 2 · TRÊN 1 ĐẾN 3 TỶ',
+                    group3: 'NHÓM 3 · TRÊN 3 ĐẾN 50 TỶ',
+                    group4: 'NHÓM 4 · TRÊN 50 TỶ',
+                    exemptTotal: 'Tổng thuế GTGT & TNCN tạm tính',
+                    lowerTotal: 'Ước tính thấp hơn trong 2 cách tính',
+                    annualTotal: 'Tổng thuế tạm tính/năm',
+                    month: 'tháng',
+                    quarter: 'quý',
+                    year: 'năm',
+                    periodEstimate: (period, value) => `Tạm tính theo ${period}: ${value}`,
+                    pitLower: 'TNCN (cách thấp hơn)',
+                    pitStandard: 'Thuế TNCN',
+                    directFormula: (vat, pit) => `GTGT ${vat} + TNCN trực tiếp ${pit}`,
+                    profitFormula: (vat, pit) => `GTGT ${vat} + TNCN theo thu nhập ${pit}`,
+                    invoiceOptional: 'Không bắt buộc theo ngưỡng doanh thu; có thể đăng ký nếu có nhu cầu.',
+                    invoiceRequired: 'Bắt buộc dùng HĐĐT có mã hoặc HĐĐT khởi tạo từ máy tính tiền.',
+                    recordsGroup1: 'Tự kê khai doanh thu thực tế và lưu sổ, chứng từ theo chế độ áp dụng.',
+                    recordsGroup2: 'Tờ khai 01/CNKD; theo dõi doanh thu, chi phí và chứng từ theo TT 152/2025.',
+                    recordsGroup34: 'Tờ khai 01/CNKD, quyết toán TNCN và sổ chi tiết doanh thu, chi phí.',
+                    formulaExempt: (revenue) => `<p>Doanh thu năm <b>${revenue}</b> không vượt ngưỡng 1 tỷ đồng nên GTGT và TNCN tạm tính bằng <b>0 ₫</b>.</p>`,
+                    formulaGroup2: (revenue, cost, vatRate, pitRate, vat, directPit, profitPit) => `<p>GTGT = ${vatRate} × ${revenue} = <b>${vat}</b>.</p><p>TNCN trực tiếp = ${pitRate} × (doanh thu − 1 tỷ) = <b>${directPit}</b>.</p><p>TNCN theo thu nhập = 15% × (${revenue} − ${cost}) = <b>${profitPit}</b>.</p>`,
+                    formulaProfit: (revenue, cost, vatRate, profitRate, vat, pit) => `<p>GTGT = ${vatRate} × ${revenue} = <b>${vat}</b>.</p><p>TNCN = ${profitRate} × (${revenue} − ${cost}) = <b>${pit}</b>.</p>`,
+                    suggestionTitle: ratio => `Gợi ý tham khảo khoảng ${ratio}% doanh thu`,
+                    rateSuffix: 'doanh thu'
+                },
+                en: {
+                    close: 'Close tax calculator',
+                    chooseIndustry: 'Please choose a business category.',
+                    enterRevenue: 'Please enter revenue greater than 0.',
+                    enterCost: 'Annual revenue above VND 3 billion requires eligible costs for income-based PIT.',
+                    suggestNeedsRevenue: 'Enter revenue before applying the estimated cost ratio.',
+                    suggestNeedsIndustry: 'Choose a category before applying the estimated cost ratio.',
+                    group1: 'GROUP 1 · REVENUE ≤ VND 1B',
+                    group2: 'GROUP 2 · ABOVE VND 1B TO 3B',
+                    group3: 'GROUP 3 · ABOVE VND 3B TO 50B',
+                    group4: 'GROUP 4 · ABOVE VND 50B',
+                    exemptTotal: 'Estimated VAT & PIT total',
+                    lowerTotal: 'Lower estimate of the two methods',
+                    annualTotal: 'Estimated annual tax total',
+                    month: 'month',
+                    quarter: 'quarter',
+                    year: 'year',
+                    periodEstimate: (period, value) => `Estimated per ${period}: ${value}`,
+                    pitLower: 'PIT (lower method)',
+                    pitStandard: 'PIT',
+                    directFormula: (vat, pit) => `VAT ${vat} + direct PIT ${pit}`,
+                    profitFormula: (vat, pit) => `VAT ${vat} + income-based PIT ${pit}`,
+                    invoiceOptional: 'Not mandatory at this revenue threshold; voluntary registration remains available.',
+                    invoiceRequired: 'A tax-authority-coded or cash-register e-invoice system is required.',
+                    recordsGroup1: 'Report actual revenue and retain the applicable books and supporting records.',
+                    recordsGroup2: 'Form 01/CNKD plus revenue, cost and supporting records under Circular 152/2025.',
+                    recordsGroup34: 'Form 01/CNKD, annual PIT finalization and detailed revenue/cost books.',
+                    formulaExempt: revenue => `<p>Annual revenue of <b>${revenue}</b> does not exceed VND 1 billion, so estimated VAT and PIT are <b>VND 0</b>.</p>`,
+                    formulaGroup2: (revenue, cost, vatRate, pitRate, vat, directPit, profitPit) => `<p>VAT = ${vatRate} × ${revenue} = <b>${vat}</b>.</p><p>Direct PIT = ${pitRate} × (revenue − VND 1B) = <b>${directPit}</b>.</p><p>Income-based PIT = 15% × (${revenue} − ${cost}) = <b>${profitPit}</b>.</p>`,
+                    formulaProfit: (revenue, cost, vatRate, profitRate, vat, pit) => `<p>VAT = ${vatRate} × ${revenue} = <b>${vat}</b>.</p><p>PIT = ${profitRate} × (${revenue} − ${cost}) = <b>${pit}</b>.</p>`,
+                    suggestionTitle: ratio => `Reference estimate: about ${ratio}% of revenue`,
+                    rateSuffix: 'revenue'
+                }
+            };
+
+            const getLang = () => (window.AppI18n && AppI18n.get() === 'en') ? 'en' : 'vi';
+            const getCopy = () => copy[getLang()];
+            const formatVND = value => `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(Math.max(0, Math.round(Number(value) || 0)))} ₫`;
+            const formatRate = value => `${new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2 }).format(value * 100)}%`;
+            const parseMoney = input => Number(String(input?.value || '').replace(/[^0-9]/g, '')) || 0;
+            const formatMoneyInput = input => {
+                const digits = String(input.value || '').replace(/[^0-9]/g, '').slice(0, 15);
+                input.value = digits ? new Intl.NumberFormat('vi-VN').format(Number(digits)) : '';
+            };
+            const getPeriod = () => form.querySelector('input[name="taxToolPeriod"]:checked')?.value || 'quarter';
+            const periodMultiplier = period => period === 'month' ? 12 : (period === 'quarter' ? 4 : 1);
+            const selectedRate = () => industryRates[industrySelect.value] || null;
+            const selectedIndustryLabel = () => {
+                const option = industrySelect.options[industrySelect.selectedIndex];
+                return option?.dataset?.[getLang()] || option?.textContent || '';
+            };
+
+            const clearError = () => {
+                errorBox.textContent = '';
+                errorBox.classList.remove('is-visible');
+            };
+            const showError = message => {
+                errorBox.textContent = message;
+                errorBox.classList.add('is-visible');
+            };
+            const showEmptyState = () => {
+                hasResult = false;
+                emptyState.hidden = false;
+                resultContent.hidden = true;
+            };
+            const invalidate = () => {
+                clearError();
+                if (hasResult) showEmptyState();
+            };
+
+            const syncLanguage = () => {
+                const lang = getLang();
+                const t = getCopy();
+                industrySelect.querySelectorAll('option').forEach(option => {
+                    if (option.dataset[lang]) option.textContent = option.dataset[lang];
+                });
+                closeButton.setAttribute('aria-label', t.close);
+                const rate = selectedRate();
+                document.getElementById('taxToolVatRate').textContent = rate ? `${formatRate(rate.vat)} × ${t.rateSuffix}` : '—';
+                document.getElementById('taxToolPitRate').textContent = rate ? `${formatRate(rate.pit)} × > 1B` : '—';
+                if (rate) suggestCostButton.title = t.suggestionTitle(Math.round(rate.costRatio * 100));
+            };
+
+            const syncRatePreview = () => {
+                syncLanguage();
+                invalidate();
+            };
+
+            const renderCalculation = ({ showValidation = true } = {}) => {
+                clearError();
+                const t = getCopy();
+                const rate = selectedRate();
+                const period = getPeriod();
+                const multiplier = periodMultiplier(period);
+                const enteredRevenue = parseMoney(revenueInput);
+                const enteredCost = parseMoney(costInput);
+                const annualRevenue = enteredRevenue * multiplier;
+                const annualCost = enteredCost * multiplier;
+
+                if (!rate) {
+                    if (showValidation) { showError(t.chooseIndustry); industrySelect.focus(); }
+                    return false;
+                }
+                if (enteredRevenue <= 0) {
+                    if (showValidation) { showError(t.enterRevenue); revenueInput.focus(); }
+                    return false;
+                }
+                if (annualRevenue > THREE_BILLION && enteredCost <= 0) {
+                    if (showValidation) { showError(t.enterCost); costInput.focus(); }
+                    return false;
+                }
+
+                let group = 1;
+                if (annualRevenue > FIFTY_BILLION) group = 4;
+                else if (annualRevenue > THREE_BILLION) group = 3;
+                else if (annualRevenue > ONE_BILLION) group = 2;
+
+                const groupLabel = t[`group${group}`];
+                const vat = group === 1 ? 0 : annualRevenue * rate.vat;
+                let pit = 0;
+                let total = 0;
+                let totalLabel = t.annualTotal;
+                let formulaHtml = '';
+
+                compareBox.hidden = true;
+                directCard.classList.remove('is-lower');
+                profitCard.classList.remove('is-lower');
+
+                if (group === 1) {
+                    totalLabel = t.exemptTotal;
+                    formulaHtml = t.formulaExempt(formatVND(annualRevenue));
+                } else if (group === 2) {
+                    const directPit = Math.max(0, annualRevenue - ONE_BILLION) * rate.pit;
+                    const profitPit = Math.max(0, annualRevenue - annualCost) * 0.15;
+                    const directTotal = vat + directPit;
+                    const profitTotal = vat + profitPit;
+                    const directIsLower = directTotal < profitTotal;
+                    const profitIsLower = profitTotal < directTotal;
+                    total = Math.min(directTotal, profitTotal);
+                    pit = directIsLower ? directPit : (profitIsLower ? profitPit : directPit);
+                    totalLabel = t.lowerTotal;
+                    compareBox.hidden = false;
+                    directCard.classList.toggle('is-lower', directIsLower);
+                    profitCard.classList.toggle('is-lower', profitIsLower);
+                    document.getElementById('taxToolDirectTotal').textContent = formatVND(directTotal);
+                    document.getElementById('taxToolProfitTotal').textContent = formatVND(profitTotal);
+                    document.getElementById('taxToolDirectFormula').textContent = t.directFormula(formatVND(vat), formatVND(directPit));
+                    document.getElementById('taxToolProfitFormula').textContent = t.profitFormula(formatVND(vat), formatVND(profitPit));
+                    formulaHtml = t.formulaGroup2(
+                        formatVND(annualRevenue), formatVND(annualCost), formatRate(rate.vat), formatRate(rate.pit),
+                        formatVND(vat), formatVND(directPit), formatVND(profitPit)
+                    );
+                } else {
+                    const profitRate = group === 3 ? 0.17 : 0.20;
+                    pit = Math.max(0, annualRevenue - annualCost) * profitRate;
+                    total = vat + pit;
+                    formulaHtml = t.formulaProfit(
+                        formatVND(annualRevenue), formatVND(annualCost), formatRate(rate.vat), formatRate(profitRate),
+                        formatVND(vat), formatVND(pit)
+                    );
+                }
+
+                if (group === 1) total = 0;
+                if (group > 1 && group !== 2) total = vat + pit;
+
+                const periodName = t[period];
+                const selectedPeriodTotal = total / multiplier;
+                document.getElementById('taxToolResultGroup').textContent = groupLabel;
+                document.getElementById('taxToolResultIndustry').textContent = selectedIndustryLabel();
+                document.getElementById('taxToolTotalLabel').textContent = totalLabel;
+                document.getElementById('taxToolTotalAnnual').textContent = formatVND(total);
+                document.getElementById('taxToolTotalPeriod').textContent = t.periodEstimate(periodName, formatVND(selectedPeriodTotal));
+                document.getElementById('taxToolAnnualRevenue').textContent = formatVND(annualRevenue);
+                document.getElementById('taxToolVat').textContent = formatVND(vat);
+                document.getElementById('taxToolPit').textContent = formatVND(pit);
+                document.getElementById('taxToolPitLabel').textContent = group === 2 ? t.pitLower : t.pitStandard;
+                document.getElementById('taxToolInvoice').textContent = group === 1 ? t.invoiceOptional : t.invoiceRequired;
+                document.getElementById('taxToolRecords').textContent = group === 1 ? t.recordsGroup1 : (group === 2 ? t.recordsGroup2 : t.recordsGroup34);
+                document.getElementById('taxToolFormula').innerHTML = formulaHtml;
+
+                emptyState.hidden = true;
+                resultContent.hidden = false;
+                hasResult = true;
+                return true;
+            };
+
+            const applySuggestedCost = () => {
+                clearError();
+                const t = getCopy();
+                const rate = selectedRate();
+                const revenue = parseMoney(revenueInput);
+                if (!rate) { showError(t.suggestNeedsIndustry); industrySelect.focus(); return; }
+                if (!revenue) { showError(t.suggestNeedsRevenue); revenueInput.focus(); return; }
+                costInput.value = new Intl.NumberFormat('vi-VN').format(Math.round(revenue * rate.costRatio));
+                invalidate();
+            };
+
+            const reset = () => {
+                form.reset();
+                revenueInput.value = '';
+                costInput.value = '';
+                clearError();
+                showEmptyState();
+                syncLanguage();
+                industrySelect.focus();
+            };
+
+            const open = () => {
+                lastFocus = document.activeElement;
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('tax-tool-open');
+                syncLanguage();
+                if (hasResult) renderCalculation({ showValidation: false });
+                requestAnimationFrame(() => industrySelect.focus());
+            };
+            const close = () => {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('tax-tool-open');
+                if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+            };
+
+            trigger.addEventListener('click', open);
+            closeButton.addEventListener('click', close);
+            modal.addEventListener('click', event => { if (event.target === modal) close(); });
+            form.addEventListener('submit', event => { event.preventDefault(); renderCalculation(); });
+            resetButton.addEventListener('click', reset);
+            suggestCostButton.addEventListener('click', applySuggestedCost);
+            industrySelect.addEventListener('change', syncRatePreview);
+            form.querySelectorAll('input[name="taxToolPeriod"]').forEach(input => input.addEventListener('change', invalidate));
+            [revenueInput, costInput].forEach(input => {
+                input.addEventListener('input', () => { formatMoneyInput(input); invalidate(); });
+            });
+            document.addEventListener('keydown', event => {
+                if (!modal.classList.contains('is-open')) return;
+                if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+                if (event.key !== 'Tab') return;
+                const focusable = Array.from(modal.querySelectorAll('button:not([disabled]), select:not([disabled]), input:not([disabled]), a[href], summary, [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null);
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+            });
+            document.querySelectorAll('[data-app-lang]').forEach(button => {
+                button.addEventListener('click', () => setTimeout(() => {
+                    syncLanguage();
+                    if (hasResult) renderCalculation({ showValidation: false });
+                }, 0));
+            });
+
+            syncLanguage();
+            showEmptyState();
+            return { open, close, calculate: renderCalculation };
+        })();
+        window.TaxCalculator2026 = TaxCalculator2026;
+        bindClick('newsOpenTaxTool', () => TaxCalculator2026?.open());
+        bindClick('newsOpenQuoteTool', openQuoteWorkspace);
+        bindClick('newsOpenGuide', openGuideModal);
+        // --- END FOOTER TAX TOOL 2026 ---
         
         const logoTrigger = document.getElementById('brandLogoTrigger');
         const modalStory = document.getElementById('seoStoryModal');
