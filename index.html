@@ -1231,74 +1231,11 @@
                 outline: none;
             }
 
-            /* TAX TOOL 2026: isolated footer entry + responsive calculator. */
-            .store-os-footer-bar {
-                width: fit-content;
-                max-width: min(100%, calc(100vw - 1.25rem));
-                margin: 0 auto;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.28rem;
-                padding: 0.18rem 0.28rem;
-                border: 1px solid rgba(148, 163, 184, 0.16);
-                border-radius: 999px;
-                background: rgba(15, 23, 42, 0.54);
-                box-shadow: 0 10px 28px rgba(2, 6, 23, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-                -webkit-backdrop-filter: blur(16px);
-                backdrop-filter: blur(16px);
-            }
-            .store-os-footer-divider {
-                width: 1px;
-                height: 1.05rem;
-                flex: 0 0 1px;
-                background: rgba(148, 163, 184, 0.2);
-            }
-            .store-os-footer-tool {
-                min-width: 0;
-                min-height: 2rem;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.36rem;
-                padding: 0 0.48rem;
-                border: 0;
-                border-radius: 999px;
-                color: #a5f3fc;
-                background: transparent;
-                font-size: inherit;
-                font-weight: 760;
-                white-space: nowrap;
-                cursor: pointer;
-                transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
-            }
-            .store-os-footer-tool:hover,
-            .store-os-footer-tool:focus-visible {
-                color: #ecfeff;
-                background: rgba(34, 211, 238, 0.1);
-                transform: translateY(-1px);
-                outline: none;
-            }
-            .store-os-footer-tool svg {
-                width: 0.95rem;
-                height: 0.95rem;
-                flex: 0 0 auto;
-            }
-            .store-os-footer-tool-short { display: none; }
-            .store-os-footer-hot {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                min-height: 1rem;
-                padding: 0.05rem 0.3rem;
-                border-radius: 999px;
-                color: #052e16;
-                background: #86efac;
-                font-size: 0.48rem;
-                font-weight: 900;
-                line-height: 1;
-            }
+            /* TAX TOOL 2026: opened from the news rail, isolated from quote state. */
             body.tax-tool-open { overflow: hidden !important; }
+            body.tax-tool-open #screenLanding { overflow: hidden !important; }
+            body.lang-en #taxCalculatorModal [data-lang="vi"],
+            body.lang-vi #taxCalculatorModal [data-lang="en"] { display: none !important; }
             .tax-tool-modal {
                 position: fixed;
                 inset: 0;
@@ -1410,6 +1347,8 @@
             .tax-tool-close:focus-visible { color: #fff; border-color: rgba(34, 211, 238, 0.34); outline: none; }
             .tax-tool-close svg { width: 1.15rem; height: 1.15rem; }
             .tax-tool-scroll {
+                flex: 1 1 auto;
+                min-height: 0;
                 min-width: 0;
                 overflow: auto;
                 overflow-x: hidden;
@@ -1799,24 +1738,39 @@
                     border-radius: 0;
                     transform: translateY(20px);
                 }
-                .tax-tool-header { padding: calc(0.78rem + env(safe-area-inset-top)) 0.82rem 0.78rem; }
-                .tax-tool-heading { gap: 0.58rem; }
-                .tax-tool-heading-icon { width: 2.35rem; height: 2.35rem; flex-basis: 2.35rem; border-radius: 12px; }
+                .tax-tool-header {
+                    position: sticky;
+                    top: 0;
+                    flex: 0 0 auto;
+                    min-height: calc(4.4rem + env(safe-area-inset-top));
+                    padding: calc(0.82rem + env(safe-area-inset-top)) 4.35rem 0.82rem 1rem;
+                }
+                .tax-tool-heading { gap: 0; }
+                .tax-tool-heading-icon { display: none; }
+                .tax-tool-heading-copy h2 { font-size: 1.05rem; line-height: 1.25; }
                 .tax-tool-heading-copy p { display: none; }
+                .tax-tool-close {
+                    position: absolute;
+                    z-index: 20;
+                    top: calc(0.68rem + env(safe-area-inset-top));
+                    right: max(0.75rem, env(safe-area-inset-right));
+                    width: 2.85rem;
+                    height: 2.85rem;
+                    border: 1px solid rgba(255, 255, 255, 0.92);
+                    border-radius: 12px;
+                    color: #020617;
+                    background: #f8fafc;
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
+                }
+                .tax-tool-close svg { width: 1.35rem; height: 1.35rem; }
                 .tax-tool-layout { grid-template-columns: minmax(0, 1fr); }
                 .tax-tool-form,
-                .tax-tool-results { padding: 0.88rem; }
+                .tax-tool-results { padding: 1rem; }
                 .tax-tool-form { border-right: 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
                 .tax-tool-empty { min-height: 13.5rem; }
                 .tax-tool-legal { padding: 0.68rem 0.88rem calc(0.68rem + env(safe-area-inset-bottom)); }
             }
             @media (max-width: 460px) {
-                .store-os-footer-bar { gap: 0.12rem; padding: 0.14rem 0.2rem; }
-                .store-os-footer-tool { gap: 0.28rem; padding: 0 0.34rem; }
-                .store-os-footer-tool-full { display: none; }
-                .store-os-footer-tool-short { display: inline; }
-                .store-os-footer-hot { display: none; }
-                .store-os-footer-divider { height: 0.9rem; }
                 .store-os-footer-link { padding: 0 0.24rem; }
                 .tax-tool-rate-preview,
                 .tax-tool-obligations { grid-template-columns: minmax(0, 1fr); }
@@ -1826,7 +1780,6 @@
                 .tax-tool-total-card strong { font-size: 1.45rem; }
             }
             @media (max-width: 350px) {
-                .store-os-footer-tool svg { display: none; }
                 .tax-tool-heading-copy h2 { font-size: 0.91rem; }
                 .tax-tool-year { display: none; }
             }
@@ -3644,31 +3597,26 @@
                 .store-os-news {
                     position: relative;
                     z-index: 2;
-                    flex: 1 0 clamp(13.75rem, 31svh, 17rem);
-                    min-height: clamp(13.75rem, 31svh, 17rem);
+                    order: 1;
+                    flex: 1 0 17rem;
+                    min-height: 17rem;
                     width: 100%;
                     display: flex;
                     flex-direction: column;
-                    gap: 0.55rem;
-                    padding: 0.48rem 0 0.55rem;
+                    justify-content: center;
+                    gap: 0.62rem;
+                    padding: 0.68rem 0 0.45rem;
                     overflow: hidden;
                 }
                 .store-os-news::before {
-                    content: "";
-                    position: absolute;
-                    inset: 0.2rem 0.7rem 0.2rem;
-                    border-radius: 22px;
-                    background:
-                        radial-gradient(circle at 12% 12%, rgba(34, 211, 238, 0.09), transparent 36%),
-                        linear-gradient(180deg, rgba(15, 23, 42, 0.12), rgba(2, 6, 23, 0.02));
-                    pointer-events: none;
+                    content: none;
                 }
                 .store-os-news-head {
                     position: relative;
                     z-index: 1;
                     padding: 0 1rem;
                     display: flex;
-                    align-items: end;
+                    align-items: flex-start;
                     justify-content: space-between;
                     gap: 0.8rem;
                     flex: 0 0 auto;
@@ -3678,7 +3626,7 @@
                     align-items: center;
                     gap: 0.42rem;
                     color: #67e8f9;
-                    font-size: 0.59rem;
+                    font-size: 0.65rem;
                     font-weight: 850;
                     letter-spacing: 0.1em !important;
                     text-transform: uppercase;
@@ -3692,15 +3640,15 @@
                     box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12), 0 0 14px rgba(52, 211, 153, 0.58);
                 }
                 .store-os-news-title {
-                    margin-top: 0.14rem;
+                    margin-top: 0.22rem;
                     color: #f8fafc;
-                    font-size: 0.91rem;
-                    font-weight: 780;
-                    line-height: 1.18;
+                    font-size: 1.08rem;
+                    font-weight: 760;
+                    line-height: 1.25;
                 }
                 .store-os-news-hint {
                     color: rgba(148, 163, 184, 0.66);
-                    font-size: 0.57rem;
+                    font-size: 0.62rem;
                     font-weight: 680;
                     white-space: nowrap;
                 }
@@ -3708,54 +3656,46 @@
                     position: relative;
                     z-index: 1;
                     min-height: 0;
-                    flex: 1 1 auto;
+                    height: 11.65rem;
+                    flex: 0 0 11.65rem;
                     display: flex;
                     align-items: stretch;
-                    gap: 0.72rem;
-                    padding: 0 1rem 0.2rem;
+                    gap: 1.25rem;
+                    padding: 0 1rem 0.1rem;
                     overflow-x: auto;
                     overflow-y: hidden;
-                    scroll-snap-type: x mandatory;
+                    scroll-snap-type: x proximity;
                     scroll-padding-inline: 1rem;
+                    scroll-behavior: smooth;
                     scrollbar-width: none;
-                    overscroll-behavior-inline: contain;
+                    overscroll-behavior-x: contain;
+                    touch-action: pan-x pan-y;
                     -webkit-overflow-scrolling: touch;
                 }
                 .store-os-news-rail::-webkit-scrollbar { display: none; }
+                .store-os-news-rail::after {
+                    content: none;
+                }
                 .store-os-news-card {
                     --news-accent: #22d3ee;
                     position: relative;
-                    isolation: isolate;
-                    flex: 0 0 min(80vw, 19.25rem);
+                    flex: 0 0 calc(100vw - 2rem);
                     min-width: 0;
-                    min-height: 9.6rem;
-                    padding: 0.85rem 0.88rem 0.78rem;
+                    height: 100%;
+                    min-height: 0;
+                    padding: 0.72rem 0 0.5rem;
                     display: flex;
                     flex-direction: column;
                     overflow: hidden;
                     scroll-snap-align: start;
-                    border: 1px solid rgba(34, 211, 238, 0.2);
-                    border: 1px solid color-mix(in srgb, var(--news-accent) 24%, rgba(148, 163, 184, 0.12));
-                    border-radius: 20px;
-                    background: rgba(8, 15, 31, 0.94);
-                    background:
-                        linear-gradient(145deg, color-mix(in srgb, var(--news-accent) 10%, rgba(15, 23, 42, 0.92)), rgba(3, 10, 24, 0.92) 66%),
-                        rgba(8, 15, 31, 0.94);
-                    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.055), 0 16px 34px rgba(2, 6, 23, 0.2);
-                    -webkit-backdrop-filter: blur(18px) saturate(135%);
-                    backdrop-filter: blur(18px) saturate(135%);
+                    border: 0;
+                    border-top: 1px solid rgba(148, 163, 184, 0.18);
+                    border-radius: 0;
+                    background: transparent;
+                    box-shadow: none;
                 }
                 .store-os-news-card::before {
-                    content: "";
-                    position: absolute;
-                    z-index: -1;
-                    width: 8.5rem;
-                    height: 8.5rem;
-                    right: -3.1rem;
-                    top: -3.8rem;
-                    border-radius: 999px;
-                    background: radial-gradient(circle, color-mix(in srgb, var(--news-accent) 34%, transparent), transparent 69%);
-                    opacity: 0.9;
+                    content: none;
                 }
                 .store-os-news-card:nth-child(2) { --news-accent: #818cf8; }
                 .store-os-news-card:nth-child(3) { --news-accent: #34d399; }
@@ -3767,68 +3707,65 @@
                 }
                 .store-os-news-tag {
                     color: color-mix(in srgb, var(--news-accent) 86%, white);
-                    font-size: 0.53rem;
-                    font-weight: 850;
+                    font-size: 0.62rem;
+                    font-weight: 820;
                     letter-spacing: 0.08em !important;
                     text-transform: uppercase;
                 }
                 .store-os-news-icon {
-                    width: 1.72rem;
-                    height: 1.72rem;
+                    width: 1.9rem;
+                    height: 1.9rem;
                     display: grid;
                     place-items: center;
                     flex: 0 0 auto;
-                    border: 1px solid rgba(34, 211, 238, 0.24);
-                    border: 1px solid color-mix(in srgb, var(--news-accent) 28%, transparent);
-                    border-radius: 10px;
+                    border: 0;
+                    border-radius: 0;
                     color: #a5f3fc;
                     color: color-mix(in srgb, var(--news-accent) 88%, white);
-                    background: rgba(34, 211, 238, 0.09);
-                    background: color-mix(in srgb, var(--news-accent) 11%, transparent);
+                    background: transparent;
                 }
-                .store-os-news-icon svg { width: 0.92rem; height: 0.92rem; }
+                .store-os-news-icon svg { width: 1.08rem; height: 1.08rem; }
                 .store-os-news-card h3 {
-                    margin-top: 0.55rem;
+                    margin-top: 0.58rem;
                     color: #f8fafc;
-                    font-size: 0.91rem;
-                    font-weight: 780;
-                    line-height: 1.18;
+                    font-size: 1.07rem;
+                    font-weight: 760;
+                    line-height: 1.25;
                     text-wrap: balance;
                 }
                 .store-os-news-card p {
-                    margin-top: 0.36rem;
+                    margin-top: 0.42rem;
                     display: -webkit-box;
                     overflow: hidden;
-                    color: rgba(203, 213, 225, 0.72);
-                    font-size: 0.64rem;
-                    font-weight: 540;
-                    line-height: 1.42;
+                    color: rgba(203, 213, 225, 0.8);
+                    font-size: 0.75rem;
+                    font-weight: 520;
+                    line-height: 1.48;
                     -webkit-line-clamp: 3;
                     -webkit-box-orient: vertical;
                 }
                 .store-os-news-action {
                     width: fit-content;
-                    min-height: 1.9rem;
+                    min-height: 2rem;
                     margin-top: auto;
-                    padding: 0.36rem 0.58rem;
+                    padding: 0.35rem 0;
                     display: inline-flex;
                     align-items: center;
                     gap: 0.35rem;
-                    border: 1px solid rgba(34, 211, 238, 0.22) !important;
-                    border: 1px solid color-mix(in srgb, var(--news-accent) 24%, transparent) !important;
-                    border-radius: 999px;
+                    border: 0 !important;
+                    border-radius: 0;
                     color: #a5f3fc !important;
                     color: color-mix(in srgb, var(--news-accent) 86%, white) !important;
-                    background: rgba(34, 211, 238, 0.08) !important;
-                    background: color-mix(in srgb, var(--news-accent) 9%, transparent) !important;
-                    font-size: 0.58rem !important;
+                    background: transparent !important;
+                    font-size: 0.72rem !important;
                     font-weight: 800 !important;
                     cursor: pointer;
                     transition: transform 0.2s ease, background 0.2s ease !important;
                 }
                 .store-os-news-action:active { transform: scale(0.96); }
-                .store-os-news-action svg { width: 0.72rem; height: 0.72rem; }
-                .store-os-footer { flex: 0 0 auto; }
+                .store-os-news-action svg { width: 0.84rem; height: 0.84rem; }
+                .store-os-trust { order: 2; flex: 0 0 auto; }
+                .store-os-footer { order: 3; flex: 0 0 auto; }
             }
             @media (max-width: 980px) and (max-height: 520px) and (orientation: landscape) {
                 .store-os-news { display: none !important; }
@@ -3953,7 +3890,7 @@
                                 <button type="button" class="resume-lang-btn" data-career-lang="en">EN</button>
                                 <button type="button" class="resume-lang-btn is-active" data-career-lang="vi">VI</button>
                             </div>
-                            <button id="btnCloseCareerProfile" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors shrink-0">
+                            <button id="btnCloseCareerProfile" class="w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors shrink-0" aria-label="Đóng hồ sơ">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
@@ -4145,7 +4082,7 @@
                     <div class="w-8 h-8 rounded-full bg-cyan-50 flex items-center justify-center"><svg class="w-4 h-4 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
                     <h3 class="text-sm font-black text-slate-900 uppercase tracking-wide"><span data-lang="en">Thanks for tapping here</span><span data-lang="vi">Cảm ơn bạn đã chạm vào đây</span></h3>
                 </div>
-                <button id="btnCloseStory" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <button id="btnCloseStory" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors" aria-label="Đóng phần giới thiệu"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar text-[14px] text-slate-600 leading-relaxed space-y-4">
                 <h2 class="text-xl font-black text-slate-800 leading-snug"><span data-lang="en">Quote builder and store management tool for sales teams.</span><span data-lang="vi">Phần mềm tạo bảng báo giá và quản lý cửa hàng cho đội bán hàng.</span></h2>
@@ -4269,7 +4206,7 @@
     <!-- MODAL LỜI CẢM ƠN VÀ GÓP Ý DEMO TỪ HOTLINE -->
     <div id="demoFeedbackModal" data-nosnippet class="home-module fixed inset-0 bg-slate-900/60 z-[2500] hidden items-center justify-center backdrop-blur-md transition-opacity duration-300 opacity-0 px-4">
         <div class="bg-white rounded-[24px] p-6 w-full max-w-[400px] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh] relative">
-            <button id="btnCloseFeedback" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors z-10">
+            <button id="btnCloseFeedback" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors z-10" aria-label="Đóng yêu cầu tư vấn">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <div class="overflow-y-auto hide-scrollbar flex-grow pt-2">
@@ -4585,20 +4522,11 @@
             </section>
 
             <footer class="store-os-footer">
-                <div class="store-os-footer-bar" aria-label="Công cụ và thông tin chân trang">
-                    <button id="btnOpenTaxCalculatorFooter" type="button" class="store-os-footer-tool" aria-haspopup="dialog" aria-controls="taxCalculatorModal">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3" stroke-width="2"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-width="2" stroke-linecap="round"></path></svg>
-                        <span class="store-os-footer-tool-full"><span data-lang="vi">Công cụ tính thuế 2026</span><span data-lang="en">2026 tax calculator</span></span>
-                        <span class="store-os-footer-tool-short"><span data-lang="vi">Tính thuế 2026</span><span data-lang="en">Tax 2026</span></span>
-                        <span class="store-os-footer-hot" aria-hidden="true">NEW</span>
-                    </button>
-                    <span class="store-os-footer-divider" aria-hidden="true"></span>
-                    <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở CV Thuận Huỳnh">© Thuận Huỳnh</button>
-                </div>
+                <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở hồ sơ Thuận Huỳnh">© Thuận Huỳnh</button>
             </footer>
         </div>
 
-        <!-- FOOTER TAX TOOL: isolated from quote-builder core. -->
+        <!-- NEWS TAX TOOL: isolated from quote-builder core. -->
         <div id="taxCalculatorModal" class="tax-tool-modal" role="dialog" aria-modal="true" aria-labelledby="taxToolTitle" aria-hidden="true">
             <div class="tax-tool-shell" tabindex="-1">
                 <header class="tax-tool-header">
@@ -4757,8 +4685,6 @@
                         <span data-lang="en">Estimates are for reference only and do not replace professional tax advice. Based on Decrees 68/2026, 141/2026 and PIT Law 109/2025.</span>
                         <span aria-hidden="true"> · </span>
                         <a href="https://xaydungchinhsach.chinhphu.vn/toan-van-nghi-dinh-so-141-2026-nd-cp-nang-nguong-doanh-thu-khong-phai-chiu-thue-len-1-ty-dong-119260504154326455.htm" target="_blank" rel="noopener noreferrer"><span data-lang="vi">Nguồn Chính phủ</span><span data-lang="en">Government source</span></a>
-                        <span aria-hidden="true"> · </span>
-                        <a href="https://thuehkd.vn/cong-cu-tinh-thue-ke-khai" target="_blank" rel="noopener noreferrer"><span data-lang="vi">Đối chiếu Sapo</span><span data-lang="en">Sapo reference</span></a>
                     </footer>
                 </div>
             </div>
@@ -5669,6 +5595,14 @@
                 "QUẢN LÝ KHO DỮ LIỆU": "DATA WAREHOUSE",
                 "ĐÓNG": "CLOSE",
                 "Đóng": "Close",
+                "Đóng hướng dẫn sử dụng": "Close user guide",
+                "Đóng công cụ tính thuế": "Close tax calculator",
+                "Đóng hồ sơ": "Close profile",
+                "Đóng phần giới thiệu": "Close introduction",
+                "Đóng cửa sổ dịch vụ": "Close services dialog",
+                "Đóng yêu cầu tư vấn": "Close consultation request",
+                "Mở hồ sơ Thuận Huỳnh": "Open Thuận Huỳnh's profile",
+                "Tin mới Thuận Store": "Thuan Store news",
                 "Kho Hàng Đã Tải": "Loaded Warehouses",
                 "Tạo Báo Giá": "Create Quote",
                 "Thêm Excel Mới": "Add New Excel",
@@ -5845,6 +5779,28 @@
                 "Ngôn ngữ ứng dụng": "App language",
                 "Ngôn ngữ hồ sơ": "Profile language",
                 "Điều hướng chính": "Primary navigation",
+                "Hệ sinh thái tính năng Thuận Store": "Thuan Store feature ecosystem",
+                "Khám phá Thuận Store": "Explore Thuan Store",
+                "Dịch vụ hỗ trợ bán hàng online": "Online sales support services",
+                "Tin mới Thuận Store": "Thuan Store news",
+                "Giao diện tối": "Dark mode",
+                "Mở menu": "Open menu",
+                "Mở demo báo giá": "Open quote demo",
+                "Mở hồ sơ Thuận Huỳnh": "Open Thuận Huỳnh's profile",
+                "Đóng hướng dẫn sử dụng": "Close user guide",
+                "Đóng công cụ tính thuế": "Close tax calculator",
+                "Đóng hồ sơ": "Close profile",
+                "Đóng phần giới thiệu": "Close introduction",
+                "Đóng cửa sổ dịch vụ": "Close services dialog",
+                "Đóng yêu cầu tư vấn": "Close consultation request",
+                "Kho hàng": "Warehouse",
+                "Khuyến mãi": "Promotions",
+                "Tài chính và chiết khấu": "Finance and discounts",
+                "Lịch chăm sóc khách hàng": "Customer care schedule",
+                "Chỉ số vận hành": "Operating metrics",
+                "Kỳ doanh thu": "Revenue period",
+                "Tỷ lệ thuế theo ngành": "Tax rates by business category",
+                "Tên cửa hàng, ngành hàng, số lượng mã hàng, nhu cầu báo giá hoặc số điện thoại liên hệ...": "Store name, business category, number of SKUs, quote needs, or contact phone...",
                 "Khám phá công cụ": "Explore tools",
                 "Chạm để tương tác": "Tap to interact",
                 "Hướng dẫn": "Guide",
@@ -9376,6 +9332,10 @@ led=>LED
             careerProfileModal.classList.toggle('lang-vi', nextLang === 'vi');
             careerProfileModal.classList.toggle('lang-en', nextLang === 'en');
             careerProfileModal.setAttribute('lang', nextLang);
+            const careerLanguageToggle = careerProfileModal.querySelector('.resume-lang-toggle');
+            if (careerLanguageToggle) careerLanguageToggle.setAttribute('aria-label', nextLang === 'en' ? 'Profile language' : 'Ngôn ngữ hồ sơ');
+            const careerCloseButton = careerProfileModal.querySelector('#btnCloseCareerProfile');
+            if (careerCloseButton) careerCloseButton.setAttribute('aria-label', nextLang === 'en' ? 'Close profile' : 'Đóng hồ sơ');
             careerProfileModal.querySelectorAll('[data-career-lang]').forEach(btn => {
                 const active = btn.dataset.careerLang === nextLang;
                 btn.classList.toggle('is-active', active);
@@ -9448,13 +9408,13 @@ led=>LED
 
         // CV chỉ mở từ bản quyền ở chân trang để landing vẫn tập trung vào trải nghiệm ứng dụng.
 
-        // --- FOOTER TAX TOOL 2026 (isolated from quote-builder state/currency) ---
+        // --- NEWS TAX TOOL 2026 (isolated from quote-builder state/currency) ---
         const TaxCalculator2026 = (() => {
             const modal = document.getElementById('taxCalculatorModal');
-            const trigger = document.getElementById('btnOpenTaxCalculatorFooter');
             const closeButton = document.getElementById('btnCloseTaxCalculator');
             const form = document.getElementById('taxToolForm');
-            if (!modal || !trigger || !closeButton || !form) return null;
+            if (!modal || !closeButton || !form) return null;
+            if (modal.parentElement !== document.body) document.body.appendChild(modal);
 
             const industrySelect = document.getElementById('taxToolIndustry');
             const revenueInput = document.getElementById('taxToolRevenue');
@@ -9751,7 +9711,6 @@ led=>LED
                 if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
             };
 
-            trigger.addEventListener('click', open);
             closeButton.addEventListener('click', close);
             modal.addEventListener('click', event => { if (event.target === modal) close(); });
             form.addEventListener('submit', event => { event.preventDefault(); renderCalculation(); });
@@ -9788,7 +9747,7 @@ led=>LED
         bindClick('newsOpenTaxTool', () => TaxCalculator2026?.open());
         bindClick('newsOpenQuoteTool', openQuoteWorkspace);
         bindClick('newsOpenGuide', openGuideModal);
-        // --- END FOOTER TAX TOOL 2026 ---
+        // --- END NEWS TAX TOOL 2026 ---
         
         const logoTrigger = document.getElementById('brandLogoTrigger');
         const modalStory = document.getElementById('seoStoryModal');
