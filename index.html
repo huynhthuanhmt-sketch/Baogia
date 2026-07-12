@@ -683,9 +683,6 @@
                 0%, 100% { box-shadow: 0 0 28px rgba(59, 130, 246, 0.16), inset 0 0 18px rgba(34, 211, 238, 0.08); }
                 50% { box-shadow: 0 0 34px rgba(34, 211, 238, 0.24), inset 0 0 20px rgba(34, 211, 238, 0.12); }
             }
-            @keyframes storeLogoMarquee {
-                to { transform: translateX(-33.3333%); }
-            }
             @keyframes storeReactorSpin {
                 to { transform: rotate(360deg); }
             }
@@ -1058,19 +1055,61 @@
                 max-width: 9.4rem;
             }
             .store-os-feature {
+                --node-gap: 0.5rem;
                 position: absolute;
                 left: 50%;
                 top: 50%;
                 z-index: 6;
                 display: grid;
                 justify-items: center;
-                gap: 0.5rem;
+                gap: 0;
                 width: 6.1rem;
                 transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(0deg - var(--orbit-angle)));
                 transform-origin: center;
                 text-align: center;
                 animation: storeFeatureOrbit 42s linear infinite;
                 will-change: transform;
+            }
+            .store-os-node-state {
+                grid-area: 1 / 1;
+                width: 100%;
+                display: grid;
+                justify-items: center;
+                gap: var(--node-gap);
+                opacity: 1;
+                visibility: visible;
+                filter: blur(0);
+                transform: scale(1);
+                transform-origin: center;
+                transition:
+                    opacity 0.34s ease,
+                    filter 0.34s ease,
+                    transform 0.44s cubic-bezier(0.22, 1, 0.36, 1),
+                    visibility 0s linear;
+                transition-delay: calc(var(--swap-index, 0) * 38ms);
+            }
+            .store-os-orbit.is-services .store-os-tool-state,
+            .store-os-orbit.is-tools .store-os-service-state {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                filter: blur(5px);
+                transform: scale(0.68);
+                transition-delay: 0s;
+            }
+            .store-os-orbit.is-services .store-os-service-state,
+            .store-os-orbit.is-tools .store-os-tool-state {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                filter: blur(0);
+                transform: scale(1);
+            }
+            .store-os-center-tools { display: none; }
+            .store-os-orbit.is-tools .store-os-center-services { display: none; }
+            .store-os-orbit.is-tools .store-os-center-tools { display: inline; }
+            .store-os-service-button {
+                color: var(--service-accent, #22d3ee) !important;
             }
             .store-os-orbit:hover .store-os-feature {
                 animation-play-state: paused;
@@ -1143,79 +1182,108 @@
                 line-height: 1.18;
                 text-shadow: 0 2px 14px rgba(2, 6, 23, 0.8);
             }
-            .store-os-trust {
-                position: relative;
-                z-index: 2;
-                padding: 0.25rem 0 0.78rem;
-                text-align: center;
-                overflow: hidden;
-            }
-            .store-os-trust p {
-                color: rgba(203, 213, 225, 0.6);
-                font-size: 0.74rem;
-                font-weight: 710;
-                text-transform: uppercase;
-                letter-spacing: 0.12em !important;
-            }
-            .store-os-logo-marquee {
-                position: relative;
-                width: 100%;
-                margin-top: 0.68rem;
-                overflow: hidden;
-                mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-                -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-            }
-            .store-os-logo-row {
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                flex-wrap: nowrap;
-                gap: 0;
-                width: max-content;
-                animation: storeLogoMarquee 26s linear infinite;
-                will-change: transform;
-            }
-            .store-os-logo-set {
-                flex: 0 0 auto;
-                min-width: max(100vw, 72rem);
-                display: flex;
-                align-items: center;
-                justify-content: space-evenly;
-                gap: clamp(1.8rem, 4vw, 3.4rem);
-                padding: 0 1.5rem;
-            }
-            .store-os-logo-marquee:hover .store-os-logo-row {
-                animation-play-state: paused;
-            }
-            .store-os-logo-row span {
-                flex: 0 0 auto;
-                color: rgba(226, 232, 240, 0.52);
-                font-size: 1rem;
-                font-weight: 820;
-                line-height: 1;
-                text-transform: uppercase;
-                white-space: nowrap;
-                filter: grayscale(1);
-            }
-            .store-os-logo-row .thin {
-                font-weight: 660;
-                text-transform: none;
-            }
             .store-os-footer {
                 position: relative;
                 z-index: 2;
-                padding: 0 1.5rem calc(0.48rem + env(safe-area-inset-bottom));
-                text-align: center;
-                color: rgba(148, 163, 184, 0.72);
+                padding: 1.15rem 2.25rem calc(0.8rem + env(safe-area-inset-bottom));
+                border-top: 1px solid rgba(34, 211, 238, 0.13);
+                color: rgba(203, 213, 225, 0.78);
+                background: rgba(2, 6, 23, 0.28);
+            }
+            .store-os-footer-main {
+                display: grid;
+                grid-template-columns: minmax(16rem, 1.25fr) minmax(15rem, 0.9fr) minmax(13rem, 0.85fr);
+                align-items: start;
+                gap: 1rem 2.4rem;
+                width: min(100%, 79rem);
+                margin: 0 auto;
+            }
+            .store-os-footer-brand {
+                min-width: 0;
+            }
+            .store-os-footer-brand strong {
+                display: block;
+                color: #f8fafc;
+                font-size: 0.84rem;
+                font-weight: 820;
+                line-height: 1.2;
+            }
+            .store-os-footer-brand p {
+                max-width: 31rem;
+                margin: 0.38rem 0 0;
+                color: rgba(203, 213, 225, 0.68);
+                font-size: 0.75rem;
+                line-height: 1.48;
+            }
+            .store-os-footer-nav {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.3rem 1.1rem;
+            }
+            .store-os-footer-nav button {
+                min-height: 2rem;
+                color: rgba(226, 232, 240, 0.78);
                 font-size: 0.72rem;
+                font-weight: 680;
+                text-align: left;
+                cursor: pointer;
+                transition: color 0.2s ease, transform 0.2s ease;
+            }
+            .store-os-footer-nav button:hover,
+            .store-os-footer-nav button:focus-visible,
+            .store-os-footer-contact a:hover,
+            .store-os-footer-contact a:focus-visible {
+                color: #67e8f9;
+                transform: translateY(-1px);
+                outline: none;
+            }
+            .store-os-footer-contact {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 0.75rem;
+                min-width: 0;
+            }
+            .store-os-footer-contact-copy {
+                min-width: 0;
+                text-align: right;
+            }
+            .store-os-footer-contact-copy span {
+                display: block;
+                color: rgba(148, 163, 184, 0.76);
+                font-size: 0.64rem;
+                font-weight: 680;
+                line-height: 1.25;
+            }
+            .store-os-footer-contact a {
+                display: inline-block;
+                max-width: 100%;
+                margin-top: 0.22rem;
+                overflow-wrap: anywhere;
+                color: #e2e8f0;
+                font-size: 0.72rem;
+                font-weight: 720;
+                transition: color 0.2s ease, transform 0.2s ease;
+            }
+            .store-os-footer-bottom {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                width: min(100%, 79rem);
+                margin: 0.72rem auto 0;
+                padding-top: 0.62rem;
+                border-top: 1px solid rgba(148, 163, 184, 0.1);
+                color: rgba(148, 163, 184, 0.68);
+                font-size: 0.66rem;
                 font-weight: 640;
             }
             .store-os-footer-link {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 2rem;
-                padding: 0 0.35rem;
+                min-height: 1.75rem;
+                padding: 0;
                 border: 0;
                 border-radius: 8px;
                 color: inherit;
@@ -1231,7 +1299,7 @@
                 outline: none;
             }
 
-            /* TAX TOOL 2026: opened from the news rail, isolated from quote state. */
+            /* TAX TOOL 2026: isolated from quote state and opened from the tools orbit. */
             body.tax-tool-open { overflow: hidden !important; }
             body.tax-tool-open #screenLanding { overflow: hidden !important; }
             body.lang-en #taxCalculatorModal [data-lang="vi"],
@@ -1974,8 +2042,9 @@
                     --orbit-radius: 9.68rem;
                 }
                 .store-os-feature {
+                    --node-gap: 0.34rem;
                     width: 4.55rem;
-                    gap: 0.34rem;
+                    gap: 0;
                 }
                 .store-os-feature .orbit-node,
                 .store-os-feature-orb {
@@ -2010,29 +2079,36 @@
                     font-size: 0.56rem;
                     letter-spacing: 0.08em !important;
                 }
-                .store-os-trust {
-                    margin-top: 0;
-                    padding: 0.08rem 0 0.38rem;
-                    overflow: hidden;
-                }
-                .store-os-trust p {
-                    display: none;
-                }
-                .store-os-logo-row {
-                    animation-duration: 19s;
-                }
-                .store-os-logo-set {
-                    min-width: 44rem;
-                    gap: 1.85rem;
-                    padding: 0 0.9rem;
-                }
-                .store-os-logo-row span {
-                    font-size: 0.82rem;
-                    color: rgba(226, 232, 240, 0.44);
-                }
                 .store-os-footer {
-                    padding: 0.2rem 1rem calc(0.78rem + env(safe-area-inset-bottom));
-                    font-size: 0.66rem;
+                    padding: 1rem max(1rem, env(safe-area-inset-right)) calc(0.78rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+                }
+                .store-os-footer-main {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 0.78rem;
+                }
+                .store-os-footer-brand p {
+                    max-width: 29rem;
+                    font-size: 0.72rem;
+                }
+                .store-os-footer-nav {
+                    gap: 0.18rem 1rem;
+                    padding-block: 0.12rem;
+                    border-top: 1px solid rgba(148, 163, 184, 0.08);
+                    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+                }
+                .store-os-footer-nav button {
+                    min-height: 2.25rem;
+                    font-size: 0.72rem;
+                }
+                .store-os-footer-contact {
+                    justify-content: space-between;
+                }
+                .store-os-footer-contact-copy {
+                    text-align: left;
+                }
+                .store-os-footer-bottom {
+                    margin-top: 0.7rem;
+                    padding-top: 0.58rem;
                 }
             }
             @media (max-width: 390px) {
@@ -2070,9 +2146,6 @@
                 .landing-os *::before,
                 .landing-os *::after {
                     transition: none !important;
-                }
-                .store-os-logo-row {
-                    animation: none !important;
                 }
                 .store-os-reactor,
                 .store-os-reactor::before,
@@ -3388,6 +3461,19 @@
                 outline: 2px solid #22d3ee;
                 outline-offset: 2px;
             }
+            #orbitServiceIcon svg { width: 1.45rem; height: 1.45rem; stroke-width: 1.9; }
+            #orbitServiceDeliverables li {
+                display: grid;
+                grid-template-columns: 1.1rem minmax(0, 1fr);
+                align-items: start;
+                gap: 0.55rem;
+                line-height: 1.48;
+            }
+            #orbitServiceDeliverables li::before {
+                content: "✓";
+                color: #67e8f9;
+                font-weight: 900;
+            }
             #btnGuideStartQuote,
             #btnReadMoreClose,
             #btnPricingStart,
@@ -3434,9 +3520,7 @@
                 }
                 .store-os-visual {
                     min-height: clamp(23rem, 96vw, 24.5rem);
-                }
-                .store-os-trust {
-                    padding-top: 0;
+                    min-height: clamp(23rem, max(96vw, calc(100svh - 22.5rem)), 36rem);
                 }
                 .home-module {
                     align-items: flex-end !important;
@@ -3457,6 +3541,7 @@
             @media (max-width: 390px) {
                 .store-os-visual {
                     min-height: 23.25rem;
+                    min-height: clamp(23.25rem, max(96vw, calc(100svh - 22.5rem)), 36rem);
                 }
                 .store-os-orbit {
                     --orbit-radius: min(9.3rem, calc(50vw - 2.35rem));
@@ -3465,6 +3550,7 @@
             @media (max-width: 340px) {
                 .store-os-visual {
                     min-height: 21.25rem;
+                    min-height: clamp(21.25rem, max(96vw, calc(100svh - 22.5rem)), 31rem);
                 }
                 #userGuideModal > div > div:first-child {
                     padding: 0.7rem 0.75rem;
@@ -3575,206 +3661,27 @@
                     margin-top: 0.36rem;
                     font-size: 0.48rem;
                 }
-                .store-os-trust {
-                    padding: 0;
-                }
-                .store-os-logo-row span {
-                    font-size: 0.68rem;
-                }
                 .store-os-footer {
-                    padding: 0.08rem calc(1rem + env(safe-area-inset-right)) calc(0.34rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-left));
-                    font-size: 0.58rem;
+                    padding: 0.62rem calc(1rem + env(safe-area-inset-right)) calc(0.5rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-left));
+                }
+                .store-os-footer-main {
+                    grid-template-columns: minmax(0, 1fr) auto;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+                .store-os-footer-brand p,
+                .store-os-footer-nav {
+                    display: none;
+                }
+                .store-os-footer-contact-copy span {
+                    display: none;
+                }
+                .store-os-footer-bottom {
+                    margin-top: 0.35rem;
+                    padding-top: 0.35rem;
                 }
             }
 
-            /* MOBILE NEWS RAIL: isolated layout filler; quote/tax core remains untouched. */
-            .store-os-news { display: none; }
-            @media (max-width: 640px) {
-                .store-os-shell {
-                    min-height: 100svh;
-                    min-height: 100dvh;
-                }
-                .store-os-news {
-                    position: relative;
-                    z-index: 2;
-                    order: 1;
-                    flex: 1 0 17rem;
-                    min-height: 17rem;
-                    width: 100%;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 0.62rem;
-                    padding: 0.68rem 0 0.45rem;
-                    overflow: hidden;
-                }
-                .store-os-news::before {
-                    content: none;
-                }
-                .store-os-news-head {
-                    position: relative;
-                    z-index: 1;
-                    padding: 0 1rem;
-                    display: flex;
-                    align-items: flex-start;
-                    justify-content: space-between;
-                    gap: 0.8rem;
-                    flex: 0 0 auto;
-                }
-                .store-os-news-kicker {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.42rem;
-                    color: #67e8f9;
-                    font-size: 0.65rem;
-                    font-weight: 850;
-                    letter-spacing: 0.1em !important;
-                    text-transform: uppercase;
-                }
-                .store-os-news-kicker::before {
-                    content: "";
-                    width: 0.42rem;
-                    height: 0.42rem;
-                    border-radius: 999px;
-                    background: #34d399;
-                    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.12), 0 0 14px rgba(52, 211, 153, 0.58);
-                }
-                .store-os-news-title {
-                    margin-top: 0.22rem;
-                    color: #f8fafc;
-                    font-size: 1.08rem;
-                    font-weight: 760;
-                    line-height: 1.25;
-                }
-                .store-os-news-hint {
-                    color: rgba(148, 163, 184, 0.66);
-                    font-size: 0.62rem;
-                    font-weight: 680;
-                    white-space: nowrap;
-                }
-                .store-os-news-rail {
-                    position: relative;
-                    z-index: 1;
-                    min-height: 0;
-                    height: 11.65rem;
-                    flex: 0 0 11.65rem;
-                    display: flex;
-                    align-items: stretch;
-                    gap: 1.25rem;
-                    padding: 0 1rem 0.1rem;
-                    overflow-x: auto;
-                    overflow-y: hidden;
-                    scroll-snap-type: x proximity;
-                    scroll-padding-inline: 1rem;
-                    scroll-behavior: smooth;
-                    scrollbar-width: none;
-                    overscroll-behavior-x: contain;
-                    touch-action: pan-x pan-y;
-                    -webkit-overflow-scrolling: touch;
-                }
-                .store-os-news-rail::-webkit-scrollbar { display: none; }
-                .store-os-news-rail::after {
-                    content: none;
-                }
-                .store-os-news-card {
-                    --news-accent: #22d3ee;
-                    position: relative;
-                    flex: 0 0 calc(100vw - 2rem);
-                    min-width: 0;
-                    height: 100%;
-                    min-height: 0;
-                    padding: 0.72rem 0 0.5rem;
-                    display: flex;
-                    flex-direction: column;
-                    overflow: hidden;
-                    scroll-snap-align: start;
-                    border: 0;
-                    border-top: 1px solid rgba(148, 163, 184, 0.18);
-                    border-radius: 0;
-                    background: transparent;
-                    box-shadow: none;
-                }
-                .store-os-news-card::before {
-                    content: none;
-                }
-                .store-os-news-card:nth-child(2) { --news-accent: #818cf8; }
-                .store-os-news-card:nth-child(3) { --news-accent: #34d399; }
-                .store-os-news-card-top {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 0.6rem;
-                }
-                .store-os-news-tag {
-                    color: color-mix(in srgb, var(--news-accent) 86%, white);
-                    font-size: 0.62rem;
-                    font-weight: 820;
-                    letter-spacing: 0.08em !important;
-                    text-transform: uppercase;
-                }
-                .store-os-news-icon {
-                    width: 1.9rem;
-                    height: 1.9rem;
-                    display: grid;
-                    place-items: center;
-                    flex: 0 0 auto;
-                    border: 0;
-                    border-radius: 0;
-                    color: #a5f3fc;
-                    color: color-mix(in srgb, var(--news-accent) 88%, white);
-                    background: transparent;
-                }
-                .store-os-news-icon svg { width: 1.08rem; height: 1.08rem; }
-                .store-os-news-card h3 {
-                    margin-top: 0.58rem;
-                    color: #f8fafc;
-                    font-size: 1.07rem;
-                    font-weight: 760;
-                    line-height: 1.25;
-                    text-wrap: balance;
-                }
-                .store-os-news-card p {
-                    margin-top: 0.42rem;
-                    display: -webkit-box;
-                    overflow: hidden;
-                    color: rgba(203, 213, 225, 0.8);
-                    font-size: 0.75rem;
-                    font-weight: 520;
-                    line-height: 1.48;
-                    -webkit-line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                }
-                .store-os-news-action {
-                    width: fit-content;
-                    min-height: 2rem;
-                    margin-top: auto;
-                    padding: 0.35rem 0;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.35rem;
-                    border: 0 !important;
-                    border-radius: 0;
-                    color: #a5f3fc !important;
-                    color: color-mix(in srgb, var(--news-accent) 86%, white) !important;
-                    background: transparent !important;
-                    font-size: 0.72rem !important;
-                    font-weight: 800 !important;
-                    cursor: pointer;
-                    transition: transform 0.2s ease, background 0.2s ease !important;
-                }
-                .store-os-news-action:active { transform: scale(0.96); }
-                .store-os-news-action svg { width: 0.84rem; height: 0.84rem; }
-                .store-os-trust { order: 2; flex: 0 0 auto; }
-                .store-os-footer { order: 3; flex: 0 0 auto; }
-            }
-            @media (max-width: 980px) and (max-height: 520px) and (orientation: landscape) {
-                .store-os-news { display: none !important; }
-            }
-
-            @media (prefers-reduced-motion: reduce) {
-                .store-os-news-rail { scroll-behavior: auto; }
-                .store-os-news-action { transition: none !important; }
-            }
 	    </style>
 </head>
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -3811,22 +3718,22 @@
                 </div>
                 <div class="grid md:grid-cols-2 gap-3">
                     <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-blue-600 text-white text-xs font-black flex items-center justify-center">1</span><h4 class="text-[13px] font-black text-slate-900 uppercase">Dùng dữ liệu có sẵn</h4></div>
-                        <p class="text-[12px] leading-relaxed text-slate-600 font-medium"><span data-lang="en">Sample data is ready to use. To use your own data, open <strong>Warehouse</strong>, select <strong>Clear Warehouse</strong>, then upload your Excel file.</span><span data-lang="vi">Công cụ có sẵn dữ liệu mẫu. Để dùng dữ liệu riêng, mở <strong>Quản lý kho</strong>, chọn <strong>Xóa Kho</strong>, rồi tải file Excel lên.</span></p>
+                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-blue-600 text-white text-xs font-black flex items-center justify-center">1</span><h4 class="text-[13px] font-black text-slate-900 uppercase"><span data-lang="vi">Dùng dữ liệu có sẵn</span><span data-lang="en">Use sample data</span></h4></div>
+                        <p class="text-[12px] leading-relaxed text-slate-600 font-medium"><span data-lang="en">Sample data is ready to use. To use your own data, open <strong>Warehouse</strong>, select <strong>Clear Warehouse</strong>, then upload your Excel file.</span><span data-lang="vi">Công cụ có sẵn dữ liệu mẫu. Để dùng dữ liệu riêng, mở <strong>Quản lý kho</strong>, chọn <strong>Xóa Kho</strong>, rồi tải tệp Excel lên.</span></p>
                     </section>
 
                     <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-indigo-600 text-white text-xs font-black flex items-center justify-center">2</span><h4 class="text-[13px] font-black text-slate-900 uppercase">Thêm sản phẩm</h4></div>
+                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-indigo-600 text-white text-xs font-black flex items-center justify-center">2</span><h4 class="text-[13px] font-black text-slate-900 uppercase"><span data-lang="vi">Thêm sản phẩm</span><span data-lang="en">Add products</span></h4></div>
                         <p class="text-[12px] leading-relaxed text-slate-600 font-medium"><span data-lang="en">Open <strong>Quote Builder</strong>, select <strong>Add Product</strong>, search by SKU or product name, then select <strong>Add</strong>. You can also add a product manually.</span><span data-lang="vi">Mở <strong>BẢNG BÁO GIÁ</strong>, chọn <strong>Thêm SP</strong>, tìm theo mã hoặc tên sản phẩm, rồi chọn <strong>Thêm</strong>. Bạn cũng có thể thêm sản phẩm thủ công.</span></p>
                     </section>
 
                     <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-teal-600 text-white text-xs font-black flex items-center justify-center">3</span><h4 class="text-[13px] font-black text-slate-900 uppercase">Chỉnh giá & chiết khấu</h4></div>
+                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-teal-600 text-white text-xs font-black flex items-center justify-center">3</span><h4 class="text-[13px] font-black text-slate-900 uppercase"><span data-lang="vi">Chỉnh giá &amp; chiết khấu</span><span data-lang="en">Adjust price &amp; discount</span></h4></div>
                         <p class="text-[12px] leading-relaxed text-slate-600 font-medium"><span data-lang="en">Adjust <strong>Qty, Discount, Promo 1, and Promo 2</strong>. Use the last field to apply a cash discount <strong>per item</strong> or to the <strong>line total</strong>.</span><span data-lang="vi">Điều chỉnh <strong>SL, CK, KM1 và KM2</strong>. Ô cuối dùng để trừ tiền <strong>theo từng sản phẩm</strong> hoặc <strong>theo tổng dòng</strong>.</span></p>
                     </section>
 
                     <section class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-violet-600 text-white text-xs font-black flex items-center justify-center">4</span><h4 class="text-[13px] font-black text-slate-900 uppercase">Tạo khuyến mãi</h4></div>
+                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-violet-600 text-white text-xs font-black flex items-center justify-center">4</span><h4 class="text-[13px] font-black text-slate-900 uppercase"><span data-lang="vi">Tạo khuyến mãi</span><span data-lang="en">Create promotions</span></h4></div>
                         <p class="text-[12px] leading-relaxed text-slate-600 font-medium"><span data-lang="en">Open <strong>Promotions</strong>, choose a promotion type, enter its conditions and applicable products, then select <strong>Save Program</strong>.</span><span data-lang="vi">Mở <strong>Khuyến mãi</strong>, chọn loại chương trình, nhập điều kiện và sản phẩm áp dụng, rồi chọn <strong>Lưu chương trình</strong>.</span></p>
                     </section>
 
@@ -3836,18 +3743,18 @@
                     </section>
 
                     <section class="bg-amber-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
-                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-amber-500 text-white text-xs font-black flex items-center justify-center">!</span><h4 class="text-[13px] font-black text-amber-900 uppercase">Lưu ý an toàn</h4></div>
-                        <p class="text-[12px] leading-relaxed text-amber-800 font-bold"><span data-lang="en">Data is stored in this browser. Keep your original Excel file. <strong>Restart</strong> only clears the current quote; <strong>Clear Warehouse</strong> removes all imported products.</span><span data-lang="vi">Dữ liệu được lưu trên trình duyệt hiện tại. Hãy giữ lại file Excel gốc. <strong>Bắt đầu lại</strong> chỉ xóa báo giá hiện tại; <strong>Xóa kho</strong> sẽ xóa toàn bộ sản phẩm đã tải lên.</span></p>
+                        <div class="flex items-center gap-2 mb-2"><span class="w-6 h-6 rounded-lg bg-amber-500 text-white text-xs font-black flex items-center justify-center">!</span><h4 class="text-[13px] font-black text-amber-900 uppercase"><span data-lang="vi">Lưu ý an toàn</span><span data-lang="en">Data safety</span></h4></div>
+                        <p class="text-[12px] leading-relaxed text-amber-800 font-bold"><span data-lang="en">Data is stored in this browser. Keep your original Excel file. <strong>Restart</strong> only clears the current quote; <strong>Clear Warehouse</strong> removes all imported products.</span><span data-lang="vi">Dữ liệu được lưu trên trình duyệt hiện tại. Hãy giữ lại tệp Excel gốc. <strong>Bắt đầu lại</strong> chỉ xóa báo giá hiện tại; <strong>Xóa kho</strong> sẽ xóa toàn bộ sản phẩm đã tải lên.</span></p>
                     </section>
                 </div>
 
                 <div class="mt-4 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                    <div class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2"><span data-lang="vi">Các cột tối thiểu khi tải file Excel riêng</span><span data-lang="en">Minimum columns for your Excel file</span></div>
+                    <div class="text-[11px] font-black uppercase tracking-widest text-slate-500 mb-2"><span data-lang="vi">Các cột tối thiểu khi tải tệp Excel riêng</span><span data-lang="en">Minimum columns for your Excel file</span></div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px] font-bold">
-                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700">Mã SP</span>
-                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700">Tên SP</span>
-                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700">ĐVT</span>
-                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700">Giá Bìa</span>
+                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700"><span data-lang="vi">Mã SP</span><span data-lang="en">SKU</span></span>
+                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700"><span data-lang="vi">Tên SP</span><span data-lang="en">Product name</span></span>
+                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700"><span data-lang="vi">ĐVT</span><span data-lang="en">Unit</span></span>
+                        <span class="bg-slate-100 rounded-lg px-3 py-2 text-center text-slate-700"><span data-lang="vi">Giá bìa</span><span data-lang="en">List price</span></span>
                     </div>
                 </div>
             </div>
@@ -3877,7 +3784,7 @@
                             <div class="min-w-0">
                                 <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="en">Short Profile</span><span data-lang="vi">Hồ sơ ngắn</span></p>
                                 <h2 class="mt-1 text-2xl md:text-4xl font-black uppercase tracking-wide leading-tight">Huỳnh Minh Thuận</h2>
-                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Operations | Dealer Channel | Retail Tools</span><span data-lang="vi">Sales Operations | Kênh đại lý | Công cụ bán lẻ</span></p>
+                                <p class="mt-1 text-sm md:text-base font-bold text-slate-300"><span data-lang="en">Sales Operations | Dealer Channel | Retail Tools</span><span data-lang="vi">Vận hành bán hàng | Kênh đại lý | Công cụ bán lẻ</span></p>
                                 <div class="mt-3 flex flex-wrap gap-2 text-[11px] font-bold">
                                     <span class="resume-pill">My Tho, Tien Giang</span>
                                     <span class="resume-pill"><span data-lang="en">Electrical products</span><span data-lang="vi">Thiết bị điện</span></span>
@@ -3904,19 +3811,19 @@
                         <section class="resume-card resume-hero-system">
                             <div>
                                 <p class="resume-eyebrow"><span data-lang="en">About</span><span data-lang="vi">Giới thiệu</span></p>
-                                <h3 class="resume-hero-title"><span data-lang="en">I work in field sales and build practical tools for the sales team.</span><span data-lang="vi">Tôi làm sales ngoài thị trường và xây công cụ thực tế cho đội bán hàng.</span></h3>
-                                <p class="resume-hero-copy"><span data-lang="en">10+ years working with dealers, distributors, retail stores, electrical products, FMCG, consumer electronics, and retail SaaS. The work I care about is simple: keep product data cleaner, quote faster, make discounts easier to check, and send customers documents that look serious.</span><span data-lang="vi">Hơn 10 năm làm việc với đại lý, nhà phân phối, cửa hàng bán lẻ, thiết bị điện, FMCG, điện máy và phần mềm bán lẻ. Tôi quan tâm những việc rất thực tế: dữ liệu sản phẩm gọn hơn, báo giá nhanh hơn, chiết khấu dễ kiểm tra hơn và tài liệu gửi khách nhìn tử tế hơn.</span></p>
+                                <h3 class="resume-hero-title"><span data-lang="en">I work in field sales and build practical tools for the sales team.</span><span data-lang="vi">Tôi làm bán hàng ngoài thị trường và xây công cụ cho đội bán hàng.</span></h3>
+                                <p class="resume-hero-copy"><span data-lang="en">10+ years working with dealers, distributors, retail stores, electrical products, FMCG, consumer electronics, and retail SaaS. The work I care about is simple: keep product data cleaner, quote faster, make discounts easier to check, and send customers documents that look serious.</span><span data-lang="vi">Hơn 10 năm làm việc với đại lý, nhà phân phối, cửa hàng bán lẻ, thiết bị điện, hàng tiêu dùng nhanh, điện máy và phần mềm bán lẻ. Tôi quan tâm những việc rất thực tế: dữ liệu sản phẩm gọn hơn, báo giá nhanh hơn, chiết khấu dễ kiểm tra hơn và tài liệu gửi khách nhìn tử tế hơn.</span></p>
                                 <div class="resume-command-strip">
                                     <span class="resume-command-chip"><span data-lang="en">Sales operations</span><span data-lang="vi">Vận hành doanh số</span></span>
                                     <span class="resume-command-chip"><span data-lang="en">Retail technology</span><span data-lang="vi">Công nghệ bán lẻ</span></span>
                                     <span class="resume-command-chip"><span data-lang="en">Quote workflow</span><span data-lang="vi">Quy trình báo giá</span></span>
-                                    <span class="resume-command-chip"><span data-lang="en">Excel / web / POS</span><span data-lang="vi">Excel / web / POS</span></span>
+                                    <span class="resume-command-chip"><span data-lang="en">Excel / web / POS</span><span data-lang="vi">Excel / trang bán hàng / phần mềm bán hàng</span></span>
                                 </div>
                             </div>
                             <div class="resume-signal-grid">
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">10+</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Years in sales, channel, and store operations</span><span data-lang="vi">Năm trong sales, kênh phân phối và vận hành cửa hàng</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">Years in sales, channel, and store operations</span><span data-lang="vi">Năm trong ngành bán hàng, kênh phân phối và vận hành cửa hàng</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">5</span>
@@ -3924,11 +3831,11 @@
                                 </div>
                                 <div class="resume-signal-tile">
                                     <span class="resume-signal-number">POS</span>
-                                    <p class="resume-signal-label"><span data-lang="en">POS, retail SaaS, website, SEO, digital ads</span><span data-lang="vi">POS, retail SaaS, website, SEO, quảng cáo số</span></p>
+                                    <p class="resume-signal-label"><span data-lang="en">POS, retail SaaS, website, SEO, digital ads</span><span data-lang="vi">Phần mềm bán hàng, trang bán hàng, tối ưu tìm kiếm và quảng cáo số</span></p>
                                 </div>
                                 <div class="resume-signal-tile">
-                                    <span class="resume-signal-number">Tool</span>
-                                    <p class="resume-signal-label"><span data-lang="en">Quote workflow, Excel, web, POS, product data</span><span data-lang="vi">Báo giá, Excel, web, POS và dữ liệu sản phẩm</span></p>
+                                    <span class="resume-signal-number"><span data-lang="en">Tool</span><span data-lang="vi">Công cụ</span></span>
+                                    <p class="resume-signal-label"><span data-lang="en">Quote workflow, Excel, web, POS, product data</span><span data-lang="vi">Báo giá, Excel, trang bán hàng, phần mềm bán hàng và dữ liệu sản phẩm</span></p>
                                 </div>
                             </div>
                         </section>
@@ -3942,9 +3849,9 @@
                                 <span class="resume-command-chip"><span data-lang="en">Faster quotes. Cleaner margins.</span><span data-lang="vi">Báo giá nhanh. Biên lợi nhuận rõ.</span></span>
                             </div>
                             <div class="resume-value-grid">
-                                <div class="resume-value-item"><strong><span data-lang="en">Field sales</span><span data-lang="vi">Sales thị trường</span></strong><p><span data-lang="en">Worked directly with dealers, distributors, stores, and day-to-day customer feedback.</span><span data-lang="vi">Từng đi tuyến, làm với đại lý/NPP, cửa hàng và xử lý phản hồi khách hằng ngày.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Field sales</span><span data-lang="vi">Bán hàng thị trường</span></strong><p><span data-lang="en">Worked directly with dealers, distributors, stores, and day-to-day customer feedback.</span><span data-lang="vi">Từng đi tuyến, làm với đại lý/NPP, cửa hàng và xử lý phản hồi khách hằng ngày.</span></p></div>
                                 <div class="resume-value-item"><strong><span data-lang="en">Organized work</span><span data-lang="vi">Làm việc có hệ thống</span></strong><p><span data-lang="en">Keeps price, product, promotion, and quote information clear enough for the team to reuse.</span><span data-lang="vi">Giữ giá, sản phẩm, khuyến mãi và báo giá đủ rõ để đội bán hàng dùng lại được.</span></p></div>
-                                <div class="resume-value-item"><strong><span data-lang="en">Retail tools</span><span data-lang="vi">Công cụ bán lẻ</span></strong><p><span data-lang="en">Uses POS, web, SEO, ads, Excel, and basic automation for practical sales work.</span><span data-lang="vi">Biết dùng POS, web, SEO, quảng cáo, Excel và tự động hóa đơn giản cho việc bán hàng.</span></p></div>
+                                <div class="resume-value-item"><strong><span data-lang="en">Retail tools</span><span data-lang="vi">Công cụ bán lẻ</span></strong><p><span data-lang="en">Uses POS, web, SEO, ads, Excel, and basic automation for practical sales work.</span><span data-lang="vi">Biết dùng phần mềm bán hàng, trang web, tối ưu tìm kiếm, quảng cáo, Excel và tự động hóa đơn giản.</span></p></div>
                             </div>
                         </section>
 
@@ -3952,7 +3859,7 @@
                             <article class="resume-card resume-operator-card">
                                 <p class="resume-eyebrow"><span data-lang="en">Channel Growth</span><span data-lang="vi">Phát triển kênh</span></p>
                                 <h3 class="resume-section-title mt-2"><span data-lang="en">Works close to dealers and distributors.</span><span data-lang="vi">Làm sát đại lý và NPP.</span></h3>
-                                <p><span data-lang="en">Used to route work, sell-out pressure, price feedback, product introduction, and market reporting.</span><span data-lang="vi">Quen chăm tuyến, áp lực sell-out, phản hồi giá, giới thiệu sản phẩm và báo cáo thị trường.</span></p>
+                                <p><span data-lang="en">Used to route work, sell-out pressure, price feedback, product introduction, and market reporting.</span><span data-lang="vi">Quen chăm tuyến, áp lực doanh số bán ra, phản hồi giá, giới thiệu sản phẩm và báo cáo thị trường.</span></p>
                             </article>
                             <article class="resume-card resume-operator-card">
                                 <p class="resume-eyebrow"><span data-lang="en">Sales Operations</span><span data-lang="vi">Vận hành doanh số</span></p>
@@ -3962,7 +3869,7 @@
                             <article class="resume-card resume-operator-card">
                                 <p class="resume-eyebrow"><span data-lang="en">Retail Technology</span><span data-lang="vi">Công nghệ bán lẻ</span></p>
                                 <h3 class="resume-section-title mt-2"><span data-lang="en">Uses technology without making it complicated.</span><span data-lang="vi">Dùng công nghệ nhưng không làm phức tạp.</span></h3>
-                                <p><span data-lang="en">Applies POS, web, SEO, ads, Excel, and automation where they actually save time.</span><span data-lang="vi">Ứng dụng POS, web, SEO, quảng cáo, Excel và tự động hóa ở những chỗ thật sự tiết kiệm thời gian.</span></p>
+                                <p><span data-lang="en">Applies POS, web, SEO, ads, Excel, and automation where they actually save time.</span><span data-lang="vi">Ứng dụng phần mềm bán hàng, trang web, tối ưu tìm kiếm, quảng cáo, Excel và tự động hóa ở những chỗ thật sự tiết kiệm thời gian.</span></p>
                             </article>
                         </section>
 
@@ -3971,18 +3878,18 @@
                                 <p class="resume-eyebrow"><span data-lang="en">Proof</span><span data-lang="vi">Minh chứng</span></p>
                                 <h3 class="resume-section-title mt-2"><span data-lang="en">A real product mindset, built from sales pain points.</span><span data-lang="vi">Tư duy sản phẩm thật, xuất phát từ điểm đau bán hàng.</span></h3>
                                 <ul class="resume-case-list">
-                                    <li><span data-lang="en">Designed a quote workflow that reduces repetitive pricing and document work.</span><span data-lang="vi">Thiết kế workflow báo giá giúp giảm thao tác lặp lại về giá và tài liệu.</span></li>
+                                    <li><span data-lang="en">Designed a quote workflow that reduces repetitive pricing and document work.</span><span data-lang="vi">Thiết kế quy trình báo giá giúp giảm thao tác lặp lại về giá và tài liệu.</span></li>
                                     <li><span data-lang="en">Built customer-ready exports across Excel, PDF, image, and message formats.</span><span data-lang="vi">Tạo đầu ra sẵn gửi khách qua Excel, PDF, hình ảnh và nội dung tin nhắn.</span></li>
-                                    <li><span data-lang="en">Supported bilingual UI, USD display, product data, and promotion logic for broader usage.</span><span data-lang="vi">Hỗ trợ song ngữ, USD, dữ liệu sản phẩm và logic khuyến mãi để dùng linh hoạt hơn.</span></li>
+                                    <li><span data-lang="en">Supported bilingual UI, USD display, product data, and promotion logic for broader usage.</span><span data-lang="vi">Hỗ trợ song ngữ, USD, dữ liệu sản phẩm và quy tắc khuyến mãi để dùng linh hoạt hơn.</span></li>
                                 </ul>
                             </div>
                             <div class="resume-product-screen" aria-hidden="true">
                                 <div class="resume-product-topbar"><i></i><i></i><i></i></div>
                                 <div class="resume-product-lines">
-                                    <div class="resume-product-line"><span>Quote Engine</span><b>Live</b></div>
-                                    <div class="resume-product-line"><span>Discount + Promo Logic</span><b>37%</b></div>
-                                    <div class="resume-product-line"><span>Bilingual Product Data</span><b>EN/VI</b></div>
-                                    <div class="resume-product-line"><span>Export Workflow</span><b>XLSX/PDF</b></div>
+                                    <div class="resume-product-line"><span><span data-lang="en">Quote Engine</span><span data-lang="vi">Công cụ báo giá</span></span><b><span data-lang="en">Live</span><span data-lang="vi">Hoạt động</span></b></div>
+                                    <div class="resume-product-line"><span><span data-lang="en">Discount + Promo Logic</span><span data-lang="vi">Chiết khấu + Khuyến mãi</span></span><b>37%</b></div>
+                                    <div class="resume-product-line"><span><span data-lang="en">Bilingual Product Data</span><span data-lang="vi">Dữ liệu sản phẩm song ngữ</span></span><b>EN/VI</b></div>
+                                    <div class="resume-product-line"><span><span data-lang="en">Export Workflow</span><span data-lang="vi">Quy trình xuất tệp</span></span><b>XLSX/PDF</b></div>
                                 </div>
                             </div>
                         </section>
@@ -3994,7 +3901,7 @@
                                     <ul class="resume-simple-list">
                                         <li><span data-lang="en">Channel development across dealers and distributors</span><span data-lang="vi">Phát triển kênh đại lý và nhà phân phối</span></li>
                                         <li><span data-lang="en">Price, discount, promotion, and product-data discipline</span><span data-lang="vi">Kỷ luật giá, chiết khấu, khuyến mãi và dữ liệu sản phẩm</span></li>
-                                        <li><span data-lang="en">Retail SaaS, POS, Excel, web, SEO, and AI-assisted documentation</span><span data-lang="vi">Retail SaaS, POS, Excel, web, SEO và tài liệu có AI hỗ trợ</span></li>
+                                        <li><span data-lang="en">Retail SaaS, POS, Excel, web, SEO, and AI-assisted documentation</span><span data-lang="vi">Phần mềm bán lẻ, Excel, trang web, tối ưu tìm kiếm và tài liệu có trí tuệ nhân tạo hỗ trợ</span></li>
                                     </ul>
                                 </section>
                                 <section class="resume-card resume-operator-card">
@@ -4011,20 +3918,20 @@
                                     <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                                         <div>
                                             <p class="resume-eyebrow"><span data-lang="en">Experience</span><span data-lang="vi">Kinh nghiệm</span></p>
-                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Progression across field sales, retail operations, and retail technology.</span><span data-lang="vi">Lộ trình qua sales thị trường, vận hành bán lẻ và công nghệ retail.</span></h3>
+                                            <h3 class="resume-section-title mt-2"><span data-lang="en">Progression across field sales, retail operations, and retail technology.</span><span data-lang="vi">Lộ trình qua bán hàng thị trường, vận hành bán lẻ và công nghệ bán lẻ.</span></h3>
                                         </div>
                                         <span class="resume-command-chip">2014 - 2026</span>
                                     </div>
                                     <div class="resume-career-grid">
                                         <article class="resume-timeline-item">
-                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4><span class="resume-timeline-date">06/2024 - Present</span></div>
+                                            <div class="flex flex-wrap items-center justify-between gap-2"><h4>MPE - Công Ty TNHH TM DV Điện Mạnh Phương</h4><span class="resume-timeline-date"><span data-lang="en">06/2024 - Present</span><span data-lang="vi">06/2024 - nay</span></span></div>
                                             <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | Electrical products</span><span data-lang="vi">Giám sát bán hàng | Thiết bị điện</span></p>
                                             <ul class="resume-impact-list"><li><span data-lang="en">Develop electrical-product channels in Tien Giang, coordinate distributor/dealer activity, handle price feedback, and support faster quote response.</span><span data-lang="vi">Phát triển kênh thiết bị điện tại Tiền Giang, phối hợp NPP/đại lý để đẩy sản phẩm, phản hồi giá và xử lý nhu cầu báo giá nhanh hơn.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Thành Hoàng Long</h4><span class="resume-timeline-date">02/2023 - 05/2024</span></div>
-                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | FMCG, mother-baby channel</span><span data-lang="vi">Giám sát bán hàng | FMCG, hàng mẹ và bé</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Roll out FMCG and mother-baby sales programs, expand customer coverage, capture market feedback, and adjust execution by area.</span><span data-lang="vi">Triển khai chương trình bán hàng FMCG/mẹ và bé, mở rộng khách hàng, ghi nhận phản hồi thị trường và điều chỉnh hoạt động theo khu vực.</span></li></ul>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Sales Supervisor | FMCG, mother-baby channel</span><span data-lang="vi">Giám sát bán hàng | Hàng tiêu dùng nhanh, mẹ và bé</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Roll out FMCG and mother-baby sales programs, expand customer coverage, capture market feedback, and adjust execution by area.</span><span data-lang="vi">Triển khai chương trình bán hàng tiêu dùng nhanh và mẹ bé, mở rộng khách hàng, ghi nhận phản hồi thị trường và điều chỉnh hoạt động theo khu vực.</span></li></ul>
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Điện máy Long Hải</h4><span class="resume-timeline-date">11/2021 - 01/2023</span></div>
@@ -4043,8 +3950,8 @@
                                         </article>
                                         <article class="resume-timeline-item">
                                             <div class="flex flex-wrap items-center justify-between gap-2"><h4>Sapo</h4><span class="resume-timeline-date">03/2014 - 01/2016</span></div>
-                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Business Development Representative | Retail SaaS</span><span data-lang="vi">Nhân viên kinh doanh | Retail SaaS</span></p>
-                                            <ul class="resume-impact-list"><li><span data-lang="en">Consult retailers on POS, websites, SEO, digital ads, sales devices, and store-management workflows; built a practical foundation in retail SaaS.</span><span data-lang="vi">Tư vấn POS, website, SEO, quảng cáo số và thiết bị bán hàng cho chủ cửa hàng; tích lũy nền tảng SaaS/retail workflow.</span></li></ul>
+                                            <p class="mt-1 text-[13px] font-semibold"><span data-lang="en">Business Development Representative | Retail SaaS</span><span data-lang="vi">Nhân viên kinh doanh | Phần mềm bán lẻ</span></p>
+                                            <ul class="resume-impact-list"><li><span data-lang="en">Consult retailers on POS, websites, SEO, digital ads, sales devices, and store-management workflows; built a practical foundation in retail SaaS.</span><span data-lang="vi">Tư vấn phần mềm bán hàng, website, tối ưu tìm kiếm, quảng cáo số và thiết bị bán hàng; tích lũy nền tảng về công nghệ và quy trình bán lẻ.</span></li></ul>
                                         </article>
                                     </div>
                                 </section>
@@ -4067,7 +3974,7 @@
 
             <footer class="bg-white border-t border-slate-200 p-3 md:p-4 shrink-0">
                 <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-center md:justify-between">
-                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Revenue-focused profile for Sales Operations, Channel Growth, Retail Tech, and product implementation roles.</span><span data-lang="vi">Hồ sơ định vị theo Sales Operations, Channel Growth, Retail Tech và các vị trí triển khai giúp tăng doanh số.</span></p>
+                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Revenue-focused profile for Sales Operations, Channel Growth, Retail Tech, and product implementation roles.</span><span data-lang="vi">Hồ sơ hướng đến vận hành bán hàng, phát triển kênh, công nghệ bán lẻ và triển khai sản phẩm.</span></p>
                     <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-sm active:scale-95 transition-transform"><span data-lang="en">Close profile</span><span data-lang="vi">Đóng hồ sơ</span></button>
                 </div>
             </footer>
@@ -4087,17 +3994,47 @@
             <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar text-[14px] text-slate-600 leading-relaxed space-y-4">
                 <h2 class="text-xl font-black text-slate-800 leading-snug"><span data-lang="en">Quote builder and store management tool for sales teams.</span><span data-lang="vi">Phần mềm tạo bảng báo giá và quản lý cửa hàng cho đội bán hàng.</span></h2>
                 <p><span data-lang="en">Product pricing, dealer discounts, promotions, and customer-ready quotations can become messy when teams handle too many SKUs manually.</span><span data-lang="vi">Giá sản phẩm, chiết khấu đại lý, khuyến mãi và bảng báo giá gửi khách rất dễ rối khi đội bán hàng phải xử lý nhiều mã hàng thủ công.</span></p>
-                <p><span data-lang="en">Thuận Store turns that workflow into a focused web app for sales teams, stores, and distributors: searchable product data, controlled discounts, promotion rules, and clean export files.</span><span data-lang="vi">Thuận Store biến quy trình đó thành một công cụ web cho đội sales, cửa hàng và nhà phân phối: tìm sản phẩm nhanh, kiểm soát chiết khấu, áp dụng khuyến mãi và xuất file sạch.</span></p>
+                <p><span data-lang="en">Thuận Store turns that workflow into a focused web app for sales teams, stores, and distributors: searchable product data, controlled discounts, promotion rules, and clean export files.</span><span data-lang="vi">Thuận Store biến quy trình đó thành công cụ trực tuyến cho đội bán hàng, cửa hàng và nhà phân phối: tìm sản phẩm nhanh, kiểm soát chiết khấu, áp dụng khuyến mãi và xuất tệp gọn gàng.</span></p>
                 <ul class="list-disc pl-5 space-y-2">
                     <li><span data-lang="en">Calculate multi-level dealer discounts faster and reduce manual errors.</span><span data-lang="vi">Tính chiết khấu đại lý nhiều tầng nhanh hơn và giảm sai sót khi tính tay.</span></li>
                     <li><span data-lang="en">Export customer-ready Excel, PDF, and image quotations with a few taps.</span><span data-lang="vi">Xuất báo giá Excel, PDF và hình ảnh để gửi khách chỉ trong vài thao tác.</span></li>
-                    <li><span data-lang="en">Keep sales data, promotion logic, and quote presentation consistent.</span><span data-lang="vi">Giữ dữ liệu bán hàng, logic khuyến mãi và cách trình bày báo giá nhất quán.</span></li>
+                    <li><span data-lang="en">Keep sales data, promotion logic, and quote presentation consistent.</span><span data-lang="vi">Giữ dữ liệu bán hàng, quy tắc khuyến mãi và cách trình bày báo giá nhất quán.</span></li>
                 </ul>
                 <p><span data-lang="en">The goal is simple: help salespeople move faster while looking more professional.</span><span data-lang="vi">Mục tiêu rất rõ: giúp người bán hàng phản hồi nhanh hơn và làm việc chuyên nghiệp hơn.</span></p>
             </div>
             <div class="mt-4 pt-4 border-t border-slate-100 shrink-0">
                 <button id="btnReadMoreClose" class="w-full py-3.5 rounded-xl text-xs font-black text-white bg-slate-900 hover:bg-slate-800 active:scale-95 transition-all shadow-[0_8px_20px_-4px_rgba(15,23,42,0.4)] uppercase tracking-widest flex items-center justify-center gap-2"><span data-lang="en">Open the tool</span><span data-lang="vi">Mở công cụ</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></button>
             </div>
+        </div>
+    </div>
+
+    <!-- ORBIT SERVICE DETAIL: one concise bilingual view for all online services. -->
+    <div id="orbitServiceModal" data-nosnippet class="home-module fixed inset-0 bg-slate-950/80 z-[2460] hidden items-center justify-center backdrop-blur-md transition-opacity duration-300 opacity-0 px-3 md:px-6" role="dialog" aria-modal="true" aria-labelledby="orbitServiceTitle">
+        <div class="w-full max-w-2xl overflow-hidden rounded-2xl border border-cyan-500/20 bg-slate-950 shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[92dvh]">
+            <header class="flex items-start justify-between gap-4 p-5 md:p-6 border-b border-cyan-500/15 shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span id="orbitServiceIcon" class="w-11 h-11 shrink-0 grid place-items-center rounded-xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-300"></span>
+                    <div class="min-w-0">
+                        <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="vi">DỊCH VỤ TRỰC TUYẾN</span><span data-lang="en">ONLINE SERVICE</span></p>
+                        <h3 id="orbitServiceTitle" class="mt-1 text-xl md:text-2xl font-black text-white leading-tight"></h3>
+                    </div>
+                </div>
+                <button id="btnCloseOrbitService" type="button" class="w-10 h-10 shrink-0 grid place-items-center rounded-xl bg-white/10 text-white hover:bg-white/15 transition-colors" aria-label="Đóng dịch vụ trực tuyến">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-width="2.4" stroke-linecap="round"></path></svg>
+                </button>
+            </header>
+            <div class="overflow-y-auto p-5 md:p-6">
+                <p id="orbitServiceSummary" class="text-sm md:text-base font-semibold text-slate-300 leading-relaxed"></p>
+                <section class="mt-5 border-y border-cyan-500/15 py-5">
+                    <h4 class="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400"><span data-lang="vi">NỘI DUNG TRIỂN KHAI</span><span data-lang="en">DELIVERABLES</span></h4>
+                    <ul id="orbitServiceDeliverables" class="mt-3 grid gap-3 text-sm font-semibold text-slate-200"></ul>
+                </section>
+                <p id="orbitServiceOutcome" class="mt-5 text-sm font-bold text-emerald-300 leading-relaxed"></p>
+            </div>
+            <footer class="grid grid-cols-2 gap-3 p-4 md:p-5 border-t border-cyan-500/15 bg-slate-950/80 shrink-0">
+                <button id="btnOrbitServiceTools" type="button" class="min-h-11 rounded-lg border border-cyan-400/25 bg-cyan-400/10 px-3 text-sm font-black text-cyan-200 active:scale-95 transition-transform"><span data-lang="vi">Xem công cụ dùng thử</span><span data-lang="en">View demo tools</span></button>
+                <button id="btnOrbitServiceConsult" type="button" class="min-h-11 rounded-lg bg-cyan-400 px-3 text-sm font-black text-slate-950 active:scale-95 transition-transform"><span data-lang="vi">Trao đổi dịch vụ</span><span data-lang="en">Discuss service</span></button>
+            </footer>
         </div>
     </div>
 
@@ -4173,7 +4110,7 @@
                     <section class="rounded-lg border border-slate-200 bg-white p-4 md:p-5">
                         <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3"><span data-lang="vi">Chưa biết lựa chọn nào phù hợp?</span><span data-lang="en">Not sure which option fits?</span></p>
                         <div class="space-y-3 text-[13px] md:text-sm font-semibold leading-relaxed">
-                            <p class="rounded-lg bg-slate-100 text-slate-700 px-3 py-2"><span data-lang="vi">Bạn có file sản phẩm, nhưng mỗi lần báo giá vẫn phải dò giá và tính chiết khấu thủ công?</span><span data-lang="en">You already have a product file, but every quotation still needs manual lookup and discount calculation?</span></p>
+                            <p class="rounded-lg bg-slate-100 text-slate-700 px-3 py-2"><span data-lang="vi">Bạn có tệp sản phẩm, nhưng mỗi lần báo giá vẫn phải dò giá và tính chiết khấu thủ công?</span><span data-lang="en">You already have a product file, but every quotation still needs manual lookup and discount calculation?</span></p>
                             <p class="rounded-lg bg-blue-600 text-white px-3 py-2 md:ml-8"><span data-lang="vi">Bắt đầu với gói Chuẩn hóa dữ liệu. Khi quy trình ổn định, chuyển sang Công cụ hằng ngày nếu cần.</span><span data-lang="en">Start with Data Preparation. Move to Daily Sales Tools once the workflow is stable.</span></p>
                             <p class="rounded-lg bg-slate-100 text-slate-700 px-3 py-2"><span data-lang="vi">Nếu đội ngũ bán hàng có nhiều nhóm khách, nhiều bảng giá hoặc cần quy trình riêng?</span><span data-lang="en">What if your sales team has several customer groups, price lists, or a custom workflow?</span></p>
                             <p class="rounded-lg bg-slate-950 text-white px-3 py-2 md:ml-8"><span data-lang="vi">Chọn Triển khai theo yêu cầu. Thuận sẽ xem dữ liệu và xác định phạm vi trước khi báo giá.</span><span data-lang="en">Choose Custom Implementation. Thuận will review your data and define the scope before quoting.</span></p>
@@ -4183,7 +4120,7 @@
                         <p class="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-3"><span data-lang="vi">Quy trình làm việc</span><span data-lang="en">Working process</span></p>
                         <ol class="space-y-3 text-[13px] font-medium text-slate-600 leading-relaxed">
                             <li><span data-lang="vi"><strong class="text-slate-950">1. Gửi yêu cầu:</strong> ngành hàng, dữ liệu sản phẩm và quy tắc tính giá.</span><span data-lang="en"><strong class="text-slate-950">1. Share your requirements:</strong> category, product data, and pricing rules.</span></li>
-                            <li><span data-lang="vi"><strong class="text-slate-950">2. Xây dựng bản mẫu:</strong> chuẩn hóa dữ liệu, thiết lập mẫu báo giá và kiểm tra xuất file.</span><span data-lang="en"><strong class="text-slate-950">2. Build a prototype:</strong> clean the data, configure the quote template, and test exports.</span></li>
+                            <li><span data-lang="vi"><strong class="text-slate-950">2. Xây dựng bản mẫu:</strong> chuẩn hóa dữ liệu, thiết lập mẫu báo giá và kiểm tra xuất tệp.</span><span data-lang="en"><strong class="text-slate-950">2. Build a prototype:</strong> clean the data, configure the quote template, and test exports.</span></li>
                             <li><span data-lang="vi"><strong class="text-slate-950">3. Chạy thử và bàn giao:</strong> điều chỉnh theo phản hồi và hướng dẫn sử dụng.</span><span data-lang="en"><strong class="text-slate-950">3. Pilot and handover:</strong> refine from feedback and provide a user guide.</span></li>
                         </ol>
                     </section>
@@ -4195,10 +4132,10 @@
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3 shrink-0">
                         <button id="btnPricingConsult" type="button" class="px-5 py-3 rounded-xl bg-slate-950 text-white text-sm font-black hover:bg-slate-800 active:scale-95 transition-all"><span data-lang="vi">Đăng ký tư vấn</span><span data-lang="en">Request consultation</span></button>
-                        <button id="btnPricingStart" type="button" class="px-5 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm font-black hover:bg-slate-50 active:scale-95 transition-all"><span data-lang="vi">Mở demo</span><span data-lang="en">Open demo</span></button>
+                        <button id="btnPricingStart" type="button" class="px-5 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm font-black hover:bg-slate-50 active:scale-95 transition-all"><span data-lang="vi">Mở bản dùng thử</span><span data-lang="en">Open demo</span></button>
                     </div>
                 </div>
-                <p class="text-[11px] text-slate-400 font-semibold mt-4 text-center"><span data-lang="vi">Giá VND áp dụng cho khách Việt Nam. Bản EN hiển thị USD cho khách quốc tế; phạm vi cuối cùng được chốt theo dữ liệu, số lượng mã hàng và mức độ tùy chỉnh thực tế.</span><span data-lang="en">VND pricing applies to Vietnam-based customers. English pricing is shown in USD for international inquiries; final scope depends on data, SKU count, and customization level.</span></p>
+                <p class="text-[11px] text-slate-400 font-semibold mt-4 text-center"><span data-lang="vi">Giá VND áp dụng cho khách Việt Nam. Bản tiếng Anh hiển thị USD cho khách quốc tế; phạm vi cuối cùng được chốt theo dữ liệu, số lượng mã hàng và mức độ tùy chỉnh thực tế.</span><span data-lang="en">VND pricing applies to Vietnam-based customers. English pricing is shown in USD for international inquiries; final scope depends on data, SKU count, and customization level.</span></p>
             </div>
         </div>
     </div>
@@ -4276,9 +4213,9 @@
                 </button>
 
                 <nav class="store-os-navlinks" aria-label="Điều hướng chính">
-                    <a href="#store-os-orbit"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></a>
-                    <button id="pricingOfferTrigger" type="button"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
-                    <a href="#store-os-start">Demo</a>
+                    <a href="#store-os-orbit" data-orbit-mode="tools"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></a>
+                    <button type="button" data-orbit-mode="services"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
+                    <button id="landingDemoTrigger" type="button"><span data-lang="vi">Dùng thử</span><span data-lang="en">Demo</span></button>
                     <a href="https://thuanstore.com/lichdituyen"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></a>
                     <button id="demoHotlineTrigger" type="button"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></button>
                 </nav>
@@ -4299,7 +4236,7 @@
                         <div id="storeOsMenuPanel" class="store-os-menu-panel">
                             <button type="button" data-landing-action="features"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></button>
                             <button type="button" data-landing-action="pricing"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
-                            <button type="button" data-landing-action="demo">Demo</button>
+                            <button type="button" data-landing-action="demo"><span data-lang="vi">Dùng thử</span><span data-lang="en">Demo</span></button>
                             <a href="https://thuanstore.com/lichdituyen"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></a>
                             <button type="button" data-landing-action="contact"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></button>
                             <div class="store-os-menu-lang">
@@ -4318,7 +4255,7 @@
                 <div class="store-os-copy">
                     <span class="store-os-chip"><span data-lang="vi">THIẾT KẾ CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOL DESIGN</span></span>
                     <h2 class="store-os-title" data-i18n-html="landing.heroTitle"><span class="store-os-title-line">Thiết kế công cụ </span><span class="store-os-title-line">theo cách bạn </span><strong>bán hàng</strong></h2>
-                    <p class="store-os-copy-text"><span data-lang="vi">Thuận Store thiết kế các công cụ web gọn nhẹ cho dữ liệu, báo giá, chăm khách và bán hàng online, nhằm giảm thao tác, tiết kiệm thời gian và hỗ trợ tăng doanh số. Bảng báo giá miễn phí là demo để bạn trải nghiệm trước khi triển khai theo quy trình của mình.</span><span data-lang="en">Thuan Store designs lightweight web tools for data, quotations, customer follow-up, and online sales, reducing manual work to save time and support revenue growth. The free quote builder is a working demo you can try before we tailor a tool to your workflow.</span></p>
+                    <p class="store-os-copy-text"><span data-lang="vi">Thuận Store thiết kế công cụ trực tuyến gọn nhẹ cho dữ liệu, báo giá, chăm sóc khách hàng và bán hàng từ xa, nhằm giảm thao tác, tiết kiệm thời gian và hỗ trợ tăng doanh số. Công cụ báo giá miễn phí là bản dùng thử trước khi triển khai theo quy trình riêng.</span><span data-lang="en">Thuan Store designs lightweight web tools for data, quotations, customer follow-up, and online sales, reducing manual work to save time and support revenue growth. The free quote builder is a working demo you can try before we tailor a tool to your workflow.</span></p>
 
                     <div id="store-os-start" class="store-os-cta-row">
                         <button id="btnStartApp" type="button" class="store-os-primary active:scale-95">
@@ -4356,177 +4293,180 @@
                 </div>
 
                 <div id="store-os-orbit" class="store-os-visual">
-                    <div class="store-os-orbit" aria-label="Hệ sinh thái tính năng Thuận Store">
+                    <div class="store-os-orbit is-services" data-orbit-mode="services" aria-label="Dịch vụ hỗ trợ bán hàng trực tuyến">
                         <div class="store-os-ring outer"></div>
                         <div class="store-os-ring middle"></div>
                         <div class="store-os-ring inner"></div>
                         <div class="store-os-ring-dots"></div>
 
-                        <button id="orbitCenterStart" type="button" class="store-os-center" title="Mở demo báo giá" aria-label="Mở demo báo giá">
+                        <button id="orbitCenterStart" type="button" class="store-os-center" title="Hiển thị công cụ dùng thử" aria-label="Hiển thị công cụ dùng thử" aria-pressed="false">
                             <span class="store-os-reactor" aria-hidden="true">
                                 <span class="store-os-reactor-blade"></span>
                                 <span class="store-os-reactor-core"></span>
                             </span>
-                            <span class="store-os-center-text" data-i18n="landing.centerCta">MỞ DEMO</span>
+                            <span class="store-os-center-text">
+                                <span class="store-os-center-services"><span data-lang="vi">XEM CÔNG CỤ</span><span data-lang="en">VIEW TOOLS</span></span>
+                                <span class="store-os-center-tools"><span data-lang="vi">DỊCH VỤ</span><span data-lang="en">SERVICES</span></span>
+                            </span>
                         </button>
 
-                        <div class="store-os-feature" style="--x: 50%; --y: 10%;">
-                            <button id="orbitQuoteTrigger" type="button" class="orbit-node" title="Mở báo giá" aria-label="Mở báo giá">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 4h7l4 4v12H8a3 3 0 01-3-3V7a3 3 0 013-3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14 4v5h5M9 13h6M9 17h4"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Báo giá</span><span data-lang="en">Quotes</span></span>
+                        <div class="store-os-feature" style="--x: 50%; --y: 10%; --swap-index: 0;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="website" style="--service-accent: #22d3ee;" title="Mở dịch vụ Website bán hàng" aria-label="Mở dịch vụ Website bán hàng">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Website</span><span data-lang="en">Website</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="orbitQuoteTrigger" type="button" class="orbit-node" title="Mở báo giá" aria-label="Mở báo giá">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 4h7l4 4v12H8a3 3 0 01-3-3V7a3 3 0 013-3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M14 4v5h5M9 13h6M9 17h4"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Báo giá</span><span data-lang="en">Quotes</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 78%; --y: 22%;">
-                            <button id="satBrand" type="button" class="orbit-node" title="Lịch chăm sóc khách hàng" aria-label="Lịch chăm sóc khách hàng">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zM20 19a4 4 0 00-3-3.87M17 5.13a4 4 0 010 7.75"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></span>
+                        <div class="store-os-feature" style="--x: 78%; --y: 22%; --swap-index: 1;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="seo" style="--service-accent: #60a5fa;" title="Mở dịch vụ SEO và nội dung" aria-label="Mở dịch vụ SEO và nội dung">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">SEO &amp; nội dung</span><span data-lang="en">SEO &amp; content</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="satBrand" type="button" class="orbit-node" title="Lịch chăm sóc khách hàng" aria-label="Lịch chăm sóc khách hàng">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20a5 5 0 00-10 0M12 11a4 4 0 100-8 4 4 0 000 8zM20 19a4 4 0 00-3-3.87M17 5.13a4 4 0 010 7.75"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 90%; --y: 50%;">
-                            <button id="satPromo" type="button" class="orbit-node" title="Khuyến mãi" aria-label="Khuyến mãi">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7M4 8h16v4H4zM12 8v13M12 8H9.5A2.5 2.5 0 119.5 3C11 3 12 5 12 8zM12 8h2.5A2.5 2.5 0 1014.5 3C13 3 12 5 12 8z"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Khuyến mãi</span><span data-lang="en">Promotions</span></span>
+                        <div class="store-os-feature" style="--x: 90%; --y: 50%; --swap-index: 2;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="shortVideo" style="--service-accent: #f472b6;" title="Mở dịch vụ TikTok và video ngắn" aria-label="Mở dịch vụ TikTok và video ngắn">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">TikTok &amp; video</span><span data-lang="en">TikTok &amp; video</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="satPromo" type="button" class="orbit-node" title="Khuyến mãi" aria-label="Khuyến mãi">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7M4 8h16v4H4zM12 8v13M12 8H9.5A2.5 2.5 0 119.5 3C11 3 12 5 12 8zM12 8h2.5A2.5 2.5 0 1014.5 3C13 3 12 5 12 8z"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Khuyến mãi</span><span data-lang="en">Promotions</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 78%; --y: 78%;">
-                            <button id="satDiscount" type="button" class="orbit-node" title="Tài chính và chiết khấu" aria-label="Tài chính và chiết khấu">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v10M15 9.5c-.65-.72-1.55-1.05-2.7-1.05-1.38 0-2.3.68-2.3 1.75 0 1.18 1.05 1.57 2.5 1.9 1.46.33 2.5.75 2.5 1.95 0 1.12-.96 1.82-2.55 1.82-1.22 0-2.25-.38-3.05-1.2"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Chiết khấu</span><span data-lang="en">Discounts</span></span>
+                        <div class="store-os-feature" style="--x: 78%; --y: 78%; --swap-index: 3;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="liveSelling" style="--service-accent: #fb7185;" title="Mở dịch vụ phát trực tiếp bán hàng" aria-label="Mở dịch vụ phát trực tiếp bán hàng">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Phát trực tiếp</span><span data-lang="en">Live selling</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="satDiscount" type="button" class="orbit-node" title="Tài chính và chiết khấu" aria-label="Tài chính và chiết khấu">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v10M15 9.5c-.65-.72-1.55-1.05-2.7-1.05-1.38 0-2.3.68-2.3 1.75 0 1.18 1.05 1.57 2.5 1.9 1.46.33 2.5.75 2.5 1.95 0 1.12-.96 1.82-2.55 1.82-1.22 0-2.25-.38-3.05-1.2"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Chiết khấu</span><span data-lang="en">Discounts</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 50%; --y: 90%;">
-                            <button id="calendarTrigger" type="button" class="orbit-node" title="Trợ lý AI đang được phát triển" aria-label="Trợ lý AI đang được phát triển">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="8" width="12" height="10" rx="3"></rect><path stroke-linecap="round" stroke-linejoin="round" d="M12 8V5M9.5 5h5M9.5 13h.01M14.5 13h.01M8 18l-1.5 2M16 18l1.5 2"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Gợi ý</span><span data-lang="en">Suggestions</span></span>
+                        <div class="store-os-feature" style="--x: 50%; --y: 90%; --swap-index: 4;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="marketplaces" style="--service-accent: #f59e0b;" title="Mở dịch vụ sàn thương mại điện tử và Amazon" aria-label="Mở dịch vụ sàn thương mại điện tử và Amazon">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="m4 9 2-5h12l2 5M5 9v11h14V9M9 20v-6h6v6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 9h18" stroke-linecap="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Sàn &amp; Amazon</span><span data-lang="en">Marketplaces</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="calendarTrigger" type="button" class="orbit-node" title="Mở công cụ tính thuế" aria-label="Mở công cụ tính thuế">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-linecap="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Thuế 2026</span><span data-lang="en">Tax 2026</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 22%; --y: 78%;">
-                            <button id="orbitReportTrigger" type="button" class="orbit-node" title="Báo cáo đang được phát triển" aria-label="Báo cáo đang được phát triển">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 20V10M12 20V4M19 20v-7"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Báo cáo</span><span data-lang="en">Reports</span></span>
+                        <div class="store-os-feature" style="--x: 22%; --y: 78%; --swap-index: 5;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="digitalAds" style="--service-accent: #a78bfa;" title="Mở dịch vụ quảng cáo số" aria-label="Mở dịch vụ quảng cáo số">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4a2 2 0 0 0 2 2h2l9 4V4L8 8H6a2 2 0 0 0-2 2Z" stroke-linejoin="round"></path><path d="m8 16 1 4M20 9v6" stroke-linecap="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Quảng cáo số</span><span data-lang="en">Digital ads</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="orbitReportTrigger" type="button" class="orbit-node" title="Mở báo cáo" aria-label="Mở báo cáo">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 20V10M12 20V4M19 20v-7"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Báo cáo</span><span data-lang="en">Reports</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 10%; --y: 50%;">
-                            <button id="orbitOrderTrigger" type="button" class="orbit-node" title="Đơn hàng đang được phát triển" aria-label="Đơn hàng đang được phát triển">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h2l2.2 10.5a2 2 0 002 1.5H17a2 2 0 001.9-1.4L21 8H6M10 21h.01M17 21h.01"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Đơn hàng</span><span data-lang="en">Orders</span></span>
+                        <div class="store-os-feature" style="--x: 10%; --y: 50%; --swap-index: 6;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="analytics" style="--service-accent: #2dd4bf;" title="Mở dịch vụ chiến lược và đo lường" aria-label="Mở dịch vụ chiến lược và đo lường">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m6 10V5m6 14v-7m4 7H2" stroke-linecap="round"></path><path d="m4 7 5-3 5 4 6-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Đo lường</span><span data-lang="en">Analytics</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="orbitOrderTrigger" type="button" class="orbit-node" title="Mở giỏ báo giá" aria-label="Mở giỏ báo giá">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h2l2.2 10.5a2 2 0 002 1.5H17a2 2 0 001.9-1.4L21 8H6M10 21h.01M17 21h.01"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Giỏ báo giá</span><span data-lang="en">Quote cart</span></span>
+                            </div>
                         </div>
 
-                        <div class="store-os-feature" style="--x: 22%; --y: 22%;">
-                            <button id="satSetup" type="button" class="orbit-node" title="Kho hàng" aria-label="Kho hàng">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 12 4.5 7.8M12 12l7.5-4.2M12 12v8.5"></path></svg>
-                            </button>
-                            <span class="store-os-feature-label"><span data-lang="vi">Dữ liệu</span><span data-lang="en">Data</span></span>
+                        <div class="store-os-feature" style="--x: 22%; --y: 22%; --swap-index: 7;">
+                            <div class="store-os-node-state store-os-service-state">
+                                <button type="button" class="orbit-node store-os-service-button" data-service-key="automation" style="--service-accent: #34d399;" title="Mở dịch vụ AI và tự động hóa" aria-label="Mở dịch vụ AI và tự động hóa">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" stroke-linecap="round"></path><path d="m10 14 2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">AI tự động hóa</span><span data-lang="en">AI automation</span></span>
+                            </div>
+                            <div class="store-os-node-state store-os-tool-state">
+                                <button id="satSetup" type="button" class="orbit-node" title="Kho hàng" aria-label="Kho hàng">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M12 12 4.5 7.8M12 12l7.5-4.2M12 12v8.5"></path></svg>
+                                </button>
+                                <span class="store-os-feature-label"><span data-lang="vi">Dữ liệu</span><span data-lang="en">Data</span></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <section id="store-os-trust" class="store-os-trust" aria-label="Dịch vụ hỗ trợ bán hàng online">
-                <p><span data-lang="vi">Các dịch vụ mở rộng cho bán hàng online</span><span data-lang="en">Services that extend your online sales</span></p>
-                <div class="store-os-logo-marquee" aria-hidden="true">
-                    <div class="store-os-logo-row">
-                        <div class="store-os-logo-set">
-                            <span><span data-lang="vi">Website bán hàng</span><span data-lang="en">Sales websites</span></span>
-                            <span class="thin"><span data-lang="vi">SEO &amp; nội dung</span><span data-lang="en">SEO &amp; content</span></span>
-                            <span><span data-lang="vi">TikTok &amp; livestream</span><span data-lang="en">TikTok &amp; live selling</span></span>
-                            <span class="thin"><span data-lang="vi">Amazon &amp; sàn TMĐT</span><span data-lang="en">Amazon &amp; marketplaces</span></span>
-                            <span><span data-lang="vi">Quảng cáo số</span><span data-lang="en">Digital advertising</span></span>
-                            <span class="thin"><span data-lang="vi">AI hỗ trợ vận hành</span><span data-lang="en">AI-assisted operations</span></span>
-                            <span><span data-lang="vi">Đa thiết bị &amp; song ngữ</span><span data-lang="en">Multi-device &amp; bilingual</span></span>
-                        </div>
-                        <div class="store-os-logo-set" aria-hidden="true">
-                            <span><span data-lang="vi">Website bán hàng</span><span data-lang="en">Sales websites</span></span>
-                            <span class="thin"><span data-lang="vi">SEO &amp; nội dung</span><span data-lang="en">SEO &amp; content</span></span>
-                            <span><span data-lang="vi">TikTok &amp; livestream</span><span data-lang="en">TikTok &amp; live selling</span></span>
-                            <span class="thin"><span data-lang="vi">Amazon &amp; sàn TMĐT</span><span data-lang="en">Amazon &amp; marketplaces</span></span>
-                            <span><span data-lang="vi">Quảng cáo số</span><span data-lang="en">Digital advertising</span></span>
-                            <span class="thin"><span data-lang="vi">AI hỗ trợ vận hành</span><span data-lang="en">AI-assisted operations</span></span>
-                            <span><span data-lang="vi">Đa thiết bị &amp; song ngữ</span><span data-lang="en">Multi-device &amp; bilingual</span></span>
-                        </div>
-                        <div class="store-os-logo-set" aria-hidden="true">
-                            <span><span data-lang="vi">Website bán hàng</span><span data-lang="en">Sales websites</span></span>
-                            <span class="thin"><span data-lang="vi">SEO &amp; nội dung</span><span data-lang="en">SEO &amp; content</span></span>
-                            <span><span data-lang="vi">TikTok &amp; livestream</span><span data-lang="en">TikTok &amp; live selling</span></span>
-                            <span class="thin"><span data-lang="vi">Amazon &amp; sàn TMĐT</span><span data-lang="en">Amazon &amp; marketplaces</span></span>
-                            <span><span data-lang="vi">Quảng cáo số</span><span data-lang="en">Digital advertising</span></span>
-                            <span class="thin"><span data-lang="vi">AI hỗ trợ vận hành</span><span data-lang="en">AI-assisted operations</span></span>
-                            <span><span data-lang="vi">Đa thiết bị &amp; song ngữ</span><span data-lang="en">Multi-device &amp; bilingual</span></span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="store-os-news" class="store-os-news" aria-labelledby="storeOsNewsTitle">
-                <div class="store-os-news-head">
-                    <div>
-                        <div class="store-os-news-kicker"><span data-lang="vi">Tin mới &amp; cập nhật</span><span data-lang="en">What's new</span></div>
-                        <h2 id="storeOsNewsTitle" class="store-os-news-title"><span data-lang="vi">Cải tiến nhỏ, bán hàng nhanh hơn.</span><span data-lang="en">Small updates. Faster selling.</span></h2>
-                    </div>
-                    <span class="store-os-news-hint"><span data-lang="vi">Vuốt để xem</span><span data-lang="en">Swipe to explore</span> →</span>
-                </div>
-
-                <div class="store-os-news-rail" aria-label="Tin mới Thuận Store">
-                    <article class="store-os-news-card">
-                        <div class="store-os-news-card-top">
-                            <span class="store-os-news-tag"><span data-lang="vi">Mới · Công cụ</span><span data-lang="en">New · Tool</span></span>
-                            <span class="store-os-news-icon" aria-hidden="true">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" stroke-width="1.9"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-width="1.9" stroke-linecap="round"></path></svg>
-                            </span>
-                        </div>
-                        <h3><span data-lang="vi">Tính thuế hộ kinh doanh 2026</span><span data-lang="en">2026 household business tax calculator</span></h3>
-                        <p><span data-lang="vi">Ước tính tham khảo theo doanh thu và ngành nghề, ngay trên trình duyệt.</span><span data-lang="en">Get a quick reference estimate by revenue and business category, right in your browser.</span></p>
-                        <button id="newsOpenTaxTool" type="button" class="store-os-news-action">
-                            <span data-lang="vi">Mở công cụ</span><span data-lang="en">Open tool</span>
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </button>
-                    </article>
-
-                    <article class="store-os-news-card">
-                        <div class="store-os-news-card-top">
-                            <span class="store-os-news-tag"><span data-lang="vi">Cập nhật · Mobile</span><span data-lang="en">Updated · Mobile</span></span>
-                            <span class="store-os-news-icon" aria-hidden="true">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="7" y="2.8" width="10" height="18.4" rx="2.3" stroke-width="1.9"></rect><path d="M10 6h4M11 17.8h2" stroke-width="1.9" stroke-linecap="round"></path></svg>
-                            </span>
-                        </div>
-                        <h3><span data-lang="vi">Báo giá gọn hơn trên điện thoại</span><span data-lang="en">A cleaner quote flow on mobile</span></h3>
-                        <p><span data-lang="vi">Tìm sản phẩm, áp dụng chiết khấu và xuất file bằng ít thao tác hơn.</span><span data-lang="en">Find products, apply discounts, and export with fewer taps.</span></p>
-                        <button id="newsOpenQuoteTool" type="button" class="store-os-news-action">
-                            <span data-lang="vi">Dùng thử</span><span data-lang="en">Try demo</span>
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </button>
-                    </article>
-
-                    <article class="store-os-news-card">
-                        <div class="store-os-news-card-top">
-                            <span class="store-os-news-tag"><span data-lang="vi">Trải nghiệm · VI/EN</span><span data-lang="en">Experience · VI/EN</span></span>
-                            <span class="store-os-news-icon" aria-hidden="true">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="1.9"></circle><path d="M3.5 12h17M12 3c2.2 2.45 3.3 5.45 3.3 9s-1.1 6.55-3.3 9c-2.2-2.45-3.3-5.45-3.3-9S9.8 5.45 12 3Z" stroke-width="1.7"></path></svg>
-                            </span>
-                        </div>
-                        <h3><span data-lang="vi">Song ngữ xuyên suốt</span><span data-lang="en">Bilingual from start to finish</span></h3>
-                        <p><span data-lang="vi">Chuyển landing, công cụ và nội dung hướng dẫn bằng một chạm.</span><span data-lang="en">Switch the landing page, tools, and guides with one tap.</span></p>
-                        <button id="newsOpenGuide" type="button" class="store-os-news-action">
-                            <span data-lang="vi">Xem hướng dẫn</span><span data-lang="en">View guide</span>
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        </button>
-                    </article>
                 </div>
             </section>
 
             <footer class="store-os-footer">
-                <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở hồ sơ Thuận Huỳnh">© Thuận Huỳnh</button>
+                <div class="store-os-footer-main">
+                    <div class="store-os-footer-brand">
+                        <strong>THUẬN STORE</strong>
+                        <p><span data-lang="vi">Thiết kế công cụ bán hàng và dịch vụ trực tuyến theo quy trình của bạn.</span><span data-lang="en">Sales tools and online services designed around your workflow.</span></p>
+                    </div>
+
+                    <nav class="store-os-footer-nav" aria-label="Điều hướng chân trang">
+                        <button type="button" data-footer-action="services"><span data-lang="vi">Dịch vụ trực tuyến</span><span data-lang="en">Online services</span></button>
+                        <button type="button" data-footer-action="tools"><span data-lang="vi">Công cụ dùng thử</span><span data-lang="en">Demo tools</span></button>
+                        <button type="button" data-footer-action="guide"><span data-lang="vi">Hướng dẫn</span><span data-lang="en">Guide</span></button>
+                        <button type="button" data-footer-action="contact"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></button>
+                    </nav>
+
+                    <div class="store-os-footer-contact">
+                        <div class="store-os-footer-contact-copy">
+                            <span><span data-lang="vi">Trao đổi dự án</span><span data-lang="en">Discuss a project</span></span>
+                            <a href="mailto:thuanstore.com@gmail.com">thuanstore.com@gmail.com</a>
+                        </div>
+                        <nav class="app-language-switcher os-language-switcher" aria-label="Ngôn ngữ ứng dụng">
+                            <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
+                            <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="store-os-footer-bottom">
+                    <button id="btnOpenCareerProfileFooter" type="button" class="store-os-footer-link" data-i18n="footer.copyright" title="Mở hồ sơ Thuận Huỳnh">© Thuận Huỳnh</button>
+                    <span><span data-lang="vi">Công cụ bán hàng · Dịch vụ trực tuyến</span><span data-lang="en">Sales tools · Online services</span></span>
+                </div>
             </footer>
         </div>
 
-        <!-- NEWS TAX TOOL: isolated from quote-builder core. -->
+        <!-- TAX TOOL: isolated from quote-builder core. -->
         <div id="taxCalculatorModal" class="tax-tool-modal" role="dialog" aria-modal="true" aria-labelledby="taxToolTitle" aria-hidden="true">
             <div class="tax-tool-shell" tabindex="-1">
                 <header class="tax-tool-header">
@@ -5779,16 +5719,20 @@
                 "Ngôn ngữ ứng dụng": "App language",
                 "Ngôn ngữ hồ sơ": "Profile language",
                 "Điều hướng chính": "Primary navigation",
+                "Điều hướng chân trang": "Footer navigation",
                 "Hệ sinh thái tính năng Thuận Store": "Thuan Store feature ecosystem",
                 "Khám phá Thuận Store": "Explore Thuan Store",
-                "Dịch vụ hỗ trợ bán hàng online": "Online sales support services",
-                "Tin mới Thuận Store": "Thuan Store news",
+                "Dịch vụ hỗ trợ bán hàng trực tuyến": "Online sales support services",
+                "Các công cụ dùng thử Thuận Store": "Thuan Store demo tools",
                 "Giao diện tối": "Dark mode",
                 "Mở menu": "Open menu",
                 "Mở demo báo giá": "Open quote demo",
+                "Hiển thị công cụ dùng thử": "Show demo tools",
+                "Hiển thị dịch vụ trực tuyến": "Show online services",
                 "Mở hồ sơ Thuận Huỳnh": "Open Thuận Huỳnh's profile",
                 "Đóng hướng dẫn sử dụng": "Close user guide",
                 "Đóng công cụ tính thuế": "Close tax calculator",
+                "Đóng dịch vụ trực tuyến": "Close online service",
                 "Đóng hồ sơ": "Close profile",
                 "Đóng phần giới thiệu": "Close introduction",
                 "Đóng cửa sổ dịch vụ": "Close services dialog",
@@ -5797,6 +5741,17 @@
                 "Khuyến mãi": "Promotions",
                 "Tài chính và chiết khấu": "Finance and discounts",
                 "Lịch chăm sóc khách hàng": "Customer care schedule",
+                "Mở dịch vụ Website bán hàng": "Open sales website service",
+                "Mở dịch vụ SEO và nội dung": "Open SEO and content service",
+                "Mở dịch vụ TikTok và video ngắn": "Open TikTok and short-form video service",
+                "Mở dịch vụ phát trực tiếp bán hàng": "Open live selling service",
+                "Mở dịch vụ sàn thương mại điện tử và Amazon": "Open marketplace and Amazon service",
+                "Mở dịch vụ quảng cáo số": "Open digital advertising service",
+                "Mở dịch vụ chiến lược và đo lường": "Open strategy and analytics service",
+                "Mở dịch vụ AI và tự động hóa": "Open AI and automation service",
+                "Mở công cụ tính thuế": "Open tax calculator",
+                "Mở báo cáo": "Open reports",
+                "Mở giỏ báo giá": "Open quote cart",
                 "Chỉ số vận hành": "Operating metrics",
                 "Kỳ doanh thu": "Revenue period",
                 "Tỷ lệ thuế theo ngành": "Tax rates by business category",
@@ -9273,24 +9228,52 @@ led=>LED
         const openCustomerSchedule = () => {
             window.location.href = CUSTOMER_SCHEDULE_URL;
         };
-        const showUpdatingFeature = () => {
-            Utils.showToast("Tính năng đang được phát triển");
-        };
         const openReportWorkspace = () => {
             openQuoteWorkspace();
             if (typeof ExportLogic !== 'undefined' && AppState.get('cart').length > 0) {
                 requestAnimationFrame(() => ExportLogic.prepareExport());
             }
         };
+        const orbitModeRoot = document.querySelector('.store-os-orbit[data-orbit-mode]');
+        const orbitModeButton = document.getElementById('orbitCenterStart');
+        const syncOrbitModeA11y = () => {
+            if (!orbitModeRoot || !orbitModeButton) return;
+            const mode = orbitModeRoot.dataset.orbitMode === 'tools' ? 'tools' : 'services';
+            const lang = window.AppI18n && typeof AppI18n.get === 'function' ? AppI18n.get() : 'vi';
+            const showingTools = mode === 'tools';
+            const buttonLabel = showingTools
+                ? (lang === 'en' ? 'Show online services' : 'Hiển thị dịch vụ trực tuyến')
+                : (lang === 'en' ? 'Show demo tools' : 'Hiển thị công cụ dùng thử');
+            const orbitLabel = showingTools
+                ? (lang === 'en' ? 'Thuan Store demo tools' : 'Các công cụ dùng thử Thuận Store')
+                : (lang === 'en' ? 'Online sales support services' : 'Dịch vụ hỗ trợ bán hàng trực tuyến');
+            orbitModeButton.setAttribute('aria-label', buttonLabel);
+            orbitModeButton.setAttribute('title', buttonLabel);
+            orbitModeButton.setAttribute('aria-pressed', showingTools ? 'true' : 'false');
+            orbitModeRoot.setAttribute('aria-label', orbitLabel);
+            orbitModeRoot.querySelectorAll('.store-os-service-state').forEach(el => el.setAttribute('aria-hidden', showingTools ? 'true' : 'false'));
+            orbitModeRoot.querySelectorAll('.store-os-tool-state').forEach(el => el.setAttribute('aria-hidden', showingTools ? 'false' : 'true'));
+        };
+        const setOrbitMode = (mode) => {
+            if (!orbitModeRoot) return;
+            const nextMode = mode === 'tools' ? 'tools' : 'services';
+            orbitModeRoot.dataset.orbitMode = nextMode;
+            orbitModeRoot.classList.toggle('is-tools', nextMode === 'tools');
+            orbitModeRoot.classList.toggle('is-services', nextMode === 'services');
+            syncOrbitModeA11y();
+        };
+        const toggleOrbitMode = () => setOrbitMode(orbitModeRoot?.dataset.orbitMode === 'tools' ? 'services' : 'tools');
+        setOrbitMode('services');
+        document.querySelectorAll('[data-app-lang]').forEach(btn => btn.addEventListener('click', () => requestAnimationFrame(syncOrbitModeA11y)));
         bindClick('satSetup', openSetupManager);
         bindClick('satPromo', openPromoManager);
         bindClick('satDiscount', openDiscountManager);
         bindClick('satBrand', openCustomerSchedule);
         bindClick('orbitQuoteTrigger', openQuoteWorkspace);
-        bindClick('orbitOrderTrigger', showUpdatingFeature);
-        bindClick('orbitReportTrigger', showUpdatingFeature);
-        bindClick('calendarTrigger', showUpdatingFeature);
-        bindClick('orbitCenterStart', openQuoteWorkspace);
+        bindClick('orbitOrderTrigger', openQuoteWorkspace);
+        bindClick('orbitReportTrigger', openReportWorkspace);
+        bindClick('calendarTrigger', () => TaxCalculator2026?.open());
+        bindClick('orbitCenterStart', toggleOrbitMode);
 
         const guideModal = document.getElementById('userGuideModal');
         const openGuideModal = () => {
@@ -9408,7 +9391,7 @@ led=>LED
 
         // CV chỉ mở từ bản quyền ở chân trang để landing vẫn tập trung vào trải nghiệm ứng dụng.
 
-        // --- NEWS TAX TOOL 2026 (isolated from quote-builder state/currency) ---
+        // --- TAX TOOL 2026 (isolated from quote-builder state/currency) ---
         const TaxCalculator2026 = (() => {
             const modal = document.getElementById('taxCalculatorModal');
             const closeButton = document.getElementById('btnCloseTaxCalculator');
@@ -9744,10 +9727,7 @@ led=>LED
             return { open, close, calculate: renderCalculation };
         })();
         window.TaxCalculator2026 = TaxCalculator2026;
-        bindClick('newsOpenTaxTool', () => TaxCalculator2026?.open());
-        bindClick('newsOpenQuoteTool', openQuoteWorkspace);
-        bindClick('newsOpenGuide', openGuideModal);
-        // --- END NEWS TAX TOOL 2026 ---
+        // --- END TAX TOOL 2026 ---
         
         const logoTrigger = document.getElementById('brandLogoTrigger');
         const modalStory = document.getElementById('seoStoryModal');
@@ -9768,6 +9748,7 @@ led=>LED
 
       const demoHotlineTrigger = document.getElementById('demoHotlineTrigger');
         const pricingOfferTrigger = document.getElementById('pricingOfferTrigger');
+        const landingDemoTrigger = document.getElementById('landingDemoTrigger');
         const pricingOfferModal = document.getElementById('pricingOfferModal');
         const demoFeedbackModal = document.getElementById('demoFeedbackModal');
 
@@ -9779,6 +9760,130 @@ led=>LED
         const btnCloseFeedback = document.getElementById('btnCloseFeedback');
         const btnSubmitFeedback = document.getElementById('btnSubmitFeedback');
         const feedbackText = document.getElementById('feedbackText');
+        const orbitServiceModal = document.getElementById('orbitServiceModal');
+        const orbitServiceTitle = document.getElementById('orbitServiceTitle');
+        const orbitServiceSummary = document.getElementById('orbitServiceSummary');
+        const orbitServiceDeliverables = document.getElementById('orbitServiceDeliverables');
+        const orbitServiceOutcome = document.getElementById('orbitServiceOutcome');
+        const orbitServiceIcon = document.getElementById('orbitServiceIcon');
+        const btnCloseOrbitService = document.getElementById('btnCloseOrbitService');
+        const btnOrbitServiceTools = document.getElementById('btnOrbitServiceTools');
+        const btnOrbitServiceConsult = document.getElementById('btnOrbitServiceConsult');
+        const orbitServiceCatalog = {
+            website: {
+                vi: {
+                    title: 'Website bán hàng',
+                    summary: 'Thiết kế website gọn, dễ dùng trên điện thoại và dẫn khách đến hành động mua hàng hoặc liên hệ.',
+                    deliverables: ['Cấu trúc danh mục, trang sản phẩm và lời kêu gọi hành động.', 'Giao diện đa thiết bị, tốc độ tải và SEO kỹ thuật cơ bản.', 'Kết nối biểu mẫu, chat và công cụ đo lường cần thiết.'],
+                    outcome: 'Kết quả hướng tới: một điểm bán hàng trực tuyến thuộc quyền kiểm soát của doanh nghiệp.'
+                },
+                en: {
+                    title: 'Sales website',
+                    summary: 'Design a focused mobile-friendly website that moves visitors toward a purchase or inquiry.',
+                    deliverables: ['Product architecture, product pages, and clear calls to action.', 'Responsive interface, loading performance, and essential technical SEO.', 'Forms, chat, and the required measurement connections.'],
+                    outcome: 'Target outcome: an online sales destination the business controls.'
+                }
+            },
+            seo: {
+                vi: {
+                    title: 'SEO và nội dung',
+                    summary: 'Xây nội dung theo nhu cầu tìm kiếm thật, giúp khách hiểu sản phẩm và tìm thấy doanh nghiệp dễ hơn.',
+                    deliverables: ['Nghiên cứu từ khóa, đối thủ và ý định tìm kiếm.', 'Bản đồ nội dung cho website, sản phẩm và mạng xã hội.', 'Tối ưu nội dung trên trang, tìm kiếm tại địa phương và quy trình cập nhật.'],
+                    outcome: 'Kết quả hướng tới: nội dung có hệ thống, dùng lại được và tạo lưu lượng bền vững.'
+                },
+                en: {
+                    title: 'SEO and content',
+                    summary: 'Build content around real search demand so customers can understand products and find the business more easily.',
+                    deliverables: ['Keyword, competitor, and search-intent research.', 'A content map for the website, products, and social channels.', 'On-page SEO, local SEO, and a repeatable publishing workflow.'],
+                    outcome: 'Target outcome: structured reusable content that supports sustainable traffic.'
+                }
+            },
+            shortVideo: {
+                vi: {
+                    title: 'TikTok và video ngắn',
+                    summary: 'Xây hệ thống video ngắn phù hợp sản phẩm, giọng thương hiệu và nguồn lực sản xuất thực tế.',
+                    deliverables: ['Trụ cột nội dung và lịch đăng theo mục tiêu bán hàng.', 'Câu mở đầu, cách trình bày sản phẩm và lời kêu gọi hành động.', 'Mẫu quay dựng để đội ngũ có thể sản xuất đều đặn.'],
+                    outcome: 'Kết quả hướng tới: quy trình video rõ ràng thay vì đăng nội dung rời rạc.'
+                },
+                en: {
+                    title: 'TikTok and short video',
+                    summary: 'Build a short-video system that fits the product, brand voice, and realistic production capacity.',
+                    deliverables: ['Content pillars and a sales-focused publishing calendar.', 'Hooks, product demonstrations, and calls to action.', 'Repeatable shooting and editing templates for the team.'],
+                    outcome: 'Target outcome: a consistent video workflow instead of disconnected posts.'
+                }
+            },
+            liveSelling: {
+                vi: {
+                    title: 'Phát trực tiếp bán hàng',
+                    summary: 'Chuẩn bị kịch bản, sản phẩm, ưu đãi và cách phối hợp để buổi phát trực tiếp rõ ràng, dễ theo dõi.',
+                    deliverables: ['Kịch bản thời lượng, thứ tự sản phẩm và nhịp tương tác.', 'Nội dung chốt đơn, ưu đãi và xử lý câu hỏi thường gặp.', 'Thiết lập vận hành, phân vai và biểu mẫu đánh giá sau buổi phát.'],
+                    outcome: 'Kết quả hướng tới: buổi phát trực tiếp có cấu trúc và có dữ liệu để cải thiện.'
+                },
+                en: {
+                    title: 'Live selling',
+                    summary: 'Prepare the script, products, offers, and team coordination for a clear and watchable live session.',
+                    deliverables: ['Run of show, product order, and engagement rhythm.', 'Closing scripts, offers, and common-question handling.', 'Operating setup, team roles, and post-live review templates.'],
+                    outcome: 'Target outcome: structured live sessions with data for continuous improvement.'
+                }
+            },
+            marketplaces: {
+                vi: {
+                    title: 'Sàn TMĐT và Amazon',
+                    summary: 'Chuẩn hóa gian hàng và nội dung sản phẩm cho sàn trong nước hoặc lộ trình bán hàng quốc tế.',
+                    deliverables: ['Thiết lập danh mục, thuộc tính và quy chuẩn đăng sản phẩm.', 'Tối ưu tiêu đề, mô tả, từ khóa và hình ảnh trang sản phẩm.', 'Quy trình vận hành giá, khuyến mãi, đơn hàng và báo cáo.'],
+                    outcome: 'Kết quả hướng tới: gian hàng nhất quán, dễ quản lý và sẵn sàng mở rộng.'
+                },
+                en: {
+                    title: 'Marketplaces and Amazon',
+                    summary: 'Standardize storefronts and product content for local marketplaces or an international selling roadmap.',
+                    deliverables: ['Category, attribute, and product-listing standards.', 'Optimized titles, descriptions, keywords, and listing visuals.', 'Workflows for pricing, promotions, orders, and reporting.'],
+                    outcome: 'Target outcome: a consistent manageable storefront ready to scale.'
+                }
+            },
+            digitalAds: {
+                vi: {
+                    title: 'Quảng cáo số',
+                    summary: 'Thiết lập quảng cáo theo mục tiêu, theo dõi chuyển đổi và tối ưu dựa trên dữ liệu thay vì cảm tính.',
+                    deliverables: ['Kiểm tra mã theo dõi, sự kiện, liên kết và dữ liệu chuyển đổi.', 'Cấu trúc chiến dịch, nhóm đối tượng và kế hoạch nội dung quảng cáo.', 'Theo dõi chi phí, kết quả và đề xuất tối ưu định kỳ.'],
+                    outcome: 'Kết quả hướng tới: biết ngân sách đang tạo ra tín hiệu bán hàng nào.'
+                },
+                en: {
+                    title: 'Digital advertising',
+                    summary: 'Set up goal-based advertising, conversion tracking, and data-led optimization.',
+                    deliverables: ['Pixel, event, UTM, and conversion-data review.', 'Campaign structure, audiences, and ad-content plan.', 'Cost and result tracking with recurring optimization actions.'],
+                    outcome: 'Target outcome: understand which sales signals the advertising budget produces.'
+                }
+            },
+            analytics: {
+                vi: {
+                    title: 'Chiến lược và đo lường',
+                    summary: 'Xác định mục tiêu, hành trình khách hàng và chỉ số cần theo dõi trước khi mở rộng đội tiếp thị.',
+                    deliverables: ['Mục tiêu, chân dung khách hàng và phễu bán hàng.', 'Bộ chỉ số theo từng kênh cùng bảng theo dõi dễ cập nhật.', 'Đánh giá kênh hiện tại và kế hoạch ưu tiên theo nguồn lực.'],
+                    outcome: 'Kết quả hướng tới: đội ngũ biết việc nào cần làm trước và đo bằng chỉ số nào.'
+                },
+                en: {
+                    title: 'Strategy and analytics',
+                    summary: 'Define goals, the customer journey, and the metrics to track before scaling a marketing team.',
+                    deliverables: ['Goals, customer profiles, and the sales funnel.', 'Channel KPIs with a maintainable reporting dashboard.', 'Current-channel review and a resource-based priority plan.'],
+                    outcome: 'Target outcome: the team knows what to do first and how success will be measured.'
+                }
+            },
+            automation: {
+                vi: {
+                    title: 'AI và tự động hóa',
+                    summary: 'Dùng AI và tự động hóa cho các bước lặp lại, nhưng vẫn giữ dữ liệu, kiểm duyệt và trách nhiệm rõ ràng.',
+                    deliverables: ['Rà soát các thao tác lặp lại và chọn điểm tự động hóa phù hợp.', 'Mẫu dùng trí tuệ nhân tạo cho nội dung, phản hồi khách và xử lý dữ liệu.', 'Luồng kết nối biểu mẫu, dữ liệu, nhắc việc hoặc báo cáo.'],
+                    outcome: 'Kết quả hướng tới: giảm thời gian thao tác mà không làm mất kiểm soát.'
+                },
+                en: {
+                    title: 'AI and automation',
+                    summary: 'Use AI and automation for repetitive steps while keeping data, review, and accountability clear.',
+                    deliverables: ['Review repetitive work and select suitable automation points.', 'AI templates for content, customer replies, and data processing.', 'Connected flows for forms, data, reminders, or reporting.'],
+                    outcome: 'Target outcome: reduce manual time without losing operational control.'
+                }
+            }
+        };
+        let activeOrbitServiceKey = '';
         const pricingLeadCopy = {
             vi: {
                 setup: 'Tôi muốn tư vấn dịch vụ Chuẩn hóa dữ liệu 999.000đ/lần. Ngành hàng: ... Dữ liệu hiện có: ... Số lượng mã hàng: ... Số điện thoại liên hệ: ...',
@@ -9813,6 +9918,70 @@ led=>LED
             setTimeout(() => { demoFeedbackModal.classList.add('hidden'); demoFeedbackModal.classList.remove('flex'); }, 300);
         };
 
+        const getOrbitServiceLanguage = () => window.AppI18n && typeof AppI18n.get === 'function' ? AppI18n.get() : 'vi';
+        const renderOrbitService = (key, sourceButton = null) => {
+            const service = orbitServiceCatalog[key];
+            if (!service || !orbitServiceTitle || !orbitServiceDeliverables) return false;
+            const lang = getOrbitServiceLanguage();
+            const copy = service[lang] || service.vi;
+            activeOrbitServiceKey = key;
+            orbitServiceTitle.textContent = copy.title;
+            orbitServiceSummary.textContent = copy.summary;
+            orbitServiceOutcome.textContent = copy.outcome;
+            orbitServiceDeliverables.replaceChildren(...copy.deliverables.map(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                return li;
+            }));
+            if (orbitServiceIcon) {
+                const icon = sourceButton?.querySelector('svg')?.cloneNode(true);
+                orbitServiceIcon.replaceChildren(...(icon ? [icon] : []));
+                orbitServiceIcon.style.color = sourceButton ? getComputedStyle(sourceButton).color : '';
+            }
+            return true;
+        };
+        const openOrbitServiceModal = (sourceButton) => {
+            if (!orbitServiceModal || !renderOrbitService(sourceButton?.dataset.serviceKey, sourceButton)) return;
+            orbitServiceModal.classList.remove('hidden');
+            orbitServiceModal.classList.add('flex');
+            if (window.AppI18n) AppI18n.apply(orbitServiceModal);
+            setTimeout(() => {
+                orbitServiceModal.classList.remove('opacity-0');
+                orbitServiceModal.firstElementChild?.classList.remove('scale-95');
+                btnCloseOrbitService?.focus();
+            }, 10);
+        };
+        const closeOrbitServiceModal = () => {
+            if (!orbitServiceModal) return;
+            orbitServiceModal.classList.add('opacity-0');
+            orbitServiceModal.firstElementChild?.classList.add('scale-95');
+            setTimeout(() => {
+                orbitServiceModal.classList.add('hidden');
+                orbitServiceModal.classList.remove('flex');
+            }, 300);
+        };
+        document.querySelectorAll('[data-service-key]').forEach(button => {
+            button.addEventListener('click', () => openOrbitServiceModal(button));
+        });
+        btnCloseOrbitService?.addEventListener('click', closeOrbitServiceModal);
+        btnOrbitServiceTools?.addEventListener('click', () => {
+            closeOrbitServiceModal();
+            setOrbitMode('tools');
+        });
+        btnOrbitServiceConsult?.addEventListener('click', () => {
+            const lang = getOrbitServiceLanguage();
+            const service = orbitServiceCatalog[activeOrbitServiceKey];
+            const title = service?.[lang]?.title || service?.vi?.title || '';
+            const preset = lang === 'en'
+                ? `I would like to discuss the ${title} service. Current business: ... Goals: ... Available channels and data: ... Contact phone: ...`
+                : `Tôi muốn trao đổi dịch vụ ${title}. Ngành hàng hiện tại: ... Mục tiêu: ... Kênh và dữ liệu đang có: ... Số điện thoại liên hệ: ...`;
+            closeOrbitServiceModal();
+            openFeedbackModal(preset);
+        });
+        orbitServiceModal?.addEventListener('click', (event) => {
+            if (event.target === orbitServiceModal) closeOrbitServiceModal();
+        });
+
         const openPricingOfferModal = () => {
             if (!pricingOfferModal) return;
             pricingOfferModal.classList.remove('hidden'); pricingOfferModal.classList.add('flex');
@@ -9826,6 +9995,7 @@ led=>LED
         };
 
         if(pricingOfferTrigger) pricingOfferTrigger.addEventListener('click', openPricingOfferModal);
+        landingDemoTrigger?.addEventListener('click', openQuoteWorkspace);
         if(btnClosePricingOffer) btnClosePricingOffer.addEventListener('click', closePricingOfferModal);
         if(btnPricingConsult) {
             btnPricingConsult.addEventListener('click', () => {
@@ -9849,11 +10019,34 @@ led=>LED
             btn.addEventListener('click', () => {
                 const action = btn.dataset.landingAction;
                 btn.closest('details')?.removeAttribute('open');
-                if (action === 'features') document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                if (action === 'pricing') openPricingOfferModal();
-                if (action === 'demo') openGuideModal();
+                if (action === 'features') {
+                    setOrbitMode('tools');
+                    document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (action === 'pricing') {
+                    setOrbitMode('services');
+                    document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (action === 'demo') openQuoteWorkspace();
                 if (action === 'profile' && CAREER_PROFILE_ENABLED) openCareerProfileModal();
                 if (action === 'contact') openFeedbackModal();
+            });
+        });
+        document.querySelectorAll('[data-footer-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.footerAction;
+                if (action === 'services' || action === 'tools') {
+                    setOrbitMode(action);
+                    document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                if (action === 'guide') openGuideModal();
+                if (action === 'contact') openFeedbackModal();
+            });
+        });
+        document.querySelectorAll('a[data-orbit-mode], button[data-orbit-mode]').forEach(control => {
+            control.addEventListener('click', () => {
+                setOrbitMode(control.dataset.orbitMode);
+                document.getElementById('store-os-orbit')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
         });
 
