@@ -1,8 +1,21 @@
 <!DOCTYPE html>
-<html lang="vi" data-lang="vi">
+<html lang="vi" data-lang="vi" data-title-vi="Thuận Store - Công cụ bán hàng và dịch vụ trực tuyến" data-title-en="Thuan Store - Sales tools and online services">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#020617">
-    <meta name="description" content="Dịch vụ chuẩn hóa gian hàng trên sàn thương mại điện tử và Amazon."><title>Sàn thương mại điện tử và Amazon - Thuận Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <meta name="description" content="Thuận Store thiết kế công cụ bán hàng và dịch vụ trực tuyến theo quy trình của cửa hàng, đội bán hàng và doanh nghiệp nhỏ.">
+    <link rel="canonical" href="https://thuanstore.com/">
+    <title>Thuận Store - Công cụ bán hàng và dịch vụ trực tuyến</title>
+    <script>
+        try {
+            const savedLanguage = localStorage.getItem('thuanstore_app_lang_v1');
+            if (savedLanguage === 'en' || savedLanguage === 'vi') {
+                document.documentElement.lang = savedLanguage;
+                document.documentElement.dataset.lang = savedLanguage;
+            }
+        } catch (error) {}
+    </script>
     <style data-thuanstore-inline="site.css">
 :root {
     color-scheme: dark;
@@ -1740,8 +1753,221 @@ html[data-lang="en"] [data-lang="vi"] {
 }
 
 </style>
+    
+    
 </head>
-<body data-service="marketplace"><main class="subpage-shell"><header class="subpage-header"><a class="brand" href="index.html"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOLS</span></small></span></a><div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang chủ" data-label-en="Close and return home" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div></header><article id="serviceContent" class="service-main"></article><footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a></footer></main><script data-thuanstore-inline="i18n.js">
+<body>
+    <main class="site-shell">
+        <div class="site-background" aria-hidden="true"></div>
+        <h1 class="sr-only" data-lang="vi">Thuận Store - thiết kế công cụ bán hàng và dịch vụ trực tuyến</h1>
+        <h1 class="sr-only" data-lang="en">Thuan Store - sales tool design and online services</h1>
+
+        <header class="site-header">
+            <a class="brand" href="index.html" aria-label="Thuận Store">
+                <svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span class="brand-copy">
+                    <strong>THUẬN STORE</strong>
+                    <small><span data-lang="vi">CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOLS</span></small>
+                </span>
+            </a>
+
+            <nav class="desktop-nav" data-label-vi="Điều hướng chính" data-label-en="Primary navigation" aria-label="Điều hướng chính">
+                <button type="button" data-show-mode="services"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
+                <button type="button" data-show-mode="tools"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></button>
+                <a href="baogia.html?tool=quote"><span data-lang="vi">Dùng thử</span><span data-lang="en">Demo</span></a>
+                <a href="https://thuanstore.com/lichdituyen"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></a>
+                <a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a>
+            </nav>
+
+            <div class="header-actions">
+                <nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ">
+                    <button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button>
+                    <button type="button" data-app-lang="en" aria-pressed="false">EN</button>
+                </nav>
+
+                <details id="mobileMenu" class="mobile-menu">
+                    <summary data-label-vi="Mở trình đơn" data-label-en="Open menu" aria-label="Mở trình đơn">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"></path></svg>
+                    </summary>
+                    <nav class="mobile-menu-panel" data-label-vi="Điều hướng di động" data-label-en="Mobile navigation" aria-label="Điều hướng di động">
+                        <button type="button" data-show-mode="services"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
+                        <button type="button" data-show-mode="tools"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></button>
+                        <a href="baogia.html?tool=quote"><span data-lang="vi">Dùng thử</span><span data-lang="en">Demo</span></a>
+                        <a href="https://thuanstore.com/lichdituyen"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></a>
+                        <a href="huongdan.html"><span data-lang="vi">Hướng dẫn</span><span data-lang="en">Guide</span></a>
+                        <a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a>
+                    </nav>
+                </details>
+            </div>
+        </header>
+
+        <section class="landing-main">
+            <div class="landing-copy">
+                <span class="eyebrow"><span data-lang="vi">THIẾT KẾ CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOL DESIGN</span></span>
+                <h2 class="landing-title">
+                    <span data-lang="vi">Thiết kế công cụ<br>theo cách bạn</span>
+                    <span data-lang="en">Tools designed<br>around how you</span>
+                    <strong><span data-lang="vi">bán hàng</span><span data-lang="en">sell</span></strong>
+                </h2>
+                <p class="landing-description"><span data-lang="vi">Thuận Store thiết kế công cụ gọn nhẹ cho dữ liệu, báo giá, chăm sóc khách hàng và bán hàng trực tuyến. Công cụ báo giá miễn phí là bản dùng thử trước khi triển khai theo quy trình riêng.</span><span data-lang="en">Thuan Store designs focused tools for data, quotations, customer follow-up, and online sales. The free quote builder is a working demo before a solution is tailored to your workflow.</span></p>
+
+                <div class="landing-actions">
+                    <a class="primary-action" href="baogia.html?tool=quote">
+                        <span><span data-lang="vi">Dùng thử báo giá miễn phí</span><span data-lang="en">Try the free quote builder</span></span>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </a>
+                    <a class="secondary-action" href="huongdan.html">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z" stroke-width="2.2" stroke-linejoin="round"></path></svg>
+                        <span><span data-lang="vi">Hướng dẫn sử dụng</span><span data-lang="en">User guide</span></span>
+                    </a>
+                </div>
+
+                <div class="landing-metrics" data-label-vi="Thông tin chính" data-label-en="Key information" aria-label="Thông tin chính">
+                    <div class="metric"><strong><span data-lang="vi">MIỄN PHÍ</span><span data-lang="en">FREE</span></strong><span><span data-lang="vi">Bản dùng thử báo giá</span><span data-lang="en">Quote builder demo</span></span></div>
+                    <div class="metric"><strong>2K+</strong><span><span data-lang="vi">Sản phẩm mẫu MPE</span><span data-lang="en">MPE sample products</span></span></div>
+                    <div class="metric"><strong>VI/EN</strong><span><span data-lang="vi">Giao diện song ngữ</span><span data-lang="en">Bilingual interface</span></span></div>
+                    <div class="metric"><strong><span data-lang="vi">RIÊNG</span><span data-lang="en">CUSTOM</span></strong><span><span data-lang="vi">Theo quy trình của bạn</span><span data-lang="en">Built around your workflow</span></span></div>
+                </div>
+            </div>
+
+            <div id="orbitArea" class="orbit-visual">
+                <div class="mobile-intro">
+                    <span class="mobile-intro-kicker"><span data-lang="vi">THIẾT KẾ CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOL DESIGN</span></span>
+                    <h2><span data-lang="vi">Công cụ phù hợp với cách bạn đang bán hàng</span><span data-lang="en">Tools designed around how you sell</span></h2>
+                    <p><span data-lang="vi">Thuận Store phát triển công cụ từ dữ liệu và quy trình hiện có. Báo giá miễn phí là bản dùng thử trước khi triển khai theo nhu cầu riêng.</span><span data-lang="en">Thuan Store builds tools around your current data and workflow. The free quote builder is a working demo before a tailored implementation.</span></p>
+                    <div class="mobile-intro-actions">
+                        <a class="primary-action" href="lienhe.html?service=custom"><span data-lang="vi">Trao đổi nhu cầu</span><span data-lang="en">Discuss your needs</span></a>
+                        <a class="secondary-action" href="baogia.html?tool=quote"><span data-lang="vi">Dùng thử báo giá</span><span data-lang="en">Try the quote builder</span></a>
+                    </div>
+                </div>
+                <div class="orbit is-services" data-orbit data-mode="services" role="region" aria-label="Dịch vụ hỗ trợ bán hàng trực tuyến">
+                    <div class="orbit-ring outer" aria-hidden="true"></div>
+                    <div class="orbit-ring middle" aria-hidden="true"></div>
+                    <div class="orbit-ring inner" aria-hidden="true"></div>
+
+                    <button id="orbitCenter" type="button" class="orbit-center" aria-label="Hiển thị công cụ dùng thử" title="Hiển thị công cụ dùng thử" aria-pressed="false">
+                        <span class="reactor" aria-hidden="true"></span>
+                        <span class="center-label">
+                            <span class="center-services"><span data-lang="vi">XEM CÔNG CỤ</span><span data-lang="en">VIEW TOOLS</span></span>
+                            <span class="center-tools"><span data-lang="vi">DỊCH VỤ</span><span data-lang="en">SERVICES</span></span>
+                        </span>
+                    </button>
+
+                    <div class="orbit-item" style="--x:50%;--y:10%;--i:0;">
+                        <a class="orbit-state service-state" href="website.html" style="--accent:#22d3ee;" data-label-vi="Mở dịch vụ website bán hàng" data-label-en="Open sales website service" aria-label="Mở dịch vụ website bán hàng" title="Mở dịch vụ website bán hàng">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Website</span><span data-lang="en">Website</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=quote" style="--accent:#22d3ee;" data-label-vi="Mở công cụ báo giá" data-label-en="Open quote builder" aria-label="Mở công cụ báo giá" title="Mở công cụ báo giá">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h7l4 4v12H8a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3Z"></path><path d="M14 4v5h5M9 13h6M9 17h4" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Báo giá</span><span data-lang="en">Quotes</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:78%;--y:22%;--i:1;">
+                        <a class="orbit-state service-state" href="seo.html" style="--accent:#60a5fa;" data-label-vi="Mở dịch vụ SEO và nội dung" data-label-en="Open SEO and content service" aria-label="Mở dịch vụ SEO và nội dung" title="Mở dịch vụ SEO và nội dung">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">SEO &amp; nội dung</span><span data-lang="en">SEO &amp; content</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=tax" style="--accent:#22d3ee;" data-label-vi="Mở công cụ tính thuế" data-label-en="Open tax calculator" aria-label="Mở công cụ tính thuế" title="Mở công cụ tính thuế">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"></rect><path d="M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Thuế 2026</span><span data-lang="en">Tax 2026</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:90%;--y:50%;--i:2;">
+                        <a class="orbit-state service-state" href="tiktok.html" style="--accent:#f472b6;" data-label-vi="Mở dịch vụ TikTok và video ngắn" data-label-en="Open TikTok and short-video service" aria-label="Mở dịch vụ TikTok và video ngắn" title="Mở dịch vụ TikTok và video ngắn">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">TikTok &amp; video</span><span data-lang="en">TikTok &amp; video</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=report" style="--accent:#2dd4bf;" data-label-vi="Mở báo cáo" data-label-en="Open reports" aria-label="Mở báo cáo" title="Mở báo cáo">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Báo cáo</span><span data-lang="en">Reports</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:78%;--y:78%;--i:3;">
+                        <a class="orbit-state service-state" href="livestream.html" style="--accent:#fb7185;" data-label-vi="Mở dịch vụ phát trực tiếp bán hàng" data-label-en="Open live selling service" aria-label="Mở dịch vụ phát trực tiếp bán hàng" title="Mở dịch vụ phát trực tiếp bán hàng">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Phát trực tiếp</span><span data-lang="en">Live selling</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=cart" style="--accent:#fbbf24;" data-label-vi="Mở giỏ báo giá" data-label-en="Open quote cart" aria-label="Mở giỏ báo giá" title="Mở giỏ báo giá">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h2l2.2 10.5a2 2 0 0 0 2 1.5H17a2 2 0 0 0 1.9-1.4L21 8H6M10 21h.01M17 21h.01" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Giỏ báo giá</span><span data-lang="en">Quote cart</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:50%;--y:90%;--i:4;">
+                        <a class="orbit-state service-state" href="marketplace.html" style="--accent:#f59e0b;" data-label-vi="Mở dịch vụ sàn thương mại điện tử và Amazon" data-label-en="Open marketplace and Amazon service" aria-label="Mở dịch vụ sàn thương mại điện tử và Amazon" title="Mở dịch vụ sàn thương mại điện tử và Amazon">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2-5H5.2L4 10Zm2 0v9h12v-9M9 19v-5h6v5" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Sàn &amp; Amazon</span><span data-lang="en">Marketplaces</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="https://thuanstore.com/lichdituyen" style="--accent:#67e8f9;" data-label-vi="Mở lịch chăm sóc khách hàng" data-label-en="Open customer schedule" aria-label="Mở lịch chăm sóc khách hàng" title="Mở lịch chăm sóc khách hàng">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm13 10v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Khách hàng</span><span data-lang="en">Customers</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:22%;--y:78%;--i:5;">
+                        <a class="orbit-state service-state" href="quangcao.html" style="--accent:#a78bfa;" data-label-vi="Mở dịch vụ quảng cáo số" data-label-en="Open digital advertising service" aria-label="Mở dịch vụ quảng cáo số" title="Mở dịch vụ quảng cáo số">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 13-5v12L3 13v-2Zm13-1 4-2v8l-4-2M5 14l1 5h4l-2-4" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Quảng cáo số</span><span data-lang="en">Digital ads</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=discount" style="--accent:#60a5fa;" data-label-vi="Mở công cụ chiết khấu" data-label-en="Open discount tool" aria-label="Mở công cụ chiết khấu" title="Mở công cụ chiết khấu">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 19 14-14M7.5 8A1.5 1.5 0 1 0 7.5 5a1.5 1.5 0 0 0 0 3Zm9 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Chiết khấu</span><span data-lang="en">Discounts</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:10%;--y:50%;--i:6;">
+                        <a class="orbit-state service-state" href="do-luong.html" style="--accent:#2dd4bf;" data-label-vi="Mở dịch vụ chiến lược và đo lường" data-label-en="Open strategy and analytics service" aria-label="Mở dịch vụ chiến lược và đo lường" title="Mở dịch vụ chiến lược và đo lường">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m4 10-1-6 4 2 3-8 3 5 3-2M3 19h18" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Đo lường</span><span data-lang="en">Analytics</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=promotions" style="--accent:#34d399;" data-label-vi="Mở công cụ khuyến mãi" data-label-en="Open promotions" aria-label="Mở công cụ khuyến mãi" title="Mở công cụ khuyến mãi">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12v8H4v-8m-2-5h20v5H2V7Zm10 13V7M12 7H7.5A2.5 2.5 0 1 1 10 4.5V7Zm0 0h4.5A2.5 2.5 0 1 0 14 4.5V7Z" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Khuyến mãi</span><span data-lang="en">Promotions</span></span>
+                        </a>
+                    </div>
+
+                    <div class="orbit-item" style="--x:22%;--y:22%;--i:7;">
+                        <a class="orbit-state service-state" href="ai.html" style="--accent:#34d399;" data-label-vi="Mở dịch vụ AI hỗ trợ bán hàng" data-label-en="Open AI sales support service" aria-label="Mở dịch vụ AI hỗ trợ bán hàng" title="Mở dịch vụ AI hỗ trợ bán hàng">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 14l2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">AI hỗ trợ</span><span data-lang="en">AI support</span></span>
+                        </a>
+                        <a class="orbit-state tool-state" href="baogia.html?tool=data" style="--accent:#38bdf8;" data-label-vi="Mở quản lý dữ liệu" data-label-en="Open data management" aria-label="Mở quản lý dữ liệu" title="Mở quản lý dữ liệu">
+                            <span class="node-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"></path><path d="M12 12 4.5 7.8M12 12l7.5-4.2M12 12v8.5" stroke-linecap="round"></path></svg></span>
+                            <span class="node-label"><span data-lang="vi">Dữ liệu</span><span data-lang="en">Data</span></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <strong>THUẬN STORE</strong>
+                    <p><span data-lang="vi">Thiết kế công cụ bán hàng và dịch vụ trực tuyến theo quy trình của bạn.</span><span data-lang="en">Sales tools and online services designed around your workflow.</span></p>
+                </div>
+                <nav class="footer-nav" data-label-vi="Điều hướng chân trang" data-label-en="Footer navigation" aria-label="Điều hướng chân trang">
+                    <button type="button" data-show-mode="services"><span data-lang="vi">Dịch vụ</span><span data-lang="en">Services</span></button>
+                    <button type="button" data-show-mode="tools"><span data-lang="vi">Công cụ</span><span data-lang="en">Tools</span></button>
+                    <a href="huongdan.html"><span data-lang="vi">Hướng dẫn</span><span data-lang="en">Guide</span></a>
+                    <a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a>
+                </nav>
+                <div class="footer-contact">
+                    <span><span data-lang="vi">Trao đổi dự án</span><span data-lang="en">Discuss a project</span></span>
+                    <a href="mailto:thuanstore.com@gmail.com">thuanstore.com@gmail.com</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <a href="gioithieu.html">© Thuận Huỳnh</a>
+                <span><span data-lang="vi">Công cụ bán hàng · Dịch vụ trực tuyến</span><span data-lang="en">Sales tools · Online services</span></span>
+            </div>
+        </footer>
+    </main>
+<script data-thuanstore-inline="i18n.js">
 (() => {
     const STORAGE_KEY = 'thuanstore_app_lang_v1';
     const normalize = value => value === 'en' ? 'en' : 'vi';
@@ -1819,203 +2045,66 @@ html[data-lang="en"] [data-lang="vi"] {
 })();
 
 </script>
-<script data-thuanstore-inline="service.js">
+<script data-thuanstore-inline="index.js">
 (() => {
-    const icons = {
-        website: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        seo: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg>',
-        tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg>',
-        livestream: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg>',
-        marketplace: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2-5H5.2L4 10Zm2 0v9h12v-9M9 19v-5h6v5" stroke-linejoin="round"></path></svg>',
-        ads: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 13-5v12L3 13v-2Zm13-1 4-2v8l-4-2M5 14l1 5h4l-2-4" stroke-linejoin="round"></path></svg>',
-        analytics: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m4 10-1-6 4 2 3-8 3 5 3-2M3 19h18" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        ai: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 14l2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+    const orbit = document.querySelector('[data-orbit]');
+    const center = document.getElementById('orbitCenter');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (!orbit || !center) return;
+
+    const getLanguage = () => window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
+
+    const syncLabels = () => {
+        const language = getLanguage();
+        const showingTools = orbit.dataset.mode === 'tools';
+        const centerLabel = showingTools
+            ? (language === 'en' ? 'Show online services' : 'Hiển thị dịch vụ trực tuyến')
+            : (language === 'en' ? 'Show demo tools' : 'Hiển thị công cụ dùng thử');
+        const orbitLabel = showingTools
+            ? (language === 'en' ? 'Thuan Store demo tools' : 'Các công cụ dùng thử Thuận Store')
+            : (language === 'en' ? 'Online sales support services' : 'Dịch vụ hỗ trợ bán hàng trực tuyến');
+
+        center.setAttribute('aria-label', centerLabel);
+        center.setAttribute('title', centerLabel);
+        center.setAttribute('aria-pressed', String(showingTools));
+        orbit.setAttribute('aria-label', orbitLabel);
     };
 
-    const catalog = {
-        website: {
-            color: '#22d3ee',
-            vi: {
-                title: 'Website bán hàng',
-                summary: 'Thiết kế website gọn, dễ dùng trên điện thoại và dẫn khách đến hành động mua hàng hoặc liên hệ.',
-                deliverables: ['Cấu trúc danh mục, trang sản phẩm và lời kêu gọi hành động.', 'Giao diện đa thiết bị, tốc độ tải và nền tảng tối ưu tìm kiếm.', 'Kết nối biểu mẫu, trò chuyện và công cụ đo lường cần thiết.'],
-                outcome: 'Một điểm bán hàng trực tuyến thuộc quyền kiểm soát của doanh nghiệp.'
-            },
-            en: {
-                title: 'Sales website',
-                summary: 'Design a focused mobile-friendly website that moves visitors toward a purchase or inquiry.',
-                deliverables: ['Product architecture, product pages, and clear calls to action.', 'Responsive interface, loading performance, and essential technical SEO.', 'Forms, chat, and the required measurement connections.'],
-                outcome: 'An online sales destination the business controls.'
-            }
-        },
-        seo: {
-            color: '#60a5fa',
-            vi: {
-                title: 'SEO và nội dung',
-                summary: 'Xây nội dung theo nhu cầu tìm kiếm thật, giúp khách hiểu sản phẩm và tìm thấy doanh nghiệp dễ hơn.',
-                deliverables: ['Nghiên cứu từ khóa, đối thủ và ý định tìm kiếm.', 'Bản đồ nội dung cho website, sản phẩm và mạng xã hội.', 'Tối ưu nội dung trên trang, tìm kiếm tại địa phương và quy trình cập nhật.'],
-                outcome: 'Nội dung có hệ thống, dùng lại được và tạo lưu lượng bền vững.'
-            },
-            en: {
-                title: 'SEO and content',
-                summary: 'Build content around real search demand so customers can understand products and find the business more easily.',
-                deliverables: ['Keyword, competitor, and search-intent research.', 'A content map for the website, products, and social channels.', 'On-page SEO, local SEO, and a repeatable publishing workflow.'],
-                outcome: 'Structured reusable content that supports sustainable traffic.'
-            }
-        },
-        tiktok: {
-            color: '#f472b6',
-            vi: {
-                title: 'TikTok và video ngắn',
-                summary: 'Xây hệ thống video ngắn phù hợp sản phẩm, giọng thương hiệu và nguồn lực sản xuất thực tế.',
-                deliverables: ['Trụ cột nội dung và lịch đăng theo mục tiêu bán hàng.', 'Câu mở đầu, cách trình bày sản phẩm và lời kêu gọi hành động.', 'Mẫu quay dựng để đội ngũ có thể sản xuất đều đặn.'],
-                outcome: 'Một quy trình video rõ ràng thay vì các nội dung rời rạc.'
-            },
-            en: {
-                title: 'TikTok and short video',
-                summary: 'Build a short-video system that fits the product, brand voice, and realistic production capacity.',
-                deliverables: ['Content pillars and a sales-focused publishing calendar.', 'Hooks, product demonstrations, and calls to action.', 'Repeatable shooting and editing templates for the team.'],
-                outcome: 'A consistent video workflow instead of disconnected posts.'
-            }
-        },
-        livestream: {
-            color: '#fb7185',
-            vi: {
-                title: 'Phát trực tiếp bán hàng',
-                summary: 'Chuẩn bị kịch bản, sản phẩm, ưu đãi và cách phối hợp để buổi phát trực tiếp rõ ràng, dễ theo dõi.',
-                deliverables: ['Kịch bản thời lượng, thứ tự sản phẩm và nhịp tương tác.', 'Nội dung chốt đơn, ưu đãi và xử lý câu hỏi thường gặp.', 'Thiết lập vận hành, phân vai và biểu mẫu đánh giá sau buổi phát.'],
-                outcome: 'Buổi phát trực tiếp có cấu trúc và có dữ liệu để cải thiện.'
-            },
-            en: {
-                title: 'Live selling',
-                summary: 'Prepare the script, products, offers, and team coordination for a clear and watchable live session.',
-                deliverables: ['Run of show, product order, and engagement rhythm.', 'Closing scripts, offers, and common-question handling.', 'Operating setup, team roles, and post-live review templates.'],
-                outcome: 'Structured live sessions with data for continuous improvement.'
-            }
-        },
-        marketplace: {
-            color: '#f59e0b',
-            vi: {
-                title: 'Sàn thương mại điện tử và Amazon',
-                summary: 'Chuẩn hóa gian hàng và nội dung sản phẩm cho sàn trong nước hoặc lộ trình bán hàng quốc tế.',
-                deliverables: ['Thiết lập danh mục, thuộc tính và quy chuẩn đăng sản phẩm.', 'Tối ưu tiêu đề, mô tả, từ khóa và hình ảnh trang sản phẩm.', 'Quy trình vận hành giá, khuyến mãi, đơn hàng và báo cáo.'],
-                outcome: 'Gian hàng nhất quán, dễ quản lý và sẵn sàng mở rộng.'
-            },
-            en: {
-                title: 'Marketplaces and Amazon',
-                summary: 'Standardize storefronts and product content for local marketplaces or an international selling roadmap.',
-                deliverables: ['Category, attribute, and product-listing standards.', 'Optimized titles, descriptions, keywords, and listing visuals.', 'Workflows for pricing, promotions, orders, and reporting.'],
-                outcome: 'A consistent manageable storefront ready to scale.'
-            }
-        },
-        ads: {
-            color: '#a78bfa',
-            vi: {
-                title: 'Quảng cáo số',
-                summary: 'Thiết lập quảng cáo theo mục tiêu, theo dõi chuyển đổi và tối ưu dựa trên dữ liệu thay vì cảm tính.',
-                deliverables: ['Kiểm tra mã theo dõi, sự kiện, liên kết và dữ liệu chuyển đổi.', 'Cấu trúc chiến dịch, nhóm đối tượng và kế hoạch nội dung quảng cáo.', 'Theo dõi chi phí, kết quả và đề xuất tối ưu định kỳ.'],
-                outcome: 'Biết ngân sách đang tạo ra tín hiệu bán hàng nào.'
-            },
-            en: {
-                title: 'Digital advertising',
-                summary: 'Set up goal-based advertising, conversion tracking, and data-led optimization.',
-                deliverables: ['Pixel, event, UTM, and conversion-data review.', 'Campaign structure, audiences, and ad-content plan.', 'Cost and result tracking with recurring optimization actions.'],
-                outcome: 'Understand which sales signals the advertising budget produces.'
-            }
-        },
-        analytics: {
-            color: '#2dd4bf',
-            vi: {
-                title: 'Chiến lược và đo lường',
-                summary: 'Xác định mục tiêu, hành trình khách hàng và chỉ số cần theo dõi trước khi mở rộng đội tiếp thị.',
-                deliverables: ['Mục tiêu, chân dung khách hàng và phễu bán hàng.', 'Bộ chỉ số theo từng kênh cùng bảng theo dõi dễ cập nhật.', 'Đánh giá kênh hiện tại và kế hoạch ưu tiên theo nguồn lực.'],
-                outcome: 'Đội ngũ biết việc nào cần làm trước và đo bằng chỉ số nào.'
-            },
-            en: {
-                title: 'Strategy and analytics',
-                summary: 'Define goals, the customer journey, and the metrics to track before scaling a marketing team.',
-                deliverables: ['Goals, customer profiles, and the sales funnel.', 'Channel KPIs with a maintainable reporting dashboard.', 'Current-channel review and a resource-based priority plan.'],
-                outcome: 'The team knows what to do first and how success will be measured.'
-            }
-        },
-        ai: {
-            color: '#34d399',
-            vi: {
-                title: 'AI hỗ trợ bán hàng',
-                summary: 'Bắt đầu từ một công việc lặp lại có dữ liệu rõ, sau đó dùng AI để xử lý bản nháp nhanh hơn và vẫn có người kiểm tra trước khi sử dụng.',
-                deliverables: ['Chuẩn hóa danh sách sản phẩm, thuộc tính và nội dung nguồn để AI sử dụng đúng dữ liệu.', 'Tạo mẫu soạn mô tả sản phẩm, nội dung bán hàng và câu trả lời thường gặp để người dùng kiểm tra trước khi gửi.', 'Kết nối biểu mẫu và bảng dữ liệu để tổng hợp yêu cầu, nhắc chăm sóc khách hoặc chuẩn bị báo cáo.'],
-                outcome: 'Giảm thời gian nhập lại và soạn nháp, trong khi quyết định cuối cùng vẫn do người dùng kiểm tra.',
-                examples: ['Sale sản phẩm: tra dữ liệu, tóm tắt thông số và chuẩn bị nội dung gửi khách từ nguồn đã duyệt.', 'Cửa hàng: soạn câu trả lời cho các câu hỏi lặp lại và phân loại yêu cầu của khách.', 'Nhóm tiếp thị: chuyển nội dung sản phẩm thành phiên bản cho website, mạng xã hội hoặc video.'],
-                principle: 'Không bắt đầu bằng một hệ thống AI lớn. Chọn một việc lặp lại, đo thời gian trước và sau, rồi mới mở rộng.',
-                cta: 'Trao đổi một việc đang lặp lại'
-            },
-            en: {
-                title: 'AI for sales support',
-                summary: 'Start with one repetitive task backed by clear data, then use AI to prepare drafts faster while keeping human review before use.',
-                deliverables: ['Standardize product lists, attributes, and source content so AI works from approved data.', 'Create reviewed templates for product descriptions, sales content, and recurring customer questions.', 'Connect forms and structured data to summarize requests, prepare follow-up reminders, or draft reports.'],
-                outcome: 'Reduce repeated entry and drafting time while keeping the final decision with the user.',
-                examples: ['Product sales: retrieve approved data, summarize specifications, and prepare customer-ready information.', 'Retail stores: draft answers to recurring questions and categorize customer requests.', 'Marketing teams: adapt product information for websites, social channels, or video scripts.'],
-                principle: 'Do not begin with a large AI system. Start with one repeatable task, measure time before and after, then expand.',
-                cta: 'Discuss one repetitive task'
-            }
-        }
+    const setMode = mode => {
+        const nextMode = mode === 'tools' ? 'tools' : 'services';
+        orbit.dataset.mode = nextMode;
+        orbit.classList.toggle('is-tools', nextMode === 'tools');
+        orbit.classList.toggle('is-services', nextMode === 'services');
+        syncLabels();
     };
 
-    const serviceKey = document.body.dataset.service;
-    const service = catalog[serviceKey];
-    const mount = document.getElementById('serviceContent');
-    if (!service || !mount) return;
+    const showOrbit = mode => {
+        setMode(mode);
+        document.getElementById('orbitArea')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mobileMenu?.removeAttribute('open');
+    };
 
-    const list = language => service[language].deliverables
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const examples = language => (service[language].examples || [])
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const hasExamples = Boolean(service.vi.examples && service.en.examples);
-
-    mount.style.setProperty('--service-color', service.color);
-    mount.innerHTML = `
-        <div class="service-heading">
-            <span class="service-heading-icon">${icons[serviceKey]}</span>
-            <div>
-                <p class="service-kicker"><span data-lang="vi">DỊCH VỤ TRỰC TUYẾN</span><span data-lang="en">ONLINE SERVICE</span></p>
-                <h1 class="service-title"><span data-lang="vi">${service.vi.title}</span><span data-lang="en">${service.en.title}</span></h1>
-            </div>
-        </div>
-        <p class="service-summary"><span data-lang="vi">${service.vi.summary}</span><span data-lang="en">${service.en.summary}</span></p>
-        <div class="service-content">
-            <section>
-                <p class="section-label"><span data-lang="vi">NỘI DUNG TRIỂN KHAI</span><span data-lang="en">DELIVERABLES</span></p>
-                <ul class="service-list" data-lang="vi">${list('vi')}</ul>
-                <ul class="service-list" data-lang="en">${list('en')}</ul>
-            </section>
-            <aside class="service-result">
-                <strong><span data-lang="vi">KẾT QUẢ HƯỚNG TỚI</span><span data-lang="en">TARGET OUTCOME</span></strong>
-                <p><span data-lang="vi">${service.vi.outcome}</span><span data-lang="en">${service.en.outcome}</span></p>
-            </aside>
-        </div>
-        ${hasExamples ? `<div class="service-extra">
-            <section>
-                <p class="section-label"><span data-lang="vi">TÌNH HUỐNG PHÙ HỢP</span><span data-lang="en">SUITABLE USE CASES</span></p>
-                <ul class="service-example-list" data-lang="vi">${examples('vi')}</ul>
-                <ul class="service-example-list" data-lang="en">${examples('en')}</ul>
-            </section>
-            <aside class="service-principle">
-                <strong><span data-lang="vi">CÁCH BẮT ĐẦU</span><span data-lang="en">HOW TO START</span></strong>
-                <p><span data-lang="vi">${service.vi.principle}</span><span data-lang="en">${service.en.principle}</span></p>
-            </aside>
-        </div>` : ''}
-        <div class="service-actions">
-            <a class="primary-action" href="lienhe.html?service=${encodeURIComponent(serviceKey)}"><span data-lang="vi">${service.vi.cta || 'Trao đổi dịch vụ'}</span><span data-lang="en">${service.en.cta || 'Discuss this service'}</span></a>
-            <a class="secondary-action" href="baogia.html?tool=quote"><span data-lang="vi">Dùng thử công cụ báo giá</span><span data-lang="en">Try the quote builder</span></a>
-        </div>`;
-
-    const language = window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
-    document.title = `${service[language].title} - Thuận Store`;
-    window.addEventListener('thuanstore:languagechange', event => {
-        document.title = `${service[event.detail.language].title} - Thuận Store`;
+    center.addEventListener('click', () => {
+        setMode(orbit.dataset.mode === 'tools' ? 'services' : 'tools');
     });
+
+    document.querySelectorAll('[data-show-mode]').forEach(control => {
+        control.addEventListener('click', event => {
+            if (control.tagName === 'A') event.preventDefault();
+            showOrbit(control.dataset.showMode);
+        });
+    });
+
+    document.querySelectorAll('.mobile-menu-panel a').forEach(link => {
+        link.addEventListener('click', () => mobileMenu?.removeAttribute('open'));
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') mobileMenu?.removeAttribute('open');
+    });
+
+    window.addEventListener('thuanstore:languagechange', syncLabels);
+    setMode('services');
 })();
 
 </script>

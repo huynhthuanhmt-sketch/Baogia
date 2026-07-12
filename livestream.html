@@ -3,7 +3,2021 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#020617">
     <meta name="description" content="Dịch vụ chuẩn bị kịch bản và quy trình phát trực tiếp bán hàng."><title>Phát trực tiếp bán hàng - Thuận Store</title>
-    <link rel="stylesheet" href="assets/site.css?v=20260712-3"><script defer src="assets/i18n.js?v=20260712-1"></script><script defer src="assets/service.js?v=20260712-2"></script>
+    <style data-thuanstore-inline="site.css">
+:root {
+    color-scheme: dark;
+    --bg: #020617;
+    --panel: #071426;
+    --line: rgba(34, 211, 238, 0.16);
+    --line-soft: rgba(148, 163, 184, 0.13);
+    --text: #f8fafc;
+    --muted: #a9b7ca;
+    --quiet: #7f91aa;
+    --cyan: #22d3ee;
+    --blue: #60a5fa;
+    --green: #34d399;
+    --pink: #f472b6;
+    --amber: #fbbf24;
+    --font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    letter-spacing: 0;
+}
+
+html {
+    background: var(--bg);
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+    overflow-x: hidden;
+    color: var(--text);
+    background: var(--bg);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+button,
+a {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    border: 0;
+}
+
+html[data-lang="vi"] [data-lang="en"],
+html[data-lang="en"] [data-lang="vi"] {
+    display: none !important;
+}
+
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.site-shell {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    width: min(calc(100% - 2rem), 92rem);
+    min-height: calc(100vh - 2rem);
+    min-height: calc(100svh - 2rem);
+    margin: 1rem auto;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at 72% 40%, rgba(34, 211, 238, 0.12), transparent 31rem),
+        linear-gradient(135deg, #020617, #041022 58%, #020817);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+}
+
+.site-background {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+        linear-gradient(to right, rgba(34, 211, 238, 0.045) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(34, 211, 238, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.28), #000 46%, rgba(0, 0, 0, 0.72));
+    mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.28), #000 46%, rgba(0, 0, 0, 0.72));
+}
+
+.site-header {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 5.3rem;
+    padding: 1rem 2.25rem 0.75rem;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.72rem;
+    min-width: max-content;
+}
+
+.brand-mark {
+    width: 1.78rem;
+    height: 1.78rem;
+    color: var(--cyan);
+    filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.58));
+}
+
+.brand-copy {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.brand-copy strong {
+    font-size: 1.05rem;
+    font-weight: 820;
+    line-height: 1;
+}
+
+.brand-copy small {
+    color: #86eaf7;
+    font-size: 0.5rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: clamp(1.5rem, 3.1vw, 2.65rem);
+}
+
+.desktop-nav a,
+.desktop-nav button {
+    padding: 0.4rem 0;
+    color: #b8c4d5;
+    background: transparent;
+    font-size: 0.88rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: color 180ms ease, transform 180ms ease;
+}
+
+.desktop-nav a:hover,
+.desktop-nav button:hover,
+.desktop-nav a:focus-visible,
+.desktop-nav button:focus-visible {
+    color: #fff;
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    min-width: max-content;
+}
+
+.language-switcher {
+    display: inline-grid;
+    grid-template-columns: repeat(2, 2rem);
+    padding: 0.15rem;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.72);
+}
+
+.language-switcher button {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: #a9b7ca;
+    background: transparent;
+    font-size: 0.72rem;
+    font-weight: 780;
+    cursor: pointer;
+}
+
+.language-switcher button.is-active {
+    color: #020617;
+    background: #f8fafc;
+}
+
+.mobile-menu {
+    display: none;
+    position: relative;
+}
+
+.mobile-menu summary {
+    display: grid;
+    place-items: center;
+    width: 2.55rem;
+    height: 2.55rem;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 8px;
+    color: #dbe5f2;
+    background: rgba(15, 23, 42, 0.72);
+    cursor: pointer;
+    list-style: none;
+}
+
+.mobile-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.mobile-menu summary svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.mobile-menu-panel {
+    position: absolute;
+    top: calc(100% + 0.55rem);
+    right: 0;
+    display: grid;
+    width: min(15rem, calc(100vw - 2rem));
+    padding: 0.55rem;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 8px;
+    background: #071426;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.38);
+}
+
+.mobile-menu-panel a,
+.mobile-menu-panel button {
+    min-height: 2.7rem;
+    padding: 0.68rem 0.75rem;
+    color: #dbe5f2;
+    background: transparent;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.landing-main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.88fr) minmax(33rem, 1.12fr);
+    align-items: center;
+    flex: 1;
+    min-height: 0;
+    padding: 0.9rem 3.2rem 0.65rem;
+}
+
+.landing-copy {
+    max-width: 40rem;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0.48rem 0.78rem;
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 8px;
+    color: #78e7f5;
+    background: rgba(8, 47, 73, 0.48);
+    font-size: 0.68rem;
+    font-weight: 820;
+}
+
+.landing-title {
+    max-width: 37rem;
+    margin: 1.2rem 0 0;
+    color: #f8fafc;
+    font-size: clamp(3rem, 4.4vw, 4.5rem);
+    font-weight: 850;
+    line-height: 1.04;
+}
+
+.landing-title span,
+.landing-title strong {
+    display: block;
+}
+
+.landing-title strong {
+    color: #38bdf8;
+}
+
+.landing-description {
+    max-width: 35rem;
+    margin: 1.15rem 0 0;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 520;
+    line-height: 1.68;
+}
+
+.landing-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.45rem;
+}
+
+.primary-action,
+.secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3.15rem;
+    padding: 0.78rem 1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 780;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.primary-action {
+    color: #02111d;
+    background: #67e8f9;
+}
+
+.secondary-action {
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    color: #e2e8f0;
+    background: rgba(15, 23, 42, 0.52);
+}
+
+.primary-action:hover,
+.secondary-action:hover,
+.primary-action:focus-visible,
+.secondary-action:focus-visible {
+    outline: none;
+    transform: translateY(-2px);
+}
+
+.landing-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 34rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.metric {
+    min-width: 0;
+    padding: 0.78rem 0.65rem;
+    border-right: 1px solid var(--line-soft);
+}
+
+.metric:last-child {
+    border-right: 0;
+}
+
+.metric strong,
+.metric span {
+    display: block;
+}
+
+.metric strong {
+    color: #f8fafc;
+    font-size: 0.83rem;
+    font-weight: 820;
+}
+
+.metric span {
+    margin-top: 0.18rem;
+    color: var(--quiet);
+    font-size: 0.64rem;
+    font-weight: 620;
+    line-height: 1.25;
+}
+
+.orbit-visual {
+    display: grid;
+    place-items: center;
+    min-height: clamp(34rem, 40vw, 36rem);
+}
+
+.mobile-intro {
+    display: none;
+}
+
+.orbit {
+    position: relative;
+    width: min(36rem, 100%);
+    height: 36rem;
+    aspect-ratio: 1;
+    isolation: isolate;
+    --orbit-radius: 14.85rem;
+}
+
+.orbit::before {
+    content: "";
+    position: absolute;
+    inset: 17%;
+    border-radius: 50%;
+    background: rgba(8, 47, 73, 0.2);
+    filter: blur(18px);
+}
+
+.orbit-ring {
+    display: none;
+}
+
+.orbit-ring::after {
+    content: "";
+    position: absolute;
+    top: -0.18rem;
+    left: 50%;
+    width: 0.36rem;
+    height: 0.36rem;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 12px var(--cyan);
+}
+
+.orbit-ring.outer { --inset: 7%; --alpha: 0.16; --speed: 38s; }
+.orbit-ring.middle { --inset: 24%; --alpha: 0.2; --speed: 29s; animation-direction: reverse; }
+.orbit-ring.inner { --inset: 38%; --alpha: 0.24; --speed: 22s; }
+
+.orbit-center {
+    position: absolute;
+    z-index: 8;
+    inset: 37.5%;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: #67e8f9;
+    background: transparent;
+    cursor: pointer;
+}
+
+.orbit-center:focus-visible {
+    outline: none;
+}
+
+.orbit-center:focus-visible .reactor {
+    box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.45), 0 0 38px rgba(34, 211, 238, 0.3), inset 0 0 20px rgba(34, 211, 238, 0.16);
+}
+
+.reactor {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 5.6rem;
+    height: 5.6rem;
+    border: 1px solid rgba(34, 211, 238, 0.42);
+    border-radius: 50%;
+    background: rgba(8, 47, 73, 0.58);
+    box-shadow: 0 0 32px rgba(34, 211, 238, 0.2), inset 0 0 20px rgba(34, 211, 238, 0.15);
+    animation: reactor-pulse 3.2s ease-in-out infinite;
+}
+
+.reactor::before,
+.reactor::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+}
+
+.reactor::before {
+    inset: 0.56rem;
+    border: 1px dashed rgba(103, 232, 249, 0.55);
+    animation: spin 7s linear infinite;
+}
+
+.reactor::after {
+    width: 2.2rem;
+    height: 2.2rem;
+    border: 1px solid rgba(103, 232, 249, 0.72);
+    background: rgba(34, 211, 238, 0.18);
+    box-shadow: 0 0 24px rgba(34, 211, 238, 0.48);
+}
+
+.center-label {
+    position: absolute;
+    top: calc(50% + 3.4rem);
+    left: 50%;
+    min-width: 7.6rem;
+    transform: translateX(-50%);
+    color: #67e8f9;
+    font-size: 0.65rem;
+    font-weight: 820;
+    line-height: 1.15;
+    text-align: center;
+}
+
+.center-tools {
+    display: none;
+}
+
+.orbit.is-tools .center-services {
+    display: none;
+}
+
+.orbit.is-tools .center-tools {
+    display: inline;
+}
+
+.orbit-item {
+    position: absolute;
+    z-index: 9;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 7rem;
+    transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(0deg - var(--orbit-angle)));
+    transform-origin: center;
+    animation: orbit-item-spin 42s linear infinite;
+    will-change: transform;
+}
+
+.orbit-item[style*="--i:0"] { --orbit-angle: 0deg; }
+.orbit-item[style*="--i:1"] { --orbit-angle: 45deg; }
+.orbit-item[style*="--i:2"] { --orbit-angle: 90deg; }
+.orbit-item[style*="--i:3"] { --orbit-angle: 135deg; }
+.orbit-item[style*="--i:4"] { --orbit-angle: 180deg; }
+.orbit-item[style*="--i:5"] { --orbit-angle: 225deg; }
+.orbit-item[style*="--i:6"] { --orbit-angle: 270deg; }
+.orbit-item[style*="--i:7"] { --orbit-angle: 315deg; }
+
+.orbit:hover .orbit-item {
+    animation-play-state: paused;
+}
+
+.orbit-state {
+    grid-area: 1 / 1;
+    display: grid;
+    justify-items: center;
+    gap: 0.48rem;
+    min-width: 0;
+    color: var(--accent, var(--cyan));
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition:
+        opacity 360ms ease,
+        transform 440ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 360ms ease,
+        visibility 0s linear;
+    transition-delay: calc(var(--i, 0) * 34ms);
+}
+
+.orbit.is-services .tool-state,
+.orbit.is-tools .service-state {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    filter: blur(5px);
+    transform: scale(0.68);
+    transition-delay: 0s;
+}
+
+.node-icon {
+    display: grid;
+    place-items: center;
+    width: 4.25rem;
+    height: 4.25rem;
+    border: 1px solid rgba(34, 211, 238, 0.35);
+    border-color: color-mix(in srgb, currentColor 38%, transparent);
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(8, 47, 73, 0.82), rgba(2, 6, 23, 0.88));
+    box-shadow: 0 13px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(34, 211, 238, 0.18);
+    box-shadow: 0 13px 30px rgba(0, 0, 0, 0.3), 0 0 20px color-mix(in srgb, currentColor 20%, transparent);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.orbit-state:hover .node-icon,
+.orbit-state:focus-visible .node-icon {
+    border-color: rgba(103, 232, 249, 0.72);
+    border-color: color-mix(in srgb, currentColor 70%, transparent);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.32), 0 0 28px rgba(34, 211, 238, 0.28);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.32), 0 0 28px color-mix(in srgb, currentColor 34%, transparent);
+    transform: translateY(-2px) scale(1.06);
+}
+
+.orbit-state:focus-visible {
+    outline: none;
+}
+
+.node-icon svg {
+    width: 2rem;
+    height: 2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.node-label {
+    width: 100%;
+    color: #e7eef8;
+    font-size: 0.78rem;
+    font-weight: 680;
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
+}
+
+.site-footer {
+    position: relative;
+    z-index: 10;
+    padding: 1rem 2.25rem calc(0.75rem + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(34, 211, 238, 0.12);
+    background: rgba(2, 6, 23, 0.32);
+}
+
+.footer-main {
+    display: grid;
+    grid-template-columns: minmax(15rem, 1.2fr) minmax(15rem, 0.9fr) minmax(13rem, 0.8fr);
+    align-items: start;
+    gap: 1rem 2rem;
+    width: min(100%, 79rem);
+    margin: 0 auto;
+}
+
+.footer-brand strong {
+    color: #f8fafc;
+    font-size: 0.82rem;
+    font-weight: 820;
+}
+
+.footer-brand p {
+    max-width: 31rem;
+    margin: 0.35rem 0 0;
+    color: #91a2b8;
+    font-size: 0.72rem;
+    line-height: 1.46;
+}
+
+.footer-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 1rem;
+}
+
+.footer-nav a,
+.footer-nav button {
+    min-height: 2rem;
+    padding: 0;
+    color: #b8c4d5;
+    background: transparent;
+    font-size: 0.7rem;
+    font-weight: 680;
+    text-align: left;
+    cursor: pointer;
+}
+
+.footer-nav a:hover,
+.footer-nav button:hover,
+.footer-contact a:hover {
+    color: #67e8f9;
+}
+
+.footer-contact {
+    min-width: 0;
+    text-align: right;
+}
+
+.footer-contact span {
+    display: block;
+    color: #7f91aa;
+    font-size: 0.63rem;
+    font-weight: 680;
+}
+
+.footer-contact a {
+    display: inline-block;
+    max-width: 100%;
+    margin-top: 0.24rem;
+    overflow-wrap: anywhere;
+    color: #e2e8f0;
+    font-size: 0.72rem;
+    font-weight: 720;
+}
+
+.footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: min(100%, 79rem);
+    margin: 0.65rem auto 0;
+    padding-top: 0.58rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    color: #71839c;
+    font-size: 0.64rem;
+    font-weight: 640;
+}
+
+.footer-bottom a:hover {
+    color: #dffaff;
+}
+
+/* Shared service and information pages */
+.subpage-shell {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    width: min(calc(100% - 2rem), 76rem);
+    min-height: calc(100vh - 2rem);
+    min-height: calc(100svh - 2rem);
+    margin: 1rem auto;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: linear-gradient(145deg, #020617, #061426);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+}
+
+.subpage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 5rem;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.subpage-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.icon-link {
+    display: grid;
+    place-items: center;
+    width: 2.55rem;
+    height: 2.55rem;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 8px;
+    color: #dbe5f2;
+    background: rgba(15, 23, 42, 0.64);
+}
+
+.icon-link svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.service-main {
+    flex: 1;
+    width: min(100%, 68rem);
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 4.5rem) clamp(1rem, 4vw, 3rem) 2rem;
+}
+
+.service-heading {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.service-heading-icon {
+    display: grid;
+    place-items: center;
+    width: 4.8rem;
+    height: 4.8rem;
+    border: 1px solid rgba(34, 211, 238, 0.42);
+    border-color: color-mix(in srgb, var(--service-color, var(--cyan)) 42%, transparent);
+    border-radius: 50%;
+    color: var(--service-color, var(--cyan));
+    background: rgba(8, 47, 73, 0.45);
+    box-shadow: 0 0 28px rgba(34, 211, 238, 0.18);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--service-color, var(--cyan)) 20%, transparent);
+}
+
+.service-heading-icon svg {
+    width: 2.25rem;
+    height: 2.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.service-kicker {
+    margin: 0 0 0.45rem;
+    color: #79e8f6;
+    font-size: 0.68rem;
+    font-weight: 820;
+}
+
+.service-title {
+    margin: 0;
+    color: #f8fafc;
+    font-size: clamp(2.1rem, 5vw, 4.2rem);
+    font-weight: 850;
+    line-height: 1.04;
+}
+
+.service-summary {
+    max-width: 50rem;
+    margin: 1.6rem 0 0;
+    color: #b5c2d3;
+    font-size: clamp(1rem, 2vw, 1.18rem);
+    font-weight: 540;
+    line-height: 1.7;
+}
+
+.service-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(15rem, 0.85fr);
+    gap: 2.2rem;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-soft);
+}
+
+.section-label {
+    margin: 0;
+    color: #7f91aa;
+    font-size: 0.66rem;
+    font-weight: 820;
+}
+
+.service-list {
+    display: grid;
+    gap: 0;
+    margin: 0.8rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.service-list li {
+    position: relative;
+    padding: 0.9rem 0 0.9rem 1.45rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    color: #d6e0ed;
+    font-size: 0.92rem;
+    font-weight: 580;
+    line-height: 1.5;
+}
+
+.service-list li::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    left: 0;
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 2px solid var(--service-color, var(--green));
+    border-radius: 50%;
+}
+
+.service-result {
+    align-self: start;
+    padding: 1.1rem 0;
+    border-top: 2px solid var(--service-color, var(--green));
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.service-result strong {
+    display: block;
+    color: var(--service-color, var(--green));
+    font-size: 0.7rem;
+    font-weight: 820;
+}
+
+.service-result p {
+    margin: 0.55rem 0 0;
+    color: #e2e8f0;
+    font-size: 1rem;
+    font-weight: 680;
+    line-height: 1.55;
+}
+
+.service-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.2rem;
+}
+
+.info-content {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: 2rem;
+}
+
+.info-section {
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line-soft);
+}
+
+.info-section h2 {
+    margin: 0;
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.info-section p,
+.info-section li {
+    color: #b5c2d3;
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.service-extra {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.65fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-soft);
+}
+
+.service-example-list {
+    display: grid;
+    gap: 0;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-soft);
+}
+
+.service-example-list li {
+    position: relative;
+    padding: 0.85rem 0 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--line-soft);
+    color: #a9b7ca;
+    font-size: 0.78rem;
+    line-height: 1.55;
+}
+
+.service-example-list li::before {
+    content: "";
+    position: absolute;
+    top: 1.2rem;
+    left: 0;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--service-color, var(--green));
+}
+
+.service-principle {
+    align-self: start;
+    padding: 1rem 0 1rem 1.2rem;
+    border-left: 2px solid var(--service-color, var(--green));
+}
+
+.service-principle strong {
+    color: var(--service-color, var(--green));
+    font-size: 0.62rem;
+    font-weight: 820;
+}
+
+.service-principle p {
+    margin: 0.55rem 0 0;
+    color: #d4deea;
+    font-size: 0.8rem;
+    font-weight: 620;
+    line-height: 1.6;
+}
+
+.info-section ol,
+.info-section ul {
+    margin: 0.7rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.subpage-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.5rem calc(0.9rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-soft);
+    color: #71839c;
+    font-size: 0.66rem;
+}
+
+.contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.84fr) minmax(25rem, 1.16fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    margin-top: 2.6rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line-soft);
+}
+
+.contact-scope-list {
+    display: grid;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-soft);
+}
+
+.contact-scope-list li {
+    position: relative;
+    display: grid;
+    gap: 0.32rem;
+    padding: 1rem 0 1rem 1.35rem;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.contact-scope-list li::before {
+    content: "";
+    position: absolute;
+    top: 1.35rem;
+    left: 0;
+    width: 0.45rem;
+    height: 0.45rem;
+    border: 2px solid var(--green);
+    border-radius: 50%;
+}
+
+.contact-scope-list strong {
+    color: #f8fafc;
+    font-size: 0.86rem;
+}
+
+.contact-scope-list li > span {
+    color: #93a4ba;
+    font-size: 0.76rem;
+    line-height: 1.55;
+}
+
+.contact-process {
+    margin-top: 1.8rem;
+}
+
+.contact-process ol {
+    display: grid;
+    gap: 0.85rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contact-process li {
+    display: grid;
+    grid-template-columns: 1.85rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0.7rem;
+}
+
+.contact-process li > span {
+    display: grid;
+    place-items: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    border-radius: 50%;
+    color: #6ee7b7;
+    font-size: 0.68rem;
+    font-weight: 820;
+}
+
+.contact-process p {
+    display: grid;
+    gap: 0.2rem;
+    margin: 0;
+}
+
+.contact-process strong {
+    color: #e8eef7;
+    font-size: 0.78rem;
+}
+
+.contact-process small {
+    color: #8192a9;
+    font-size: 0.7rem;
+    line-height: 1.45;
+}
+
+.contact-form {
+    align-self: start;
+    padding: clamp(1.15rem, 3vw, 1.75rem);
+    border: 1px solid rgba(52, 211, 153, 0.24);
+    border-radius: 8px;
+    background: rgba(7, 20, 38, 0.82);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
+}
+
+.contact-form-heading h2 {
+    margin: 0.38rem 0 0;
+    color: #f8fafc;
+    font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+    line-height: 1.2;
+}
+
+.contact-form-heading > p:last-child {
+    margin: 0.55rem 0 0;
+    color: #8fa0b6;
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+.contact-choice-group {
+    margin: 1.2rem 0 0;
+    padding: 0;
+    border: 0;
+}
+
+.contact-choice-group legend,
+.contact-field > span {
+    color: #c8d3e2;
+    font-size: 0.68rem;
+    font-weight: 760;
+}
+
+.contact-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.55rem;
+}
+
+.contact-choice-grid label {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 2.65rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 6px;
+    color: #d7e0ec;
+    background: rgba(15, 23, 42, 0.46);
+    font-size: 0.7rem;
+    font-weight: 660;
+    cursor: pointer;
+}
+
+.contact-choice-grid label.is-selected,
+.contact-choice-grid label:focus-within {
+    border-color: rgba(52, 211, 153, 0.58);
+    background: rgba(6, 78, 59, 0.26);
+}
+
+.contact-choice-grid input {
+    margin: 0;
+    accent-color: #34d399;
+}
+
+.contact-field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    margin-top: 1rem;
+}
+
+.contact-field {
+    display: grid;
+    gap: 0.42rem;
+    margin-top: 0.8rem;
+}
+
+.contact-field-grid .contact-field {
+    margin-top: 0;
+}
+
+.contact-field input,
+.contact-field textarea {
+    width: 100%;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 6px;
+    outline: none;
+    color: #f8fafc;
+    background: rgba(2, 6, 23, 0.62);
+    font: inherit;
+    font-size: 0.78rem;
+}
+
+.contact-field input {
+    min-height: 2.8rem;
+    padding: 0 0.78rem;
+}
+
+.contact-field textarea {
+    min-height: 7.2rem;
+    padding: 0.72rem 0.78rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+    border-color: rgba(52, 211, 153, 0.62);
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.1);
+}
+
+.contact-submit {
+    width: 100%;
+    min-height: 3rem;
+    margin-top: 1rem;
+    border-radius: 7px;
+    color: #02120d;
+    background: #6ee7b7;
+    font-size: 0.78rem;
+    font-weight: 820;
+    cursor: pointer;
+}
+
+.contact-submit:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.contact-form-status {
+    min-height: 1.1rem;
+    margin: 0.7rem 0 0;
+    color: #9fb0c4;
+    font-size: 0.7rem;
+    font-weight: 650;
+    line-height: 1.45;
+}
+
+.contact-form-status[data-state="success"] { color: #6ee7b7; }
+.contact-form-status[data-state="error"] { color: #fda4af; }
+
+.contact-privacy {
+    margin: 0.35rem 0 0;
+    color: #6f8199;
+    font-size: 0.64rem;
+    line-height: 1.45;
+}
+
+.contact-direct {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 2.2rem;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.contact-direct a {
+    display: grid;
+    gap: 0.3rem;
+    min-width: 0;
+    padding: 1rem;
+}
+
+.contact-direct a + a {
+    border-left: 1px solid var(--line-soft);
+}
+
+.contact-direct span {
+    color: #6ee7b7;
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+.contact-direct strong {
+    overflow-wrap: anywhere;
+    color: #e7eef8;
+    font-size: 0.82rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-item-spin {
+    from {
+        transform: translate(-50%, -50%) rotate(var(--orbit-angle)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(0deg - var(--orbit-angle)));
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(calc(var(--orbit-angle) + 360deg)) translateY(calc(0px - var(--orbit-radius))) rotate(calc(-360deg - var(--orbit-angle)));
+    }
+}
+
+@keyframes reactor-pulse {
+    0%, 100% { transform: scale(0.96); box-shadow: 0 0 26px rgba(34, 211, 238, 0.18), inset 0 0 18px rgba(34, 211, 238, 0.13); }
+    50% { transform: scale(1.03); box-shadow: 0 0 38px rgba(34, 211, 238, 0.28), inset 0 0 22px rgba(34, 211, 238, 0.18); }
+}
+
+@media (max-width: 1180px) {
+    .landing-main {
+        grid-template-columns: minmax(0, 0.95fr) minmax(29rem, 1.05fr);
+        padding-inline: 2.2rem;
+    }
+
+    .orbit {
+        width: min(32rem, 100%);
+        height: 32rem;
+        --orbit-radius: 13rem;
+    }
+
+    .landing-title {
+        font-size: clamp(3rem, 5vw, 3.6rem);
+    }
+}
+
+@media (max-width: 980px) {
+    .site-shell,
+    .subpage-shell {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100svh;
+        margin: 0;
+        border-right: 0;
+        border-left: 0;
+        border-radius: 0;
+    }
+
+    .desktop-nav {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .landing-main {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 1.4rem 1.25rem 0.5rem;
+    }
+
+    .landing-copy {
+        width: min(100%, 43rem);
+        margin: 0 auto;
+    }
+
+    .orbit-visual {
+        min-height: 33rem;
+    }
+
+    .orbit {
+        width: min(34rem, 88vw);
+        height: min(34rem, 88vw);
+        --orbit-radius: 13.6rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .site-header {
+        min-height: 4.15rem;
+        padding: max(0.7rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.55rem max(1rem, env(safe-area-inset-left));
+        border-bottom: 1px solid rgba(34, 211, 238, 0.09);
+    }
+
+    .brand {
+        gap: 0.55rem;
+    }
+
+    .brand-mark {
+        width: 1.45rem;
+        height: 1.45rem;
+    }
+
+    .brand-copy strong {
+        font-size: 0.94rem;
+    }
+
+    .brand-copy small {
+        font-size: 0.43rem;
+    }
+
+    .header-actions {
+        margin-left: auto;
+    }
+
+    .language-switcher {
+        grid-template-columns: repeat(2, 1.78rem);
+    }
+
+    .language-switcher button {
+        width: 1.78rem;
+        height: 1.78rem;
+        font-size: 0.66rem;
+    }
+
+    .landing-main {
+        display: block;
+        padding: 0;
+    }
+
+    .landing-copy {
+        display: none;
+    }
+
+    .orbit-visual {
+        row-gap: 0.25rem;
+        min-height: clamp(23rem, 96vw, 24.5rem);
+        min-height: clamp(23rem, max(96vw, calc(100svh - 22.5rem)), 36rem);
+    }
+
+    .mobile-intro {
+        display: block;
+        width: min(calc(100% - 2rem), 25rem);
+        margin: 0.85rem auto 0;
+        text-align: left;
+    }
+
+    .mobile-intro-kicker {
+        color: #67e8f9;
+        font-size: 0.62rem;
+        font-weight: 820;
+        line-height: 1.2;
+    }
+
+    .mobile-intro h2 {
+        margin: 0.42rem 0 0;
+        color: #f8fafc;
+        font-size: clamp(1.48rem, 7.2vw, 1.9rem);
+        font-weight: 840;
+        line-height: 1.12;
+    }
+
+    .mobile-intro p {
+        margin: 0.65rem 0 0;
+        color: #a9b7ca;
+        font-size: 0.78rem;
+        font-weight: 520;
+        line-height: 1.55;
+    }
+
+    .mobile-intro-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin-top: 0.85rem;
+    }
+
+    .mobile-intro-actions .primary-action,
+    .mobile-intro-actions .secondary-action {
+        min-width: 0;
+        min-height: 2.75rem;
+        padding: 0.62rem 0.55rem;
+        font-size: 0.7rem;
+        text-align: center;
+    }
+
+    .orbit {
+        width: min(24rem, calc(100vw - 0.2rem));
+        height: min(24rem, calc(100vw - 0.2rem));
+        --orbit-radius: 9.68rem;
+    }
+
+    .orbit-item {
+        width: 4.6rem;
+    }
+
+    .node-icon {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .node-icon svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .node-label {
+        font-size: 0.66rem;
+        line-height: 1.14;
+    }
+
+    .orbit-center {
+        inset: 31%;
+    }
+
+    .reactor {
+        width: 4.55rem;
+        height: 4.55rem;
+    }
+
+    .reactor::after {
+        width: 1.85rem;
+        height: 1.85rem;
+    }
+
+    .center-label {
+        top: calc(50% + 2.75rem);
+        min-width: 6.4rem;
+        font-size: 0.56rem;
+    }
+
+    .site-footer {
+        padding: 0.95rem max(1rem, env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+    }
+
+    .footer-main {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.72rem;
+    }
+
+    .footer-nav {
+        padding-block: 0.1rem;
+        border-top: 1px solid rgba(148, 163, 184, 0.08);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    .footer-nav a,
+    .footer-nav button {
+        min-height: 2.2rem;
+    }
+
+    .footer-contact {
+        text-align: left;
+    }
+
+    .footer-bottom {
+        margin-top: 0.6rem;
+    }
+
+    .subpage-header {
+        min-height: 4.3rem;
+        padding: max(0.65rem, env(safe-area-inset-top)) max(0.8rem, env(safe-area-inset-right)) 0.55rem max(0.8rem, env(safe-area-inset-left));
+    }
+
+    .service-main {
+        padding: 2rem 1rem 1.5rem;
+    }
+
+    .service-heading {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+    }
+
+    .service-heading-icon {
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .service-title {
+        font-size: clamp(2rem, 11vw, 3.1rem);
+    }
+
+    .service-summary {
+        margin-top: 1.2rem;
+        font-size: 0.98rem;
+    }
+
+    .service-content {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+    }
+
+    .service-extra {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+    }
+
+    .service-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .contact-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+    }
+
+    .contact-choice-grid,
+    .contact-field-grid,
+    .contact-direct {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .contact-direct a + a {
+        border-top: 1px solid var(--line-soft);
+        border-left: 0;
+    }
+
+    .subpage-footer {
+        padding-inline: 1rem;
+    }
+}
+
+@media (max-width: 390px) {
+    .brand-copy strong {
+        font-size: 0.88rem;
+    }
+
+    .orbit-visual {
+        min-height: 23.25rem;
+        min-height: clamp(23.25rem, max(96vw, calc(100svh - 22.5rem)), 36rem);
+    }
+
+    .orbit {
+        width: min(23.2rem, calc(100vw - 0.2rem));
+        height: min(23.2rem, calc(100vw - 0.2rem));
+        --orbit-radius: 9.3rem;
+    }
+
+    .orbit-item {
+        width: 4.4rem;
+    }
+
+    .node-label {
+        font-size: 0.63rem;
+    }
+
+    .footer-bottom {
+        align-items: flex-start;
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 340px) {
+    .brand-copy small {
+        display: none;
+    }
+
+    .orbit-visual {
+        min-height: 21.25rem;
+        min-height: clamp(21.25rem, max(96vw, calc(100svh - 22.5rem)), 31rem);
+    }
+
+    .orbit {
+        width: min(21rem, calc(100vw - 0.2rem));
+        height: min(21rem, calc(100vw - 0.2rem));
+        --orbit-radius: 7.9rem;
+    }
+
+    .orbit-item {
+        width: 4.15rem;
+    }
+
+    .node-icon {
+        width: 2.55rem;
+        height: 2.55rem;
+    }
+
+    .node-label {
+        font-size: 0.59rem;
+    }
+}
+
+@media (max-width: 980px) and (max-height: 520px) and (orientation: landscape) {
+    .mobile-intro {
+        display: none;
+    }
+
+    .site-header {
+        min-height: 3.35rem;
+        padding: max(0.4rem, env(safe-area-inset-top)) calc(1rem + env(safe-area-inset-right)) 0.35rem calc(1rem + env(safe-area-inset-left));
+    }
+
+    .landing-copy {
+        display: none;
+    }
+
+    .orbit-visual {
+        min-height: 15rem;
+    }
+
+    .orbit {
+        width: 15rem;
+        height: 15rem;
+        --orbit-radius: 6rem;
+    }
+
+    .orbit-item {
+        width: 3.45rem;
+    }
+
+    .node-icon {
+        width: 2.12rem;
+        height: 2.12rem;
+    }
+
+    .node-icon svg {
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+
+    .node-label {
+        font-size: 0.53rem;
+    }
+
+    .reactor {
+        width: 3.6rem;
+        height: 3.6rem;
+    }
+
+    .center-label {
+        top: calc(50% + 2.15rem);
+        font-size: 0.48rem;
+    }
+
+    .site-footer {
+        padding: 0.55rem calc(1rem + env(safe-area-inset-right)) calc(0.45rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-left));
+    }
+
+    .footer-main {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+    }
+
+    .footer-brand p,
+    .footer-nav,
+    .footer-contact span {
+        display: none;
+    }
+
+    .footer-bottom {
+        margin-top: 0.35rem;
+        padding-top: 0.35rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+</style>
 </head>
-<body data-service="livestream"><main class="subpage-shell"><header class="subpage-header"><a class="brand" href="index.html"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOLS</span></small></span></a><div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang chủ" data-label-en="Close and return home" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div></header><article id="serviceContent" class="service-main"></article><footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a></footer></main></body>
+<body data-service="livestream"><main class="subpage-shell"><header class="subpage-header"><a class="brand" href="index.html"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CÔNG CỤ BÁN HÀNG</span><span data-lang="en">SALES TOOLS</span></small></span></a><div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang chủ" data-label-en="Close and return home" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div></header><article id="serviceContent" class="service-main"></article><footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a></footer></main><script data-thuanstore-inline="i18n.js">
+(() => {
+    const STORAGE_KEY = 'thuanstore_app_lang_v1';
+    const normalize = value => value === 'en' ? 'en' : 'vi';
+
+    const readStored = () => {
+        try {
+            return localStorage.getItem(STORAGE_KEY);
+        } catch (error) {
+            return null;
+        }
+    };
+
+    const readInitial = () => {
+        const query = new URLSearchParams(window.location.search).get('lang');
+        if (query === 'vi' || query === 'en') return query;
+        const stored = readStored();
+        if (stored === 'vi' || stored === 'en') return stored;
+        return navigator.language && navigator.language.toLowerCase().startsWith('en') ? 'en' : 'vi';
+    };
+
+    let currentLanguage = normalize(readInitial());
+    document.documentElement.lang = currentLanguage;
+    document.documentElement.dataset.lang = currentLanguage;
+
+    const persist = language => {
+        try {
+            localStorage.setItem(STORAGE_KEY, language);
+        } catch (error) {
+            /* Storage can be unavailable when a browser restricts local files. */
+        }
+    };
+
+    const applyLabels = language => {
+        document.querySelectorAll('[data-label-vi][data-label-en]').forEach(element => {
+            const value = language === 'en' ? element.dataset.labelEn : element.dataset.labelVi;
+            if (!value) return;
+            element.setAttribute('aria-label', value);
+            if (element.hasAttribute('title')) element.setAttribute('title', value);
+        });
+    };
+
+    const apply = (language, shouldPersist = true) => {
+        currentLanguage = normalize(language);
+        document.documentElement.lang = currentLanguage;
+        document.documentElement.dataset.lang = currentLanguage;
+        document.body?.classList.toggle('lang-en', currentLanguage === 'en');
+        document.body?.classList.toggle('lang-vi', currentLanguage === 'vi');
+        const pageTitle = currentLanguage === 'en'
+            ? document.documentElement.dataset.titleEn
+            : document.documentElement.dataset.titleVi;
+        if (pageTitle) document.title = pageTitle;
+
+        document.querySelectorAll('[data-app-lang]').forEach(button => {
+            const isActive = button.dataset.appLang === currentLanguage;
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+
+        applyLabels(currentLanguage);
+        if (shouldPersist) persist(currentLanguage);
+        window.dispatchEvent(new CustomEvent('thuanstore:languagechange', { detail: { language: currentLanguage } }));
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-app-lang]').forEach(button => {
+            button.addEventListener('click', () => apply(button.dataset.appLang));
+        });
+        apply(currentLanguage, false);
+    });
+
+    window.ThuanStoreLanguage = {
+        get: () => currentLanguage,
+        set: apply
+    };
+})();
+
+</script>
+<script data-thuanstore-inline="service.js">
+(() => {
+    const icons = {
+        website: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+        seo: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg>',
+        tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg>',
+        livestream: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg>',
+        marketplace: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2-5H5.2L4 10Zm2 0v9h12v-9M9 19v-5h6v5" stroke-linejoin="round"></path></svg>',
+        ads: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 13-5v12L3 13v-2Zm13-1 4-2v8l-4-2M5 14l1 5h4l-2-4" stroke-linejoin="round"></path></svg>',
+        analytics: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m4 10-1-6 4 2 3-8 3 5 3-2M3 19h18" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+        ai: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 14l2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+    };
+
+    const catalog = {
+        website: {
+            color: '#22d3ee',
+            vi: {
+                title: 'Website bán hàng',
+                summary: 'Thiết kế website gọn, dễ dùng trên điện thoại và dẫn khách đến hành động mua hàng hoặc liên hệ.',
+                deliverables: ['Cấu trúc danh mục, trang sản phẩm và lời kêu gọi hành động.', 'Giao diện đa thiết bị, tốc độ tải và nền tảng tối ưu tìm kiếm.', 'Kết nối biểu mẫu, trò chuyện và công cụ đo lường cần thiết.'],
+                outcome: 'Một điểm bán hàng trực tuyến thuộc quyền kiểm soát của doanh nghiệp.'
+            },
+            en: {
+                title: 'Sales website',
+                summary: 'Design a focused mobile-friendly website that moves visitors toward a purchase or inquiry.',
+                deliverables: ['Product architecture, product pages, and clear calls to action.', 'Responsive interface, loading performance, and essential technical SEO.', 'Forms, chat, and the required measurement connections.'],
+                outcome: 'An online sales destination the business controls.'
+            }
+        },
+        seo: {
+            color: '#60a5fa',
+            vi: {
+                title: 'SEO và nội dung',
+                summary: 'Xây nội dung theo nhu cầu tìm kiếm thật, giúp khách hiểu sản phẩm và tìm thấy doanh nghiệp dễ hơn.',
+                deliverables: ['Nghiên cứu từ khóa, đối thủ và ý định tìm kiếm.', 'Bản đồ nội dung cho website, sản phẩm và mạng xã hội.', 'Tối ưu nội dung trên trang, tìm kiếm tại địa phương và quy trình cập nhật.'],
+                outcome: 'Nội dung có hệ thống, dùng lại được và tạo lưu lượng bền vững.'
+            },
+            en: {
+                title: 'SEO and content',
+                summary: 'Build content around real search demand so customers can understand products and find the business more easily.',
+                deliverables: ['Keyword, competitor, and search-intent research.', 'A content map for the website, products, and social channels.', 'On-page SEO, local SEO, and a repeatable publishing workflow.'],
+                outcome: 'Structured reusable content that supports sustainable traffic.'
+            }
+        },
+        tiktok: {
+            color: '#f472b6',
+            vi: {
+                title: 'TikTok và video ngắn',
+                summary: 'Xây hệ thống video ngắn phù hợp sản phẩm, giọng thương hiệu và nguồn lực sản xuất thực tế.',
+                deliverables: ['Trụ cột nội dung và lịch đăng theo mục tiêu bán hàng.', 'Câu mở đầu, cách trình bày sản phẩm và lời kêu gọi hành động.', 'Mẫu quay dựng để đội ngũ có thể sản xuất đều đặn.'],
+                outcome: 'Một quy trình video rõ ràng thay vì các nội dung rời rạc.'
+            },
+            en: {
+                title: 'TikTok and short video',
+                summary: 'Build a short-video system that fits the product, brand voice, and realistic production capacity.',
+                deliverables: ['Content pillars and a sales-focused publishing calendar.', 'Hooks, product demonstrations, and calls to action.', 'Repeatable shooting and editing templates for the team.'],
+                outcome: 'A consistent video workflow instead of disconnected posts.'
+            }
+        },
+        livestream: {
+            color: '#fb7185',
+            vi: {
+                title: 'Phát trực tiếp bán hàng',
+                summary: 'Chuẩn bị kịch bản, sản phẩm, ưu đãi và cách phối hợp để buổi phát trực tiếp rõ ràng, dễ theo dõi.',
+                deliverables: ['Kịch bản thời lượng, thứ tự sản phẩm và nhịp tương tác.', 'Nội dung chốt đơn, ưu đãi và xử lý câu hỏi thường gặp.', 'Thiết lập vận hành, phân vai và biểu mẫu đánh giá sau buổi phát.'],
+                outcome: 'Buổi phát trực tiếp có cấu trúc và có dữ liệu để cải thiện.'
+            },
+            en: {
+                title: 'Live selling',
+                summary: 'Prepare the script, products, offers, and team coordination for a clear and watchable live session.',
+                deliverables: ['Run of show, product order, and engagement rhythm.', 'Closing scripts, offers, and common-question handling.', 'Operating setup, team roles, and post-live review templates.'],
+                outcome: 'Structured live sessions with data for continuous improvement.'
+            }
+        },
+        marketplace: {
+            color: '#f59e0b',
+            vi: {
+                title: 'Sàn thương mại điện tử và Amazon',
+                summary: 'Chuẩn hóa gian hàng và nội dung sản phẩm cho sàn trong nước hoặc lộ trình bán hàng quốc tế.',
+                deliverables: ['Thiết lập danh mục, thuộc tính và quy chuẩn đăng sản phẩm.', 'Tối ưu tiêu đề, mô tả, từ khóa và hình ảnh trang sản phẩm.', 'Quy trình vận hành giá, khuyến mãi, đơn hàng và báo cáo.'],
+                outcome: 'Gian hàng nhất quán, dễ quản lý và sẵn sàng mở rộng.'
+            },
+            en: {
+                title: 'Marketplaces and Amazon',
+                summary: 'Standardize storefronts and product content for local marketplaces or an international selling roadmap.',
+                deliverables: ['Category, attribute, and product-listing standards.', 'Optimized titles, descriptions, keywords, and listing visuals.', 'Workflows for pricing, promotions, orders, and reporting.'],
+                outcome: 'A consistent manageable storefront ready to scale.'
+            }
+        },
+        ads: {
+            color: '#a78bfa',
+            vi: {
+                title: 'Quảng cáo số',
+                summary: 'Thiết lập quảng cáo theo mục tiêu, theo dõi chuyển đổi và tối ưu dựa trên dữ liệu thay vì cảm tính.',
+                deliverables: ['Kiểm tra mã theo dõi, sự kiện, liên kết và dữ liệu chuyển đổi.', 'Cấu trúc chiến dịch, nhóm đối tượng và kế hoạch nội dung quảng cáo.', 'Theo dõi chi phí, kết quả và đề xuất tối ưu định kỳ.'],
+                outcome: 'Biết ngân sách đang tạo ra tín hiệu bán hàng nào.'
+            },
+            en: {
+                title: 'Digital advertising',
+                summary: 'Set up goal-based advertising, conversion tracking, and data-led optimization.',
+                deliverables: ['Pixel, event, UTM, and conversion-data review.', 'Campaign structure, audiences, and ad-content plan.', 'Cost and result tracking with recurring optimization actions.'],
+                outcome: 'Understand which sales signals the advertising budget produces.'
+            }
+        },
+        analytics: {
+            color: '#2dd4bf',
+            vi: {
+                title: 'Chiến lược và đo lường',
+                summary: 'Xác định mục tiêu, hành trình khách hàng và chỉ số cần theo dõi trước khi mở rộng đội tiếp thị.',
+                deliverables: ['Mục tiêu, chân dung khách hàng và phễu bán hàng.', 'Bộ chỉ số theo từng kênh cùng bảng theo dõi dễ cập nhật.', 'Đánh giá kênh hiện tại và kế hoạch ưu tiên theo nguồn lực.'],
+                outcome: 'Đội ngũ biết việc nào cần làm trước và đo bằng chỉ số nào.'
+            },
+            en: {
+                title: 'Strategy and analytics',
+                summary: 'Define goals, the customer journey, and the metrics to track before scaling a marketing team.',
+                deliverables: ['Goals, customer profiles, and the sales funnel.', 'Channel KPIs with a maintainable reporting dashboard.', 'Current-channel review and a resource-based priority plan.'],
+                outcome: 'The team knows what to do first and how success will be measured.'
+            }
+        },
+        ai: {
+            color: '#34d399',
+            vi: {
+                title: 'AI hỗ trợ bán hàng',
+                summary: 'Bắt đầu từ một công việc lặp lại có dữ liệu rõ, sau đó dùng AI để xử lý bản nháp nhanh hơn và vẫn có người kiểm tra trước khi sử dụng.',
+                deliverables: ['Chuẩn hóa danh sách sản phẩm, thuộc tính và nội dung nguồn để AI sử dụng đúng dữ liệu.', 'Tạo mẫu soạn mô tả sản phẩm, nội dung bán hàng và câu trả lời thường gặp để người dùng kiểm tra trước khi gửi.', 'Kết nối biểu mẫu và bảng dữ liệu để tổng hợp yêu cầu, nhắc chăm sóc khách hoặc chuẩn bị báo cáo.'],
+                outcome: 'Giảm thời gian nhập lại và soạn nháp, trong khi quyết định cuối cùng vẫn do người dùng kiểm tra.',
+                examples: ['Sale sản phẩm: tra dữ liệu, tóm tắt thông số và chuẩn bị nội dung gửi khách từ nguồn đã duyệt.', 'Cửa hàng: soạn câu trả lời cho các câu hỏi lặp lại và phân loại yêu cầu của khách.', 'Nhóm tiếp thị: chuyển nội dung sản phẩm thành phiên bản cho website, mạng xã hội hoặc video.'],
+                principle: 'Không bắt đầu bằng một hệ thống AI lớn. Chọn một việc lặp lại, đo thời gian trước và sau, rồi mới mở rộng.',
+                cta: 'Trao đổi một việc đang lặp lại'
+            },
+            en: {
+                title: 'AI for sales support',
+                summary: 'Start with one repetitive task backed by clear data, then use AI to prepare drafts faster while keeping human review before use.',
+                deliverables: ['Standardize product lists, attributes, and source content so AI works from approved data.', 'Create reviewed templates for product descriptions, sales content, and recurring customer questions.', 'Connect forms and structured data to summarize requests, prepare follow-up reminders, or draft reports.'],
+                outcome: 'Reduce repeated entry and drafting time while keeping the final decision with the user.',
+                examples: ['Product sales: retrieve approved data, summarize specifications, and prepare customer-ready information.', 'Retail stores: draft answers to recurring questions and categorize customer requests.', 'Marketing teams: adapt product information for websites, social channels, or video scripts.'],
+                principle: 'Do not begin with a large AI system. Start with one repeatable task, measure time before and after, then expand.',
+                cta: 'Discuss one repetitive task'
+            }
+        }
+    };
+
+    const serviceKey = document.body.dataset.service;
+    const service = catalog[serviceKey];
+    const mount = document.getElementById('serviceContent');
+    if (!service || !mount) return;
+
+    const list = language => service[language].deliverables
+        .map(item => `<li>${item}</li>`)
+        .join('');
+    const examples = language => (service[language].examples || [])
+        .map(item => `<li>${item}</li>`)
+        .join('');
+    const hasExamples = Boolean(service.vi.examples && service.en.examples);
+
+    mount.style.setProperty('--service-color', service.color);
+    mount.innerHTML = `
+        <div class="service-heading">
+            <span class="service-heading-icon">${icons[serviceKey]}</span>
+            <div>
+                <p class="service-kicker"><span data-lang="vi">DỊCH VỤ TRỰC TUYẾN</span><span data-lang="en">ONLINE SERVICE</span></p>
+                <h1 class="service-title"><span data-lang="vi">${service.vi.title}</span><span data-lang="en">${service.en.title}</span></h1>
+            </div>
+        </div>
+        <p class="service-summary"><span data-lang="vi">${service.vi.summary}</span><span data-lang="en">${service.en.summary}</span></p>
+        <div class="service-content">
+            <section>
+                <p class="section-label"><span data-lang="vi">NỘI DUNG TRIỂN KHAI</span><span data-lang="en">DELIVERABLES</span></p>
+                <ul class="service-list" data-lang="vi">${list('vi')}</ul>
+                <ul class="service-list" data-lang="en">${list('en')}</ul>
+            </section>
+            <aside class="service-result">
+                <strong><span data-lang="vi">KẾT QUẢ HƯỚNG TỚI</span><span data-lang="en">TARGET OUTCOME</span></strong>
+                <p><span data-lang="vi">${service.vi.outcome}</span><span data-lang="en">${service.en.outcome}</span></p>
+            </aside>
+        </div>
+        ${hasExamples ? `<div class="service-extra">
+            <section>
+                <p class="section-label"><span data-lang="vi">TÌNH HUỐNG PHÙ HỢP</span><span data-lang="en">SUITABLE USE CASES</span></p>
+                <ul class="service-example-list" data-lang="vi">${examples('vi')}</ul>
+                <ul class="service-example-list" data-lang="en">${examples('en')}</ul>
+            </section>
+            <aside class="service-principle">
+                <strong><span data-lang="vi">CÁCH BẮT ĐẦU</span><span data-lang="en">HOW TO START</span></strong>
+                <p><span data-lang="vi">${service.vi.principle}</span><span data-lang="en">${service.en.principle}</span></p>
+            </aside>
+        </div>` : ''}
+        <div class="service-actions">
+            <a class="primary-action" href="lienhe.html?service=${encodeURIComponent(serviceKey)}"><span data-lang="vi">${service.vi.cta || 'Trao đổi dịch vụ'}</span><span data-lang="en">${service.en.cta || 'Discuss this service'}</span></a>
+            <a class="secondary-action" href="baogia.html?tool=quote"><span data-lang="vi">Dùng thử công cụ báo giá</span><span data-lang="en">Try the quote builder</span></a>
+        </div>`;
+
+    const language = window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
+    document.title = `${service[language].title} - Thuận Store`;
+    window.addEventListener('thuanstore:languagechange', event => {
+        document.title = `${service[event.detail.language].title} - Thuận Store`;
+    });
+})();
+
+</script>
+</body>
 </html>
