@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Chăm Sóc Khách Hàng</title>
+    <meta name="description" content="Lịch đi tuyến và chăm sóc khách hàng dành cho nhân viên bán hàng thị trường - một công cụ của Thuận Store.">
+    <title>Lịch Đi Tuyến - Thuận Store</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -954,7 +955,7 @@
 
             const getQuoteBaseUrl = () => {
                 let baseUrl = String(settings.quoteBaseUrl || '').trim();
-                if (!baseUrl && /^https?:$/i.test(window.location.protocol)) baseUrl = `${window.location.origin}/`;
+                if (!baseUrl && /^https?:$/i.test(window.location.protocol)) baseUrl = new URL('baogia.html', window.location.href).href;
                 if (!baseUrl) return '';
                 if (!/^https?:\/\//i.test(baseUrl)) baseUrl = `https://${baseUrl}`;
                 return baseUrl;

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi" data-lang="vi">
+<html lang="vi" data-lang="vi" data-title-vi="AI lập ngân sách quảng cáo - Thuận Store" data-title-en="AI advertising budget planner - Thuan Store">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#020617">
-    <meta name="description" content="Dịch vụ chuẩn hóa gian hàng trên sàn thương mại điện tử và Amazon."><title>Sàn thương mại điện tử và Amazon - Thuận Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="AI chuyên gia tính điểm hòa vốn, ngân sách thử nghiệm và kế hoạch quảng cáo 30 ngày.">
+    <title>AI lập ngân sách quảng cáo - Thuận Store</title>
     <style data-thuanstore-inline="site.css">
 :root {
     color-scheme: dark;
@@ -3655,7 +3657,16 @@ body.needs-advisor-open {
 
 </style>
 </head>
-<body data-service="marketplace"><main class="subpage-shell"><header class="subpage-header"><a class="brand" href="index.html"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CHẠM ĐẾN TƯƠNG LAI</span><span data-lang="en">TOUCH THE FUTURE</span></small></span></a><div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang chủ" data-label-en="Close and return home" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div></header><article id="serviceContent" class="service-main"></article><footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a></footer></main><script data-thuanstore-inline="i18n.js">
+<body class="expert-page" data-expert="ads">
+    <main class="subpage-shell">
+        <header class="subpage-header">
+            <a class="brand" href="index.html" aria-label="Thuận Store"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CHẠM ĐẾN TƯƠNG LAI</span><span data-lang="en">TOUCH THE FUTURE</span></small></span></a>
+            <div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang công cụ" data-label-en="Close and return to tools" aria-label="Đóng và về trang công cụ" title="Đóng và về trang công cụ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div>
+        </header>
+        <article id="expertApp" class="expert-app"></article>
+        <footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html?service=ads"><span data-lang="vi">Trao đổi triển khai</span><span data-lang="en">Discuss implementation</span></a></footer>
+    </main>
+    <script data-thuanstore-inline="i18n.js">
 (() => {
     const STORAGE_KEY = 'thuanstore_app_lang_v1';
     const normalize = value => value === 'en' ? 'en' : 'vi';
@@ -3732,202 +3743,484 @@ body.needs-advisor-open {
     };
 })();
 </script>
-<script data-thuanstore-inline="service.js">
+    <script data-thuanstore-inline="expert-core.js">
 (() => {
-    const icons = {
-        website: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        seo: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg>',
-        tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg>',
-        livestream: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg>',
-        marketplace: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2-5H5.2L4 10Zm2 0v9h12v-9M9 19v-5h6v5" stroke-linejoin="round"></path></svg>',
-        ads: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 13-5v12L3 13v-2Zm13-1 4-2v8l-4-2M5 14l1 5h4l-2-4" stroke-linejoin="round"></path></svg>',
-        analytics: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m4 10-1-6 4 2 3-8 3 5 3-2M3 19h18" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        ai: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 14l2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+    const mount = document.getElementById('expertApp');
+    if (!mount) return;
+
+    const getLanguage = () => window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
+    const escapeHtml = value => String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    const normalize = value => String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase()
+        .trim();
+    const number = (value, fallback = 0) => {
+        const parsed = Number(String(value ?? '').replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const formatNumber = (value, language = getLanguage(), maximumFractionDigits = 1) => new Intl.NumberFormat(
+        language === 'en' ? 'en-US' : 'vi-VN',
+        { maximumFractionDigits }
+    ).format(value);
+
+    const bilingual = (vi, en) => `<span data-lang="vi">${escapeHtml(vi)}</span><span data-lang="en">${escapeHtml(en)}</span>`;
+    const optionMarkup = option => `<option value="${escapeHtml(option.value)}" data-option-vi="${escapeHtml(option.vi)}" data-option-en="${escapeHtml(option.en)}">${escapeHtml(option.vi)}</option>`;
+
+    const renderField = field => {
+        const id = `expert-${field.id}`;
+        const required = field.required ? ' required' : '';
+        const span = field.span === 2 ? ' expert-field-wide' : '';
+        const hint = field.hint ? `<small>${bilingual(field.hint.vi, field.hint.en)}</small>` : '';
+        if (field.type === 'multiselect') {
+            return `<fieldset class="expert-field expert-choice-field${span}" data-field-id="${escapeHtml(field.id)}"${required}>
+                <legend>${bilingual(field.label.vi, field.label.en)}</legend>
+                <div class="expert-choice-grid">${field.options.map(option => `<label><input type="checkbox" name="${escapeHtml(field.id)}" value="${escapeHtml(option.value)}"><span>${bilingual(option.vi, option.en)}</span></label>`).join('')}</div>
+                ${hint}
+            </fieldset>`;
+        }
+        if (field.type === 'select') {
+            return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+                <select id="${id}" name="${escapeHtml(field.id)}"${required}>${field.options.map(optionMarkup).join('')}</select>${hint}
+            </label>`;
+        }
+        if (field.type === 'textarea') {
+            return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+                <textarea id="${id}" name="${escapeHtml(field.id)}" rows="${field.rows || 5}" data-placeholder-vi="${escapeHtml(field.placeholder?.vi || '')}" data-placeholder-en="${escapeHtml(field.placeholder?.en || '')}" placeholder="${escapeHtml(field.placeholder?.vi || '')}"${required}></textarea>${hint}
+            </label>`;
+        }
+        const inputType = field.type === 'number' ? 'number' : 'text';
+        const constraints = [
+            field.min !== undefined ? ` min="${field.min}"` : '',
+            field.max !== undefined ? ` max="${field.max}"` : '',
+            field.step !== undefined ? ` step="${field.step}"` : ''
+        ].join('');
+        return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+            <input id="${id}" type="${inputType}" name="${escapeHtml(field.id)}" data-placeholder-vi="${escapeHtml(field.placeholder?.vi || '')}" data-placeholder-en="${escapeHtml(field.placeholder?.en || '')}" placeholder="${escapeHtml(field.placeholder?.vi || '')}"${constraints}${required}>${hint}
+        </label>`;
     };
 
-    const catalog = {
-        website: {
-            color: '#22d3ee',
-            vi: {
-                title: 'Website và hiện diện online',
-                summary: 'Xây nơi khách có thể tìm thấy thông tin đúng, hiểu sản phẩm và thực hiện cuộc gọi, đặt món, mua hàng hoặc gửi yêu cầu.',
-                deliverables: ['Cấu trúc website, trang sản phẩm hoặc dịch vụ và lời kêu gọi hành động.', 'Rà soát thông tin doanh nghiệp, menu, giờ hoạt động và liên kết trên các điểm hiện diện cần thiết.', 'Giao diện đa thiết bị, tốc độ tải, nền tảng SEO và công cụ đo lường.'],
-                outcome: 'Một điểm hiện diện online rõ ràng, nhất quán và có thể đo kết quả.'
-            },
-            en: {
-                title: 'Website and online presence',
-                summary: 'Build a place where customers can find accurate information, understand the offer, and call, order, buy, or inquire.',
-                deliverables: ['Website structure, product or service pages, and clear calls to action.', 'Review of business information, menus, opening hours, and links across relevant listings.', 'Responsive design, loading performance, SEO foundations, and measurement.'],
-                outcome: 'A clear, consistent online presence with measurable outcomes.'
+    const readValues = (form, fields) => Object.fromEntries(fields.map(field => {
+        if (field.type === 'multiselect') {
+            return [field.id, [...form.querySelectorAll(`input[name="${field.id}"]:checked`)].map(input => input.value)];
+        }
+        return [field.id, form.elements[field.id]?.value?.trim?.() ?? form.elements[field.id]?.value ?? ''];
+    }));
+
+    const setValues = (form, fields, values = {}) => {
+        fields.forEach(field => {
+            const value = values[field.id];
+            if (value === undefined) return;
+            if (field.type === 'multiselect') {
+                form.querySelectorAll(`input[name="${field.id}"]`).forEach(input => {
+                    input.checked = Array.isArray(value) && value.includes(input.value);
+                });
+                return;
             }
-        },
-        seo: {
-            color: '#60a5fa',
-            vi: {
-                title: 'Nội dung và SEO',
-                summary: 'Xây nội dung theo nhu cầu tìm kiếm thật, giúp khách hiểu sản phẩm và tìm thấy doanh nghiệp dễ hơn.',
-                deliverables: ['Nghiên cứu từ khóa, đối thủ và ý định tìm kiếm.', 'Bản đồ nội dung cho website, sản phẩm và mạng xã hội.', 'Tối ưu nội dung trên trang, tìm kiếm tại địa phương và quy trình cập nhật.'],
-                outcome: 'Nội dung có hệ thống, dùng lại được và tạo lưu lượng bền vững.'
-            },
-            en: {
-                title: 'Content and SEO',
-                summary: 'Build content around real search demand so customers can understand products and find the business more easily.',
-                deliverables: ['Keyword, competitor, and search-intent research.', 'A content map for the website, products, and social channels.', 'On-page SEO, local SEO, and a repeatable publishing workflow.'],
-                outcome: 'Structured reusable content that supports sustainable traffic.'
+            if (form.elements[field.id]) form.elements[field.id].value = value;
+        });
+    };
+
+    const resultToText = result => {
+        const lines = [result.title, result.summary, ''];
+        (result.metrics || []).forEach(metric => lines.push(`${metric.label}: ${metric.value}${metric.note ? ` - ${metric.note}` : ''}`));
+        (result.sections || []).forEach(section => {
+            lines.push('', section.title);
+            (section.items || []).forEach(item => lines.push(`- ${typeof item === 'string' ? item : `${item.title}: ${item.text}`}`));
+        });
+        if (result.caution) lines.push('', result.caution);
+        return lines.join('\n');
+    };
+
+    const createResult = (result, config, language) => {
+        const output = document.getElementById('expertOutput');
+        output.hidden = false;
+        output.innerHTML = '';
+
+        const header = document.createElement('header');
+        header.className = 'expert-result-header';
+        const kicker = document.createElement('span');
+        kicker.className = 'expert-result-kicker';
+        kicker.textContent = result.kicker || (language === 'en' ? 'EXPERT ANALYSIS' : 'PHÂN TÍCH CHUYÊN MÔN');
+        const title = document.createElement('h2');
+        title.textContent = result.title;
+        const summary = document.createElement('p');
+        summary.textContent = result.summary;
+        header.append(kicker, title, summary);
+        output.append(header);
+
+        if (result.metrics?.length) {
+            const metrics = document.createElement('div');
+            metrics.className = 'expert-result-metrics';
+            result.metrics.forEach(metric => {
+                const item = document.createElement('div');
+                const label = document.createElement('span');
+                const value = document.createElement('strong');
+                label.textContent = metric.label;
+                value.textContent = metric.value;
+                item.append(label, value);
+                if (metric.note) {
+                    const note = document.createElement('small');
+                    note.textContent = metric.note;
+                    item.append(note);
+                }
+                metrics.append(item);
+            });
+            output.append(metrics);
+        }
+
+        (result.sections || []).forEach((section, index) => {
+            const block = document.createElement('section');
+            block.className = 'expert-result-section';
+            const heading = document.createElement('h3');
+            heading.innerHTML = `<span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(section.title)}`;
+            block.append(heading);
+            if (section.intro) {
+                const intro = document.createElement('p');
+                intro.textContent = section.intro;
+                block.append(intro);
             }
-        },
+            const list = document.createElement('ul');
+            (section.items || []).forEach(entry => {
+                const item = document.createElement('li');
+                if (typeof entry === 'string') {
+                    item.textContent = entry;
+                } else {
+                    const strong = document.createElement('strong');
+                    const text = document.createElement('span');
+                    strong.textContent = entry.title;
+                    text.textContent = entry.text;
+                    item.append(strong, text);
+                }
+                list.append(item);
+            });
+            block.append(list);
+            output.append(block);
+        });
+
+        if (result.table?.rows?.length) {
+            const region = document.createElement('div');
+            region.className = 'expert-table-region';
+            region.tabIndex = 0;
+            const table = document.createElement('table');
+            const head = document.createElement('thead');
+            const headRow = document.createElement('tr');
+            result.table.headers.forEach(value => {
+                const cell = document.createElement('th');
+                cell.scope = 'col';
+                cell.textContent = value;
+                headRow.append(cell);
+            });
+            head.append(headRow);
+            const body = document.createElement('tbody');
+            result.table.rows.forEach(row => {
+                const tableRow = document.createElement('tr');
+                row.forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    tableRow.append(cell);
+                });
+                body.append(tableRow);
+            });
+            table.append(head, body);
+            region.append(table);
+            output.append(region);
+        }
+
+        if (result.caution) {
+            const caution = document.createElement('p');
+            caution.className = 'expert-caution';
+            caution.textContent = result.caution;
+            output.append(caution);
+        }
+
+        const actions = document.createElement('div');
+        actions.className = 'expert-result-actions';
+        const copy = document.createElement('button');
+        copy.type = 'button';
+        copy.className = 'secondary-action';
+        copy.textContent = language === 'en' ? 'Copy analysis' : 'Sao chép phân tích';
+        copy.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(resultToText(result));
+                copy.textContent = language === 'en' ? 'Copied' : 'Đã sao chép';
+            } catch (error) {
+                copy.textContent = language === 'en' ? 'Select and copy manually' : 'Hãy chọn và sao chép thủ công';
+            }
+        });
+        actions.append(copy);
+
+        if (result.download) {
+            const download = document.createElement('button');
+            download.type = 'button';
+            download.className = 'secondary-action';
+            download.textContent = result.download.label;
+            download.addEventListener('click', () => {
+                const blob = new Blob([result.download.content], { type: result.download.type || 'text/csv;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = result.download.filename;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+            });
+            actions.append(download);
+        }
+
+        const contact = document.createElement('a');
+        contact.className = 'primary-action';
+        const brief = (result.brief || resultToText(result)).slice(0, 1800);
+        contact.href = `lienhe.html?service=${encodeURIComponent(config.contactService)}&lang=${language}&brief=${encodeURIComponent(brief)}`;
+        contact.textContent = language === 'en' ? 'Confirm and discuss implementation' : 'Xác nhận và trao đổi triển khai';
+        actions.append(contact);
+        output.append(actions);
+    };
+
+    const applyLanguage = config => {
+        const language = getLanguage();
+        mount.querySelectorAll('select option[data-option-vi]').forEach(option => {
+            option.textContent = language === 'en' ? option.dataset.optionEn : option.dataset.optionVi;
+        });
+        mount.querySelectorAll('[data-placeholder-vi][data-placeholder-en]').forEach(field => {
+            field.placeholder = language === 'en' ? field.dataset.placeholderEn : field.dataset.placeholderVi;
+        });
+        document.title = `${language === 'en' ? config.title.en : config.title.vi} - Thuan Store`;
+    };
+
+    const mountExpert = config => {
+        mount.style.setProperty('--expert-color', config.color);
+        mount.innerHTML = `<section class="expert-intro">
+            <div>
+                <span class="expert-badge">${bilingual('AI CHUYÊN GIA · BETA', 'EXPERT AI · BETA')}</span>
+                <h1>${bilingual(config.title.vi, config.title.en)}</h1>
+                <p>${bilingual(config.summary.vi, config.summary.en)}</p>
+            </div>
+            <ol class="expert-flow" aria-label="Workflow">
+                <li><span>1</span>${bilingual('Nhập bối cảnh', 'Enter context')}</li>
+                <li><span>2</span>${bilingual('Nhận phân tích', 'Get analysis')}</li>
+                <li><span>3</span>${bilingual('Kiểm tra và dùng', 'Review and use')}</li>
+            </ol>
+        </section>
+        <div class="expert-workspace">
+            <form id="expertForm" class="expert-form">
+                <div class="expert-form-heading"><span>${bilingual('DỮ LIỆU ĐẦU VÀO', 'INPUT')}</span><h2>${bilingual(config.formTitle.vi, config.formTitle.en)}</h2><p>${bilingual(config.formSummary.vi, config.formSummary.en)}</p></div>
+                <div class="expert-field-grid">${config.fields.map(renderField).join('')}</div>
+                <p id="expertFormError" class="expert-form-error" role="alert"></p>
+                <div class="expert-form-actions">
+                    <button class="primary-action" type="submit">${bilingual(config.submit.vi, config.submit.en)}</button>
+                    <button id="expertExample" class="secondary-action" type="button">${bilingual('Điền dữ liệu mẫu', 'Use sample data')}</button>
+                    <button id="expertReset" class="text-action" type="reset">${bilingual('Làm lại', 'Reset')}</button>
+                </div>
+                <p class="expert-local-note">${bilingual('Phân tích chạy trực tiếp trên thiết bị. Dữ liệu nhập tại đây không được gửi lên máy chủ.', 'Analysis runs directly on your device. Data entered here is not sent to a server.')}</p>
+            </form>
+            <section id="expertOutput" class="expert-output" aria-live="polite" hidden>
+                <div class="expert-empty-state"><span>AI</span><h2>${bilingual('Kết quả sẽ xuất hiện tại đây', 'Your result will appear here')}</h2></div>
+            </section>
+        </div>`;
+
+        const form = document.getElementById('expertForm');
+        const output = document.getElementById('expertOutput');
+        const error = document.getElementById('expertFormError');
+        let lastValues = null;
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            error.textContent = '';
+            if (!form.checkValidity()) {
+                error.textContent = getLanguage() === 'en' ? 'Please complete the required fields.' : 'Vui lòng nhập đủ các trường bắt buộc.';
+                form.reportValidity();
+                return;
+            }
+            const values = readValues(form, config.fields);
+            const missingChoice = config.fields.find(field => field.type === 'multiselect' && field.required && !values[field.id].length);
+            if (missingChoice) {
+                error.textContent = getLanguage() === 'en' ? 'Please select at least one option.' : 'Vui lòng chọn ít nhất một lựa chọn.';
+                form.querySelector(`[data-field-id="${missingChoice.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            try {
+                lastValues = values;
+                createResult(config.analyze(values, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+                output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (analysisError) {
+                error.textContent = getLanguage() === 'en' ? 'The input could not be analyzed. Please review it and try again.' : 'Chưa thể phân tích dữ liệu này. Hãy kiểm tra và thử lại.';
+            }
+        });
+
+        document.getElementById('expertExample').addEventListener('click', () => {
+            setValues(form, config.fields, config.example);
+            form.requestSubmit();
+        });
+        form.addEventListener('reset', () => {
+            setTimeout(() => {
+                output.hidden = true;
+                output.innerHTML = '';
+                error.textContent = '';
+                lastValues = null;
+            });
+        });
+        window.addEventListener('thuanstore:languagechange', () => {
+            applyLanguage(config);
+            if (lastValues) createResult(config.analyze(lastValues, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+        });
+        applyLanguage(config);
+        if (window.location.hash === '#expertApp') setTimeout(() => mount.scrollIntoView({ block: 'start' }), 100);
+    };
+
+    window.ThuanExpert = { mount: mountExpert, normalize, number, formatNumber };
+})();
+</script>
+    <script data-thuanstore-inline="expert-ads.js">
+(() => {
+    const platformOptions = [
+        { value: 'tiktok', vi: 'TikTok Ads', en: 'TikTok Ads' },
+        { value: 'meta', vi: 'Facebook/Instagram Ads', en: 'Facebook/Instagram Ads' },
+        { value: 'google-search', vi: 'Google Search', en: 'Google Search' },
+        { value: 'google-shopping', vi: 'Google Shopping', en: 'Google Shopping' }
+    ];
+    const platformGuidance = {
         tiktok: {
-            color: '#f472b6',
-            vi: {
-                title: 'Video ngắn',
-                summary: 'Xây hệ thống video ngắn phù hợp sản phẩm, giọng thương hiệu và nguồn lực sản xuất thực tế.',
-                deliverables: ['Trụ cột nội dung và lịch đăng theo mục tiêu bán hàng.', 'Câu mở đầu, cách trình bày sản phẩm và lời kêu gọi hành động.', 'Mẫu quay dựng để đội ngũ có thể sản xuất đều đặn.'],
-                outcome: 'Một quy trình video rõ ràng thay vì các nội dung rời rạc.'
-            },
-            en: {
-                title: 'Short video',
-                summary: 'Build a short-video system that fits the product, brand voice, and realistic production capacity.',
-                deliverables: ['Content pillars and a sales-focused publishing calendar.', 'Hooks, product demonstrations, and calls to action.', 'Repeatable shooting and editing templates for the team.'],
-                outcome: 'A consistent video workflow instead of disconnected posts.'
-            }
+            vi: ['Chuẩn bị ít nhất 4–6 video có câu mở đầu và góc tiếp cận khác nhau.', 'Ưu tiên tín hiệu nội dung trước khi tăng ngân sách; không đánh giá chỉ sau một ngày.', 'Trang đích phải tiếp tục đúng lời hứa của video và tải nhanh trên điện thoại.', 'Tách nội dung thử nghiệm khỏi nhóm quảng cáo đang ổn định để đọc kết quả rõ hơn.'],
+            en: ['Prepare at least 4–6 videos with distinct hooks and angles.', 'Validate creative signals before increasing spend; do not judge from one day alone.', 'The landing page must continue the video promise and load quickly on mobile.', 'Separate creative testing from stable ad groups so results remain readable.']
         },
-        livestream: {
-            color: '#fb7185',
-            vi: {
-                title: 'Phát trực tiếp bán hàng',
-                summary: 'Chuẩn bị kịch bản, sản phẩm, ưu đãi và cách phối hợp để buổi phát trực tiếp rõ ràng, dễ theo dõi.',
-                deliverables: ['Kịch bản thời lượng, thứ tự sản phẩm và nhịp tương tác.', 'Nội dung chốt đơn, ưu đãi và xử lý câu hỏi thường gặp.', 'Thiết lập vận hành, phân vai và biểu mẫu đánh giá sau buổi phát.'],
-                outcome: 'Buổi phát trực tiếp có cấu trúc và có dữ liệu để cải thiện.'
-            },
-            en: {
-                title: 'Live selling',
-                summary: 'Prepare the script, products, offers, and team coordination for a clear and watchable live session.',
-                deliverables: ['Run of show, product order, and engagement rhythm.', 'Closing scripts, offers, and common-question handling.', 'Operating setup, team roles, and post-live review templates.'],
-                outcome: 'Structured live sessions with data for continuous improvement.'
-            }
+        meta: {
+            vi: ['Chuẩn bị nhiều định dạng: video dọc, ảnh, carousel và nội dung phản hồi câu hỏi.', 'Tách khách mới, khách đã tương tác và khách đã mua khi dữ liệu cho phép.', 'Kiểm tra sự kiện chuyển đổi, chất lượng trang đích và cách đội ngũ phản hồi tin nhắn.', 'Đánh giá theo chi phí tạo kết quả kinh doanh, không chỉ lượt tiếp cận hoặc nhấp.'],
+            en: ['Prepare vertical video, image, carousel, and objection-handling creative.', 'Separate new, engaged, and existing customers when the data supports it.', 'Verify conversion events, landing-page quality, and message-response workflow.', 'Judge business-result cost, not reach or clicks alone.']
         },
-        marketplace: {
-            color: '#f59e0b',
-            vi: {
-                title: 'Sàn thương mại điện tử và Amazon',
-                summary: 'Chuẩn hóa gian hàng và nội dung sản phẩm cho sàn trong nước hoặc lộ trình bán hàng quốc tế.',
-                deliverables: ['Thiết lập danh mục, thuộc tính và quy chuẩn đăng sản phẩm.', 'Tối ưu tiêu đề, mô tả, từ khóa và hình ảnh trang sản phẩm.', 'Quy trình vận hành giá, khuyến mãi, đơn hàng và báo cáo.'],
-                outcome: 'Gian hàng nhất quán, dễ quản lý và sẵn sàng mở rộng.'
-            },
-            en: {
-                title: 'Marketplaces and Amazon',
-                summary: 'Standardize storefronts and product content for local marketplaces or an international selling roadmap.',
-                deliverables: ['Category, attribute, and product-listing standards.', 'Optimized titles, descriptions, keywords, and listing visuals.', 'Workflows for pricing, promotions, orders, and reporting.'],
-                outcome: 'A consistent manageable storefront ready to scale.'
-            }
+        'google-search': {
+            vi: ['Nhóm từ khóa theo ý định và trang đích tương ứng, không đưa mọi từ khóa vào một nhóm.', 'Loại trừ truy vấn không phù hợp và kiểm tra cụm từ tìm kiếm định kỳ.', 'Nội dung quảng cáo, trang đích và hành động chuyển đổi phải nhất quán.', 'Chỉ dùng chiến lược tự động khi theo dõi chuyển đổi đủ tin cậy.'],
+            en: ['Group keywords by intent and matching landing page rather than combining everything.', 'Exclude irrelevant queries and review search terms regularly.', 'Ad copy, landing page, and conversion action must remain consistent.', 'Use automated bidding only after conversion tracking is reliable.']
         },
-        ads: {
-            color: '#a78bfa',
-            vi: {
-                title: 'Quảng cáo số',
-                summary: 'Thiết lập quảng cáo theo mục tiêu, theo dõi chuyển đổi và tối ưu dựa trên dữ liệu thay vì cảm tính.',
-                deliverables: ['Kiểm tra mã theo dõi, sự kiện, liên kết và dữ liệu chuyển đổi.', 'Cấu trúc chiến dịch, nhóm đối tượng và kế hoạch nội dung quảng cáo.', 'Theo dõi chi phí, kết quả và đề xuất tối ưu định kỳ.'],
-                outcome: 'Biết ngân sách đang tạo ra tín hiệu bán hàng nào.'
-            },
-            en: {
-                title: 'Digital advertising',
-                summary: 'Set up goal-based advertising, conversion tracking, and data-led optimization.',
-                deliverables: ['Pixel, event, UTM, and conversion-data review.', 'Campaign structure, audiences, and ad-content plan.', 'Cost and result tracking with recurring optimization actions.'],
-                outcome: 'Understand which sales signals the advertising budget produces.'
-            }
-        },
-        analytics: {
-            color: '#2dd4bf',
-            vi: {
-                title: 'Chiến lược và đo lường',
-                summary: 'Xác định mục tiêu, hành trình khách hàng và chỉ số cần theo dõi trước khi mở rộng đội tiếp thị.',
-                deliverables: ['Mục tiêu, chân dung khách hàng và phễu bán hàng.', 'Bộ chỉ số theo từng kênh cùng bảng theo dõi dễ cập nhật.', 'Đánh giá kênh hiện tại và kế hoạch ưu tiên theo nguồn lực.'],
-                outcome: 'Đội ngũ biết việc nào cần làm trước và đo bằng chỉ số nào.'
-            },
-            en: {
-                title: 'Strategy and analytics',
-                summary: 'Define goals, the customer journey, and the metrics to track before scaling a marketing team.',
-                deliverables: ['Goals, customer profiles, and the sales funnel.', 'Channel KPIs with a maintainable reporting dashboard.', 'Current-channel review and a resource-based priority plan.'],
-                outcome: 'The team knows what to do first and how success will be measured.'
-            }
-        },
-        ai: {
-            color: '#34d399',
-            vi: {
-                title: 'AI cho nội dung và vận hành',
-                summary: 'Bắt đầu từ một công việc lặp lại có dữ liệu rõ, sau đó dùng AI để xử lý bản nháp nhanh hơn và vẫn có người kiểm tra trước khi sử dụng.',
-                deliverables: ['Chuẩn hóa danh sách sản phẩm, thuộc tính và nội dung nguồn để AI sử dụng đúng dữ liệu.', 'Tạo mẫu soạn mô tả sản phẩm, nội dung bán hàng và câu trả lời thường gặp để người dùng kiểm tra trước khi gửi.', 'Kết nối biểu mẫu và bảng dữ liệu để tổng hợp yêu cầu, nhắc chăm sóc khách hoặc chuẩn bị báo cáo.'],
-                outcome: 'Giảm thời gian nhập lại và soạn nháp, trong khi quyết định cuối cùng vẫn do người dùng kiểm tra.',
-                examples: ['Sale sản phẩm: tra dữ liệu, tóm tắt thông số và chuẩn bị nội dung gửi khách từ nguồn đã duyệt.', 'Cửa hàng: soạn câu trả lời cho các câu hỏi lặp lại và phân loại yêu cầu của khách.', 'Nhóm tiếp thị: chuyển nội dung sản phẩm thành phiên bản cho website, mạng xã hội hoặc video.'],
-                principle: 'Không bắt đầu bằng một hệ thống AI lớn. Chọn một việc lặp lại, đo thời gian trước và sau, rồi mới mở rộng.',
-                cta: 'Trao đổi một việc đang lặp lại'
-            },
-            en: {
-                title: 'AI for content and operations',
-                summary: 'Start with one repetitive task backed by clear data, then use AI to prepare drafts faster while keeping human review before use.',
-                deliverables: ['Standardize product lists, attributes, and source content so AI works from approved data.', 'Create reviewed templates for product descriptions, sales content, and recurring customer questions.', 'Connect forms and structured data to summarize requests, prepare follow-up reminders, or draft reports.'],
-                outcome: 'Reduce repeated entry and drafting time while keeping the final decision with the user.',
-                examples: ['Product sales: retrieve approved data, summarize specifications, and prepare customer-ready information.', 'Retail stores: draft answers to recurring questions and categorize customer requests.', 'Marketing teams: adapt product information for websites, social channels, or video scripts.'],
-                principle: 'Do not begin with a large AI system. Start with one repeatable task, measure time before and after, then expand.',
-                cta: 'Discuss one repetitive task'
-            }
+        'google-shopping': {
+            vi: ['Chuẩn hóa mã, tiêu đề, danh mục, giá, tình trạng hàng và hình ảnh trong nguồn dữ liệu.', 'Kiểm tra chênh lệch giá hoặc trạng thái giữa website và nguồn sản phẩm.', 'Phân nhóm sản phẩm theo biên lợi nhuận, giá trị và khả năng cung ứng.', 'Tách chi phí quảng cáo khỏi phí sàn, khuyến mãi và chi phí giao hàng khi tính hiệu quả.'],
+            en: ['Standardize identifiers, titles, categories, price, availability, and imagery in the feed.', 'Check price or availability differences between the site and product source.', 'Group products by margin, value, and supply capacity.', 'Separate advertising cost from marketplace fees, promotions, and delivery when assessing efficiency.']
         }
     };
 
-    const serviceKey = document.body.dataset.service;
-    const service = catalog[serviceKey];
-    const mount = document.getElementById('serviceContent');
-    if (!service || !mount) return;
+    const currency = (value, lang) => new Intl.NumberFormat(lang === 'en' ? 'en-US' : 'vi-VN', {
+        style: 'currency', currency: 'VND', maximumFractionDigits: 0
+    }).format(Math.round(value));
+    const percent = value => `${Math.round(value * 10) / 10}%`;
 
-    const list = language => service[language].deliverables
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const examples = language => (service[language].examples || [])
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const hasExamples = Boolean(service.vi.examples && service.en.examples);
+    window.ThuanExpert.mount({
+        color: '#a78bfa',
+        contactService: 'ads',
+        title: { vi: 'AI lập ngân sách quảng cáo', en: 'AI advertising budget planner' },
+        summary: {
+            vi: 'Tính điểm hòa vốn từ giá trị đơn hàng và biên lợi nhuận, sau đó xây ngân sách thử nghiệm, giới hạn chi phí, cấu trúc 30 ngày và danh sách đo lường.',
+            en: 'Calculate break-even economics from order value and margin, then build a test budget, cost guardrails, a 30-day structure, and measurement checklist.'
+        },
+        formTitle: { vi: 'Nhập số liệu kinh doanh trước khi chạy quảng cáo', en: 'Enter business economics before advertising' },
+        formSummary: {
+            vi: 'Không thể đánh giá quảng cáo chỉ bằng lượt xem. Công cụ cần biết một kết quả kinh doanh có giá trị bao nhiêu.',
+            en: 'Advertising cannot be judged by views alone. The tool needs to know what a business result is worth.'
+        },
+        submit: { vi: 'Phân tích ngân sách và điểm hòa vốn', en: 'Analyze budget and break-even point' },
+        fields: [
+            { id: 'platform', type: 'select', required: true, label: { vi: 'Nền tảng', en: 'Platform' }, options: platformOptions },
+            { id: 'goal', type: 'select', required: true, label: { vi: 'Kết quả cần tạo', en: 'Business result' }, options: [
+                { value: 'purchase', vi: 'Đơn hàng', en: 'Purchase' },
+                { value: 'lead', vi: 'Khách để lại thông tin', en: 'Qualified lead' },
+                { value: 'message', vi: 'Tin nhắn có nhu cầu', en: 'Qualified message' },
+                { value: 'booking', vi: 'Lịch hẹn hoặc đặt bàn', en: 'Booking or reservation' }
+            ] },
+            { id: 'offer', type: 'text', required: true, span: 2, label: { vi: 'Sản phẩm hoặc dịch vụ quảng cáo', en: 'Advertised product or service' }, placeholder: { vi: 'Ví dụ: bộ sản phẩm chăm sóc mẹ và bé', en: 'Example: a mother-and-baby care bundle' } },
+            { id: 'budget', type: 'number', required: true, min: 1, max: 10000, step: 0.5, label: { vi: 'Ngân sách media/tháng (triệu đồng)', en: 'Monthly media budget (VND million)' }, placeholder: { vi: '15', en: '15' }, hint: { vi: 'Khoản nền tảng quảng cáo trực tiếp thu.', en: 'The amount paid directly to the advertising platform.' } },
+            { id: 'orderValue', type: 'number', required: true, min: 1000, max: 1000000000, step: 1000, label: { vi: 'Giá trị trung bình của một kết quả (đồng)', en: 'Average value per result (VND)' }, placeholder: { vi: '600000', en: '600000' }, hint: { vi: 'Đơn hàng: doanh thu trung bình. Lead/tin nhắn: giá trị doanh thu kỳ vọng sau khi chốt.', en: 'Purchase: average revenue. Lead/message: expected revenue after closing.' } },
+            { id: 'margin', type: 'number', required: true, min: 1, max: 95, step: 1, label: { vi: 'Biên lợi nhuận gộp (%)', en: 'Gross margin (%)' }, placeholder: { vi: '30', en: '30' } },
+            { id: 'closeRate', type: 'number', required: true, min: 1, max: 100, step: 1, label: { vi: 'Tỷ lệ tạo doanh thu từ kết quả (%)', en: 'Result-to-revenue rate (%)' }, placeholder: { vi: '100', en: '100' }, hint: { vi: 'Đơn hàng đã thanh toán: 100%. Tin nhắn/lead: nhập tỷ lệ chốt thực tế.', en: 'Paid purchase: 100%. Message/lead: enter the actual close rate.' } },
+            { id: 'readiness', type: 'select', required: true, label: { vi: 'Mức sẵn sàng', en: 'Readiness' }, options: [
+                { value: 'ready', vi: 'Có trang đích, đo lường và nội dung', en: 'Landing page, tracking, and creative ready' },
+                { value: 'partial', vi: 'Có một phần nhưng chưa kiểm tra đầy đủ', en: 'Partially ready, not fully checked' },
+                { value: 'none', vi: 'Chưa có trang đích hoặc đo lường', en: 'No landing page or measurement yet' }
+            ] },
+            { id: 'creative', type: 'number', required: true, min: 1, max: 50, step: 1, label: { vi: 'Số nội dung quảng cáo có thể thử', en: 'Creative variations available' }, placeholder: { vi: '6', en: '6' } }
+        ],
+        example: {
+            platform: 'tiktok', goal: 'purchase', offer: 'Bộ sản phẩm thiết yếu cho mẹ và bé', budget: '15', orderValue: '600000', margin: '30', closeRate: '100', readiness: 'partial', creative: '6'
+        },
+        analyze(values, lang, helpers) {
+            const isEn = lang === 'en';
+            const budget = Math.max(0, helpers.number(values.budget)) * 1000000;
+            const orderValue = Math.max(1, helpers.number(values.orderValue));
+            const margin = Math.max(0.01, Math.min(0.95, helpers.number(values.margin) / 100));
+            const closeRate = Math.max(0.01, Math.min(1, helpers.number(values.closeRate) / 100));
+            const creative = Math.max(1, helpers.number(values.creative, 1));
+            const grossContribution = orderValue * margin;
+            const breakEvenCost = grossContribution * closeRate;
+            const targetCost = breakEvenCost * 0.7;
+            const breakEvenRoas = 1 / margin;
+            const targetRoas = breakEvenRoas / 0.7;
+            const daily = budget / 30;
+            const prospecting = budget * 0.7;
+            const retargeting = budget * 0.2;
+            const experiments = budget * 0.1;
+            const targetResults = targetCost > 0 ? Math.floor(budget / targetCost) : 0;
+            const platformName = platformOptions.find(option => option.value === values.platform)?.[lang] || values.platform;
+            const readiness = {
+                ready: isEn ? 'Launch can start after a final tracking and content review.' : 'Có thể bắt đầu sau khi kiểm tra lần cuối về đo lường và nội dung.',
+                partial: isEn ? 'Use the first week to fix measurement, landing continuity, and missing creative.' : 'Dùng tuần đầu để hoàn thiện đo lường, tính liên tục của trang đích và nội dung còn thiếu.',
+                none: isEn ? 'Do not send paid traffic yet. Build a landing destination and measurement first.' : 'Chưa nên đưa lưu lượng trả phí vào. Cần chuẩn bị nơi nhận khách và hệ thống đo lường trước.'
+            }[values.readiness];
+            const warnings = [];
+            if (creative < 4) warnings.push(isEn ? 'Creative supply is thin. Prepare at least four genuinely different angles before drawing conclusions.' : 'Nguồn nội dung còn ít. Nên có ít nhất bốn góc tiếp cận thật sự khác nhau trước khi kết luận.');
+            if (daily < targetCost * 1.5) warnings.push(isEn ? 'The daily budget is small relative to the target result cost; learning may be slow and volatile.' : 'Ngân sách ngày thấp so với chi phí mục tiêu; quá trình thu thập dữ liệu có thể chậm và dao động.');
+            if (margin < 0.2) warnings.push(isEn ? 'A low gross margin leaves little room for advertising, discounts, returns, and fulfillment.' : 'Biên lợi nhuận gộp thấp để lại ít khoảng cho quảng cáo, giảm giá, đổi trả và hoàn tất đơn.');
+            if (values.readiness !== 'ready') warnings.push(readiness);
 
-    mount.style.setProperty('--service-color', service.color);
-    mount.innerHTML = `
-        <div class="service-heading">
-            <span class="service-heading-icon">${icons[serviceKey]}</span>
-            <div>
-                <p class="service-kicker"><span data-lang="vi">DỊCH VỤ TRỰC TUYẾN</span><span data-lang="en">ONLINE SERVICE</span></p>
-                <h1 class="service-title"><span data-lang="vi">${service.vi.title}</span><span data-lang="en">${service.en.title}</span></h1>
-            </div>
-        </div>
-        <p class="service-summary"><span data-lang="vi">${service.vi.summary}</span><span data-lang="en">${service.en.summary}</span></p>
-        <div class="service-content">
-            <section>
-                <p class="section-label"><span data-lang="vi">NỘI DUNG TRIỂN KHAI</span><span data-lang="en">DELIVERABLES</span></p>
-                <ul class="service-list" data-lang="vi">${list('vi')}</ul>
-                <ul class="service-list" data-lang="en">${list('en')}</ul>
-            </section>
-            <aside class="service-result">
-                <strong><span data-lang="vi">KẾT QUẢ HƯỚNG TỚI</span><span data-lang="en">TARGET OUTCOME</span></strong>
-                <p><span data-lang="vi">${service.vi.outcome}</span><span data-lang="en">${service.en.outcome}</span></p>
-            </aside>
-        </div>
-        ${hasExamples ? `<div class="service-extra">
-            <section>
-                <p class="section-label"><span data-lang="vi">TÌNH HUỐNG PHÙ HỢP</span><span data-lang="en">SUITABLE USE CASES</span></p>
-                <ul class="service-example-list" data-lang="vi">${examples('vi')}</ul>
-                <ul class="service-example-list" data-lang="en">${examples('en')}</ul>
-            </section>
-            <aside class="service-principle">
-                <strong><span data-lang="vi">CÁCH BẮT ĐẦU</span><span data-lang="en">HOW TO START</span></strong>
-                <p><span data-lang="vi">${service.vi.principle}</span><span data-lang="en">${service.en.principle}</span></p>
-            </aside>
-        </div>` : ''}
-        <div class="service-actions">
-            <a class="primary-action" href="lienhe.html?service=${encodeURIComponent(serviceKey)}"><span data-lang="vi">${service.vi.cta || 'Nhận báo giá dịch vụ'}</span><span data-lang="en">${service.en.cta || 'Request a service quote'}</span></a>
-            <a class="secondary-action" href="index.html#solutionFinder"><span data-lang="vi">Xem giải pháp theo mô hình</span><span data-lang="en">Explore solutions by business type</span></a>
-        </div>`;
+            const phases = isEn
+                ? [
+                    { title: 'Days 1–3 · Measurement gate', text: 'Verify the primary conversion, revenue value, source tracking, consent, page speed, and message/order handoff.' },
+                    { title: 'Days 4–10 · Controlled test', text: `Test ${Math.min(Math.max(4, creative), 8)} distinct creative angles with stable audience and offer conditions.` },
+                    { title: 'Days 11–20 · Read the economics', text: `Compare qualified-result cost with the ${currency(targetCost, lang)} operating target; pause weak combinations only after enough comparable exposure.` },
+                    { title: 'Days 21–30 · Scale or repair', text: 'Increase only the combinations that hold result quality; otherwise repair the offer, creative, page, or sales response.' }
+                ]
+                : [
+                    { title: 'Ngày 1–3 · Cổng kiểm tra đo lường', text: 'Kiểm tra chuyển đổi chính, giá trị doanh thu, nguồn truy cập, đồng ý lưu dữ liệu, tốc độ trang và cách bàn giao tin nhắn/đơn hàng.' },
+                    { title: 'Ngày 4–10 · Thử nghiệm có kiểm soát', text: `Thử ${Math.min(Math.max(4, creative), 8)} góc nội dung khác nhau trong điều kiện đối tượng và đề nghị ổn định.` },
+                    { title: 'Ngày 11–20 · Đọc hiệu quả kinh doanh', text: `So sánh chi phí kết quả có chất lượng với mức vận hành ${currency(targetCost, lang)}; chỉ dừng phương án yếu sau khi có dữ liệu đủ so sánh.` },
+                    { title: 'Ngày 21–30 · Mở rộng hoặc sửa điểm nghẽn', text: 'Chỉ tăng ngân sách cho tổ hợp giữ được chất lượng; nếu không, sửa đề nghị, nội dung, trang đích hoặc tốc độ phản hồi bán hàng.' }
+                ];
+            const measurement = isEn
+                ? ['Primary conversion fires once and carries the correct value.', 'UTM or equivalent source fields survive through the inquiry/order handoff.', 'Daily dashboard separates media spend, platform result, qualified result, revenue, refund, and gross margin.', 'Sales response time and reason for lost leads are recorded.', 'Media budget, service fee, creative production, promotions, and platform/marketplace fees remain separate.']
+                : ['Chuyển đổi chính chỉ ghi nhận một lần và mang đúng giá trị.', 'UTM hoặc trường nguồn tương đương được giữ đến lúc bàn giao tin nhắn/đơn hàng.', 'Bảng theo dõi ngày tách chi tiêu media, kết quả nền tảng, kết quả có chất lượng, doanh thu, hoàn trả và lợi nhuận gộp.', 'Ghi nhận thời gian phản hồi bán hàng và lý do mất khách.', 'Tách riêng ngân sách media, phí quản lý, sản xuất nội dung, khuyến mãi và phí nền tảng/sàn.'];
 
-    const language = window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
-    document.title = `${service[language].title} - Thuận Store`;
-    window.addEventListener('thuanstore:languagechange', event => {
-        document.title = `${service[event.detail.language].title} - Thuận Store`;
+            return {
+                title: isEn ? `30-day ${platformName} test plan` : `Kế hoạch thử nghiệm ${platformName} trong 30 ngày`,
+                summary: isEn
+                    ? `For “${values.offer}”, the model uses contribution margin and close rate to define a result-cost ceiling before any scale decision.`
+                    : `Với “${values.offer}”, mô hình dùng lợi nhuận đóng góp và tỷ lệ tạo doanh thu để xác định trần chi phí trước khi quyết định tăng ngân sách.`,
+                metrics: [
+                    { label: isEn ? 'Break-even result cost' : 'Chi phí kết quả hòa vốn', value: currency(breakEvenCost, lang), note: isEn ? 'Before overhead and returns' : 'Chưa gồm chi phí chung và hoàn trả' },
+                    { label: isEn ? 'Operating target cost' : 'Chi phí mục tiêu vận hành', value: currency(targetCost, lang), note: isEn ? '70% of break-even ceiling' : '70% trần hòa vốn' },
+                    { label: isEn ? 'ROAS reference' : 'ROAS tham khảo', value: `${targetRoas.toFixed(2)}×`, note: isEn ? `Break-even: ${breakEvenRoas.toFixed(2)}×` : `Hòa vốn: ${breakEvenRoas.toFixed(2)}×` },
+                    { label: isEn ? 'Daily media budget' : 'Ngân sách media/ngày', value: currency(daily, lang), note: isEn ? `Mathematical capacity: about ${targetResults} target-cost results/month` : `Năng lực toán học: khoảng ${targetResults} kết quả/tháng ở mức mục tiêu` }
+                ],
+                sections: [
+                    { title: isEn ? 'Budget allocation' : 'Phân bổ ngân sách', items: [
+                        { title: isEn ? 'New-customer delivery · 70%' : 'Tiếp cận khách mới · 70%', text: currency(prospecting, lang) },
+                        { title: isEn ? 'Retargeting · 20%' : 'Tiếp thị lại · 20%', text: currency(retargeting, lang) },
+                        { title: isEn ? 'Creative experiments · 10%' : 'Thử nghiệm nội dung · 10%', text: currency(experiments, lang) }
+                    ] },
+                    { title: isEn ? 'Platform-specific operating rules' : 'Nguyên tắc riêng của nền tảng', items: platformGuidance[values.platform][lang] },
+                    { title: isEn ? 'Thirty-day decision sequence' : 'Trình tự quyết định trong 30 ngày', items: phases },
+                    { title: isEn ? 'Measurement checklist' : 'Danh sách kiểm tra đo lường', items: measurement },
+                    { title: isEn ? 'Risks to resolve before scaling' : 'Rủi ro phải xử lý trước khi tăng ngân sách', items: warnings.length ? warnings : [isEn ? 'No immediate model warning. Continue monitoring data quality and operational capacity.' : 'Chưa có cảnh báo tức thời từ mô hình. Tiếp tục kiểm tra chất lượng dữ liệu và khả năng vận hành.'] }
+                ],
+                caution: isEn
+                    ? 'This is scenario analysis, not a performance guarantee. Platform delivery, competition, seasonality, creative quality, sales response, returns, and tracking quality can materially change results.'
+                    : 'Đây là phân tích kịch bản, không bảo đảm hiệu quả. Phân phối của nền tảng, cạnh tranh, mùa vụ, chất lượng nội dung, tốc độ bán hàng, hoàn trả và độ chính xác đo lường đều có thể làm kết quả thay đổi đáng kể.',
+                brief: isEn
+                    ? `Advertising plan\nPlatform: ${platformName}\nOffer: ${values.offer}\nMonthly media: ${currency(budget, lang)}\nAverage value: ${currency(orderValue, lang)}\nGross margin: ${percent(margin * 100)}\nTarget result cost: ${currency(targetCost, lang)}`
+                    : `Kế hoạch quảng cáo\nNền tảng: ${platformName}\nSản phẩm/dịch vụ: ${values.offer}\nMedia tháng: ${currency(budget, lang)}\nGiá trị trung bình: ${currency(orderValue, lang)}\nBiên gộp: ${percent(margin * 100)}\nChi phí kết quả mục tiêu: ${currency(targetCost, lang)}`
+            };
+        }
     });
 })();
 </script>

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi" data-lang="vi">
+<html lang="vi" data-lang="vi" data-title-vi="AI viết kịch bản video ngắn - Thuận Store" data-title-en="AI short-video script writer - Thuan Store">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#020617">
-    <meta name="description" content="Dịch vụ chuẩn hóa gian hàng trên sàn thương mại điện tử và Amazon."><title>Sàn thương mại điện tử và Amazon - Thuận Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="AI chuyên gia tạo kịch bản, phân cảnh và danh sách quay video ngắn theo nền tảng và ngành hàng.">
+    <title>AI viết kịch bản video ngắn - Thuận Store</title>
     <style data-thuanstore-inline="site.css">
 :root {
     color-scheme: dark;
@@ -3655,7 +3657,16 @@ body.needs-advisor-open {
 
 </style>
 </head>
-<body data-service="marketplace"><main class="subpage-shell"><header class="subpage-header"><a class="brand" href="index.html"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CHẠM ĐẾN TƯƠNG LAI</span><span data-lang="en">TOUCH THE FUTURE</span></small></span></a><div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang chủ" data-label-en="Close and return home" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div></header><article id="serviceContent" class="service-main"></article><footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html"><span data-lang="vi">Liên hệ</span><span data-lang="en">Contact</span></a></footer></main><script data-thuanstore-inline="i18n.js">
+<body class="expert-page" data-expert="video">
+    <main class="subpage-shell">
+        <header class="subpage-header">
+            <a class="brand" href="index.html" aria-label="Thuận Store"><svg class="brand-mark" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3 4 14h7v7l9-11h-7V3Z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="brand-copy"><strong>THUẬN STORE</strong><small><span data-lang="vi">CHẠM ĐẾN TƯƠNG LAI</span><span data-lang="en">TOUCH THE FUTURE</span></small></span></a>
+            <div class="subpage-actions"><nav class="language-switcher" data-label-vi="Ngôn ngữ" data-label-en="Language" aria-label="Ngôn ngữ"><button type="button" class="is-active" data-app-lang="vi" aria-pressed="true">VI</button><button type="button" data-app-lang="en" aria-pressed="false">EN</button></nav><a class="icon-link" href="index.html#orbitArea" data-label-vi="Đóng và về trang công cụ" data-label-en="Close and return to tools" aria-label="Đóng và về trang công cụ" title="Đóng và về trang công cụ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"></path></svg></a></div>
+        </header>
+        <article id="expertApp" class="expert-app"></article>
+        <footer class="subpage-footer"><span>© Thuận Huỳnh</span><a href="lienhe.html?service=tiktok"><span data-lang="vi">Trao đổi triển khai</span><span data-lang="en">Discuss implementation</span></a></footer>
+    </main>
+    <script data-thuanstore-inline="i18n.js">
 (() => {
     const STORAGE_KEY = 'thuanstore_app_lang_v1';
     const normalize = value => value === 'en' ? 'en' : 'vi';
@@ -3732,202 +3743,500 @@ body.needs-advisor-open {
     };
 })();
 </script>
-<script data-thuanstore-inline="service.js">
+    <script data-thuanstore-inline="expert-core.js">
 (() => {
-    const icons = {
-        website: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M7 14h4M15 13v4m-2-2h4" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        seo: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"></circle><path d="m15 15 5 5M7.8 9h5.4M7.8 12h3.4" stroke-linecap="round"></path></svg>',
-        tiktok: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m10 9 5 3-5 3V9Z" stroke-linejoin="round"></path></svg>',
-        livestream: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><path d="M4.8 7.5a6 6 0 0 0 0 5M19.2 7.5a6 6 0 0 1 0 5M11 18h2" stroke-linecap="round"></path></svg>',
-        marketplace: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.2-5H5.2L4 10Zm2 0v9h12v-9M9 19v-5h6v5" stroke-linejoin="round"></path></svg>',
-        ads: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 13-5v12L3 13v-2Zm13-1 4-2v8l-4-2M5 14l1 5h4l-2-4" stroke-linejoin="round"></path></svg>',
-        analytics: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9m4 10-1-6 4 2 3-8 3 5 3-2M3 19h18" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
-        ai: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"></rect><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4M10 14l2-4 2 4m-3.2-1h2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>'
+    const mount = document.getElementById('expertApp');
+    if (!mount) return;
+
+    const getLanguage = () => window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
+    const escapeHtml = value => String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    const normalize = value => String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase()
+        .trim();
+    const number = (value, fallback = 0) => {
+        const parsed = Number(String(value ?? '').replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const formatNumber = (value, language = getLanguage(), maximumFractionDigits = 1) => new Intl.NumberFormat(
+        language === 'en' ? 'en-US' : 'vi-VN',
+        { maximumFractionDigits }
+    ).format(value);
+
+    const bilingual = (vi, en) => `<span data-lang="vi">${escapeHtml(vi)}</span><span data-lang="en">${escapeHtml(en)}</span>`;
+    const optionMarkup = option => `<option value="${escapeHtml(option.value)}" data-option-vi="${escapeHtml(option.vi)}" data-option-en="${escapeHtml(option.en)}">${escapeHtml(option.vi)}</option>`;
+
+    const renderField = field => {
+        const id = `expert-${field.id}`;
+        const required = field.required ? ' required' : '';
+        const span = field.span === 2 ? ' expert-field-wide' : '';
+        const hint = field.hint ? `<small>${bilingual(field.hint.vi, field.hint.en)}</small>` : '';
+        if (field.type === 'multiselect') {
+            return `<fieldset class="expert-field expert-choice-field${span}" data-field-id="${escapeHtml(field.id)}"${required}>
+                <legend>${bilingual(field.label.vi, field.label.en)}</legend>
+                <div class="expert-choice-grid">${field.options.map(option => `<label><input type="checkbox" name="${escapeHtml(field.id)}" value="${escapeHtml(option.value)}"><span>${bilingual(option.vi, option.en)}</span></label>`).join('')}</div>
+                ${hint}
+            </fieldset>`;
+        }
+        if (field.type === 'select') {
+            return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+                <select id="${id}" name="${escapeHtml(field.id)}"${required}>${field.options.map(optionMarkup).join('')}</select>${hint}
+            </label>`;
+        }
+        if (field.type === 'textarea') {
+            return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+                <textarea id="${id}" name="${escapeHtml(field.id)}" rows="${field.rows || 5}" data-placeholder-vi="${escapeHtml(field.placeholder?.vi || '')}" data-placeholder-en="${escapeHtml(field.placeholder?.en || '')}" placeholder="${escapeHtml(field.placeholder?.vi || '')}"${required}></textarea>${hint}
+            </label>`;
+        }
+        const inputType = field.type === 'number' ? 'number' : 'text';
+        const constraints = [
+            field.min !== undefined ? ` min="${field.min}"` : '',
+            field.max !== undefined ? ` max="${field.max}"` : '',
+            field.step !== undefined ? ` step="${field.step}"` : ''
+        ].join('');
+        return `<label class="expert-field${span}" for="${id}"><span>${bilingual(field.label.vi, field.label.en)}</span>
+            <input id="${id}" type="${inputType}" name="${escapeHtml(field.id)}" data-placeholder-vi="${escapeHtml(field.placeholder?.vi || '')}" data-placeholder-en="${escapeHtml(field.placeholder?.en || '')}" placeholder="${escapeHtml(field.placeholder?.vi || '')}"${constraints}${required}>${hint}
+        </label>`;
     };
 
-    const catalog = {
-        website: {
-            color: '#22d3ee',
-            vi: {
-                title: 'Website và hiện diện online',
-                summary: 'Xây nơi khách có thể tìm thấy thông tin đúng, hiểu sản phẩm và thực hiện cuộc gọi, đặt món, mua hàng hoặc gửi yêu cầu.',
-                deliverables: ['Cấu trúc website, trang sản phẩm hoặc dịch vụ và lời kêu gọi hành động.', 'Rà soát thông tin doanh nghiệp, menu, giờ hoạt động và liên kết trên các điểm hiện diện cần thiết.', 'Giao diện đa thiết bị, tốc độ tải, nền tảng SEO và công cụ đo lường.'],
-                outcome: 'Một điểm hiện diện online rõ ràng, nhất quán và có thể đo kết quả.'
-            },
-            en: {
-                title: 'Website and online presence',
-                summary: 'Build a place where customers can find accurate information, understand the offer, and call, order, buy, or inquire.',
-                deliverables: ['Website structure, product or service pages, and clear calls to action.', 'Review of business information, menus, opening hours, and links across relevant listings.', 'Responsive design, loading performance, SEO foundations, and measurement.'],
-                outcome: 'A clear, consistent online presence with measurable outcomes.'
+    const readValues = (form, fields) => Object.fromEntries(fields.map(field => {
+        if (field.type === 'multiselect') {
+            return [field.id, [...form.querySelectorAll(`input[name="${field.id}"]:checked`)].map(input => input.value)];
+        }
+        return [field.id, form.elements[field.id]?.value?.trim?.() ?? form.elements[field.id]?.value ?? ''];
+    }));
+
+    const setValues = (form, fields, values = {}) => {
+        fields.forEach(field => {
+            const value = values[field.id];
+            if (value === undefined) return;
+            if (field.type === 'multiselect') {
+                form.querySelectorAll(`input[name="${field.id}"]`).forEach(input => {
+                    input.checked = Array.isArray(value) && value.includes(input.value);
+                });
+                return;
             }
+            if (form.elements[field.id]) form.elements[field.id].value = value;
+        });
+    };
+
+    const resultToText = result => {
+        const lines = [result.title, result.summary, ''];
+        (result.metrics || []).forEach(metric => lines.push(`${metric.label}: ${metric.value}${metric.note ? ` - ${metric.note}` : ''}`));
+        (result.sections || []).forEach(section => {
+            lines.push('', section.title);
+            (section.items || []).forEach(item => lines.push(`- ${typeof item === 'string' ? item : `${item.title}: ${item.text}`}`));
+        });
+        if (result.caution) lines.push('', result.caution);
+        return lines.join('\n');
+    };
+
+    const createResult = (result, config, language) => {
+        const output = document.getElementById('expertOutput');
+        output.hidden = false;
+        output.innerHTML = '';
+
+        const header = document.createElement('header');
+        header.className = 'expert-result-header';
+        const kicker = document.createElement('span');
+        kicker.className = 'expert-result-kicker';
+        kicker.textContent = result.kicker || (language === 'en' ? 'EXPERT ANALYSIS' : 'PHÂN TÍCH CHUYÊN MÔN');
+        const title = document.createElement('h2');
+        title.textContent = result.title;
+        const summary = document.createElement('p');
+        summary.textContent = result.summary;
+        header.append(kicker, title, summary);
+        output.append(header);
+
+        if (result.metrics?.length) {
+            const metrics = document.createElement('div');
+            metrics.className = 'expert-result-metrics';
+            result.metrics.forEach(metric => {
+                const item = document.createElement('div');
+                const label = document.createElement('span');
+                const value = document.createElement('strong');
+                label.textContent = metric.label;
+                value.textContent = metric.value;
+                item.append(label, value);
+                if (metric.note) {
+                    const note = document.createElement('small');
+                    note.textContent = metric.note;
+                    item.append(note);
+                }
+                metrics.append(item);
+            });
+            output.append(metrics);
+        }
+
+        (result.sections || []).forEach((section, index) => {
+            const block = document.createElement('section');
+            block.className = 'expert-result-section';
+            const heading = document.createElement('h3');
+            heading.innerHTML = `<span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(section.title)}`;
+            block.append(heading);
+            if (section.intro) {
+                const intro = document.createElement('p');
+                intro.textContent = section.intro;
+                block.append(intro);
+            }
+            const list = document.createElement('ul');
+            (section.items || []).forEach(entry => {
+                const item = document.createElement('li');
+                if (typeof entry === 'string') {
+                    item.textContent = entry;
+                } else {
+                    const strong = document.createElement('strong');
+                    const text = document.createElement('span');
+                    strong.textContent = entry.title;
+                    text.textContent = entry.text;
+                    item.append(strong, text);
+                }
+                list.append(item);
+            });
+            block.append(list);
+            output.append(block);
+        });
+
+        if (result.table?.rows?.length) {
+            const region = document.createElement('div');
+            region.className = 'expert-table-region';
+            region.tabIndex = 0;
+            const table = document.createElement('table');
+            const head = document.createElement('thead');
+            const headRow = document.createElement('tr');
+            result.table.headers.forEach(value => {
+                const cell = document.createElement('th');
+                cell.scope = 'col';
+                cell.textContent = value;
+                headRow.append(cell);
+            });
+            head.append(headRow);
+            const body = document.createElement('tbody');
+            result.table.rows.forEach(row => {
+                const tableRow = document.createElement('tr');
+                row.forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    tableRow.append(cell);
+                });
+                body.append(tableRow);
+            });
+            table.append(head, body);
+            region.append(table);
+            output.append(region);
+        }
+
+        if (result.caution) {
+            const caution = document.createElement('p');
+            caution.className = 'expert-caution';
+            caution.textContent = result.caution;
+            output.append(caution);
+        }
+
+        const actions = document.createElement('div');
+        actions.className = 'expert-result-actions';
+        const copy = document.createElement('button');
+        copy.type = 'button';
+        copy.className = 'secondary-action';
+        copy.textContent = language === 'en' ? 'Copy analysis' : 'Sao chép phân tích';
+        copy.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(resultToText(result));
+                copy.textContent = language === 'en' ? 'Copied' : 'Đã sao chép';
+            } catch (error) {
+                copy.textContent = language === 'en' ? 'Select and copy manually' : 'Hãy chọn và sao chép thủ công';
+            }
+        });
+        actions.append(copy);
+
+        if (result.download) {
+            const download = document.createElement('button');
+            download.type = 'button';
+            download.className = 'secondary-action';
+            download.textContent = result.download.label;
+            download.addEventListener('click', () => {
+                const blob = new Blob([result.download.content], { type: result.download.type || 'text/csv;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = result.download.filename;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+            });
+            actions.append(download);
+        }
+
+        const contact = document.createElement('a');
+        contact.className = 'primary-action';
+        const brief = (result.brief || resultToText(result)).slice(0, 1800);
+        contact.href = `lienhe.html?service=${encodeURIComponent(config.contactService)}&lang=${language}&brief=${encodeURIComponent(brief)}`;
+        contact.textContent = language === 'en' ? 'Confirm and discuss implementation' : 'Xác nhận và trao đổi triển khai';
+        actions.append(contact);
+        output.append(actions);
+    };
+
+    const applyLanguage = config => {
+        const language = getLanguage();
+        mount.querySelectorAll('select option[data-option-vi]').forEach(option => {
+            option.textContent = language === 'en' ? option.dataset.optionEn : option.dataset.optionVi;
+        });
+        mount.querySelectorAll('[data-placeholder-vi][data-placeholder-en]').forEach(field => {
+            field.placeholder = language === 'en' ? field.dataset.placeholderEn : field.dataset.placeholderVi;
+        });
+        document.title = `${language === 'en' ? config.title.en : config.title.vi} - Thuan Store`;
+    };
+
+    const mountExpert = config => {
+        mount.style.setProperty('--expert-color', config.color);
+        mount.innerHTML = `<section class="expert-intro">
+            <div>
+                <span class="expert-badge">${bilingual('AI CHUYÊN GIA · BETA', 'EXPERT AI · BETA')}</span>
+                <h1>${bilingual(config.title.vi, config.title.en)}</h1>
+                <p>${bilingual(config.summary.vi, config.summary.en)}</p>
+            </div>
+            <ol class="expert-flow" aria-label="Workflow">
+                <li><span>1</span>${bilingual('Nhập bối cảnh', 'Enter context')}</li>
+                <li><span>2</span>${bilingual('Nhận phân tích', 'Get analysis')}</li>
+                <li><span>3</span>${bilingual('Kiểm tra và dùng', 'Review and use')}</li>
+            </ol>
+        </section>
+        <div class="expert-workspace">
+            <form id="expertForm" class="expert-form">
+                <div class="expert-form-heading"><span>${bilingual('DỮ LIỆU ĐẦU VÀO', 'INPUT')}</span><h2>${bilingual(config.formTitle.vi, config.formTitle.en)}</h2><p>${bilingual(config.formSummary.vi, config.formSummary.en)}</p></div>
+                <div class="expert-field-grid">${config.fields.map(renderField).join('')}</div>
+                <p id="expertFormError" class="expert-form-error" role="alert"></p>
+                <div class="expert-form-actions">
+                    <button class="primary-action" type="submit">${bilingual(config.submit.vi, config.submit.en)}</button>
+                    <button id="expertExample" class="secondary-action" type="button">${bilingual('Điền dữ liệu mẫu', 'Use sample data')}</button>
+                    <button id="expertReset" class="text-action" type="reset">${bilingual('Làm lại', 'Reset')}</button>
+                </div>
+                <p class="expert-local-note">${bilingual('Phân tích chạy trực tiếp trên thiết bị. Dữ liệu nhập tại đây không được gửi lên máy chủ.', 'Analysis runs directly on your device. Data entered here is not sent to a server.')}</p>
+            </form>
+            <section id="expertOutput" class="expert-output" aria-live="polite" hidden>
+                <div class="expert-empty-state"><span>AI</span><h2>${bilingual('Kết quả sẽ xuất hiện tại đây', 'Your result will appear here')}</h2></div>
+            </section>
+        </div>`;
+
+        const form = document.getElementById('expertForm');
+        const output = document.getElementById('expertOutput');
+        const error = document.getElementById('expertFormError');
+        let lastValues = null;
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            error.textContent = '';
+            if (!form.checkValidity()) {
+                error.textContent = getLanguage() === 'en' ? 'Please complete the required fields.' : 'Vui lòng nhập đủ các trường bắt buộc.';
+                form.reportValidity();
+                return;
+            }
+            const values = readValues(form, config.fields);
+            const missingChoice = config.fields.find(field => field.type === 'multiselect' && field.required && !values[field.id].length);
+            if (missingChoice) {
+                error.textContent = getLanguage() === 'en' ? 'Please select at least one option.' : 'Vui lòng chọn ít nhất một lựa chọn.';
+                form.querySelector(`[data-field-id="${missingChoice.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            try {
+                lastValues = values;
+                createResult(config.analyze(values, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+                output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (analysisError) {
+                error.textContent = getLanguage() === 'en' ? 'The input could not be analyzed. Please review it and try again.' : 'Chưa thể phân tích dữ liệu này. Hãy kiểm tra và thử lại.';
+            }
+        });
+
+        document.getElementById('expertExample').addEventListener('click', () => {
+            setValues(form, config.fields, config.example);
+            form.requestSubmit();
+        });
+        form.addEventListener('reset', () => {
+            setTimeout(() => {
+                output.hidden = true;
+                output.innerHTML = '';
+                error.textContent = '';
+                lastValues = null;
+            });
+        });
+        window.addEventListener('thuanstore:languagechange', () => {
+            applyLanguage(config);
+            if (lastValues) createResult(config.analyze(lastValues, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+        });
+        applyLanguage(config);
+        if (window.location.hash === '#expertApp') setTimeout(() => mount.scrollIntoView({ block: 'start' }), 100);
+    };
+
+    window.ThuanExpert = { mount: mountExpert, normalize, number, formatNumber };
+})();
+</script>
+    <script data-thuanstore-inline="expert-video.js">
+(() => {
+    const industryOptions = [
+        ['mother-baby', 'Mẹ và bé', 'Mother and baby'],
+        ['retail', 'Bán lẻ', 'Retail'],
+        ['food', 'Ẩm thực', 'Food and dining'],
+        ['beauty', 'Làm đẹp', 'Beauty'],
+        ['education', 'Giáo dục', 'Education'],
+        ['b2b', 'Sản phẩm B2B', 'B2B products'],
+        ['service', 'Dịch vụ', 'Services'],
+        ['other', 'Ngành khác', 'Other']
+    ].map(([value, vi, en]) => ({ value, vi, en }));
+
+    const hookPatterns = {
+        'mother-baby': {
+            vi: ['Đừng chọn chỉ theo tên gọi, hãy kiểm tra 3 thông tin này trước.', 'Nếu đang phân vân giữa nhiều lựa chọn, bắt đầu từ độ tuổi và nhu cầu.', 'Một chi tiết trên nhãn sản phẩm mà cha mẹ thường bỏ qua.'],
+            en: ['Do not choose by product name alone; check these three details first.', 'If several options look similar, start with age and need.', 'One label detail parents often overlook.']
         },
-        seo: {
-            color: '#60a5fa',
-            vi: {
-                title: 'Nội dung và SEO',
-                summary: 'Xây nội dung theo nhu cầu tìm kiếm thật, giúp khách hiểu sản phẩm và tìm thấy doanh nghiệp dễ hơn.',
-                deliverables: ['Nghiên cứu từ khóa, đối thủ và ý định tìm kiếm.', 'Bản đồ nội dung cho website, sản phẩm và mạng xã hội.', 'Tối ưu nội dung trên trang, tìm kiếm tại địa phương và quy trình cập nhật.'],
-                outcome: 'Nội dung có hệ thống, dùng lại được và tạo lưu lượng bền vững.'
-            },
-            en: {
-                title: 'Content and SEO',
-                summary: 'Build content around real search demand so customers can understand products and find the business more easily.',
-                deliverables: ['Keyword, competitor, and search-intent research.', 'A content map for the website, products, and social channels.', 'On-page SEO, local SEO, and a repeatable publishing workflow.'],
-                outcome: 'Structured reusable content that supports sustainable traffic.'
-            }
+        food: {
+            vi: ['Món này được chuẩn bị như thế nào trước khi đến bàn?', 'Nếu lần đầu ghé quán, đây là cách chọn món dễ nhất.', 'Ba cảnh quay để biết một món có đáng thử hay không.'],
+            en: ['How is this dish prepared before it reaches the table?', 'First visit? Here is the easiest way to choose.', 'Three shots that show whether a dish is worth trying.']
         },
-        tiktok: {
-            color: '#f472b6',
-            vi: {
-                title: 'Video ngắn',
-                summary: 'Xây hệ thống video ngắn phù hợp sản phẩm, giọng thương hiệu và nguồn lực sản xuất thực tế.',
-                deliverables: ['Trụ cột nội dung và lịch đăng theo mục tiêu bán hàng.', 'Câu mở đầu, cách trình bày sản phẩm và lời kêu gọi hành động.', 'Mẫu quay dựng để đội ngũ có thể sản xuất đều đặn.'],
-                outcome: 'Một quy trình video rõ ràng thay vì các nội dung rời rạc.'
-            },
-            en: {
-                title: 'Short video',
-                summary: 'Build a short-video system that fits the product, brand voice, and realistic production capacity.',
-                deliverables: ['Content pillars and a sales-focused publishing calendar.', 'Hooks, product demonstrations, and calls to action.', 'Repeatable shooting and editing templates for the team.'],
-                outcome: 'A consistent video workflow instead of disconnected posts.'
-            }
+        beauty: {
+            vi: ['Trước khi đặt lịch, hãy hỏi rõ ba điều này.', 'Quy trình này phù hợp với ai và không phù hợp với ai?', 'Kết quả thực tế bắt đầu từ bước chuẩn bị này.'],
+            en: ['Ask these three questions before booking.', 'Who is this process suitable for, and who is it not?', 'Realistic results begin with this preparation step.']
         },
-        livestream: {
-            color: '#fb7185',
-            vi: {
-                title: 'Phát trực tiếp bán hàng',
-                summary: 'Chuẩn bị kịch bản, sản phẩm, ưu đãi và cách phối hợp để buổi phát trực tiếp rõ ràng, dễ theo dõi.',
-                deliverables: ['Kịch bản thời lượng, thứ tự sản phẩm và nhịp tương tác.', 'Nội dung chốt đơn, ưu đãi và xử lý câu hỏi thường gặp.', 'Thiết lập vận hành, phân vai và biểu mẫu đánh giá sau buổi phát.'],
-                outcome: 'Buổi phát trực tiếp có cấu trúc và có dữ liệu để cải thiện.'
-            },
-            en: {
-                title: 'Live selling',
-                summary: 'Prepare the script, products, offers, and team coordination for a clear and watchable live session.',
-                deliverables: ['Run of show, product order, and engagement rhythm.', 'Closing scripts, offers, and common-question handling.', 'Operating setup, team roles, and post-live review templates.'],
-                outcome: 'Structured live sessions with data for continuous improvement.'
-            }
+        b2b: {
+            vi: ['Một thông số nhỏ có thể làm thay đổi toàn bộ cách chọn sản phẩm.', 'Đây là cách đội bán hàng kiểm tra sản phẩm trước khi báo giá.', 'Ba câu hỏi kỹ thuật cần trả lời trước khi đặt hàng.'],
+            en: ['One specification can change the entire product choice.', 'How a sales team checks a product before quoting.', 'Three technical questions to answer before ordering.']
         },
-        marketplace: {
-            color: '#f59e0b',
-            vi: {
-                title: 'Sàn thương mại điện tử và Amazon',
-                summary: 'Chuẩn hóa gian hàng và nội dung sản phẩm cho sàn trong nước hoặc lộ trình bán hàng quốc tế.',
-                deliverables: ['Thiết lập danh mục, thuộc tính và quy chuẩn đăng sản phẩm.', 'Tối ưu tiêu đề, mô tả, từ khóa và hình ảnh trang sản phẩm.', 'Quy trình vận hành giá, khuyến mãi, đơn hàng và báo cáo.'],
-                outcome: 'Gian hàng nhất quán, dễ quản lý và sẵn sàng mở rộng.'
-            },
-            en: {
-                title: 'Marketplaces and Amazon',
-                summary: 'Standardize storefronts and product content for local marketplaces or an international selling roadmap.',
-                deliverables: ['Category, attribute, and product-listing standards.', 'Optimized titles, descriptions, keywords, and listing visuals.', 'Workflows for pricing, promotions, orders, and reporting.'],
-                outcome: 'A consistent manageable storefront ready to scale.'
-            }
-        },
-        ads: {
-            color: '#a78bfa',
-            vi: {
-                title: 'Quảng cáo số',
-                summary: 'Thiết lập quảng cáo theo mục tiêu, theo dõi chuyển đổi và tối ưu dựa trên dữ liệu thay vì cảm tính.',
-                deliverables: ['Kiểm tra mã theo dõi, sự kiện, liên kết và dữ liệu chuyển đổi.', 'Cấu trúc chiến dịch, nhóm đối tượng và kế hoạch nội dung quảng cáo.', 'Theo dõi chi phí, kết quả và đề xuất tối ưu định kỳ.'],
-                outcome: 'Biết ngân sách đang tạo ra tín hiệu bán hàng nào.'
-            },
-            en: {
-                title: 'Digital advertising',
-                summary: 'Set up goal-based advertising, conversion tracking, and data-led optimization.',
-                deliverables: ['Pixel, event, UTM, and conversion-data review.', 'Campaign structure, audiences, and ad-content plan.', 'Cost and result tracking with recurring optimization actions.'],
-                outcome: 'Understand which sales signals the advertising budget produces.'
-            }
-        },
-        analytics: {
-            color: '#2dd4bf',
-            vi: {
-                title: 'Chiến lược và đo lường',
-                summary: 'Xác định mục tiêu, hành trình khách hàng và chỉ số cần theo dõi trước khi mở rộng đội tiếp thị.',
-                deliverables: ['Mục tiêu, chân dung khách hàng và phễu bán hàng.', 'Bộ chỉ số theo từng kênh cùng bảng theo dõi dễ cập nhật.', 'Đánh giá kênh hiện tại và kế hoạch ưu tiên theo nguồn lực.'],
-                outcome: 'Đội ngũ biết việc nào cần làm trước và đo bằng chỉ số nào.'
-            },
-            en: {
-                title: 'Strategy and analytics',
-                summary: 'Define goals, the customer journey, and the metrics to track before scaling a marketing team.',
-                deliverables: ['Goals, customer profiles, and the sales funnel.', 'Channel KPIs with a maintainable reporting dashboard.', 'Current-channel review and a resource-based priority plan.'],
-                outcome: 'The team knows what to do first and how success will be measured.'
-            }
-        },
-        ai: {
-            color: '#34d399',
-            vi: {
-                title: 'AI cho nội dung và vận hành',
-                summary: 'Bắt đầu từ một công việc lặp lại có dữ liệu rõ, sau đó dùng AI để xử lý bản nháp nhanh hơn và vẫn có người kiểm tra trước khi sử dụng.',
-                deliverables: ['Chuẩn hóa danh sách sản phẩm, thuộc tính và nội dung nguồn để AI sử dụng đúng dữ liệu.', 'Tạo mẫu soạn mô tả sản phẩm, nội dung bán hàng và câu trả lời thường gặp để người dùng kiểm tra trước khi gửi.', 'Kết nối biểu mẫu và bảng dữ liệu để tổng hợp yêu cầu, nhắc chăm sóc khách hoặc chuẩn bị báo cáo.'],
-                outcome: 'Giảm thời gian nhập lại và soạn nháp, trong khi quyết định cuối cùng vẫn do người dùng kiểm tra.',
-                examples: ['Sale sản phẩm: tra dữ liệu, tóm tắt thông số và chuẩn bị nội dung gửi khách từ nguồn đã duyệt.', 'Cửa hàng: soạn câu trả lời cho các câu hỏi lặp lại và phân loại yêu cầu của khách.', 'Nhóm tiếp thị: chuyển nội dung sản phẩm thành phiên bản cho website, mạng xã hội hoặc video.'],
-                principle: 'Không bắt đầu bằng một hệ thống AI lớn. Chọn một việc lặp lại, đo thời gian trước và sau, rồi mới mở rộng.',
-                cta: 'Trao đổi một việc đang lặp lại'
-            },
-            en: {
-                title: 'AI for content and operations',
-                summary: 'Start with one repetitive task backed by clear data, then use AI to prepare drafts faster while keeping human review before use.',
-                deliverables: ['Standardize product lists, attributes, and source content so AI works from approved data.', 'Create reviewed templates for product descriptions, sales content, and recurring customer questions.', 'Connect forms and structured data to summarize requests, prepare follow-up reminders, or draft reports.'],
-                outcome: 'Reduce repeated entry and drafting time while keeping the final decision with the user.',
-                examples: ['Product sales: retrieve approved data, summarize specifications, and prepare customer-ready information.', 'Retail stores: draft answers to recurring questions and categorize customer requests.', 'Marketing teams: adapt product information for websites, social channels, or video scripts.'],
-                principle: 'Do not begin with a large AI system. Start with one repeatable task, measure time before and after, then expand.',
-                cta: 'Discuss one repetitive task'
-            }
+        default: {
+            vi: ['Nếu chỉ có 30 giây, đây là điều cần biết trước tiên.', 'Sai lầm thường gặp khi chọn giải pháp này.', 'Ba bước để đi từ nhu cầu đến lựa chọn phù hợp.'],
+            en: ['If you only have 30 seconds, start here.', 'A common mistake when choosing this solution.', 'Three steps from need to the right option.']
         }
     };
 
-    const serviceKey = document.body.dataset.service;
-    const service = catalog[serviceKey];
-    const mount = document.getElementById('serviceContent');
-    if (!service || !mount) return;
+    const goalCtas = {
+        awareness: { vi: 'Lưu video để kiểm tra lại khi cần.', en: 'Save this video for your next review.' },
+        engagement: { vi: 'Bạn đang quan tâm điều nào nhất? Hãy để lại câu hỏi.', en: 'Which point matters most to you? Leave a question.' },
+        leads: { vi: 'Gửi nhu cầu cụ thể để nhận danh sách cần chuẩn bị.', en: 'Send your specific need to receive a preparation checklist.' },
+        sales: { vi: 'Kiểm tra thông tin và tình trạng sản phẩm trước khi đặt.', en: 'Check the product details and availability before ordering.' }
+    };
+    const platformNames = { tiktok: 'TikTok', reels: 'Instagram/Facebook Reels', shorts: 'YouTube Shorts' };
 
-    const list = language => service[language].deliverables
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const examples = language => (service[language].examples || [])
-        .map(item => `<li>${item}</li>`)
-        .join('');
-    const hasExamples = Boolean(service.vi.examples && service.en.examples);
+    window.ThuanExpert.mount({
+        color: '#f472b6',
+        contactService: 'tiktok',
+        title: { vi: 'AI viết kịch bản video ngắn', en: 'AI short-video script writer' },
+        summary: {
+            vi: 'Tạo câu mở đầu, phân cảnh theo thời gian, lời thoại, chữ trên màn hình, cảnh cần quay và bước kiểm duyệt cho TikTok, Reels hoặc Shorts.',
+            en: 'Create hooks, timed scenes, voiceover, on-screen text, a shot list, and review steps for TikTok, Reels, or Shorts.'
+        },
+        formTitle: { vi: 'Chuẩn bị một video có thể quay', en: 'Prepare a video that can actually be filmed' },
+        formSummary: {
+            vi: 'Kịch bản được xây theo thời lượng và nguồn lực sản xuất, không chỉ tạo một đoạn quảng cáo chung chung.',
+            en: 'The script is built around duration and production resources, not a generic advertising paragraph.'
+        },
+        submit: { vi: 'Viết kịch bản và phân cảnh', en: 'Write script and shot plan' },
+        fields: [
+            { id: 'industry', type: 'select', required: true, label: { vi: 'Lĩnh vực', en: 'Industry' }, options: industryOptions },
+            { id: 'platform', type: 'select', required: true, label: { vi: 'Nền tảng chính', en: 'Primary platform' }, options: [
+                { value: 'tiktok', vi: 'TikTok', en: 'TikTok' },
+                { value: 'reels', vi: 'Facebook/Instagram Reels', en: 'Facebook/Instagram Reels' },
+                { value: 'shorts', vi: 'YouTube Shorts', en: 'YouTube Shorts' }
+            ] },
+            { id: 'subject', type: 'text', required: true, span: 2, label: { vi: 'Sản phẩm, dịch vụ hoặc chủ đề', en: 'Product, service, or topic' }, placeholder: { vi: 'Ví dụ: cách chọn sữa phù hợp theo độ tuổi', en: 'Example: choosing formula by age group' } },
+            { id: 'audience', type: 'text', required: true, span: 2, label: { vi: 'Người xem chính', en: 'Primary viewer' }, placeholder: { vi: 'Ví dụ: cha mẹ lần đầu mua sản phẩm cho trẻ nhỏ', en: 'Example: first-time parents buying for a young child' } },
+            { id: 'goal', type: 'select', required: true, label: { vi: 'Mục tiêu video', en: 'Video goal' }, options: [
+                { value: 'awareness', vi: 'Tăng nhận biết', en: 'Awareness' },
+                { value: 'engagement', vi: 'Tạo câu hỏi và tương tác', en: 'Questions and engagement' },
+                { value: 'leads', vi: 'Nhận tin nhắn hoặc yêu cầu', en: 'Messages or inquiries' },
+                { value: 'sales', vi: 'Hỗ trợ quyết định mua', en: 'Support a purchase decision' }
+            ] },
+            { id: 'duration', type: 'select', required: true, label: { vi: 'Thời lượng', en: 'Duration' }, options: [
+                { value: '15', vi: '15 giây', en: '15 seconds' },
+                { value: '30', vi: '30 giây', en: '30 seconds' },
+                { value: '45', vi: '45 giây', en: '45 seconds' },
+                { value: '60', vi: '60 giây', en: '60 seconds' }
+            ] },
+            { id: 'presenter', type: 'select', required: true, label: { vi: 'Cách xuất hiện', en: 'Presentation style' }, options: [
+                { value: 'owner', vi: 'Chủ cửa hàng nói trực tiếp', en: 'Owner speaks to camera' },
+                { value: 'staff', vi: 'Nhân viên hướng dẫn', en: 'Staff demonstration' },
+                { value: 'hands', vi: 'Chỉ quay tay và sản phẩm', en: 'Hands and product only' },
+                { value: 'voiceover', vi: 'Cảnh quay kèm lời đọc', en: 'Footage with voiceover' }
+            ] },
+            { id: 'assets', type: 'multiselect', required: true, span: 2, label: { vi: 'Tư liệu có thể quay', en: 'Available production assets' }, options: [
+                { value: 'product', vi: 'Sản phẩm thật', en: 'Physical product' },
+                { value: 'space', vi: 'Cửa hàng hoặc nơi làm việc', en: 'Store or workplace' },
+                { value: 'demo', vi: 'Có thể minh họa cách dùng', en: 'Can demonstrate use' },
+                { value: 'customer', vi: 'Có phản hồi khách đã được phép dùng', en: 'Approved customer feedback' },
+                { value: 'graphics', vi: 'Có hình ảnh hoặc tài liệu kỹ thuật', en: 'Visuals or technical material' }
+            ] },
+            { id: 'fact', type: 'textarea', required: true, span: 2, rows: 3, label: { vi: 'Dữ kiện bắt buộc phải đúng', en: 'Fact that must remain accurate' }, placeholder: { vi: 'Ví dụ: độ tuổi sử dụng, quy cách, nguồn gốc hoặc điều kiện ưu đãi', en: 'Example: age suitability, specification, origin, or offer conditions' } }
+        ],
+        example: {
+            industry: 'mother-baby', platform: 'tiktok', subject: 'Cách đọc thông tin độ tuổi trên sản phẩm sữa cho trẻ', audience: 'Cha mẹ lần đầu tìm hiểu sản phẩm cho trẻ nhỏ', goal: 'engagement', duration: '30', presenter: 'hands', assets: ['product', 'demo', 'graphics'], fact: 'Chỉ sử dụng thông tin độ tuổi và cách dùng được công bố trên nhãn sản phẩm; không đưa ra tư vấn y khoa.'
+        },
+        analyze(values, lang, helpers) {
+            const isEn = lang === 'en';
+            const duration = helpers.number(values.duration, 30);
+            const hookSet = hookPatterns[values.industry] || hookPatterns.default;
+            const hooks = hookSet[lang].map(hook => `${hook} ${isEn ? `Topic: ${values.subject}.` : `Chủ đề: ${values.subject}.`}`);
+            const cta = goalCtas[values.goal]?.[lang] || goalCtas.engagement[lang];
+            const sceneCount = duration <= 15 ? 4 : duration <= 30 ? 6 : duration <= 45 ? 7 : 8;
+            const segment = Math.max(2, Math.floor(duration / sceneCount));
+            const scenes = [];
+            for (let index = 0; index < sceneCount; index += 1) {
+                const start = index * segment;
+                const end = index === sceneCount - 1 ? duration : Math.min(duration, (index + 1) * segment);
+                let instruction;
+                if (index === 0) instruction = isEn ? `Show the problem immediately. Say: “${hooks[0]}”` : `Cho thấy vấn đề ngay lập tức. Nói: “${hooks[0]}”`;
+                else if (index === sceneCount - 1) instruction = isEn ? `Return to the product or person and use the CTA: “${cta}”` : `Trở lại sản phẩm hoặc người nói và dùng lời kêu gọi: “${cta}”`;
+                else if (index === 1) instruction = isEn ? `Name the viewer and situation: ${values.audience}.` : `Gọi đúng người xem và tình huống: ${values.audience}.`;
+                else if (index === 2) instruction = isEn ? `Show the first concrete proof or label detail. Keep this fact exact: ${values.fact}` : `Cho thấy bằng chứng hoặc chi tiết đầu tiên. Giữ nguyên dữ kiện: ${values.fact}`;
+                else if (index === 3) instruction = isEn ? `Demonstrate one practical step using the available assets.` : `Minh họa một bước thực tế bằng tư liệu đang có.`;
+                else instruction = isEn ? `Add one comparison, objection, or common customer question. Use a new camera angle.` : `Bổ sung một so sánh, băn khoăn hoặc câu hỏi thường gặp. Đổi góc máy.`;
+                scenes.push({ title: `${start}–${end}s`, text: instruction });
+            }
+            const assetNames = {
+                product: isEn ? 'close-up, label, packaging, scale' : 'cận cảnh, nhãn, bao bì, kích thước',
+                space: isEn ? 'wide shot, working area, service context' : 'toàn cảnh, khu vực làm việc, bối cảnh phục vụ',
+                demo: isEn ? 'hands, sequence, before/during/after use' : 'tay thao tác, trình tự, trước/trong/sau khi dùng',
+                customer: isEn ? 'approved quote, anonymized proof, context' : 'trích dẫn được phép, bằng chứng ẩn danh, bối cảnh',
+                graphics: isEn ? 'specification overlay, comparison, source note' : 'chữ thông số, bảng so sánh, ghi chú nguồn'
+            };
+            const shots = values.assets.map(value => ({
+                title: isEn ? value.toUpperCase() : value.toUpperCase(),
+                text: assetNames[value]
+            }));
+            const editing = isEn
+                ? ['Use a 9:16 vertical frame and keep critical text away from interface overlays.', 'Use one idea per text screen; keep each line short enough to read without pausing.', 'Cut when the information changes, not on every beat.', 'Add captions and review them manually, especially product names and numbers.', 'Use music only when it does not compete with speech or create licensing risk.']
+                : ['Dùng khung dọc 9:16 và giữ chữ quan trọng tránh vùng giao diện của nền tảng.', 'Mỗi màn hình chữ chỉ có một ý; câu đủ ngắn để đọc mà không cần dừng video.', 'Cắt cảnh khi thông tin thay đổi, không cắt chỉ vì nhịp nhạc.', 'Thêm phụ đề và kiểm tra thủ công, nhất là tên sản phẩm và con số.', 'Chỉ dùng nhạc khi không lấn lời nói và không tạo rủi ro bản quyền.'];
+            const safety = isEn
+                ? ['Compare every spoken claim with the approved source before publishing.', 'Do not use customer images, health claims, or guaranteed outcomes without the required consent and review.', 'State price, conditions, age suitability, availability, and validity clearly when relevant.', 'The first frame, caption, and landing destination must describe the same offer.']
+                : ['Đối chiếu mọi công dụng được nói với nguồn đã duyệt trước khi đăng.', 'Không dùng hình ảnh khách, nội dung sức khỏe hoặc lời hứa kết quả khi chưa có đồng ý và kiểm tra phù hợp.', 'Nêu rõ giá, điều kiện, độ tuổi, tình trạng hàng và thời hạn khi có liên quan.', 'Khung hình đầu, nội dung bài đăng và nơi khách được dẫn đến phải cùng một đề nghị.'];
 
-    mount.style.setProperty('--service-color', service.color);
-    mount.innerHTML = `
-        <div class="service-heading">
-            <span class="service-heading-icon">${icons[serviceKey]}</span>
-            <div>
-                <p class="service-kicker"><span data-lang="vi">DỊCH VỤ TRỰC TUYẾN</span><span data-lang="en">ONLINE SERVICE</span></p>
-                <h1 class="service-title"><span data-lang="vi">${service.vi.title}</span><span data-lang="en">${service.en.title}</span></h1>
-            </div>
-        </div>
-        <p class="service-summary"><span data-lang="vi">${service.vi.summary}</span><span data-lang="en">${service.en.summary}</span></p>
-        <div class="service-content">
-            <section>
-                <p class="section-label"><span data-lang="vi">NỘI DUNG TRIỂN KHAI</span><span data-lang="en">DELIVERABLES</span></p>
-                <ul class="service-list" data-lang="vi">${list('vi')}</ul>
-                <ul class="service-list" data-lang="en">${list('en')}</ul>
-            </section>
-            <aside class="service-result">
-                <strong><span data-lang="vi">KẾT QUẢ HƯỚNG TỚI</span><span data-lang="en">TARGET OUTCOME</span></strong>
-                <p><span data-lang="vi">${service.vi.outcome}</span><span data-lang="en">${service.en.outcome}</span></p>
-            </aside>
-        </div>
-        ${hasExamples ? `<div class="service-extra">
-            <section>
-                <p class="section-label"><span data-lang="vi">TÌNH HUỐNG PHÙ HỢP</span><span data-lang="en">SUITABLE USE CASES</span></p>
-                <ul class="service-example-list" data-lang="vi">${examples('vi')}</ul>
-                <ul class="service-example-list" data-lang="en">${examples('en')}</ul>
-            </section>
-            <aside class="service-principle">
-                <strong><span data-lang="vi">CÁCH BẮT ĐẦU</span><span data-lang="en">HOW TO START</span></strong>
-                <p><span data-lang="vi">${service.vi.principle}</span><span data-lang="en">${service.en.principle}</span></p>
-            </aside>
-        </div>` : ''}
-        <div class="service-actions">
-            <a class="primary-action" href="lienhe.html?service=${encodeURIComponent(serviceKey)}"><span data-lang="vi">${service.vi.cta || 'Nhận báo giá dịch vụ'}</span><span data-lang="en">${service.en.cta || 'Request a service quote'}</span></a>
-            <a class="secondary-action" href="index.html#solutionFinder"><span data-lang="vi">Xem giải pháp theo mô hình</span><span data-lang="en">Explore solutions by business type</span></a>
-        </div>`;
-
-    const language = window.ThuanStoreLanguage?.get?.() || document.documentElement.dataset.lang || 'vi';
-    document.title = `${service[language].title} - Thuận Store`;
-    window.addEventListener('thuanstore:languagechange', event => {
-        document.title = `${service[event.detail.language].title} - Thuận Store`;
+            return {
+                title: isEn ? `${duration}-second ${platformNames[values.platform]} production script` : `Kịch bản quay ${duration} giây cho ${platformNames[values.platform]}`,
+                summary: isEn
+                    ? `The video is designed for ${values.audience}, begins with a decision-relevant hook, and uses evidence around “${values.subject}” before asking for action.`
+                    : `Video hướng đến ${values.audience}, mở đầu bằng vấn đề liên quan quyết định và dùng bằng chứng quanh “${values.subject}” trước khi kêu gọi hành động.`,
+                metrics: [
+                    { label: isEn ? 'Duration' : 'Thời lượng', value: `${duration}s`, note: platformNames[values.platform] },
+                    { label: isEn ? 'Planned scenes' : 'Số phân cảnh', value: String(sceneCount), note: isEn ? 'Each scene has one information job' : 'Mỗi cảnh chỉ đảm nhiệm một ý' },
+                    { label: isEn ? 'Shoot estimate' : 'Thời gian quay dự kiến', value: isEn ? '45–90 minutes' : '45–90 phút', note: isEn ? 'Excludes complex locations or talent' : 'Chưa gồm bối cảnh hoặc nhân sự phức tạp' }
+                ],
+                sections: [
+                    { title: isEn ? 'Hook options' : 'Các câu mở đầu', items: hooks },
+                    { title: isEn ? 'Timed script and shot sequence' : 'Kịch bản và phân cảnh theo thời gian', items: scenes },
+                    { title: isEn ? 'Shot list from available assets' : 'Danh sách cảnh theo tư liệu đang có', items: shots },
+                    { title: isEn ? 'Editing specification' : 'Yêu cầu dựng video', items: editing },
+                    { title: isEn ? 'Accuracy and publishing review' : 'Kiểm tra độ chính xác trước khi đăng', items: safety }
+                ],
+                caution: isEn
+                    ? 'This is a production draft. A responsible person must verify product facts, consent, platform rules, and regulated claims before filming or publishing.'
+                    : 'Đây là bản nháp sản xuất. Người phụ trách phải kiểm tra dữ kiện sản phẩm, quyền sử dụng hình ảnh, quy định nền tảng và nội dung có kiểm soát trước khi quay hoặc đăng.',
+                brief: isEn
+                    ? `Short-video request\nPlatform: ${platformNames[values.platform]}\nTopic: ${values.subject}\nAudience: ${values.audience}\nDuration: ${duration}s\nStyle: ${values.presenter}`
+                    : `Yêu cầu video ngắn\nNền tảng: ${platformNames[values.platform]}\nChủ đề: ${values.subject}\nNgười xem: ${values.audience}\nThời lượng: ${duration} giây\nCách quay: ${values.presenter}`
+            };
+        }
     });
 })();
 </script>
