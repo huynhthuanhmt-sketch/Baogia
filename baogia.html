@@ -276,14 +276,20 @@
                 padding: 0;
             }
             .app-lang-btn {
-                min-width: 2.05rem;
-                height: 2.05rem;
-                border-radius: 999px;
+                display: grid;
+                min-width: 2.35rem;
+                height: 2.5rem;
+                grid-template-rows: 1rem 0.55rem;
+                place-content: center;
+                gap: 0.08rem;
+                border-radius: 0.5rem;
                 font-size: 0.66rem;
                 font-weight: 760;
                 letter-spacing: 0.02em;
                 transition: background 0.2s var(--ui-ease), color 0.2s var(--ui-ease), transform 0.2s var(--ui-ease);
             }
+            .app-language-switcher .language-flag { font-size: 0.95rem; line-height: 1; }
+            .app-language-switcher .language-code { font-size: 0.52rem; font-weight: 850; line-height: 1; }
             .app-lang-btn.is-active {
                 background: #f8fafc;
                 color: #0f172a;
@@ -1861,8 +1867,8 @@
                 padding: 0.14rem;
             }
             .landing-os .app-language-switcher.os-language-switcher .app-lang-btn {
-                min-width: 1.9rem;
-                height: 1.9rem;
+                min-width: 2.35rem;
+                height: 2.5rem;
                 color: rgba(226, 232, 240, 0.72);
             }
             .landing-os .app-language-switcher.os-language-switcher .app-lang-btn.is-active {
@@ -2332,6 +2338,13 @@
                 text-transform: none !important;
                 letter-spacing: 0 !important;
             }
+            #careerProfileModal .career-tool-symbol {
+                width: 5.4rem;
+                height: 5.4rem;
+                flex: 0 0 auto;
+                overflow: visible;
+                filter: drop-shadow(0 12px 20px rgba(2, 132, 199, 0.18));
+            }
             #careerProfileModal .career-profile-header p { color: #475569 !important; }
             #careerProfileModal #btnCloseCareerProfile {
                 background: #eef2f7 !important;
@@ -2583,6 +2596,10 @@
                     width: 3.65rem !important;
                     height: 3.65rem !important;
                     border-radius: 1rem !important;
+                }
+                #careerProfileModal .career-tool-symbol {
+                    width: 3.8rem;
+                    height: 3.8rem;
                 }
                 #careerProfileModal .career-profile-header h2 {
                     font-size: 1.12rem !important;
@@ -3688,6 +3705,84 @@
                 }
             }
 
+            /* Compact language control: flags stay visually free, with no boxed buttons. */
+            .landing-os .app-language-switcher.os-language-switcher,
+            .app-language-switcher.os-language-switcher {
+                gap: 0.14rem;
+                padding: 0;
+                border: 0;
+                border-radius: 0;
+                background: transparent;
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn,
+            .app-language-switcher.os-language-switcher .app-lang-btn {
+                position: relative;
+                min-width: 2.2rem;
+                width: 2.2rem;
+                height: 2.75rem;
+                border-radius: 0;
+                color: rgba(226, 232, 240, 0.62);
+                background: transparent;
+                box-shadow: none;
+                opacity: 0.68;
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn::after,
+            .app-language-switcher.os-language-switcher .app-lang-btn::after {
+                position: absolute;
+                right: 50%;
+                bottom: 0.18rem;
+                width: 0.9rem;
+                height: 2px;
+                border-radius: 999px;
+                background: #67e8f9;
+                content: "";
+                opacity: 0;
+                transform: translateX(50%) scaleX(0.55);
+                transition: opacity 180ms ease, transform 180ms ease;
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn.is-active,
+            .app-language-switcher.os-language-switcher .app-lang-btn.is-active {
+                color: #f8fafc;
+                background: transparent;
+                box-shadow: none;
+                opacity: 1;
+            }
+            .landing-os .app-language-switcher.os-language-switcher .app-lang-btn.is-active::after,
+            .app-language-switcher.os-language-switcher .app-lang-btn.is-active::after {
+                opacity: 1;
+                transform: translateX(50%) scaleX(1);
+            }
+            .app-language-switcher .language-flag { font-size: 1.05rem; }
+
+            @media (max-width: 640px) {
+                #searchModal {
+                    height: 100dvh;
+                    min-height: 0;
+                }
+                #searchModal > div:first-child > div:first-child {
+                    padding: max(0.75rem, env(safe-area-inset-top)) 0.75rem 0.6rem !important;
+                }
+                #searchModal #btnCloseSearch,
+                #searchModal #btnFinishSearch,
+                #searchModal .btn-toggle-search {
+                    min-height: 2.75rem;
+                }
+                #searchModal #searchInput {
+                    min-height: 3rem;
+                    font-size: 16px !important;
+                }
+                #searchModal #searchQuickHint {
+                    font-size: 0.75rem;
+                }
+                #searchModal #searchList {
+                    overscroll-behavior: contain;
+                    -webkit-overflow-scrolling: touch;
+                }
+                #searchModal #searchList article {
+                    padding: 0.75rem 1rem;
+                }
+            }
+
 	    </style>
         <style id="mobile-quote-tax-readability">
             @media (max-width: 640px) {
@@ -3888,6 +3983,52 @@
                     justify-content: space-between;
                 }
             }
+
+            /* Final mobile contract: prevent iOS zoom and keep every quote/tax control tappable. */
+            @media (max-width: 1024px) {
+                #screenMain input,
+                #screenMain textarea,
+                #screenMain select,
+                #quoteList .cart-input,
+                #quoteList .cart-input-text,
+                .tax-tool-select,
+                .tax-tool-money {
+                    min-height: 44px !important;
+                    font-size: 16px !important;
+                }
+
+                #btnResetQuote,
+                #btnCloseTaxCalculator,
+                .tax-tool-period span,
+                .tax-tool-submit,
+                .tax-tool-reset,
+                .tax-tool-suggest {
+                    min-width: 44px;
+                    min-height: 44px !important;
+                }
+            }
+
+            @media (max-height: 520px) and (orientation: landscape) {
+                .tax-tool-header {
+                    min-height: 56px;
+                    padding-top: max(0.45rem, env(safe-area-inset-top));
+                    padding-bottom: 0.45rem;
+                }
+
+                .tax-tool-close {
+                    top: max(0.35rem, env(safe-area-inset-top));
+                }
+
+                .tax-tool-field-label,
+                .tax-tool-field > label {
+                    font-size: 0.875rem;
+                }
+
+                .tax-tool-hint,
+                .tax-tool-rate-preview span {
+                    font-size: 0.78rem;
+                }
+            }
         </style>
 </head>
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
@@ -3986,7 +4127,7 @@
                 <div class="relative px-5 md:px-8 py-5 md:py-7">
                     <div class="flex items-start justify-between gap-4">
                         <div class="flex items-center gap-4 min-w-0">
-                            <img src="data:image/jpeg;base64,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" alt="Huỳnh Minh Thuận" loading="lazy" decoding="async" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-white/80 shadow-2xl shrink-0">
+                            <svg class="career-tool-symbol shrink-0" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="careerToolGradient" x1="18" y1="12" x2="80" y2="84" gradientUnits="userSpaceOnUse"><stop stop-color="#0284C7"/><stop offset="0.52" stop-color="#06B6D4"/><stop offset="1" stop-color="#16A34A"/></linearGradient></defs><path d="M24 10H56L72 26V76C72 81.5 67.5 86 62 86H24C18.5 86 14 81.5 14 76V20C14 14.5 18.5 10 24 10Z" stroke="url(#careerToolGradient)" stroke-width="4" stroke-linejoin="round"/><path d="M56 10V24C56 27.3 58.7 30 62 30H72" stroke="url(#careerToolGradient)" stroke-width="4" stroke-linejoin="round"/><path d="M27 39H54M27 50H47" stroke="#0F172A" stroke-opacity="0.72" stroke-width="4" stroke-linecap="round"/><path d="M31 70C39 60 49 75 59 62C65 54 71 59 79 48" stroke="url(#careerToolGradient)" stroke-width="4" stroke-linecap="round"/><circle cx="31" cy="70" r="5" fill="#0284C7"/><circle cx="59" cy="62" r="5" fill="#06B6D4"/><circle cx="79" cy="48" r="5" fill="#16A34A"/></svg>
                             <div class="min-w-0">
                                 <p class="text-[10px] font-black uppercase tracking-[0.18em] text-cyan-300"><span data-lang="en">Short Profile</span><span data-lang="vi">Hồ sơ ngắn</span></p>
                                 <h2 class="mt-1 text-2xl md:text-4xl font-black uppercase tracking-wide leading-tight">Huỳnh Minh Thuận</h2>
@@ -4063,7 +4204,7 @@
 
                         <section class="grid gap-5 lg:grid-cols-3">
                             <article class="resume-card resume-operator-card">
-                                <p class="resume-eyebrow"><span data-lang="en">Channel Growth</span><span data-lang="vi">Phát triển kênh</span></p>
+                                <p class="resume-eyebrow"><span data-lang="en">Channel Development</span><span data-lang="vi">Phát triển kênh</span></p>
                                 <h3 class="resume-section-title mt-2"><span data-lang="en">Works close to dealers and distributors.</span><span data-lang="vi">Làm sát đại lý và NPP.</span></h3>
                                 <p><span data-lang="en">Used to route work, sell-out pressure, price feedback, product introduction, and market reporting.</span><span data-lang="vi">Quen chăm tuyến, áp lực doanh số bán ra, phản hồi giá, giới thiệu sản phẩm và báo cáo thị trường.</span></p>
                             </article>
@@ -4180,7 +4321,7 @@
 
             <footer class="bg-white border-t border-slate-200 p-3 md:p-4 shrink-0">
                 <div class="flex flex-col md:flex-row gap-2 md:gap-3 md:items-center md:justify-between">
-                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Revenue-focused profile for Sales Operations, Channel Growth, Retail Tech, and product implementation roles.</span><span data-lang="vi">Hồ sơ hướng đến vận hành bán hàng, phát triển kênh, công nghệ bán lẻ và triển khai sản phẩm.</span></p>
+                    <p class="hidden md:block text-[12px] text-slate-500 font-bold text-center md:text-left"><span data-lang="en">Profile for Sales Operations, Channel Development, Retail Tech, and product implementation.</span><span data-lang="vi">Hồ sơ hướng đến vận hành bán hàng, phát triển kênh, công nghệ bán lẻ và triển khai sản phẩm.</span></p>
                     <button id="btnCareerProfileDone" class="bg-slate-900 text-white font-black px-5 py-3 rounded-2xl md:rounded-xl text-sm active:scale-95 transition-transform"><span data-lang="en">Close profile</span><span data-lang="vi">Đóng hồ sơ</span></button>
                 </div>
             </footer>
@@ -4380,10 +4521,10 @@
     </div>
 
     <!-- MODAL LÀM MỚI BÁO GIÁ -->
-    <div id="confirmResetModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4">
+    <div id="confirmResetModal" class="fixed inset-0 bg-slate-950/80 z-[2000] hidden items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0 px-4" role="dialog" aria-modal="true" aria-labelledby="confirmResetTitle">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mb-4 mx-auto"><svg class="w-6 h-6 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg></div>
-            <h3 class="text-lg font-black text-slate-900 mb-2 text-center uppercase tracking-wide"><span data-lang="vi">Bắt đầu lại</span><span data-lang="en">Start over</span></h3>
+            <h3 id="confirmResetTitle" class="text-lg font-black text-slate-900 mb-2 text-center uppercase tracking-wide"><span data-lang="vi">Bắt đầu lại</span><span data-lang="en">Start over</span></h3>
             <p class="text-xs text-slate-500 mb-6 font-medium text-center leading-relaxed"><span data-lang="vi">Báo giá và thông tin khách hàng hiện tại sẽ được xóa để bạn tạo mới.</span><span data-lang="en">The current quote and customer details will be cleared so you can start a new one.</span></p>
             <div class="flex gap-3"><button id="btnCancelReset" class="flex-1 py-3 rounded-xl text-xs font-black text-slate-600 bg-slate-100 active:scale-95"><span data-lang="vi">Hủy</span><span data-lang="en">Cancel</span></button><button id="btnConfirmResetAction" class="flex-1 py-3 rounded-xl text-xs font-black text-white bg-rose-500 active:scale-95 shadow-md"><span data-lang="vi">Xác nhận</span><span data-lang="en">Confirm</span></button></div>
         </div>
@@ -4431,8 +4572,8 @@
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A8.5 8.5 0 1111.21 3 6.7 6.7 0 0021 12.79z"></path></svg>
                     </button>
                     <nav id="appLanguageSwitcher" class="app-language-switcher os-language-switcher" aria-label="Ngôn ngữ ứng dụng">
-                        <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
-                        <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+                        <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true" data-label-vi="Tiếng Việt" data-label-en="Vietnamese" aria-label="Tiếng Việt" title="Tiếng Việt"><span class="language-flag" aria-hidden="true">🇻🇳</span><span class="language-code">VI</span></button>
+                        <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false" data-label-vi="Tiếng Anh" data-label-en="English" aria-label="Tiếng Anh" title="Tiếng Anh"><span class="language-flag" aria-hidden="true">🇬🇧</span><span class="language-code">EN</span></button>
                     </nav>
                     <a class="store-os-top-cta" href="#store-os-start"><span data-lang="vi">Tạo báo giá</span><span data-lang="en">Create quote</span></a>
                     <details id="storeOsMenu" class="store-os-menu">
@@ -4448,8 +4589,8 @@
                             <div class="store-os-menu-lang">
                                 <span><span data-lang="vi">Ngôn ngữ</span><span data-lang="en">Language</span></span>
                                 <nav class="app-language-switcher os-language-switcher" aria-label="Ngôn ngữ ứng dụng">
-                                    <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true">VI</button>
-                                    <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false">EN</button>
+                                    <button type="button" class="app-lang-btn is-active" data-app-lang="vi" aria-pressed="true" data-label-vi="Tiếng Việt" data-label-en="Vietnamese" aria-label="Tiếng Việt" title="Tiếng Việt"><span class="language-flag" aria-hidden="true">🇻🇳</span><span class="language-code">VI</span></button>
+                                    <button type="button" class="app-lang-btn" data-app-lang="en" aria-pressed="false" data-label-vi="Tiếng Anh" data-label-en="English" aria-label="Tiếng Anh" title="Tiếng Anh"><span class="language-flag" aria-hidden="true">🇬🇧</span><span class="language-code">EN</span></button>
                                 </nav>
                             </div>
                         </div>
@@ -5153,10 +5294,11 @@
                         <div class="font-black text-slate-900 uppercase text-sm">TÌM SẢN PHẨM</div>
                         <button id="btnFinishSearch" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs uppercase shadow-md">XONG (<span id="cartBadge">0</span>)</button>
                     </div>
-                    <div class="relative mb-3">
-                        <input type="text" id="searchInput" placeholder="Gõ mã hoặc tên SP..." class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:bg-white transition-colors">
+                    <div class="relative mb-2">
+                        <input type="text" id="searchInput" placeholder="Ví dụ: 20 cb 20A" enterkeyhint="done" autocomplete="off" autocapitalize="off" spellcheck="false" class="w-full bg-slate-50 border border-slate-300 rounded-xl pl-11 py-3 text-sm font-bold outline-none focus:border-blue-500 focus:bg-white transition-colors">
                         <svg class="w-5 h-5 text-slate-400 absolute left-4 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
+                    <p id="searchQuickHint" class="hidden mb-2 px-1 text-[11px] leading-snug font-bold text-blue-700" aria-live="polite"></p>
                     <div class="flex items-center justify-between gap-2 overflow-x-auto hide-scrollbar pb-1">
                         <div class="flex gap-2 shrink-0">
                             <button id="btnSortCycle" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-white text-slate-500 border border-slate-200 flex items-center gap-1 shadow-sm">
@@ -6001,7 +6143,7 @@
                 "Tiêu đề tài liệu...": "Document title...",
                 "Tên người báo giá...": "Sender name...",
                 "Số điện thoại...": "Phone number...",
-                "Gõ mã hoặc tên SP...": "Enter SKU or product name...",
+                "Ví dụ: 20 cb 20A": "Example: 20 cb 20A",
                 "Chia sẻ tính năng bạn mong muốn hoặc khó khăn gặp phải...": "Share a feature request or workflow issue...",
                 "Tên SP *": "Product name *",
                 "Giá Bìa *": "List price *",
@@ -9025,7 +9167,7 @@ led=>LED
             manualAdd: { modal: document.getElementById('manualAddModal'), btnOpen: document.getElementById('btnOpenManualAdd'), btnClose: document.getElementById('btnCancelManual'), btnConfirm: document.getElementById('btnConfirmManual'), name: document.getElementById('manualName'), price: document.getElementById('manualPrice'), unit: document.getElementById('manualUnit'), code: document.getElementById('manualCode') },
             setup: { btnStart: document.getElementById('btnStartApp'), btnStartText: document.getElementById('btnStartText'), btnCloseSetup: document.getElementById('btnCloseSetup'), fileIn: document.getElementById('fileInput'), fileName: document.getElementById('fileName'), mapping: document.getElementById('mappingSection'), mapCode: document.getElementById('mapCode'), mapName: document.getElementById('mapName'), mapUnit: document.getElementById('mapUnit'), mapPrice: document.getElementById('mapPrice'), btnConfirm: document.getElementById('btnConfirmMapping'), warehouseListSection: document.getElementById('warehouseListSection'), warehouseBadges: document.getElementById('warehouseBadges'), btnClearAllData: document.getElementById('btnClearAllData'), btnRestoreSample: document.getElementById('btnRestoreDefaultSample'), totalProductCount: document.getElementById('totalProductCount'), warehouseNameInput: document.getElementById('warehouseNameInput'), btnStartFromSetup: document.getElementById('btnStartFromSetup') },
             main: { custName: document.getElementById('customerName'), senderName: document.getElementById('senderName'), senderPhone: document.getElementById('senderPhone'), promoNote: document.getElementById('promoNoteInput'), quoteList: document.getElementById('quoteList'), itemCount: document.getElementById('itemCountBadge'), btnBackToHome: document.getElementById('btnBackToHome'), quickPromoRow: document.getElementById('quickPromoButtons'), btnOpenSetupManager: document.getElementById('btnOpenSetupManager'), btnResetQuote: document.getElementById('btnResetQuote'), btnOpenSearch: document.getElementById('btnOpenSearch'), btnToggleView: document.getElementById('btnToggleView') },
-            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, 
+            search: { modal: document.getElementById('searchModal'), btnClose: document.getElementById('btnCloseSearch'), btnFinish: document.getElementById('btnFinishSearch'), input: document.getElementById('searchInput'), hint: document.getElementById('searchQuickHint'), list: document.getElementById('searchList'), badge: document.getElementById('cartBadge'), warehouseFilters: document.getElementById('warehouseFilters'), btnSortCycle: document.getElementById('btnSortCycle') }, 
             footer: { bar: document.getElementById('bottomFooter'), sumOrig: document.getElementById('summaryTotalOriginal'), sumDisc: document.getElementById('summaryTotalDiscount'), sumFinal: document.getElementById('summaryTotalFinal'), btnExport: document.getElementById('btnExportMenu'), orderAlert: document.getElementById('orderPromoAlert') },
             export: { modal: document.getElementById('exportModal'), btnClose: document.getElementById('btnCloseExport'), btnExcel: document.getElementById('btnActionExcel'), btnPDF: document.getElementById('btnActionPDF'), btnPrint: document.getElementById('btnActionPrint'), btnImage: document.getElementById('btnActionImage'), loading: document.getElementById('exportLoading'), guide: document.getElementById('exportGuide'), msgBox: document.getElementById('smartMsgText'), btnCopyMsg: document.getElementById('btnCopySmartMsg'), imageModal: document.getElementById('imageResultModal'), btnCloseImage: document.getElementById('btnCloseImageResult'), finalImg: document.getElementById('finalGeneratedImage'), btnExportRestart: document.getElementById('btnExportRestart'), btnDownloadImage: document.getElementById('btnDownloadImage') },
             confirmDelete: { modal: document.getElementById('confirmDeleteModal'), btnCancel: document.getElementById('btnCancelDelete'), btnConfirm: document.getElementById('btnConfirmDeleteAction') },
@@ -10634,9 +10776,35 @@ led=>LED
             if (window.AppI18n) AppI18n.apply(btn);
         };
 
+        const parseSearchRequest = () => {
+            const rawTokens = DOM.search.input.value.trim().split(/\s+/).filter(Boolean);
+            let qty = null;
+            if (rawTokens.length > 1 && /^\d{1,6}$/.test(rawTokens[0])) {
+                qty = Math.min(999999, Math.max(1, Number.parseInt(rawTokens.shift(), 10)));
+            }
+            const terms = Utils.normString(rawTokens.join(' ')).split(/\s+/).filter(Boolean);
+            return { qty, terms };
+        };
+
+        const updateSearchQuickHint = (request, filtered) => {
+            if (!DOM.search.hint) return;
+            if (!request.qty || filtered.length === 0) {
+                DOM.search.hint.textContent = '';
+                DOM.search.hint.classList.add('hidden');
+                return;
+            }
+            const productName = ProductLanguage.name(filtered[0]);
+            const isEn = window.AppI18n && AppI18n.get() === 'en';
+            DOM.search.hint.textContent = isEn
+                ? `Press Enter to add ${request.qty} × ${productName}`
+                : `Nhấn Enter để thêm ${request.qty} × ${productName}`;
+            DOM.search.hint.classList.remove('hidden');
+        };
+        
         const applyFiltersAndSearch = () => {
             if (!DOM.search.modal.classList.contains('active')) return;
-            const terms = Utils.normString(DOM.search.input.value.trim()).split(/\s+/).filter(t => t.length > 0);
+            const request = parseSearchRequest();
+            const terms = request.terms;
             let filtered = AppState.get('productDB'); const sortState = AppState.get('fluctuationSort');
             if (AppState.get('currentFilterWarehouse') !== 'All') filtered = filtered.filter(p => p.warehouse === AppState.get('currentFilterWarehouse'));
             if (sortState === 'inc') { filtered = filtered.filter(p => (Utils.getIncreaseDecreaseInfo(p.unit) || {}).type === 'tăng'); } 
@@ -10649,14 +10817,51 @@ led=>LED
             if (sortState === 'inc') { filtered.sort((a,b) => { return (Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value - (Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value; }); } 
             else if (sortState === 'dec') { filtered.sort((a,b) => { return Math.abs((Utils.getIncreaseDecreaseInfo(b.unit) || {value:0}).value) - Math.abs((Utils.getIncreaseDecreaseInfo(a.unit) || {value:0}).value); }); }
 
+            updateSearchQuickHint(request, filtered);
             AppState.set('filteredProducts', filtered, true); AppState.set('displayCount', 50, true); renderSearchList();
         };
 
-        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); if (window.AppI18n) AppI18n.apply(DOM.search.modal); };
-        const closeSearch = () => DOM.search.modal.classList.remove('active');
+        const openSearch = () => { DOM.search.modal.classList.add('active'); DOM.search.input.value = ''; AppState.set('currentFilterWarehouse', 'All', true); AppState.set('fluctuationSort', 'normal', true); updateSortUI(); renderWarehouseFilters(); applyFiltersAndSearch(); if (window.AppI18n) AppI18n.apply(DOM.search.modal); DOM.search.input.focus({ preventScroll: true }); };
+        const closeSearch = () => { DOM.search.input.blur(); DOM.search.modal.classList.remove('active'); };
         DOM.search.btnClose.addEventListener('click', closeSearch); DOM.search.btnFinish.addEventListener('click', closeSearch);
         DOM.main.btnOpenSearch.addEventListener('click', openSearch);
         let searchTimeout; DOM.search.input.addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(applyFiltersAndSearch, 250); });
+
+        DOM.search.input.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            const request = parseSearchRequest();
+            if (!request.qty) return;
+            event.preventDefault();
+            const product = AppState.get('filteredProducts')[0];
+            if (!product) {
+                Utils.showToast(window.AppI18n && AppI18n.get() === 'en' ? 'No matching product found.' : 'Không tìm thấy sản phẩm phù hợp.');
+                return;
+            }
+
+            const cart = AppState.get('cart');
+            let item = cart.find(entry => entry.productId === product.id);
+            if (item) {
+                item.qty = request.qty;
+                PromoLogic.checkAndApplyToItem(item);
+            } else {
+                const defs = AppState.get('defaults');
+                let finalBase = defs.baseDiscount; let finalKm1 = defs.km1; let finalKm2 = defs.km2;
+                let finalKmTien = defs.kmTien; let finalKmTienType = defs.kmTienType;
+                if (product.fallbackDiscount !== undefined && product.fallbackDiscount > 0) {
+                    finalBase = product.fallbackDiscount; finalKm1 = 0; finalKm2 = 0; finalKmTien = 0;
+                }
+                item = { id: Utils.generateId(), productId: product.id, code: product.code, name: product.name, nameVi: product.nameVi, nameEn: product.nameEn, isDefaultSample: product.isDefaultSample, unit: product.unit, originalPrice: product.price, qty: request.qty, baseDiscount: finalBase, km1: finalKm1, km2: finalKm2, kmTien: finalKmTien, kmTienType: finalKmTienType, note: '', lastAutoStr: '', warehouse: product.warehouse, appliedPromoId: null };
+                ProductLanguage.enrichCartItem(item, product);
+                PromoLogic.checkAndApplyToItem(item);
+                cart.push(item);
+            }
+            AppState.set('cart', cart);
+            closeSearch();
+            const productName = ProductLanguage.name(product);
+            Utils.showToast(window.AppI18n && AppI18n.get() === 'en'
+                ? `Added ${request.qty} × ${productName}`
+                : `Đã thêm ${request.qty} × ${productName}`);
+        });
 
         DOM.search.list.addEventListener('click', (e) => {
             const btnLoadMore = e.target.closest('#btnLoadMore'); if (btnLoadMore) { AppState.set('displayCount', AppState.get('displayCount') + 50, true); renderSearchList(); return; }
@@ -10713,6 +10918,13 @@ led=>LED
                     <button data-pid="${safeProductId}" class="btn-toggle-search ${btnClass} px-5 py-2 rounded-xl text-xs font-bold shrink-0 active:scale-95 transition-transform">${btnText}</button>
                 </article>`;
             }).join('');
+
+            if (itemsToRender.length === 0) {
+                html = `<div class="px-5 py-12 text-center">
+                    <p class="text-sm font-bold text-slate-700"><span data-lang="vi">Không tìm thấy sản phẩm</span><span data-lang="en">No products found</span></p>
+                    <p class="mt-1 text-xs text-slate-500"><span data-lang="vi">Thử tên hoặc mã sản phẩm ngắn hơn.</span><span data-lang="en">Try a shorter product name or SKU.</span></p>
+                </div>`;
+            }
             
             if (count < filtered.length) { html += `<div class="p-4 flex justify-center bg-slate-50"><button id="btnLoadMore" class="px-6 py-2 bg-blue-100 text-blue-700 font-bold rounded-full text-xs uppercase shadow-sm">Hiển thị thêm (${count}/${filtered.length})</button></div>`; }
             DOM.search.list.innerHTML = html;

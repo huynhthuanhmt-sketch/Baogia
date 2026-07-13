@@ -14,8 +14,141 @@
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; background: #f1f5f9; -webkit-font-smoothing: antialiased; }
+        .route-sitebar {
+            position: sticky;
+            z-index: 100;
+            top: 0;
+            display: flex;
+            min-height: 4rem;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: max(0.6rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.6rem max(1rem, env(safe-area-inset-left));
+            border-bottom: 1px solid rgba(103, 232, 249, 0.16);
+            color: #e8f5f7;
+            background: #041022;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+        }
+        .route-home {
+            display: inline-flex;
+            min-width: 0;
+            align-items: center;
+            gap: 0.65rem;
+            color: inherit;
+            text-decoration: none;
+        }
+        .route-home svg { width: 1.35rem; height: 1.35rem; flex: 0 0 auto; color: #67e8f9; }
+        .route-brand { display: grid; gap: 0.12rem; min-width: 0; }
+        .route-brand strong { font-size: 0.95rem; line-height: 1.2; }
+        .route-brand small { overflow: hidden; color: #8fa4ba; font-size: 0.68rem; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+        .route-site-actions { display: flex; flex: 0 0 auto; align-items: center; gap: 0.55rem; }
+        .route-language {
+            display: inline-flex;
+            gap: 0.14rem;
+            border: 0;
+            background: transparent;
+        }
+        .route-language button {
+            position: relative;
+            display: grid;
+            min-width: 2.2rem;
+            min-height: 2.75rem;
+            grid-template-rows: 1rem 0.55rem;
+            place-content: center;
+            gap: 0.08rem;
+            border: 0;
+            color: #94a3b8;
+            background: transparent;
+            font: inherit;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            opacity: 0.62;
+            transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
+        }
+        .route-language button::after {
+            position: absolute;
+            right: 50%;
+            bottom: 0.18rem;
+            width: 0.9rem;
+            height: 2px;
+            border-radius: 999px;
+            background: #67e8f9;
+            content: "";
+            opacity: 0;
+            transform: translateX(50%) scaleX(0.55);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+        .route-language .language-flag { font-size: 1.05rem; line-height: 1; }
+        .route-language .language-code { font-size: 0.52rem; font-weight: 850; line-height: 1; }
+        .route-language button[aria-pressed="true"] { color: #f8fafc; background: transparent; opacity: 1; }
+        .route-language button[aria-pressed="true"]::after { opacity: 1; transform: translateX(50%) scaleX(1); }
+        .route-close {
+            display: grid;
+            width: 2.75rem;
+            height: 2.75rem;
+            place-items: center;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            border-radius: 7px;
+            color: #dbe7f3;
+            background: rgba(15, 23, 42, 0.62);
+        }
+        .route-close svg { width: 1.1rem; height: 1.1rem; }
+        .route-dependency-error { margin: 2rem auto; max-width: 42rem; padding: 1.2rem; color: #991b1b; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; font: 600 1rem/1.55 system-ui, sans-serif; }
+
+        @media (max-width: 767px) {
+            .route-sitebar { min-height: 4.25rem; gap: 0.55rem; }
+            .route-brand small { max-width: 9.5rem; font-size: 0.72rem; }
+            #root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+            #root textarea,
+            #root select { min-height: 44px !important; font-size: 16px !important; }
+            #root button,
+            #root summary,
+            #root a { min-height: 44px; }
+            #root .route-step-nav {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1px !important;
+                overflow: visible !important;
+                padding: 1px !important;
+            }
+            #root .route-step-button {
+                min-width: 0;
+                min-height: 48px;
+                padding: 0.62rem 0.7rem !important;
+                font-size: 0.875rem !important;
+                line-height: 1.3;
+                text-align: left;
+                white-space: normal !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .route-brand strong { font-size: 0.86rem; }
+            .route-brand small { max-width: 7.5rem; }
+            .route-site-actions { gap: 0.35rem; }
+            .route-language { grid-template-columns: repeat(2, 2.35rem); }
+            .route-language button { min-width: 2.35rem; }
+        }
+    </style>
 </head>
 <body>
+    <header class="route-sitebar">
+        <a id="routeHomeLink" class="route-home" href="index.html" aria-label="Về trang chủ Thuận Store">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v10h13V10M9 20v-6h6v6" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span class="route-brand"><strong>THUẬN STORE</strong><small data-route-copy="toolTitle">Lịch đi tuyến &amp; chăm sóc khách hàng</small></span>
+        </a>
+        <div class="route-site-actions">
+            <nav class="route-language" aria-label="Ngôn ngữ">
+                <button type="button" data-route-lang="vi" aria-pressed="true" data-label-vi="Tiếng Việt" data-label-en="Vietnamese" aria-label="Tiếng Việt" title="Tiếng Việt"><span class="language-flag" aria-hidden="true">🇻🇳</span><span class="language-code">VI</span></button>
+                <button type="button" data-route-lang="en" aria-pressed="false" data-label-vi="Tiếng Anh" data-label-en="English" aria-label="Tiếng Anh" title="Tiếng Anh"><span class="language-flag" aria-hidden="true">🇬🇧</span><span class="language-code">EN</span></button>
+            </nav>
+            <a id="routeCloseLink" class="route-close" href="index.html" aria-label="Đóng và về trang chủ" title="Đóng và về trang chủ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke-width="2" stroke-linecap="round"></path></svg></a>
+        </div>
+    </header>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -955,9 +1088,8 @@
 
             const getQuoteBaseUrl = () => {
                 let baseUrl = String(settings.quoteBaseUrl || '').trim();
-                if (!baseUrl && /^https?:$/i.test(window.location.protocol)) baseUrl = new URL('baogia.html', window.location.href).href;
-                if (!baseUrl) return '';
-                if (!/^https?:\/\//i.test(baseUrl)) baseUrl = `https://${baseUrl}`;
+                if (!baseUrl) baseUrl = new URL('baogia.html', window.location.href).href;
+                if (!/^(https?:|file:)/i.test(baseUrl)) baseUrl = `https://${baseUrl}`;
                 return baseUrl;
             };
 
@@ -976,6 +1108,7 @@
                         if (address) url.searchParams.set('diachi', address);
                     }
                     url.searchParams.set('nguon', 'lichdituyen');
+                    url.searchParams.set('lang', document.documentElement.lang === 'en' ? 'en' : 'vi');
                     window.open(url.toString(), '_blank', 'noopener,noreferrer');
                 } catch (error) {
                     setStatus({ type: 'error', text: 'Đường dẫn tạo báo giá chưa hợp lệ.' });
@@ -1685,14 +1818,14 @@
                                 </button>
                             </div>
 
-                            <div className="flex bg-slate-50 p-2 overflow-x-auto w-full border-b border-slate-100 justify-start md:justify-center gap-1">
-                                <button onClick={() => setActiveTab('upload')} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'upload' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'}`}>1. Nạp File</button>
-                                <button onClick={() => setActiveTab('categorize')} disabled={customers.length === 0} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'categorize' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>2. Phân Loại</button>
-                                <button onClick={() => setActiveTab('analysis')} disabled={customers.length === 0} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all relative ${activeTab === 'analysis' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>
+                            <div className="route-step-nav flex bg-slate-50 p-2 overflow-x-auto w-full border-b border-slate-100 justify-start md:justify-center gap-1">
+                                <button onClick={() => setActiveTab('upload')} className={`route-step-button whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'upload' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'}`}>1. Nạp File</button>
+                                <button onClick={() => setActiveTab('categorize')} disabled={customers.length === 0} className={`route-step-button whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'categorize' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>2. Phân Loại</button>
+                                <button onClick={() => setActiveTab('analysis')} disabled={customers.length === 0} className={`route-step-button whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all relative ${activeTab === 'analysis' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>
                                     3. Đánh Giá & Phân Tích
                                     {customers.length > 0 && kpiStatus !== 'good' && activeTab !== 'analysis' && <span className="absolute top-1 right-2 w-2.5 h-2.5 bg-orange-500 rounded-full animate-ping"></span>}
                                 </button>
-                                <button onClick={() => { if(!fullMonthSchedule) executeRoutingForMonth(); setActiveTab('schedule'); }} disabled={customers.length === 0} className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'schedule' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>4. Lịch Chăm Sóc</button>
+                                <button onClick={() => { if(!fullMonthSchedule) executeRoutingForMonth(); setActiveTab('schedule'); }} disabled={customers.length === 0} className={`route-step-button whitespace-nowrap px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'schedule' ? 'bg-blue-600 shadow text-white' : 'text-slate-600 hover:bg-slate-200'} disabled:opacity-40`}>4. Lịch Chăm Sóc</button>
                             </div>
                             <div className={`px-4 py-2.5 text-[13px] font-bold flex items-center gap-2 ${status.type === 'error' ? 'bg-red-50 text-red-700' : status.type === 'loading' ? 'bg-blue-50 text-blue-700' : 'bg-emerald-50 text-emerald-700'}`}>
                                 {status.type === 'error' ? <i className="fa-solid fa-circle-exclamation"></i> : status.type === 'loading' ? <i className="fa-solid fa-rotate animate-spin"></i> : <i className="fa-solid fa-circle-check"></i>} {status.text}
@@ -2170,6 +2303,271 @@
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+    </script>
+    <script>
+        (() => {
+            const STORAGE_KEY = 'thuanstore_app_lang_v1';
+            const exact = new Map([
+                ['Lịch đi tuyến & chăm sóc khách hàng', 'Route planning & customer care'],
+                ['Lịch Chăm Sóc Khách Hàng', 'Customer Care Route Planner'],
+                ['Quản lý Tuyến & Doanh số', 'Route & Sales Management'],
+                ['BẢNG BÁO GIÁ', 'QUOTE BUILDER'],
+                ['Báo Giá', 'Quote'],
+                ['Báo giá', 'Quote'],
+                ['1. Nạp File', '1. Import'],
+                ['2. Phân Loại', '2. Classify'],
+                ['3. Đánh Giá & Phân Tích', '3. Review & Analyze'],
+                ['4. Lịch Chăm Sóc', '4. Visit Schedule'],
+                ['Thiết lập ứng dụng & chỉ tiêu tuyến', 'Application & route targets'],
+                ['Tên ứng dụng', 'Application name'],
+                ['Tên nhân viên kinh doanh', 'Sales representative'],
+                ['Tỉnh / Thành phố', 'Province / City'],
+                ['Nhà phân phối', 'Distributor'],
+                ['Link bảng báo giá (trống = cùng domain)', 'Quote Builder URL (blank = same domain)'],
+                ['Tối thiểu đại lý/ngày', 'Minimum accounts/day'],
+                ['Tối đa đại lý/ngày', 'Maximum accounts/day'],
+                ['Tối đa km/ngày', 'Maximum km/day'],
+                ['Phát hiện dữ liệu làm dở!', 'Saved work found'],
+                ['TIẾP TỤC LÀM VIỆC', 'CONTINUE WORKING'],
+                ['Bỏ qua & Nạp file mới', 'Skip & import new files'],
+                ['QUÉT CHỌN CÁC FILE .XLSX CẦN GỘP', 'SELECT .XLSX FILES TO MERGE'],
+                ['Bản nâng cấp: Loại trừ thông minh doanh số file năm cũ.', 'Automatically excludes sales from older-year files.'],
+                ['Thêm thủ công', 'Add manually'],
+                ['Up file bổ sung', 'Import more files'],
+                ['Điền Thông Tin Khách Mới', 'Enter new customer details'],
+                ['Tên khách hàng (*)', 'Customer name (*)'],
+                ['Số điện thoại', 'Phone number'],
+                ['Xã/Phường', 'Ward / Commune'],
+                ['Huyện/Thị trấn', 'District / Town'],
+                ['Lưu', 'Save'],
+                ['Hủy', 'Cancel'],
+                ['Hủy bỏ', 'Cancel'],
+                ['Tổng KH', 'Total accounts'],
+                ['Trọng điểm', 'Priority'],
+                ['Tìm tên, SĐT, Huyện...', 'Search name, phone, or district...'],
+                ['Đã nạp DS Ngày:', 'Imported daily sales:'],
+                ['Trọng Điểm', 'Priority'],
+                ['Tương Tác', 'Engagement'],
+                ['Duy Trì', 'Maintenance'],
+                ['Sửa Thông Tin & DS', 'Edit details & sales'],
+                ['Xóa KH', 'Delete customer'],
+                ['Thông tin cơ bản', 'Basic information'],
+                ['Tên KH', 'Customer name'],
+                ['SĐT', 'Phone'],
+                ['Doanh số 12 Tháng', '12-month sales'],
+                ['Lưu Thay Đổi', 'Save changes'],
+                ['HIỆU SUẤT TUYẾN (KPI)', 'ROUTE PERFORMANCE (KPI)'],
+                ['Công suất dự kiến', 'Projected capacity'],
+                ['CẦN BÙ', 'NEEDS CAPACITY'],
+                ['QUÁ TẢI', 'OVER CAPACITY'],
+                ['ĐẠT', 'ON TARGET'],
+                ['lượt/tháng', 'visits/month'],
+                ['Mục tiêu:', 'Target:'],
+                ['Tỉ lệ Định vị (GPS)', 'GPS coverage'],
+                ['Hành Động Nhanh', 'Recommended action'],
+                ['Tiến độ', 'Status'],
+                ['TỐI ƯU', 'OPTIMAL'],
+                ['Chưa đủ đại lý.', 'Not enough accounts.'],
+                ['Quá tải.', 'Over capacity.'],
+                ['Cần giảm tải', 'Reduce the load'],
+                ['* Nhớ cập nhật GPS trên đường đi.', '* Update GPS while visiting accounts.'],
+                ['DS Trọng Điểm', 'Priority sales'],
+                ['DS Duy Trì', 'Maintenance sales'],
+                ['DS Tương Tác', 'Engagement sales'],
+                ['Tổng DS Tháng', 'Monthly sales'],
+                ['Tiến Độ Quý', 'Quarter progress'],
+                ['Tiến Độ Năm', 'Year progress'],
+                ['Chỉ tiêu Quý', 'Quarter target'],
+                ['Chỉ tiêu Năm', 'Year target'],
+                ['Quy Mô Tập KH', 'Account portfolio'],
+                ['Trọng Điểm (3 lần)', 'Priority (3 visits)'],
+                ['Duy Trì (2 lần)', 'Maintenance (2 visits)'],
+                ['Tương Tác (1 lần)', 'Engagement (1 visit)'],
+                ['Phân Bổ Mật Độ', 'Territory distribution'],
+                ['Chưa rõ', 'Unassigned'],
+                ['TẠO LỊCH ĐI TUYẾN CHUẨN', 'BUILD ROUTE SCHEDULE'],
+                ['Điểm Xuất Phát (Nhà)', 'Starting point (home)'],
+                ['Chưa thiết lập (Dùng để tính km lộ trình)', 'Not set (required for route distance)'],
+                ['Cập nhật', 'Update'],
+                ['Định vị', 'Set location'],
+                ['Tháng', 'Month'],
+                ['XUẤT BÁO CÁO EXCEL', 'EXPORT EXCEL REPORT'],
+                ['Tìm tên khách hàng trong lịch...', 'Search customers in the schedule...'],
+                ['Lộ Trình', 'Optimize route'],
+                ['Không tìm thấy khách hàng.', 'No customers found.'],
+                ['Cách nhà:', 'From home:'],
+                ['Chưa có tọa độ', 'No GPS location'],
+                ['Xóa', 'Delete'],
+                ['Xác nhận xóa?', 'Confirm deletion?'],
+                ['Bạn có chắc chắn muốn xóa khách hàng', 'Are you sure you want to delete customer'],
+                ['khỏi hệ thống?', 'from the system?'],
+                ['Xóa ngay', 'Delete now'],
+                ['Nhập DS (VNĐ)...', 'Enter sales (VND)...'],
+                ['Về trang chủ Thuận Store', 'Back to Thuan Store home'],
+                ['Đóng và về trang chủ', 'Close and return home'],
+                ['Ngôn ngữ', 'Language'],
+                ['Đang khởi động hệ thống...', 'Starting the application...'],
+                ['Hệ thống đã sẵn sàng.', 'The application is ready.'],
+                ['Phát hiện phiên làm việc cũ.', 'A saved session was found.'],
+                ['Đang khôi phục dữ liệu...', 'Restoring saved data...'],
+                ['Đã khôi phục thành công!', 'Saved data restored.'],
+                ['Vui lòng nhập tên khách hàng.', 'Enter a customer name.'],
+                ['Thêm khách hàng thành công.', 'Customer added.'],
+                ['Đã cập nhật thông tin thành công!', 'Customer details updated.'],
+                ['Trình duyệt không hỗ trợ định vị.', 'This browser does not support geolocation.'],
+                ['Không lấy được GPS. Hãy cấp quyền vị trí và thử lại ở nơi thoáng.', 'GPS was unavailable. Allow location access and retry in an open area.'],
+                ['Không có KH nào có tọa độ để tối ưu. Hãy bấm GPS cho KH.', 'No customer has GPS data. Add GPS before optimizing.'],
+                ['Vui lòng thiết lập Vị trí Nhà trước.', 'Set the home location first.'],
+                ['Đang kết nối vệ tinh tính toán lộ trình thực tế...', 'Calculating the route...'],
+                ['Đã dùng thuật toán dự phòng do mạng yếu!', 'Used fallback routing because the network was unavailable.'],
+                ['Đã tự động tối ưu theo đường thực tế!', 'Route optimized using road distance.'],
+                ['Đang đọc và phân tích dữ liệu đa tầng...', 'Reading and validating imported data...'],
+                ['Lỗi tải thư viện. Vui lòng kiểm tra mạng.', 'A required library could not load. Check the network.'],
+                ['Thư viện chưa sẵn sàng.', 'The required library is not ready.'],
+                ['Lỗi đọc file:', 'File read error:'],
+                ['Không tìm thấy bảng "TÊN KHÁCH HÀNG" trong file.', 'The "CUSTOMER NAME" table was not found in the file.'],
+                ['Đang xuất báo cáo (Sắp xong)...', 'Exporting the report...'],
+                ['Xuất file thành công.', 'File exported.'],
+                ['Đã xuất file.', 'File exported.'],
+                ['Đã lưu/chia sẻ file thành công!', 'File saved or shared.'],
+                ['Lỗi thư viện xuất Excel.', 'The Excel export library is unavailable.'],
+                ['Lỗi kết xuất file:', 'Export error:'],
+                ['Chưa cấu hình link bảng báo giá. Hãy nhập link trong phần Thiết lập ứng dụng.', 'The Quote Builder URL is not configured. Enter it in Application settings.'],
+                ['Đường dẫn tạo báo giá chưa hợp lệ.', 'The Quote Builder URL is invalid.']
+            ]);
+            const reverse = new Map([...exact].map(([vi, en]) => [en, vi]));
+            let language = 'vi';
+            let applying = false;
+
+            const initialLanguage = () => {
+                const query = new URLSearchParams(location.search).get('lang');
+                if (query === 'vi' || query === 'en') return query;
+                try {
+                    const stored = localStorage.getItem(STORAGE_KEY);
+                    if (stored === 'vi' || stored === 'en') return stored;
+                } catch (error) { /* Storage can be blocked for local files. */ }
+                return 'vi';
+            };
+
+            const dynamicToEnglish = value => value
+                .replace(/^Tổng Hợp Doanh Số Tháng (\d+)$/, 'Sales summary - Month $1')
+                .replace(/^TUẦN (\d+)$/, 'WEEK $1')
+                .replace(/^Thứ (\d+)$/, 'Day $1')
+                .replace(/^\(Ngày (\d+)\/(\d+)\)$/, '(Date $1/$2)')
+                .replace(/^(\d+)\/(\d+) Đại lý$/, '$1/$2 accounts')
+                .replace(/^T\.(\d+) \(Nay\)$/, 'M.$1 (Current)')
+                .replace(/^T\.(\d+)$/, 'M.$1')
+                .replace(/^Đã lưu định vị\s*(.*)$/, 'Location saved $1')
+                .replace(/^Đã nạp DS Ngày:\s*(.*)$/, 'Imported daily sales: $1')
+                .replace(/^Mục tiêu:\s*(.*) lượt \((.*) ngày làm việc\)\.$/, 'Target: $1 visits ($2 working days).')
+                .replace(/^Đã chuyển sang Tháng (\d+) và làm sạch DS Ngày cũ\.$/, 'Switched to Month $1 and cleared old daily sales.')
+                .replace(/^Đã chuyển sang năm (\d+) và làm sạch lịch\/doanh số của năm cũ\.$/, 'Switched to $1 and cleared the previous schedule and sales.')
+                .replace(/^Nạp thành công (\d+) KH từ file\.$/, 'Imported $1 customers.')
+                .replace(/^Đã khôi phục (\d+) lượt trong lịch tuyến\.$/, 'Restored $1 scheduled visits.')
+                .replace(/^Có (\d+) điểm GPS còn yếu, nên cập nhật lại để tuyến chuẩn hơn\.$/, '$1 GPS locations need a more accurate update.')
+                .replace(/^Chỉ tiêu Quý (\d+):$/, 'Quarter $1 target:')
+                .replace(/^Tiến độ Quý (\d+):$/, 'Quarter $1 progress:')
+                .replace(/^Ngày (.+)$/, 'Date $1');
+
+            const dynamicToVietnamese = value => value
+                .replace(/^Sales summary - Month (\d+)$/, 'Tổng Hợp Doanh Số Tháng $1')
+                .replace(/^WEEK (\d+)$/, 'TUẦN $1')
+                .replace(/^Day (\d+)$/, 'Thứ $1')
+                .replace(/^\(Date (\d+)\/(\d+)\)$/, '(Ngày $1/$2)')
+                .replace(/^(\d+)\/(\d+) accounts$/, '$1/$2 Đại lý')
+                .replace(/^M\.(\d+) \(Current\)$/, 'T.$1 (Nay)')
+                .replace(/^M\.(\d+)$/, 'T.$1')
+                .replace(/^Location saved\s*(.*)$/, 'Đã lưu định vị $1')
+                .replace(/^Imported daily sales:\s*(.*)$/, 'Đã nạp DS Ngày: $1')
+                .replace(/^Target:\s*(.*) visits \((.*) working days\)\.$/, 'Mục tiêu: $1 lượt ($2 ngày làm việc).')
+                .replace(/^Date (.+)$/, 'Ngày $1');
+
+            const translate = value => {
+                if (!value || !value.trim()) return value;
+                const leading = value.match(/^\s*/)?.[0] || '';
+                const trailing = value.match(/\s*$/)?.[0] || '';
+                const core = value.trim();
+                const translated = language === 'en'
+                    ? dynamicToEnglish(exact.get(core) || core)
+                    : dynamicToVietnamese(reverse.get(core) || core);
+                return `${leading}${translated}${trailing}`;
+            };
+
+            const applyLanguage = root => {
+                if (!root || applying) return;
+                applying = true;
+                document.documentElement.lang = language;
+                document.title = language === 'en' ? 'Route Planner - Thuan Store' : 'Lịch Đi Tuyến - Thuận Store';
+                document.querySelector('meta[name="description"]')?.setAttribute('content', language === 'en'
+                    ? 'Route planning and customer care for field sales teams - a Thuan Store tool.'
+                    : 'Lịch đi tuyến và chăm sóc khách hàng dành cho nhân viên bán hàng thị trường - một công cụ của Thuận Store.');
+                const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                    acceptNode(node) {
+                        if (!node.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
+                        if (node.parentElement?.closest('script, style, noscript')) return NodeFilter.FILTER_REJECT;
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                });
+                const nodes = [];
+                while (walker.nextNode()) nodes.push(walker.currentNode);
+                nodes.forEach(node => {
+                    const next = translate(node.nodeValue);
+                    if (next !== node.nodeValue) node.nodeValue = next;
+                });
+                root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(element => {
+                    ['placeholder', 'title', 'aria-label'].forEach(attribute => {
+                        if (!element.hasAttribute(attribute)) return;
+                        const value = element.getAttribute(attribute);
+                        const next = translate(value);
+                        if (next !== value) element.setAttribute(attribute, next);
+                    });
+                });
+                document.querySelectorAll('[data-route-lang]').forEach(button => {
+                    button.setAttribute('aria-pressed', String(button.dataset.routeLang === language));
+                    const label = language === 'en' ? button.dataset.labelEn : button.dataset.labelVi;
+                    if (label) {
+                        button.setAttribute('aria-label', label);
+                        button.setAttribute('title', label);
+                    }
+                });
+                const home = document.getElementById('routeHomeLink');
+                const close = document.getElementById('routeCloseLink');
+                [home, close].forEach(link => {
+                    if (!link) return;
+                    const url = new URL('index.html', location.href);
+                    url.searchParams.set('lang', language);
+                    link.href = url.href;
+                });
+                applying = false;
+            };
+
+            const setLanguage = next => {
+                language = next === 'en' ? 'en' : 'vi';
+                try { localStorage.setItem(STORAGE_KEY, language); } catch (error) { /* Storage can be blocked for local files. */ }
+                applyLanguage(document.body);
+            };
+
+            language = initialLanguage();
+            document.querySelectorAll('[data-route-lang]').forEach(button => button.addEventListener('click', () => setLanguage(button.dataset.routeLang)));
+            const observer = new MutationObserver(records => {
+                if (applying) return;
+                const roots = new Set();
+                records.forEach(record => {
+                    if (record.type === 'characterData') roots.add(record.target.parentElement);
+                    record.addedNodes.forEach(node => roots.add(node.nodeType === Node.TEXT_NODE ? node.parentElement : node));
+                });
+                roots.forEach(root => applyLanguage(root));
+            });
+            observer.observe(document.getElementById('root'), { childList: true, subtree: true, characterData: true });
+            applyLanguage(document.body);
+
+            window.setTimeout(() => {
+                const root = document.getElementById('root');
+                if (root?.childElementCount || (window.React && window.ReactDOM && window.Babel)) return;
+                root.innerHTML = `<div class="route-dependency-error">${language === 'en' ? 'The Route Planner could not load its required libraries. Check the connection and reload this page.' : 'Công cụ Lịch đi tuyến chưa tải được thư viện cần thiết. Hãy kiểm tra kết nối và tải lại trang.'}</div>`;
+            }, 8000);
+            window.RouteLanguage = { get: () => language, set: setLanguage };
+        })();
     </script>
 </body>
 </html>
