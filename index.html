@@ -2262,6 +2262,152 @@ html[data-lang="en"] [data-lang="vi"] {
     .footer-action {
         justify-content: flex-start;
     }
+
+    /* Mobile reading and touch targets follow the 16px input / 44px control baseline. */
+    .mobile-intro p,
+    .solution-heading > p {
+        font-size: 0.98rem;
+        line-height: 1.62;
+    }
+
+    .solution-tabs button {
+        min-height: 3.5rem;
+        padding: 0.72rem 0.78rem;
+        font-size: 0.88rem;
+        line-height: 1.4;
+    }
+
+    .solution-panel-intro h3 {
+        font-size: 1.42rem;
+        line-height: 1.3;
+    }
+
+    .solution-panel-intro div > p:last-child {
+        font-size: 0.95rem;
+        line-height: 1.62;
+    }
+
+    .solution-step h4 {
+        font-size: 1rem;
+    }
+
+    .solution-step p {
+        font-size: 0.92rem;
+        line-height: 1.62;
+    }
+
+    .solution-links a {
+        min-height: 2.75rem;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.84rem;
+        line-height: 1.35;
+    }
+
+    .tool-group h4 {
+        min-height: 2.75rem;
+        font-size: 0.82rem;
+    }
+
+    .tool-live-grid .tool-tile-meta strong,
+    .tool-ai-grid .tool-tile-meta strong {
+        font-size: 0.92rem;
+        line-height: 1.35;
+    }
+
+    .tool-tile-meta small {
+        font-size: 0.68rem;
+    }
+
+    .needs-advisor-invite strong {
+        font-size: 0.9rem;
+    }
+
+    .needs-advisor-invite-action {
+        min-height: 2.75rem;
+        font-size: 0.84rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: auto;
+        max-height: none;
+        overflow: visible;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame::after,
+    body.showcase-native-controls .ai-showcase-sound,
+    body.showcase-native-controls .ai-showcase-progress {
+        display: none;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame video {
+        order: 1;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        border-radius: 6px;
+        object-fit: contain;
+        background: #020617;
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.34);
+    }
+
+    body.showcase-native-controls .ai-showcase-context {
+        position: static;
+        order: 2;
+        gap: 0.34rem;
+        max-width: none;
+        padding: 0.9rem 0.1rem 0.25rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-context strong {
+        color: #f8fafc;
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    body.showcase-native-controls .ai-showcase-context > span {
+        display: block;
+        color: #9fb0c3;
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+
+    body.showcase-native-controls .ai-showcase-minimal-controls {
+        position: static;
+        order: 4;
+        min-height: 2.75rem;
+        padding: 0 0.1rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-count {
+        font-size: 0.78rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-toggle {
+        position: static;
+        order: 3;
+        display: inline-flex;
+        width: 100%;
+        min-height: 3rem;
+        height: auto;
+        gap: 0.55rem;
+        margin-top: 0.6rem;
+        border-radius: 6px;
+        color: #eaf9fc;
+        background: rgba(12, 45, 63, 0.7);
+    }
+
+    body.showcase-native-controls .ai-showcase-toggle-text {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.92rem;
+        font-weight: 720;
+        line-height: 1.3;
+    }
 }
 
 @media (max-width: 980px) and (max-height: 520px) and (orientation: landscape) {
@@ -2758,6 +2904,48 @@ body.needs-advisor-open {
     margin-top: 0.5rem;
 }
 
+.needs-result-plan {
+    margin-top: 1.15rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.needs-result-plan > span {
+    color: #82c4d3;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.needs-result-plan ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    counter-reset: solution-step;
+    list-style: none;
+}
+
+.needs-result-plan li {
+    position: relative;
+    min-width: 0;
+    padding: 2.1rem 0.75rem 0 0;
+    color: #b7c7d8;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    counter-increment: solution-step;
+}
+
+.needs-result-plan li::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #6ee7b7;
+    font-size: 0.78rem;
+    font-weight: 720;
+    content: "0" counter(solution-step);
+}
+
 .needs-result-route {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -2819,6 +3007,24 @@ body.needs-advisor-open {
 .needs-result-budget strong,
 .needs-result-budget small {
     display: block;
+}
+
+.needs-result-scope-note {
+    margin: 0.85rem 0 0;
+    color: #91a2b8;
+    font-size: 0.8rem;
+    line-height: 1.55;
+}
+
+.needs-result-scope-note strong {
+    color: #cfe9ed;
+    font-weight: 680;
+}
+
+.needs-result-scope-note span {
+    display: block;
+    margin-top: 0.3rem;
+    color: #71839c;
 }
 
 .needs-result-budget span {
@@ -2900,6 +3106,20 @@ body.needs-advisor-open {
 
     .needs-result-route {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .needs-result-plan ol {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.15rem;
+    }
+
+    .needs-result-plan li {
+        min-height: 3.4rem;
+        padding: 0.65rem 0 0.65rem 2.35rem;
+    }
+
+    .needs-result-plan li::before {
+        top: 0.65rem;
     }
 
     .needs-result-route a {
@@ -3817,6 +4037,19 @@ body.needs-advisor-open {
 
 .ai-showcase-stage.is-paused .ai-showcase-play-icon {
     display: block;
+}
+
+.ai-showcase-toggle-text {
+    display: none;
+}
+
+.ai-showcase-toggle-play-label,
+.ai-showcase-stage.is-paused .ai-showcase-toggle-pause-label {
+    display: none;
+}
+
+.ai-showcase-stage.is-paused .ai-showcase-toggle-play-label {
+    display: inline;
 }
 
 .ai-showcase-progress {
@@ -5136,6 +5369,139 @@ body.needs-advisor-open {
     font-size: 0.78rem;
 }
 
+/* Industry advice connects each business context to a measurable commercial scope. */
+.solution-advisory {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.65fr);
+    margin-top: 1.4rem;
+    border-top: 1px solid rgba(130, 196, 211, 0.2);
+    border-bottom: 1px solid rgba(130, 196, 211, 0.16);
+    background: rgba(7, 20, 38, 0.68);
+}
+
+.solution-advisory-main,
+.solution-advisory-scope {
+    min-width: 0;
+    padding: 1.25rem 1.35rem;
+}
+
+.solution-advisory-scope {
+    border-left: 1px solid rgba(130, 196, 211, 0.16);
+    background: rgba(3, 13, 28, 0.48);
+}
+
+.solution-advisory-label {
+    display: block;
+    color: #82c4d3;
+    font-size: 0.72rem;
+    font-weight: 760;
+    line-height: 1.35;
+}
+
+.solution-advisory-outcome {
+    display: block;
+    margin-top: 0.45rem;
+    color: #f2f7fb;
+    font-size: 1.08rem;
+    font-weight: 760;
+    line-height: 1.4;
+}
+
+.solution-advisory-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1.05rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.solution-advisory-list li {
+    min-width: 0;
+    padding-left: 0.8rem;
+    border-left: 2px solid rgba(130, 196, 211, 0.32);
+    color: #b7c5d5;
+    font-size: 0.78rem;
+    line-height: 1.55;
+}
+
+.solution-advisory-scope dl {
+    display: grid;
+    gap: 0.58rem;
+    margin: 0.72rem 0 0;
+}
+
+.solution-advisory-scope dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+    gap: 0.75rem;
+    align-items: baseline;
+}
+
+.solution-advisory-scope dt {
+    color: #8293a8;
+    font-size: 0.72rem;
+    font-weight: 620;
+}
+
+.solution-advisory-scope dd {
+    margin: 0;
+    color: #e8f5f7;
+    font-size: 0.84rem;
+    font-weight: 760;
+    text-align: right;
+}
+
+.solution-advisory-scope p {
+    margin: 0.9rem 0 0;
+    padding-top: 0.78rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.13);
+    color: #c5d2df;
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+.solution-advisory-scope small {
+    display: block;
+    margin-top: 0.48rem;
+    color: #718399;
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+.solution-panel-action {
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.65rem;
+}
+
+.solution-panel-action .primary-action,
+.solution-advisor-action {
+    min-height: 2.85rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+.solution-advisor-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.62rem 0.86rem;
+    border: 1px solid rgba(130, 196, 211, 0.34);
+    color: #d8eef2;
+    background: transparent;
+    font-weight: 720;
+    cursor: pointer;
+}
+
+.solution-advisor-action:hover,
+.solution-advisor-action:focus-visible {
+    color: #ffffff;
+    border-color: rgba(130, 196, 211, 0.72);
+    outline: none;
+    background: rgba(12, 45, 63, 0.46);
+}
+
 .available-tools {
     margin-top: 3.5rem;
 }
@@ -5402,6 +5768,64 @@ body.needs-advisor-open .needs-advisor-invite {
         width: 100%;
     }
 
+    .solution-advisory {
+        grid-template-columns: minmax(0, 1fr);
+        margin-top: 1.1rem;
+    }
+
+    .solution-advisory-main,
+    .solution-advisory-scope {
+        padding: 1rem 0;
+    }
+
+    .solution-advisory-scope {
+        border-top: 1px solid rgba(130, 196, 211, 0.16);
+        border-left: 0;
+        background: transparent;
+    }
+
+    .solution-advisory-label {
+        font-size: 0.78rem;
+    }
+
+    .solution-advisory-outcome {
+        font-size: 1rem;
+    }
+
+    .solution-advisory-list {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.72rem;
+    }
+
+    .solution-advisory-list li {
+        font-size: 0.91rem;
+    }
+
+    .solution-advisory-scope dt,
+    .solution-advisory-scope p {
+        font-size: 0.88rem;
+    }
+
+    .solution-advisory-scope dd {
+        font-size: 0.94rem;
+    }
+
+    .solution-advisory-scope small {
+        font-size: 0.78rem;
+    }
+
+    .solution-panel-action {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .solution-panel-action .primary-action,
+    .solution-advisor-action {
+        width: 100%;
+        min-height: 3rem;
+        font-size: 0.9rem;
+    }
+
     .ai-showcase-context {
         right: 0.7rem;
         bottom: 3.25rem;
@@ -5482,6 +5906,145 @@ body.needs-advisor-open .needs-advisor-invite {
 
     .needs-advisor-invite {
         transition: none;
+    }
+}
+
+/* Final mobile type scale: keep later component overrides from shrinking core copy. */
+@media (max-width: 720px) {
+    .mobile-intro p,
+    .solution-heading > p {
+        font-size: 0.98rem;
+        line-height: 1.62;
+    }
+
+    .solution-tabs button {
+        min-height: 3.5rem;
+        padding: 0.72rem 0.78rem;
+        font-size: 0.88rem;
+        line-height: 1.4;
+    }
+
+    .solution-panel-intro h3 {
+        font-size: 1.42rem;
+        line-height: 1.3;
+    }
+
+    .solution-panel-intro div > p:last-child {
+        font-size: 0.95rem;
+        line-height: 1.62;
+    }
+
+    .solution-step h4 {
+        font-size: 1rem;
+    }
+
+    .solution-step p {
+        font-size: 0.92rem;
+        line-height: 1.62;
+    }
+
+    .solution-links a {
+        min-height: 2.75rem;
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.84rem;
+        line-height: 1.35;
+    }
+
+    .tool-group h4 {
+        min-height: 2.75rem;
+        font-size: 0.82rem;
+    }
+
+    .tool-live-grid .tool-tile-meta strong,
+    .tool-ai-grid .tool-tile-meta strong {
+        font-size: 0.92rem;
+        line-height: 1.35;
+    }
+
+    .tool-tile-meta small {
+        font-size: 0.68rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame {
+        display: flex;
+        flex-direction: column;
+        aspect-ratio: auto;
+        max-height: none;
+        overflow: visible;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame::after,
+    body.showcase-native-controls .ai-showcase-sound,
+    body.showcase-native-controls .ai-showcase-progress {
+        display: none;
+    }
+
+    body.showcase-native-controls .ai-showcase-frame video {
+        order: 1;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        border-radius: 6px;
+        object-fit: contain;
+        background: #020617;
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.34);
+    }
+
+    body.showcase-native-controls .ai-showcase-context {
+        position: static;
+        order: 2;
+        gap: 0.34rem;
+        max-width: none;
+        padding: 0.9rem 0.1rem 0.25rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-context strong {
+        color: #f8fafc;
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    body.showcase-native-controls .ai-showcase-context > span {
+        display: block;
+        color: #9fb0c3;
+        font-size: 0.92rem;
+        line-height: 1.55;
+    }
+
+    body.showcase-native-controls .ai-showcase-minimal-controls {
+        position: static;
+        order: 4;
+        min-height: 2.75rem;
+        padding: 0 0.1rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-count {
+        font-size: 0.82rem;
+    }
+
+    body.showcase-native-controls .ai-showcase-toggle {
+        position: static;
+        order: 3;
+        display: inline-flex;
+        width: 100%;
+        min-height: 3rem;
+        height: auto;
+        gap: 0.55rem;
+        margin-top: 0.6rem;
+        border-radius: 6px;
+        color: #eaf9fc;
+        background: rgba(12, 45, 63, 0.7);
+    }
+
+    body.showcase-native-controls .ai-showcase-toggle-text {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.92rem;
+        font-weight: 720;
+        line-height: 1.3;
     }
 }
     </style>
@@ -5681,8 +6244,7 @@ body.needs-advisor-open .needs-advisor-invite {
             <div class="ai-showcase-inner">
                 <div class="ai-showcase-stage" data-ai-showcase>
                     <div class="ai-showcase-frame">
-                        <span class="ai-showcase-badge"><span data-lang="vi">DEMO CÓ THUYẾT MINH · 15 GIÂY</span><span data-lang="en">15-SECOND GUIDED DEMO</span></span>
-                        <video id="aiShowcaseVideo" muted playsinline autoplay preload="auto" data-label-vi="Video mẫu tự động phát" data-label-en="Autoplay sample video" aria-label="Video mẫu tự động phát"></video>
+                        <video id="aiShowcaseVideo" controls playsinline webkit-playsinline preload="metadata" data-label-vi="Video mẫu" data-label-en="Sample video" aria-label="Video mẫu"></video>
                         <div class="ai-showcase-context" aria-live="polite">
                             <strong id="aiShowcaseTitle"><span data-lang="vi">Tạo báo giá từ yêu cầu</span><span data-lang="en">Build a quote from a request</span></strong>
                             <span id="aiShowcaseSummary"><span data-lang="vi">Từ nội dung nhập đến báo giá hoàn chỉnh.</span><span data-lang="en">From a short request to a complete quotation.</span></span>
@@ -5702,6 +6264,7 @@ body.needs-advisor-open .needs-advisor-invite {
                         <button class="ai-showcase-toggle" type="button" data-ai-showcase-toggle data-label-vi="Tạm dừng video" data-label-en="Pause video" aria-label="Tạm dừng video" title="Tạm dừng video">
                             <svg class="ai-showcase-pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12M16 6v12" stroke-linecap="round"></path></svg>
                             <svg class="ai-showcase-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6V6Z" stroke-linejoin="round"></path></svg>
+                            <span class="ai-showcase-toggle-text"><span class="ai-showcase-toggle-play-label"><span data-lang="vi">Phát video</span><span data-lang="en">Play video</span></span><span class="ai-showcase-toggle-pause-label"><span data-lang="vi">Tạm dừng</span><span data-lang="en">Pause</span></span></span>
                         </button>
                         <div class="ai-showcase-progress" aria-hidden="true"><span></span></div>
                     </div>
@@ -5715,10 +6278,10 @@ body.needs-advisor-open .needs-advisor-invite {
             <div class="solution-inner">
                 <div class="solution-heading">
                     <div>
-                        <span class="solution-kicker"><span data-lang="vi">NGÀNH PHỤC VỤ</span><span data-lang="en">INDUSTRIES</span></span>
+                        <span class="solution-kicker"><span data-lang="vi">TƯ VẤN THEO BỐI CẢNH</span><span data-lang="en">CONTEXTUAL GUIDANCE</span></span>
                         <h2 id="solutionTitle" class="solution-title"><span data-lang="vi">Giải pháp theo ngành</span><span data-lang="en">Industry solutions</span></h2>
                     </div>
-                    <p><span data-lang="vi">Chọn ngành để xem nhóm công cụ, kênh và phạm vi triển khai phù hợp.</span><span data-lang="en">Choose an industry to see the relevant tools, channels, and implementation scope.</span></p>
+                    <p><span data-lang="vi">Chọn ngành để xem lộ trình ưu tiên, bộ công cụ, phạm vi triển khai và mức đầu tư tham khảo.</span><span data-lang="en">Choose an industry to see priorities, tools, implementation scope, and an indicative investment range.</span></p>
                 </div>
 
                 <div class="solution-tabs" role="tablist" data-label-vi="Chọn mô hình kinh doanh" data-label-en="Choose a business type" aria-label="Chọn mô hình kinh doanh">
@@ -6045,6 +6608,180 @@ body.needs-advisor-open .needs-advisor-invite {
 
     const solutionTabs = [...document.querySelectorAll('[data-solution-tab]')];
     const solutionPanels = [...document.querySelectorAll('[data-solution-panel]')];
+    const solutionBriefs = {
+        restaurant: {
+            outcomeVi: 'Được tìm thấy → xem menu → đặt bàn hoặc đặt món',
+            outcomeEn: 'Get discovered → view the menu → reserve or order',
+            deliverables: [
+                { vi: 'Cấu trúc Google, website hoặc menu với một đường dẫn chuyển đổi rõ ràng.', en: 'Google, website, or menu structure with one clear conversion path.' },
+                { vi: 'Lịch nội dung 30 ngày, chủ đề món nổi bật và kịch bản video ngắn.', en: 'A 30-day content plan, signature-dish themes, and short-video scripts.' },
+                { vi: 'Thiết lập đo cuộc gọi, chỉ đường, đặt bàn, đơn hàng và chi phí chuyển đổi.', en: 'Tracking for calls, directions, reservations, orders, and acquisition cost.' }
+            ],
+            setupVi: '6-15 triệu', setupEn: 'VND 6-15M',
+            monthlyVi: '3-8 triệu/tháng', monthlyEn: 'VND 3-8M/month',
+            timelineVi: '2-4 tuần', timelineEn: '2-4 weeks',
+            metricVi: 'Đo bằng lượt xem menu, cuộc gọi, đặt bàn và đơn hàng.',
+            metricEn: 'Measure menu views, calls, reservations, and orders.',
+            promptVi: 'Tôi kinh doanh nhà hàng hoặc quán ăn. Tôi cần website hoặc menu, Google địa phương, nội dung, video ngắn, quảng cáo và đo đặt bàn hoặc đơn hàng. Hãy đề xuất lộ trình, chi phí khởi tạo, duy trì và ngân sách quảng cáo.',
+            promptEn: 'I run a restaurant or food business. I need a website or menu, local Google presence, content, short video, advertising, and reservation or order tracking. Recommend a roadmap, setup cost, monthly support, and ad budget.'
+        },
+        retail: {
+            outcomeVi: 'Chuẩn hóa sản phẩm → mở kênh bán → tạo và đo đơn hàng',
+            outcomeEn: 'Standardize products → launch channels → generate and measure orders',
+            deliverables: [
+                { vi: 'Rà soát mã hàng, tên, giá, hình ảnh và dữ liệu thiếu hoặc trùng lặp.', en: 'Audit SKUs, names, pricing, images, and missing or duplicate data.' },
+                { vi: 'Mẫu trang sản phẩm, báo giá và nội dung dùng chung cho các kênh bán.', en: 'Reusable product-page, quotation, and content templates across channels.' },
+                { vi: 'Kế hoạch ưu đãi, quảng cáo thử nghiệm và báo cáo theo đơn hàng.', en: 'Offer plan, test campaigns, and order-level reporting.' }
+            ],
+            setupVi: '7-18 triệu', setupEn: 'VND 7-18M',
+            monthlyVi: '3-9 triệu/tháng', monthlyEn: 'VND 3-9M/month',
+            timelineVi: '3-5 tuần', timelineEn: '3-5 weeks',
+            metricVi: 'Đo bằng tỷ lệ hoàn thiện dữ liệu, đơn hàng và chi phí mỗi đơn.',
+            metricEn: 'Measure catalog completeness, orders, and cost per order.',
+            promptVi: 'Tôi kinh doanh cửa hàng bán lẻ hoặc tạp hóa. Tôi cần chuẩn hóa danh mục, giá, báo giá, website hoặc sàn, nội dung và quảng cáo. Hãy đề xuất thứ tự triển khai, chi phí khởi tạo, duy trì và cách đo đơn hàng.',
+            promptEn: 'I run a retail or grocery shop. I need catalog and pricing cleanup, quotations, a website or marketplace, content, and advertising. Recommend the implementation order, setup cost, monthly support, and order measurement.'
+        },
+        field: {
+            outcomeVi: 'Lập tuyến → chăm khách → báo giá → theo dõi cơ hội',
+            outcomeEn: 'Plan routes → serve accounts → quote → follow opportunities',
+            deliverables: [
+                { vi: 'Chuẩn hóa danh sách khách, khu vực, tần suất ghé và việc cần làm tiếp theo.', en: 'Standardize accounts, territories, visit frequency, and next actions.' },
+                { vi: 'Kết nối lịch đi tuyến với danh mục, chính sách giá và mẫu báo giá.', en: 'Connect route planning with catalog, pricing policies, and quotations.' },
+                { vi: 'Báo cáo lượt ghé, khách cần chăm lại, cơ hội và kết quả theo tuyến.', en: 'Report visits, follow-ups, opportunities, and territory outcomes.' }
+            ],
+            setupVi: '5-15 triệu', setupEn: 'VND 5-15M',
+            monthlyVi: '1-4 triệu/tháng', monthlyEn: 'VND 1-4M/month',
+            timelineVi: '3-6 tuần', timelineEn: '3-6 weeks',
+            metricVi: 'Đo bằng lượt ghé đúng kế hoạch, thời gian phản hồi và tỷ lệ chốt.',
+            metricEn: 'Measure planned visits, response time, and close rate.',
+            promptVi: 'Tôi quản lý đội sale thị trường. Tôi cần lịch đi tuyến, quản lý khách hàng, báo giá tại điểm bán, nhắc chăm sóc và báo cáo cơ hội. Hãy đề xuất quy trình, công cụ, chi phí khởi tạo và duy trì.',
+            promptEn: 'I manage a field sales team. I need route planning, account management, on-site quotations, follow-up reminders, and opportunity reporting. Recommend the workflow, tools, setup cost, and monthly support.'
+        },
+        online: {
+            outcomeVi: 'Sản phẩm → nội dung → lượt truy cập → chuyển đổi',
+            outcomeEn: 'Products → content → traffic → conversion',
+            deliverables: [
+                { vi: 'Kiến trúc website hoặc gian hàng, danh mục và trang sản phẩm ưu tiên.', en: 'Website or storefront architecture, catalog, and priority product pages.' },
+                { vi: 'Lịch nội dung 30 ngày, kịch bản video và quy trình phát trực tiếp.', en: 'A 30-day content calendar, video scripts, and live-selling workflow.' },
+                { vi: 'Kế hoạch quảng cáo thử nghiệm với điểm hòa vốn và đo chuyển đổi.', en: 'A test advertising plan with break-even targets and conversion tracking.' }
+            ],
+            setupVi: '8-18 triệu', setupEn: 'VND 8-18M',
+            monthlyVi: '4-9 triệu/tháng', monthlyEn: 'VND 4-9M/month',
+            timelineVi: '3-6 tuần', timelineEn: '3-6 weeks',
+            metricVi: 'Đo bằng tỷ lệ chuyển đổi, giá trị đơn và chi phí có đơn hàng.',
+            metricEn: 'Measure conversion rate, order value, and cost per order.',
+            promptVi: 'Tôi bán hàng online. Tôi cần website hoặc sàn, danh mục, nội dung, video ngắn, phát trực tiếp, quảng cáo và đo chuyển đổi. Hãy đề xuất lộ trình ưu tiên, chi phí khởi tạo, duy trì và ngân sách thử nghiệm.',
+            promptEn: 'I sell online. I need a website or marketplace, catalog, content, short video, live selling, advertising, and conversion tracking. Recommend a prioritized roadmap, setup cost, monthly support, and test budget.'
+        },
+        services: {
+            outcomeVi: 'Được tìm thấy → hiểu dịch vụ → gửi yêu cầu hoặc đặt lịch',
+            outcomeEn: 'Get discovered → understand the service → inquire or book',
+            deliverables: [
+                { vi: 'Hồ sơ Google, trang dịch vụ và khu vực phục vụ được trình bày rõ.', en: 'Clear Google profile, service pages, and service-area coverage.' },
+                { vi: 'Bộ câu hỏi thường gặp, tình huống khách hàng và lịch nội dung giải đáp.', en: 'FAQs, customer scenarios, and an educational content plan.' },
+                { vi: 'Biểu mẫu tiếp nhận, đặt lịch và đo nguồn cuộc gọi hoặc yêu cầu.', en: 'Intake form, booking flow, and source tracking for calls or inquiries.' }
+            ],
+            setupVi: '5-14 triệu', setupEn: 'VND 5-14M',
+            monthlyVi: '2-7 triệu/tháng', monthlyEn: 'VND 2-7M/month',
+            timelineVi: '2-4 tuần', timelineEn: '2-4 weeks',
+            metricVi: 'Đo bằng cuộc gọi, yêu cầu hợp lệ, lượt đặt và chi phí mỗi khách.',
+            metricEn: 'Measure calls, qualified inquiries, bookings, and cost per lead.',
+            promptVi: 'Tôi cung cấp dịch vụ tại địa phương. Tôi cần Google, website, SEO, nội dung giải đáp, video ngắn, quảng cáo và biểu mẫu đặt lịch. Hãy đề xuất lộ trình, chi phí và cách đo khách hàng tiềm năng.',
+            promptEn: 'I provide local services. I need Google, a website, SEO, educational content, short video, advertising, and a booking form. Recommend a roadmap, costs, and lead measurement.'
+        },
+        beauty: {
+            outcomeVi: 'Tạo tin cậy → đặt lịch → nhắc lịch → khách quay lại',
+            outcomeEn: 'Build trust → book → remind → retain',
+            deliverables: [
+                { vi: 'Trang dịch vụ, bảng giá tham khảo, hình ảnh quy trình và đặt lịch.', en: 'Service pages, indicative pricing, process visuals, and booking.' },
+                { vi: 'Lịch nội dung, kịch bản video và nguyên tắc sử dụng hình ảnh khách hàng.', en: 'Content calendar, video scripts, and customer-image usage rules.' },
+                { vi: 'Nhắc lịch, chăm sóc sau dịch vụ và chiến dịch đưa khách quay lại.', en: 'Appointment reminders, aftercare, and repeat-visit campaigns.' }
+            ],
+            setupVi: '6-16 triệu', setupEn: 'VND 6-16M',
+            monthlyVi: '3-8 triệu/tháng', monthlyEn: 'VND 3-8M/month',
+            timelineVi: '2-5 tuần', timelineEn: '2-5 weeks',
+            metricVi: 'Đo bằng lượt đặt, tỷ lệ đến, chi phí mỗi lịch và khách quay lại.',
+            metricEn: 'Measure bookings, show rate, cost per booking, and repeat visits.',
+            promptVi: 'Tôi kinh doanh spa, salon hoặc dịch vụ làm đẹp. Tôi cần website, Google địa phương, nội dung hình ảnh, video ngắn, đặt lịch, quảng cáo và chăm sóc khách quay lại. Hãy đề xuất lộ trình và chi phí.',
+            promptEn: 'I run a spa, salon, or beauty service. I need a website, local Google presence, visual content, short video, booking, advertising, and repeat-customer follow-up. Recommend a roadmap and costs.'
+        },
+        education: {
+            outcomeVi: 'Làm rõ chương trình → thu đăng ký → tư vấn → nhập học',
+            outcomeEn: 'Clarify programs → capture registrations → advise → enroll',
+            deliverables: [
+                { vi: 'Trang chương trình, lịch khai giảng, học phí và biểu mẫu đăng ký.', en: 'Program pages, schedules, tuition, and registration forms.' },
+                { vi: 'Lịch tuyển sinh, nội dung giải đáp và kịch bản video giới thiệu.', en: 'Enrollment calendar, FAQs, and introductory video scripts.' },
+                { vi: 'Quy trình phản hồi, phân loại học viên và đo tỷ lệ nhập học.', en: 'Response workflow, learner qualification, and enrollment tracking.' }
+            ],
+            setupVi: '7-18 triệu', setupEn: 'VND 7-18M',
+            monthlyVi: '3-9 triệu/tháng', monthlyEn: 'VND 3-9M/month',
+            timelineVi: '3-5 tuần', timelineEn: '3-5 weeks',
+            metricVi: 'Đo bằng đăng ký hợp lệ, lịch tư vấn, chi phí đăng ký và nhập học.',
+            metricEn: 'Measure qualified registrations, consultations, cost per lead, and enrollments.',
+            promptVi: 'Tôi kinh doanh giáo dục hoặc đào tạo. Tôi cần website khóa học, nội dung tuyển sinh, video giới thiệu, biểu mẫu đăng ký, quảng cáo và đo tỷ lệ nhập học. Hãy đề xuất lộ trình và chi phí.',
+            promptEn: 'I run an education or training business. I need course pages, enrollment content, introductory video, registration forms, advertising, and enrollment tracking. Recommend a roadmap and costs.'
+        },
+        b2b: {
+            outcomeVi: 'Danh mục → cơ hội → báo giá → chăm sóc → doanh số',
+            outcomeEn: 'Catalog → opportunity → quotation → follow-up → revenue',
+            deliverables: [
+                { vi: 'Chuẩn hóa danh mục, nhóm khách, chính sách giá và mẫu báo giá.', en: 'Standardize catalog, account groups, pricing policies, and quotation templates.' },
+                { vi: 'Tổ chức khu vực, tuyến ghé, lịch chăm sóc và việc cần làm tiếp theo.', en: 'Organize territories, visit routes, follow-up schedules, and next actions.' },
+                { vi: 'Báo cáo cơ hội, thời gian ra báo giá, tỷ lệ chốt và doanh số theo tuyến.', en: 'Report opportunities, quote turnaround, close rate, and territory revenue.' }
+            ],
+            setupVi: '8-18 triệu', setupEn: 'VND 8-18M',
+            monthlyVi: '2-6 triệu/tháng', monthlyEn: 'VND 2-6M/month',
+            timelineVi: '4-8 tuần', timelineEn: '4-8 weeks',
+            metricVi: 'Đo bằng thời gian ra báo giá, cơ hội đang mở, tỷ lệ chốt và doanh số.',
+            metricEn: 'Measure quote turnaround, open pipeline, close rate, and revenue.',
+            promptVi: 'Tôi kinh doanh phân phối hoặc B2B. Tôi cần chuẩn hóa danh mục, giá theo nhóm khách, báo giá, lịch đi tuyến, quản lý cơ hội và báo cáo doanh số. Hãy đề xuất quy trình, công cụ và chi phí.',
+            promptEn: 'I run a distribution or B2B business. I need catalog cleanup, account pricing, quotations, route planning, opportunity management, and revenue reporting. Recommend the workflow, tools, and costs.'
+        }
+    };
+
+    const bilingual = (vi, en) => `<span data-lang="vi">${vi}</span><span data-lang="en">${en}</span>`;
+    const enhanceSolutionPanel = panel => {
+        const key = panel.dataset.solutionPanel;
+        const brief = solutionBriefs[key];
+        if (!brief || panel.querySelector('.solution-advisory')) return;
+        const advisory = document.createElement('section');
+        advisory.className = 'solution-advisory';
+        advisory.dataset.labelVi = 'Đề xuất triển khai theo ngành';
+        advisory.dataset.labelEn = 'Industry implementation brief';
+        advisory.setAttribute('aria-label', advisory.dataset.labelVi);
+        advisory.innerHTML = `<div class="solution-advisory-main">
+                <span class="solution-advisory-label">${bilingual('ĐẦU RA ƯU TIÊN', 'PRIORITY OUTCOME')}</span>
+                <strong class="solution-advisory-outcome">${bilingual(brief.outcomeVi, brief.outcomeEn)}</strong>
+                <ul class="solution-advisory-list">${brief.deliverables.map(item => `<li>${bilingual(item.vi, item.en)}</li>`).join('')}</ul>
+            </div>
+            <aside class="solution-advisory-scope">
+                <span class="solution-advisory-label">${bilingual('PHẠM VI THAM KHẢO', 'INDICATIVE SCOPE')}</span>
+                <dl>
+                    <div><dt>${bilingual('Khởi tạo', 'Setup')}</dt><dd>${bilingual(brief.setupVi, brief.setupEn)}</dd></div>
+                    <div><dt>${bilingual('Duy trì', 'Monthly')}</dt><dd>${bilingual(brief.monthlyVi, brief.monthlyEn)}</dd></div>
+                    <div><dt>${bilingual('Thời gian', 'Timeline')}</dt><dd>${bilingual(brief.timelineVi, brief.timelineEn)}</dd></div>
+                </dl>
+                <p>${bilingual(brief.metricVi, brief.metricEn)}</p>
+                <small>${bilingual('Chi phí quảng cáo thanh toán riêng cho nền tảng khi có sử dụng.', 'Media spend is paid separately to the advertising platform when used.')}</small>
+            </aside>`;
+        const action = panel.querySelector('.solution-panel-action');
+        panel.insertBefore(advisory, action || null);
+        const primary = action?.querySelector('.primary-action');
+        if (primary) primary.innerHTML = bilingual('Nhận đề xuất & dự toán', 'Get proposal & estimate');
+        if (action) {
+            const advisorButton = document.createElement('button');
+            advisorButton.type = 'button';
+            advisorButton.className = 'secondary-action solution-advisor-action';
+            advisorButton.dataset.openAdvisor = '';
+            advisorButton.dataset.solutionKey = key;
+            advisorButton.dataset.solutionPromptVi = brief.promptVi;
+            advisorButton.dataset.solutionPromptEn = brief.promptEn;
+            advisorButton.innerHTML = bilingual('Xem lộ trình phù hợp', 'Build my roadmap');
+            action.appendChild(advisorButton);
+        }
+    };
+    solutionPanels.forEach(enhanceSolutionPanel);
+
     const activateSolution = (key, shouldFocus = false) => {
         solutionTabs.forEach(tab => {
             const isActive = tab.dataset.solutionTab === key;
@@ -6084,6 +6821,7 @@ body.needs-advisor-open .needs-advisor-invite {
     const ADVISOR_INVITE_LIMIT = 3;
     let advisorTrigger = null;
     let lastAdvisorInput = '';
+    let lastAdvisorSolutionKey = '';
     let advisorInviteTimer = 0;
 
     const readAdvisorInviteState = () => {
@@ -6310,10 +7048,11 @@ body.needs-advisor-open .needs-advisor-invite {
         };
     };
 
-    const renderAdvisor = input => {
+    const renderAdvisor = (input, solutionKey = '') => {
         const language = getLanguage();
         const normalized = normalizeText(input);
         const industry = detectIndustry(normalized);
+        const solutionBrief = solutionBriefs[solutionKey] || null;
         const routes = selectRoutes(normalized);
         const implementationRoutes = routes.filter(route => route.setup[1] || route.recurring[1] || route.media[1]);
         const totals = bundleBudgets(implementationRoutes);
@@ -6323,24 +7062,43 @@ body.needs-advisor-open .needs-advisor-invite {
             const copy = route[language];
             return `<div class="needs-result-route"><div><strong>${copy.title}</strong><small>${copy.description}</small></div><a href="${addLanguage(route.href, language)}">${copy.action}</a></div>`;
         }).join('');
-        const setupValue = implementationRoutes.length ? formatRange(totals.setupLow, totals.setupHigh, language) : (language === 'en' ? 'Free to use' : 'Dùng miễn phí');
-        const recurringValue = totals.recurringHigh ? formatRange(totals.recurringLow, totals.recurringHigh, language) : (language === 'en' ? 'Not required' : 'Không bắt buộc');
+        const setupValue = solutionBrief
+            ? (language === 'en' ? solutionBrief.setupEn : solutionBrief.setupVi)
+            : (implementationRoutes.length ? formatRange(totals.setupLow, totals.setupHigh, language) : (language === 'en' ? 'Free to use' : 'Dùng miễn phí'));
+        const recurringValue = solutionBrief
+            ? (language === 'en' ? solutionBrief.monthlyEn : solutionBrief.monthlyVi)
+            : (totals.recurringHigh ? formatRange(totals.recurringLow, totals.recurringHigh, language) : (language === 'en' ? 'Not required' : 'Không bắt buộc'));
         const mediaValue = totals.mediaHigh ? formatRange(totals.mediaLow, totals.mediaHigh, language) : (language === 'en' ? 'Only when needed' : 'Chỉ khi cần');
+        const timelineValue = solutionBrief ? (language === 'en' ? solutionBrief.timelineEn : solutionBrief.timelineVi) : '';
+        const outcomeValue = solutionBrief ? (language === 'en' ? solutionBrief.outcomeEn : solutionBrief.outcomeVi) : guidance[0];
+        const metricValue = solutionBrief ? (language === 'en' ? solutionBrief.metricEn : solutionBrief.metricVi) : guidance[1];
         const routeTitles = routes.map(route => route[language].title).join(' → ');
+        const deliverables = solutionBrief
+            ? solutionBrief.deliverables.map(item => language === 'en' ? item.en : item.vi)
+            : [];
         const brief = language === 'en'
-            ? `Needs-assistant request\nBusiness: ${industry.en}\nOriginal requirement: ${input}\nRecommended sequence: ${routeTitles}\nInitial setup: ${setupValue}\nMonthly support: ${recurringValue}\nAd spend: ${mediaValue}`
-            : `Yêu cầu từ trợ lý tiếp nhận\nMô hình: ${industry.vi}\nNhu cầu ban đầu: ${input}\nTrình tự đề xuất: ${routeTitles}\nLàm ban đầu: ${setupValue}\nHỗ trợ mỗi tháng: ${recurringValue}\nTiền chạy quảng cáo: ${mediaValue}`;
+            ? `Needs-assistant request\nBusiness: ${industry.en}\nOriginal requirement: ${input}\nPriority outcome: ${outcomeValue}\nRecommended scope: ${deliverables.join(' | ') || routeTitles}\nInitial setup: ${setupValue}\nMonthly support: ${recurringValue}\nTimeline: ${timelineValue || 'To be confirmed'}\nAd spend: ${mediaValue}`
+            : `Yêu cầu từ trợ lý tiếp nhận\nMô hình: ${industry.vi}\nNhu cầu ban đầu: ${input}\nĐầu ra ưu tiên: ${outcomeValue}\nPhạm vi đề xuất: ${deliverables.join(' | ') || routeTitles}\nKhởi tạo: ${setupValue}\nDuy trì: ${recurringValue}\nThời gian: ${timelineValue || 'Cần xác nhận'}\nNgân sách quảng cáo: ${mediaValue}`;
         const contactHref = `lienhe.html?service=advisor&lang=${language}&brief=${encodeURIComponent(brief.slice(0, 1800))}`;
+        const dedicatedPlanMarkup = solutionBrief ? `<div class="needs-result-plan"><span>${language === 'en' ? 'IMPLEMENTATION SCOPE' : 'PHẠM VI TRIỂN KHAI'}</span><ol>${deliverables.map(item => `<li>${item}</li>`).join('')}</ol></div>` : '';
+        const budgetThird = solutionBrief
+            ? `<div><span>${language === 'en' ? 'Timeline' : 'Thời gian'}</span><strong>${timelineValue}</strong><small>${language === 'en' ? 'From confirmation to handover' : 'Từ xác nhận đến bàn giao'}</small></div>`
+            : `<div><span>${language === 'en' ? 'Ad spend' : 'Tiền chạy quảng cáo'}</span><strong>${mediaValue}</strong><small>${language === 'en' ? 'Paid directly to the advertising platform' : 'Thanh toán trực tiếp cho nền tảng quảng cáo'}</small></div>`;
+        const scopeNote = solutionBrief
+            ? `<p class="needs-result-scope-note"><strong>${language === 'en' ? 'Measurement:' : 'Đo lường:'}</strong> ${metricValue} <span>${language === 'en' ? 'Advertising spend, when used, is paid separately to the platform.' : 'Ngân sách quảng cáo, nếu sử dụng, được thanh toán riêng cho nền tảng.'}</span></p>`
+            : '';
 
         advisorResult.hidden = false;
-        advisorResult.innerHTML = `<header class="needs-result-header"><span>${language === 'en' ? 'RECOMMENDED START' : 'GỢI Ý PHÙ HỢP'}</span><h3>${language === 'en' ? `For ${industry.en}` : `Dành cho ${industry.vi}`}</h3><p>${language === 'en' ? 'Start with the most useful item below. The cost ranges help with comparison and are not a final quotation.' : 'Nên bắt đầu từ hạng mục hữu ích nhất bên dưới. Mức phí dùng để tham khảo, chưa phải báo giá cuối.'}</p></header>
-            <div class="needs-result-guidance"><span>${language === 'en' ? 'Priority' : 'Ưu tiên'}</span><div><strong>${guidance[0]}</strong><p>${guidance[1]}</p></div></div>
+        advisorResult.innerHTML = `<header class="needs-result-header"><span>${solutionBrief ? (language === 'en' ? 'INDUSTRY ROADMAP' : 'LỘ TRÌNH THEO NGÀNH') : (language === 'en' ? 'RECOMMENDED START' : 'GỢI Ý PHÙ HỢP')}</span><h3>${language === 'en' ? `For ${industry.en}` : `Dành cho ${industry.vi}`}</h3><p>${language === 'en' ? 'The scope, cost, and timeline below are an initial planning estimate and will be confirmed from actual data.' : 'Phạm vi, chi phí và thời gian dưới đây là dự toán ban đầu; số liệu thực tế sẽ được xác nhận trước khi triển khai.'}</p></header>
+            <div class="needs-result-guidance"><span>${language === 'en' ? 'Outcome' : 'Đầu ra'}</span><div><strong>${outcomeValue}</strong><p>${metricValue}</p></div></div>
+            ${dedicatedPlanMarkup}
             <div class="needs-result-routes">${routeMarkup}</div>
             <div class="needs-result-budget">
                 <div><span>${language === 'en' ? 'Initial setup' : 'Làm ban đầu'}</span><strong>${setupValue}</strong><small>${language === 'en' ? 'Planning, setup, and handover' : 'Lập kế hoạch, thiết lập và bàn giao'}</small></div>
                 <div><span>${language === 'en' ? 'Monthly support' : 'Hỗ trợ mỗi tháng'}</span><strong>${recurringValue}</strong><small>${language === 'en' ? 'Content, operations, or campaign support' : 'Nội dung, vận hành hoặc hỗ trợ chiến dịch'}</small></div>
-                <div><span>${language === 'en' ? 'Ad spend' : 'Tiền chạy quảng cáo'}</span><strong>${mediaValue}</strong><small>${language === 'en' ? 'Paid directly to the advertising platform' : 'Thanh toán trực tiếp cho nền tảng quảng cáo'}</small></div>
+                ${budgetThird}
             </div>
+            ${scopeNote}
             <div class="needs-result-questions"><h4>${language === 'en' ? 'Four details to confirm' : 'Thông tin cần xác nhận'}</h4><ul>${questions.map(question => `<li>${question}</li>`).join('')}</ul></div>
             <div class="needs-result-actions"><a class="primary-action" href="${contactHref}">${language === 'en' ? 'Confirm and send requirement' : 'Xác nhận và gửi yêu cầu'}</a><button class="secondary-action" type="button" data-edit-advisor>${language === 'en' ? 'Edit the requirement' : 'Chỉnh lại nhu cầu'}</button></div>`;
         advisorResult.querySelector('[data-edit-advisor]')?.addEventListener('click', () => {
@@ -6371,6 +7129,14 @@ body.needs-advisor-open .needs-advisor-invite {
         trigger.addEventListener('click', event => {
             event.preventDefault();
             openAdvisor(trigger);
+            const solutionPrompt = getLanguage() === 'en' ? trigger.dataset.solutionPromptEn : trigger.dataset.solutionPromptVi;
+            if (!solutionPrompt || !advisorInput) return;
+            advisorInput.value = solutionPrompt;
+            advisorError.textContent = '';
+            lastAdvisorInput = solutionPrompt;
+            lastAdvisorSolutionKey = trigger.dataset.solutionKey || '';
+            renderAdvisor(solutionPrompt, lastAdvisorSolutionKey);
+            setTimeout(() => advisorResult?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 420);
         });
     });
     advisorInviteConfirm?.addEventListener('click', () => {
@@ -6396,6 +7162,7 @@ body.needs-advisor-open .needs-advisor-invite {
         }
         advisorError.textContent = '';
         lastAdvisorInput = input;
+        lastAdvisorSolutionKey = '';
         renderAdvisor(input);
         advisorResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
@@ -6417,7 +7184,7 @@ body.needs-advisor-open .needs-advisor-invite {
     const syncAdvisorLanguage = () => {
         if (!advisorInput) return;
         advisorInput.placeholder = getLanguage() === 'en' ? advisorInput.dataset.placeholderEn : advisorInput.dataset.placeholderVi;
-        if (lastAdvisorInput) renderAdvisor(lastAdvisorInput);
+        if (lastAdvisorInput) renderAdvisor(lastAdvisorInput, lastAdvisorSolutionKey);
     };
 
     const showcase = document.querySelector('[data-ai-showcase]');
@@ -6435,10 +7202,40 @@ body.needs-advisor-open .needs-advisor-invite {
     let activeShowcaseIndex = 0;
     let showcaseIsVisible = true;
     let showcaseUserPaused = false;
-    let showcaseSoundEnabled = false;
+    const embeddedBrowser = /Zalo|FBAN|FBAV|Instagram|Line\/|;\s*wv\)|WebView/i.test(navigator.userAgent || '');
+    const nativeShowcaseControls = embeddedBrowser || window.matchMedia('(pointer: coarse)').matches || window.innerWidth <= 720;
+    let showcaseSoundEnabled = nativeShowcaseControls;
+    let activeShowcaseRawSource = '';
+    let showcaseFallbackAttempted = false;
+    const showcaseBlobUrls = new Map();
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (showcaseVideo && prefersReducedMotion) showcaseVideo.autoplay = false;
+    if (showcaseVideo) {
+        showcaseVideo.controls = nativeShowcaseControls;
+        showcaseVideo.autoplay = !nativeShowcaseControls && !prefersReducedMotion;
+        showcaseVideo.muted = !showcaseSoundEnabled;
+        showcaseVideo.preload = nativeShowcaseControls ? 'metadata' : 'auto';
+        showcaseVideo.setAttribute('playsinline', '');
+        showcaseVideo.setAttribute('webkit-playsinline', '');
+        document.body.classList.toggle('showcase-native-controls', nativeShowcaseControls);
+    }
+
+    const prepareShowcaseSource = source => {
+        if (!source?.startsWith('data:video/') || !source.includes(';base64,') || typeof Blob === 'undefined' || !URL?.createObjectURL) return source || '';
+        if (showcaseBlobUrls.has(source)) return showcaseBlobUrls.get(source);
+        try {
+            const commaIndex = source.indexOf(',');
+            const mime = source.slice(5, source.indexOf(';')) || 'video/mp4';
+            const binary = atob(source.slice(commaIndex + 1));
+            const bytes = new Uint8Array(binary.length);
+            for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+            const blobUrl = URL.createObjectURL(new Blob([bytes], { type: mime }));
+            showcaseBlobUrls.set(source, blobUrl);
+            return blobUrl;
+        } catch (error) {
+            return source;
+        }
+    };
 
     try {
         showcaseItems = JSON.parse(showcaseData?.textContent || '[]');
@@ -6495,7 +7292,7 @@ body.needs-advisor-open .needs-advisor-invite {
     };
 
     const playShowcase = () => {
-        if (!showcaseVideo || prefersReducedMotion || !showcaseIsVisible || showcaseUserPaused) return;
+        if (!showcaseVideo || nativeShowcaseControls || prefersReducedMotion || !showcaseIsVisible || showcaseUserPaused) return;
         showcaseVideo.play().catch(() => syncShowcasePlayback());
     };
 
@@ -6515,8 +7312,15 @@ body.needs-advisor-open .needs-advisor-invite {
         showcaseVideo.pause();
         if (item.poster) showcaseVideo.poster = item.poster;
         else showcaseVideo.removeAttribute('poster');
-        showcaseVideo.src = source || '';
+        activeShowcaseRawSource = source || '';
+        showcaseFallbackAttempted = false;
+        showcaseVideo.src = nativeShowcaseControls
+            ? activeShowcaseRawSource
+            : prepareShowcaseSource(activeShowcaseRawSource);
+        showcaseVideo.controls = nativeShowcaseControls;
+        showcaseVideo.autoplay = !nativeShowcaseControls && !prefersReducedMotion;
         showcaseVideo.muted = !showcaseSoundEnabled;
+        showcaseVideo.preload = nativeShowcaseControls ? 'metadata' : 'auto';
         showcaseVideo.load();
         if (showcaseProgress) showcaseProgress.style.transform = 'scaleX(0)';
         syncShowcaseControls();
@@ -6572,10 +7376,27 @@ body.needs-advisor-open .needs-advisor-invite {
         if (!showcaseProgress || !Number.isFinite(showcaseVideo.duration) || showcaseVideo.duration <= 0) return;
         showcaseProgress.style.transform = `scaleX(${Math.min(1, showcaseVideo.currentTime / showcaseVideo.duration)})`;
     });
+    showcaseVideo?.addEventListener('error', () => {
+        if (showcaseFallbackAttempted || !activeShowcaseRawSource || showcaseVideo.src === activeShowcaseRawSource) return;
+        showcaseFallbackAttempted = true;
+        showcaseVideo.src = activeShowcaseRawSource;
+        showcaseVideo.load();
+        syncShowcasePlayback();
+    });
     showcaseVideo?.addEventListener('ended', () => {
+        if (nativeShowcaseControls) {
+            showcaseUserPaused = true;
+            syncShowcasePlayback();
+            return;
+        }
         showcaseUserPaused = false;
         activateShowcase(activeShowcaseIndex + 1);
     });
+
+    window.addEventListener('pagehide', () => {
+        showcaseBlobUrls.forEach(url => URL.revokeObjectURL(url));
+        showcaseBlobUrls.clear();
+    }, { once: true });
 
     if (showcase && 'IntersectionObserver' in window) {
         new IntersectionObserver(entries => {
