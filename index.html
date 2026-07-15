@@ -10474,6 +10474,191 @@ body::before {
         margin-top: 0.75rem;
     }
 }
+
+/* iPhone portrait repair: keep the storefront compact, readable and aligned without changing its structure. */
+@media (max-width: 430px) and (orientation: portrait) {
+    html,
+    body,
+    .site-shell {
+        min-height: 100dvh;
+    }
+
+    .site-shell {
+        overflow-x: clip;
+    }
+
+    .site-header {
+        min-height: 4.4rem;
+        gap: 0.62rem;
+        padding:
+            max(0.72rem, env(safe-area-inset-top))
+            max(0.85rem, env(safe-area-inset-right))
+            0.62rem
+            max(0.85rem, env(safe-area-inset-left));
+    }
+
+    .brand {
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 0.52rem;
+    }
+
+    .brand-copy {
+        gap: 0.16rem;
+    }
+
+    .brand-copy strong {
+        font-size: 0.98rem;
+        white-space: nowrap;
+    }
+
+    .brand-copy small {
+        font-size: 0.6rem;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+
+    .header-actions,
+    :is(.site-header, .subpage-header) .language-switcher {
+        gap: 0.3rem;
+    }
+
+    :is(.site-header, .subpage-header) .language-switcher button {
+        min-width: 1.72rem;
+        min-height: 2.75rem;
+    }
+
+    :is(.site-header, .subpage-header) .language-flag {
+        font-size: 0.88rem;
+    }
+
+    :is(.site-header, .subpage-header) .language-code {
+        font-size: 0.67rem;
+    }
+
+    .mobile-menu summary {
+        width: 2.7rem;
+        height: 2.7rem;
+    }
+
+    .mobile-menu-panel {
+        right: max(0px, env(safe-area-inset-right));
+        width: min(17rem, calc(100vw - 1.5rem));
+    }
+
+    .landing-main {
+        flex: 0 0 auto;
+    }
+
+    .orbit-visual {
+        min-height: 0;
+        row-gap: 0.9rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .mobile-intro {
+        width: min(calc(100% - 1.5rem), 25rem);
+        margin-top: 0.9rem;
+    }
+
+    .mobile-intro h2 {
+        font-size: clamp(1.7rem, 7vw, 1.9rem);
+    }
+
+    .mobile-intro p {
+        font-size: 0.98rem;
+        line-height: 1.52;
+    }
+
+    .mobile-intro-actions {
+        gap: 0.42rem;
+        margin-top: 0.88rem;
+    }
+
+    .mobile-intro-actions > .store-object-action {
+        min-height: 6rem;
+    }
+
+    .mobile-intro-actions .store-action-label {
+        font-size: clamp(0.76rem, 3.1vw, 0.82rem);
+        font-weight: 760;
+    }
+
+    .mobile-intro-actions .store-computer-action .store-action-label {
+        left: 22.5%;
+        width: 55%;
+    }
+
+    .mobile-intro-actions .store-notebook-action .store-action-label {
+        left: 24%;
+        width: 47%;
+        font-size: clamp(0.73rem, 3vw, 0.79rem);
+    }
+
+    .orbit {
+        width: min(23.5rem, calc(100% - 1rem));
+        --orbit-radius: min(8.9rem, calc(50vw - 3.7rem));
+    }
+
+    .orbit-item {
+        width: 5.35rem;
+    }
+
+    .node-icon {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+
+    .reactor {
+        width: 5.25rem;
+        height: 5.25rem;
+    }
+
+    .center-label {
+        top: calc(50% + 3.12rem);
+        font-size: 0.72rem;
+    }
+
+    .orbit-toggle {
+        top: 0.42rem;
+        right: 0.35rem;
+        transform: none;
+    }
+
+    .home-catalog-scroll,
+    .needs-advisor-body,
+    .workspace-dialog,
+    .solution-workspace .solution-inner {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .site-footer {
+        flex: 0 0 auto;
+        margin-top: 0.75rem;
+    }
+}
+
+@media (max-width: 350px) and (orientation: portrait) {
+    .brand-copy small {
+        font-size: 0.54rem;
+    }
+
+    :is(.site-header, .subpage-header) .language-code {
+        font-size: 0.64rem;
+    }
+
+    .mobile-intro-actions > .store-object-action {
+        min-height: 5.55rem;
+    }
+
+    .mobile-intro-actions .store-computer-action .store-action-label {
+        font-size: 0.73rem;
+    }
+
+    .mobile-intro-actions .store-notebook-action .store-action-label {
+        font-size: 0.71rem;
+    }
+}
     </style>
     
     
