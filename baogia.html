@@ -4030,6 +4030,356 @@
                 }
             }
         </style>
+        <style id="unified-titanium-tool-theme">
+            :root {
+                --tool-graphite: #0b1014;
+                --tool-graphite-soft: #11181d;
+                --tool-titanium: #dfe5e8;
+                --tool-titanium-soft: #f3f5f6;
+                --tool-line: #bcc7cc;
+                --tool-cyan: #62c4d0;
+                --tool-ink: #162026;
+                --tool-muted: #65747c;
+            }
+
+            html,
+            body {
+                background: #080c0f;
+                font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, "Segoe UI", sans-serif;
+            }
+
+            #screenMain {
+                color: var(--tool-ink);
+                background: #e7ebed;
+            }
+
+            #screenMain #mainScroll > .sticky {
+                border-color: rgba(188, 199, 204, 0.28) !important;
+                color: #eaf0f2;
+                background: rgba(11, 16, 20, 0.97) !important;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24) !important;
+            }
+
+            #screenMain #mainScroll > .sticky h2,
+            #screenMain #mainScroll > .sticky .text-slate-900 {
+                color: #edf3f5 !important;
+            }
+
+            #btnBackToHome,
+            #btnOpenGuideMain,
+            #btnOpenSetupManager,
+            #btnOpenPromoManager,
+            #btnOpenDiscountManager,
+            #btnOpenBrandManager,
+            #btnToggleView,
+            #btnResetQuote {
+                border: 1px solid rgba(188, 199, 204, 0.24) !important;
+                border-radius: 6px !important;
+                color: #c8d3d8 !important;
+                background: #11181d !important;
+                box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2) !important;
+            }
+
+            #btnResetQuote {
+                color: #e2a1a7 !important;
+            }
+
+            #btnOpenSearch,
+            #btnExportMenu,
+            .tax-tool-submit {
+                border: 1px solid rgba(244, 247, 248, 0.56) !important;
+                border-radius: 6px !important;
+                color: #0a1014 !important;
+                background: linear-gradient(180deg, #f0f3f4, #aeb9be) !important;
+                box-shadow: 0 3px 9px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.68) !important;
+            }
+
+            #quoteList > article {
+                border: 1px solid #c4cdd1 !important;
+                border-radius: 8px !important;
+                color: var(--tool-ink);
+                background: var(--tool-titanium-soft) !important;
+                box-shadow: 0 4px 14px rgba(26, 38, 44, 0.08) !important;
+            }
+
+            #quoteList > article .text-slate-900,
+            #quoteList > article .text-slate-800,
+            #quoteList > article .text-blue-600,
+            #quoteList > article .text-blue-700,
+            #quoteList > article .text-teal-700,
+            #quoteList > article .text-teal-800,
+            #quoteList > article .text-emerald-700,
+            #quoteList > article .text-emerald-800 {
+                color: var(--tool-ink) !important;
+            }
+
+            #quoteList > article .bg-blue-600 {
+                color: #eef3f5 !important;
+                background: #2c383e !important;
+            }
+
+            #quoteList > article .bg-blue-50,
+            #quoteList > article .bg-slate-50,
+            #quoteList > article .bg-slate-100,
+            #quoteList > article .bg-slate-200,
+            #quoteList > article .bg-blue-200,
+            #quoteList > article .bg-teal-200,
+            #quoteList > article .bg-emerald-200,
+            #quoteList > article .bg-indigo-100,
+            #quoteList > article .bg-rose-100 {
+                background: #e4e9eb !important;
+            }
+
+            #quoteList [data-action="remove"] {
+                border-color: transparent !important;
+                border-radius: 4px !important;
+                color: #9b555b !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+
+            #screenMain #quoteList input.cart-input-text,
+            #screenMain #quoteList input.cart-input,
+            #screenMain input,
+            #screenMain textarea,
+            #screenMain select {
+                min-height: 44px !important;
+                border: 1px solid #b9c5ca !important;
+                border-radius: 6px !important;
+                color: #152027 !important;
+                background: #ffffff !important;
+                box-shadow: inset 0 1px 2px rgba(25, 39, 46, 0.05) !important;
+                font-size: 16px !important;
+            }
+
+            #screenMain #quoteList input.cart-input:focus,
+            #screenMain #quoteList input.cart-input-text:focus,
+            #screenMain input:focus,
+            #screenMain textarea:focus,
+            #screenMain select:focus {
+                border-color: #56b8c4 !important;
+                outline: 2px solid rgba(86, 184, 196, 0.18) !important;
+                outline-offset: 1px;
+            }
+
+            #quoteList .quote-price-editor {
+                border: 1px solid #c6d0d4 !important;
+                border-radius: 7px !important;
+                background: #e9edef !important;
+                box-shadow: none !important;
+            }
+
+            #quoteList .quote-primary-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 0.7rem !important;
+                overflow: visible !important;
+                padding: 0 !important;
+            }
+
+            #quoteList .quote-edit-cell label,
+            #quoteList .quote-edit-cell [data-action="sync"],
+            #quoteList .quote-edit-cell [data-action="toggleKmType"] {
+                min-height: 1.75rem;
+                border: 0 !important;
+                border-radius: 4px !important;
+                color: #44535a !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                font-size: 0.75rem !important;
+                font-weight: 720 !important;
+            }
+
+            #quoteList .quote-promo-details {
+                grid-column: 1 / -1;
+                margin-top: 0.15rem;
+                border-top: 1px solid #c4cdd1;
+            }
+
+            #quoteList .quote-promo-details > summary {
+                display: grid;
+                min-height: 44px;
+                grid-template-columns: minmax(0, 1fr) auto;
+                grid-template-areas: "title icon" "hint icon";
+                align-items: center;
+                gap: 0.1rem 0.75rem;
+                padding: 0.55rem 0.15rem 0.35rem;
+                color: #304047;
+                cursor: pointer;
+                list-style: none;
+            }
+
+            #quoteList .quote-promo-details > summary::-webkit-details-marker {
+                display: none;
+            }
+
+            #quoteList .quote-promo-details > summary span {
+                grid-area: title;
+                font-size: 0.86rem;
+                font-weight: 760;
+            }
+
+            #quoteList .quote-promo-details > summary small {
+                grid-area: hint;
+                color: #6f7e85;
+                font-size: 0.72rem;
+                line-height: 1.35;
+            }
+
+            #quoteList .quote-promo-details > summary svg {
+                grid-area: icon;
+                width: 1.15rem;
+                height: 1.15rem;
+                color: #4c626a;
+                transition: transform 160ms ease;
+            }
+
+            #quoteList .quote-promo-details[open] > summary svg {
+                transform: rotate(180deg);
+            }
+
+            #quoteList .quote-promo-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 0.65rem;
+                padding: 0.55rem 0 0.15rem;
+            }
+
+            #bottomFooter {
+                border-color: rgba(188, 199, 204, 0.22) !important;
+                border-radius: 0 !important;
+                color: #eef3f5;
+                background: rgba(11, 16, 20, 0.98) !important;
+                box-shadow: 0 -8px 22px rgba(0, 0, 0, 0.24) !important;
+            }
+
+            #bottomFooter #summaryTotalFinal,
+            #bottomFooter .text-slate-900 {
+                color: #eef3f5 !important;
+            }
+
+            .fullscreen-modal {
+                color: var(--tool-ink);
+                background: #e7ebed !important;
+            }
+
+            .fullscreen-modal > div:first-child {
+                border-color: #c4cdd1 !important;
+                background: #f3f5f6 !important;
+                box-shadow: 0 4px 14px rgba(24, 37, 44, 0.08) !important;
+            }
+
+            .fullscreen-modal button,
+            #manualAddModal button,
+            #userGuideModal button {
+                border-radius: 6px !important;
+            }
+
+            .tax-tool-shell {
+                border-color: rgba(188, 199, 204, 0.22) !important;
+                border-radius: 8px !important;
+                color: #e7edef !important;
+                background: #0b1014 !important;
+                box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48) !important;
+            }
+
+            .tax-tool-header,
+            .tax-tool-form,
+            .tax-tool-results {
+                border-color: rgba(188, 199, 204, 0.14) !important;
+                background: #0b1014 !important;
+            }
+
+            .tax-tool-heading-icon,
+            .tax-tool-close,
+            .tax-tool-rate-preview div,
+            .tax-tool-period,
+            .tax-tool-method,
+            .tax-tool-obligations,
+            .tax-tool-details {
+                border-color: rgba(188, 199, 204, 0.2) !important;
+                border-radius: 6px !important;
+                background: #11181d !important;
+                box-shadow: none !important;
+            }
+
+            .tax-tool-select,
+            .tax-tool-money {
+                min-height: 44px;
+                border-color: rgba(188, 199, 204, 0.28) !important;
+                border-radius: 6px !important;
+                color: #eef3f5 !important;
+                background: #080c0f !important;
+                font-size: 16px !important;
+            }
+
+            .tax-tool-period span,
+            .tax-tool-submit,
+            .tax-tool-reset,
+            .tax-tool-suggest {
+                min-height: 44px;
+                border-radius: 6px !important;
+            }
+
+            .tax-tool-period input:checked + span {
+                color: #071114 !important;
+                background: linear-gradient(180deg, #edf1f2, #aeb9be) !important;
+                box-shadow: inset 0 1px rgba(255, 255, 255, 0.56) !important;
+            }
+
+            .tax-tool-close {
+                display: inline-flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+
+            @media (max-width: 640px) {
+                #quoteList .quote-promo-grid {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 0.35rem;
+                }
+
+                #quoteList .quote-promo-grid .quote-edit-cell,
+                #quoteList .quote-promo-grid .quote-edit-cell:last-child {
+                    display: grid !important;
+                    grid-column: auto !important;
+                    grid-template-columns: minmax(0, 1fr) 6.5rem;
+                    align-items: center;
+                    gap: 0.7rem;
+                    min-width: 0;
+                }
+
+                #quoteList .quote-promo-grid .quote-edit-cell > div {
+                    justify-content: flex-start !important;
+                    margin: 0 !important;
+                }
+
+                #quoteList .quote-promo-grid .cart-input {
+                    min-width: 0;
+                }
+
+                #screenMain #quoteList input.cart-input-text,
+                #screenMain #quoteList input.cart-input,
+                #screenMain input,
+                #screenMain textarea,
+                #screenMain select {
+                    font-size: 16px !important;
+                }
+
+                #quoteList > article {
+                    padding: 0.9rem !important;
+                }
+
+                #bottomFooter {
+                    padding-top: 0.7rem !important;
+                    padding-bottom: calc(0.7rem + env(safe-area-inset-bottom)) !important;
+                }
+
+                .tax-tool-shell {
+                    border-radius: 8px 8px 0 0 !important;
+                }
+            }
+        </style>
 </head>
 <body class="screen-landing overflow-hidden selection:bg-blue-200 w-full h-full relative bg-slate-950">
 
@@ -9438,6 +9788,8 @@ led=>LED
                     const baseDiscountLabel = Utils.term('CK(%)', 'Discount (%)', lang);
                     const promo1Label = Utils.term('KM1(%)', 'Promo 1 (%)', lang);
                     const promo2Label = Utils.term('KM2(%)', 'Promo 2 (%)', lang);
+                    const morePromoLabel = Utils.term('Khuyến mãi thêm', 'More promotions', lang);
+                    const morePromoHint = Utils.term('KM1, KM2 và giảm tiền', 'Promo 1, Promo 2, and cash discount', lang);
                     const unitLabel = Utils.term('Đơn', 'Unit', lang);
                     const removeLabel = Utils.term('Xóa', 'Remove', lang);
                     const notePlaceholder = Utils.term('Ghi chú in báo giá...', 'Quote note...', lang);
@@ -9488,13 +9840,18 @@ led=>LED
                                 </div>
                             </div>
 
-                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
-                                <div class="quote-edit-grid grid grid-cols-5 gap-2">
+                            <div class="quote-price-editor bg-slate-50 rounded-xl p-3 border border-slate-200 shadow-inner mb-3">
+                                <div class="quote-edit-grid quote-primary-grid grid grid-cols-2 gap-2">
 	                                    <div class="quote-edit-cell flex flex-col"><label class="text-[10px] md:text-[11px] font-black text-slate-800 bg-slate-200 rounded px-1 py-0.5 uppercase tracking-widest mb-1.5 text-center shadow-sm" title="Số lượng">${qtyLabel}</label><input type="number" inputmode="numeric" autocomplete="off" enterkeyhint="done" min="1" data-field="qty" value="${safeQty}" class="cart-input w-full bg-white border-2 border-slate-300 rounded-lg py-1.5 text-center text-[14px] font-black text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all px-0 appearance-none"></div>
 	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-teal-800 bg-teal-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="baseDiscount">${baseDiscountLabel}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="baseDiscount" value="${safeBaseDiscount}" class="cart-input w-full bg-white border-2 border-teal-200 rounded-lg py-1.5 text-center text-[14px] font-black text-teal-700 outline-none focus:border-teal-500 px-0 appearance-none"></div>
-	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km1">${promo1Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km1" value="${safeKm1}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
-	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km2">${promo2Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km2" value="${safeKm2}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
-	                                    <div class="quote-edit-cell flex flex-col"><div class="flex justify-center mb-1.5"><button type="button" data-action="toggleKmType" class="text-[9px] font-black px-1 py-0.5 rounded border ${item.kmTienType==='total'?'border-rose-400 bg-rose-100 text-rose-800':'border-indigo-400 bg-indigo-100 text-indigo-800'}">${cashTypeLabel}</button></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="kmTien" value="${safeKmTien}" class="cart-input w-full bg-white border-2 border-indigo-200 rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:border-indigo-500 px-0 appearance-none"></div>
+                                    <details class="quote-promo-details">
+                                        <summary><span>${morePromoLabel}</span><small>${morePromoHint}</small><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></summary>
+                                        <div class="quote-promo-grid">
+	                                            <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-blue-800 bg-blue-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km1">${promo1Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km1" value="${safeKm1}" class="cart-input w-full bg-white border-2 border-blue-200 rounded-lg py-1.5 text-center text-[14px] font-black text-blue-700 outline-none focus:border-blue-500 px-0 appearance-none"></div>
+	                                            <div class="quote-edit-cell flex flex-col"><div class="flex justify-center gap-0.5 mb-1.5"><label class="text-[10px] md:text-[11px] font-black text-emerald-800 bg-emerald-200 rounded px-1 py-0.5 cursor-pointer text-center" data-action="sync" data-field="km2">${promo2Label}</label></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="km2" value="${safeKm2}" class="cart-input w-full bg-white border-2 border-emerald-200 rounded-lg py-1.5 text-center text-[14px] font-black text-emerald-700 outline-none focus:border-emerald-500 px-0 appearance-none"></div>
+	                                            <div class="quote-edit-cell flex flex-col"><div class="flex justify-center mb-1.5"><button type="button" data-action="toggleKmType" class="text-[9px] font-black px-1 py-0.5 rounded border ${item.kmTienType==='total'?'border-rose-400 bg-rose-100 text-rose-800':'border-indigo-400 bg-indigo-100 text-indigo-800'}">${cashTypeLabel}</button></div><input type="number" inputmode="decimal" autocomplete="off" enterkeyhint="done" data-field="kmTien" value="${safeKmTien}" class="cart-input w-full bg-white border-2 border-indigo-200 rounded-lg py-1.5 text-center text-[14px] font-black outline-none focus:border-indigo-500 px-0 appearance-none"></div>
+                                        </div>
+                                    </details>
                                 </div>
                             </div>
                             <div class="flex justify-between items-end px-1 mt-1">

@@ -133,6 +133,267 @@
             .route-language { grid-template-columns: repeat(2, 2.35rem); }
             .route-language button { min-width: 2.35rem; }
         }
+
+        /* Unified titanium interface: presentation only; route data and React logic stay intact. */
+        :root {
+            --route-graphite: #0b1014;
+            --route-graphite-soft: #11181d;
+            --route-titanium: #e7ebed;
+            --route-surface: #f5f7f7;
+            --route-line: #bec8cd;
+            --route-cyan: #62c4d0;
+            --route-ink: #162026;
+            --route-muted: #65747c;
+        }
+
+        html,
+        body {
+            color: var(--route-ink);
+            background: var(--route-titanium);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", Inter, "Segoe UI", sans-serif;
+            text-rendering: optimizeLegibility;
+        }
+
+        .route-sitebar {
+            border-bottom-color: rgba(190, 200, 205, 0.2);
+            color: #eaf0f2;
+            background: rgba(11, 16, 20, 0.98);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.24);
+            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+        }
+
+        .route-home svg {
+            color: #72ccd6;
+            filter: drop-shadow(0 0 5px rgba(98, 196, 208, 0.28));
+        }
+
+        .route-brand strong {
+            color: #eef3f5;
+            background: linear-gradient(180deg, #ffffff 8%, #aebbc2 92%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 780;
+        }
+
+        .route-brand small {
+            color: #94a2a9;
+        }
+
+        .route-language button {
+            color: #8f9ca4;
+        }
+
+        .route-language button::after {
+            height: 1px;
+            border-radius: 0;
+            background: #70d0dc;
+        }
+
+        .route-language button[aria-pressed="true"] {
+            color: #eef3f5;
+        }
+
+        .route-close {
+            border-color: rgba(190, 200, 205, 0.24);
+            border-radius: 6px;
+            color: #dbe3e7;
+            background: #11181d;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+        }
+
+        #root {
+            color: var(--route-ink);
+            background: var(--route-titanium);
+        }
+
+        #root .bg-white {
+            background-color: var(--route-surface) !important;
+        }
+
+        #root .bg-slate-50,
+        #root .bg-gray-50 {
+            background-color: #e9edef !important;
+        }
+
+        #root .bg-slate-100,
+        #root .bg-gray-100 {
+            background-color: #dfe5e8 !important;
+        }
+
+        #root .border-slate-100,
+        #root .border-slate-200,
+        #root .border-slate-300,
+        #root .border-gray-100,
+        #root .border-gray-200,
+        #root .border-gray-300 {
+            border-color: var(--route-line) !important;
+        }
+
+        #root .text-slate-950,
+        #root .text-slate-900,
+        #root .text-slate-800,
+        #root .text-gray-950,
+        #root .text-gray-900,
+        #root .text-gray-800 {
+            color: var(--route-ink) !important;
+        }
+
+        #root .text-slate-700,
+        #root .text-slate-600,
+        #root .text-slate-500,
+        #root .text-gray-700,
+        #root .text-gray-600,
+        #root .text-gray-500 {
+            color: var(--route-muted) !important;
+        }
+
+        #root .bg-blue-600,
+        #root .bg-indigo-600 {
+            border-color: rgba(93, 111, 120, 0.62) !important;
+            color: #f1f5f6 !important;
+            background: linear-gradient(180deg, #39464d, #151c21) !important;
+            box-shadow: 0 3px 9px rgba(24, 38, 44, 0.2), inset 0 1px rgba(255, 255, 255, 0.14) !important;
+        }
+
+        #root .bg-emerald-600,
+        #root .bg-green-600,
+        #root .bg-teal-600 {
+            border-color: rgba(93, 111, 120, 0.62) !important;
+            color: #f1f5f6 !important;
+            background: linear-gradient(180deg, #39464d, #151c21) !important;
+            box-shadow: 0 3px 9px rgba(24, 38, 44, 0.2), inset 0 1px rgba(255, 255, 255, 0.14) !important;
+        }
+
+        #root .text-blue-600,
+        #root .text-blue-700,
+        #root .text-indigo-600,
+        #root .text-indigo-700 {
+            color: #526970 !important;
+        }
+
+        #root .text-blue-800,
+        #root .text-blue-900,
+        #root .text-indigo-800,
+        #root .text-indigo-900 {
+            color: #27383f !important;
+        }
+
+        #root .text-emerald-600,
+        #root .text-emerald-700,
+        #root .text-emerald-800,
+        #root .text-green-600,
+        #root .text-green-700,
+        #root .text-green-800,
+        #root .text-teal-600,
+        #root .text-teal-700,
+        #root .text-teal-800 {
+            color: #4c6862 !important;
+        }
+
+        #root .bg-blue-50,
+        #root .bg-indigo-50 {
+            background-color: rgba(98, 119, 128, 0.08) !important;
+        }
+
+        #root .bg-emerald-50,
+        #root .bg-green-50,
+        #root .bg-teal-50 {
+            background-color: rgba(98, 119, 112, 0.08) !important;
+        }
+
+        #root .border-blue-100,
+        #root .border-blue-200,
+        #root .border-indigo-100,
+        #root .border-indigo-200 {
+            border-color: rgba(72, 151, 161, 0.34) !important;
+        }
+
+        #root .border-emerald-100,
+        #root .border-emerald-200,
+        #root .border-green-100,
+        #root .border-green-200,
+        #root .border-teal-100,
+        #root .border-teal-200 {
+            border-color: rgba(70, 148, 133, 0.34) !important;
+        }
+
+        #root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+        #root textarea,
+        #root select {
+            border-color: #b8c4c9 !important;
+            border-radius: 6px !important;
+            color: var(--route-ink) !important;
+            background: #ffffff !important;
+            box-shadow: inset 0 1px 2px rgba(25, 39, 46, 0.05) !important;
+        }
+
+        #root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):focus,
+        #root textarea:focus,
+        #root select:focus {
+            border-color: #56b8c4 !important;
+            outline: 2px solid rgba(86, 184, 196, 0.18) !important;
+            outline-offset: 1px;
+        }
+
+        #root button,
+        #root a,
+        #root summary {
+            border-radius: 6px;
+        }
+
+        #root .rounded-xl,
+        #root .rounded-2xl,
+        #root .rounded-3xl {
+            border-radius: 8px !important;
+        }
+
+        #root .shadow-sm,
+        #root .shadow-md,
+        #root .shadow-lg,
+        #root .shadow-xl,
+        #root .shadow-2xl {
+            box-shadow: 0 5px 16px rgba(24, 38, 44, 0.09) !important;
+        }
+
+        #root .route-step-nav {
+            border: 1px solid var(--route-line);
+            border-radius: 7px;
+            background: var(--route-line);
+        }
+
+        #root .route-step-button {
+            border-radius: 5px;
+            color: var(--route-muted);
+            background: var(--route-surface);
+        }
+
+        @media (max-width: 767px) {
+            .route-brand strong {
+                font-size: 0.94rem;
+            }
+
+            .route-brand small {
+                font-size: 0.72rem;
+            }
+
+            .route-language .language-code {
+                font-size: 0.58rem;
+            }
+
+            #root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+            #root textarea,
+            #root select {
+                min-height: 44px !important;
+                font-size: 16px !important;
+            }
+
+            #root p,
+            #root li {
+                line-height: 1.55;
+            }
+        }
     </style>
 </head>
 <body>
