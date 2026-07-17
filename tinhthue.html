@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="Công cụ ước tính thuế hộ kinh doanh 2026 của Thuận Store.">
-    <meta name="theme-color" content="#0b1014">
+    <meta property="og:site_name" content="Thuận Store">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="Công cụ ước tính thuế hộ kinh doanh 2026 của Thuận Store.">
+    <meta property="og:title" content="Tính Thuế 2026 - Thuận Store">
+    <meta property="og:url" content="https://thuanstore.com/tinhthue.html">
+    <link rel="canonical" href="https://thuanstore.com/tinhthue.html">
+    <link rel="alternate" hreflang="vi" href="https://thuanstore.com/tinhthue.html?lang=vi">
+    <link rel="alternate" hreflang="en" href="https://thuanstore.com/tinhthue.html?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://thuanstore.com/tinhthue.html">
+    <meta name="theme-color" content="#f8fafc">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2362c4d0' stroke-width='2'%3E%3Crect x='4' y='3' width='16' height='18' rx='3'/%3E%3Cpath d='M8 7h8M8 12h2m4 0h2m-8 4h2m4 0h2'/%3E%3C/svg%3E">
     <title>Tính Thuế 2026 - Thuận Store</title>
     <style>
@@ -624,6 +633,282 @@
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+        }
+
+        /* Shared neutral titanium surface; calculation behavior remains untouched. */
+        :root {
+            --titanium: #e6e9e7;
+            --surface: #f5f6f2;
+            --surface-soft: #ecefec;
+            --surface-strong: #ffffff;
+            --line: #c4cbc7;
+            --line-soft: #d7dcd9;
+            --ink: #17201f;
+            --muted: #5f6c6b;
+        }
+
+        @media (max-width: 560px) {
+            h1 {
+                font-size: clamp(1.68rem, 7.4vw, 1.9rem);
+                line-height: 1.14;
+            }
+
+            .intro-copy {
+                font-size: 0.98rem;
+                line-height: 1.55;
+            }
+
+            .panel-title {
+                font-size: 1.07rem;
+            }
+
+            .field-label,
+            .field > label {
+                font-size: 0.92rem;
+            }
+
+            .period span {
+                font-size: 0.92rem;
+            }
+        }
+
+        /* Quote workspace palette: visual layer only; tax calculation stays unchanged. */
+        :root {
+            --graphite: #0f172a;
+            --graphite-soft: #0f172a;
+            --titanium: #f8fafc;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --surface-strong: #ffffff;
+            --line: #e2e8f0;
+            --line-soft: #e2e8f0;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --cyan: #2563eb;
+            --cyan-dark: #1d4ed8;
+            --brass: #4f46e5;
+            --danger: #e11d48;
+            --success: #059669;
+        }
+
+        html,
+        body {
+            color: #0f172a !important;
+            background: #f8fafc !important;
+        }
+
+        .appbar {
+            color: #0f172a !important;
+            background: rgba(255, 255, 255, 0.96) !important;
+            border-bottom-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+        }
+
+        .brand-mark {
+            color: #2563eb !important;
+            filter: none !important;
+        }
+
+        .brand-copy strong {
+            color: #0f172a !important;
+        }
+
+        .brand-copy small,
+        .language-button {
+            color: #64748b !important;
+        }
+
+        .language-button::after {
+            background: #2563eb !important;
+        }
+
+        .language-button[aria-pressed="true"] {
+            color: #0f172a !important;
+        }
+
+        .close-link {
+            color: #475569 !important;
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: none !important;
+        }
+
+        h1,
+        .panel-title {
+            color: #0f172a !important;
+            text-shadow: none !important;
+        }
+
+        .status-note,
+        .field-label,
+        .field > label {
+            color: #475569 !important;
+        }
+
+        .workspace {
+            background: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+        }
+
+        .input-panel,
+        .result-panel {
+            background: #ffffff !important;
+        }
+
+        .input-panel {
+            border-right-color: #e2e8f0 !important;
+        }
+
+        .panel-step {
+            color: #1d4ed8 !important;
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+            box-shadow: none !important;
+        }
+
+        .select,
+        .money {
+            color: #0f172a !important;
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        .select-wrap svg,
+        .currency,
+        .suggest {
+            color: #2563eb !important;
+        }
+
+        .select:focus,
+        .money:focus {
+            border-color: #2563eb !important;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16) !important;
+        }
+
+        .period {
+            background: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .period span {
+            color: #64748b !important;
+        }
+
+        .period input:checked + span {
+            color: #ffffff !important;
+            background: #2563eb !important;
+            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.2) !important;
+        }
+
+        .rate-preview div {
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+        }
+
+        .rate-preview strong,
+        .empty-state h3,
+        .breakdown strong,
+        .method strong {
+            color: #0f172a !important;
+        }
+
+        .submit {
+            color: #ffffff !important;
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2) !important;
+        }
+
+        .submit:hover {
+            background: #1d4ed8 !important;
+        }
+
+        .submit svg {
+            color: #ffffff !important;
+        }
+
+        .reset {
+            color: #475569 !important;
+            background: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .reset:hover {
+            background: #e2e8f0 !important;
+        }
+
+        .empty-icon {
+            color: #2563eb !important;
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+            box-shadow: none !important;
+        }
+
+        .result-group {
+            color: #1d4ed8 !important;
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+        }
+
+        .total-block {
+            color: #ffffff !important;
+            background: #0f172a !important;
+            border-color: #0f172a !important;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16) !important;
+        }
+
+        .total-label {
+            color: #cbd5e1 !important;
+        }
+
+        .total-block strong {
+            color: #ffffff !important;
+        }
+
+        .total-period {
+            color: #93c5fd !important;
+        }
+
+        .breakdown,
+        .breakdown > div,
+        .obligation,
+        .details {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .method {
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        .method.is-lower {
+            background: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+        }
+
+        .method h4,
+        .obligation strong,
+        .details summary {
+            color: #334155 !important;
+        }
+
+        .method-badge {
+            color: #047857 !important;
+            background: #d1fae5 !important;
+        }
+
+        .obligation svg,
+        .details summary::after,
+        .legal a {
+            color: #2563eb !important;
+        }
+
+        .legal {
+            color: #64748b !important;
+            background: #f8fafc !important;
+            border-color: #e2e8f0 !important;
         }
     </style>
 </head>

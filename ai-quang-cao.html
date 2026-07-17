@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fd6da' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E">
     <meta name="description" content="AI chuyên gia tính điểm hòa vốn, ngân sách thử nghiệm và kế hoạch quảng cáo 30 ngày.">
+    <meta property="og:site_name" content="Thuận Store">
+    <meta property="og:type" content="website">
+    <meta property="og:description" content="AI chuyên gia tính điểm hòa vốn, ngân sách thử nghiệm và kế hoạch quảng cáo 30 ngày.">
+    <meta property="og:title" content="AI lập ngân sách quảng cáo - Thuận Store">
+    <meta property="og:url" content="https://thuanstore.com/ai-quang-cao.html">
+    <link rel="canonical" href="https://thuanstore.com/ai-quang-cao.html">
+    <link rel="alternate" hreflang="vi" href="https://thuanstore.com/ai-quang-cao.html?lang=vi">
+    <link rel="alternate" hreflang="en" href="https://thuanstore.com/ai-quang-cao.html?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://thuanstore.com/ai-quang-cao.html">
     <title>AI lập ngân sách quảng cáo - Thuận Store</title>
     <style data-thuanstore-inline="site.css">
 :root {
@@ -3253,6 +3262,11 @@ body.needs-advisor-open {
     margin-top: clamp(2.5rem, 6vw, 5rem);
 }
 
+.expert-workspace:not(.has-result) {
+    grid-template-columns: minmax(0, 44rem);
+    justify-content: center;
+}
+
 .expert-form {
     min-width: 0;
 }
@@ -3655,6 +3669,230 @@ body.needs-advisor-open {
     font-weight: 560;
 }
 
+.expert-progress {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 1.65rem;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.expert-progress-step {
+    position: relative;
+    min-width: 0;
+    padding: 0 0.75rem 0.78rem 0;
+    color: #71839c;
+    font-size: 0.76rem;
+    font-weight: 620;
+    line-height: 1.35;
+}
+
+.expert-progress-step::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: transparent;
+}
+
+.expert-progress-step > strong {
+    display: block;
+    margin-bottom: 0.22rem;
+    color: currentColor;
+    font-size: 0.7rem;
+    font-weight: 760;
+}
+
+.expert-progress-step.is-current {
+    color: #f8fafc;
+}
+
+.expert-progress-step.is-current::after,
+.expert-progress-step.is-complete::after {
+    background: var(--expert-color);
+}
+
+.expert-progress-step.is-complete {
+    color: #aab8c9;
+}
+
+.expert-form-step[hidden] {
+    display: none !important;
+}
+
+.expert-form-step {
+    animation: expertStepIn 180ms ease-out both;
+}
+
+@keyframes expertStepIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.4rem);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.expert-step-heading {
+    margin-top: 1.45rem;
+}
+
+.expert-step-heading h3 {
+    margin: 0;
+    color: #edf4fb;
+    font-size: 1.08rem;
+    font-weight: 680;
+    line-height: 1.35;
+}
+
+.expert-step-heading p {
+    margin: 0.42rem 0 0;
+    color: #8293aa;
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+.expert-review-list {
+    margin: 1.1rem 0 0;
+    border-top: 1px solid var(--line-soft);
+}
+
+.expert-review-item {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 0.38fr) minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.78rem 0;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.expert-review-item span {
+    color: #8192aa;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.expert-review-item strong {
+    overflow-wrap: anywhere;
+    color: #e7eef7;
+    font-size: 0.88rem;
+    font-weight: 590;
+    line-height: 1.5;
+}
+
+.expert-result-recap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    margin-top: 1rem;
+    color: #8293aa;
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
+.expert-result-recap span {
+    overflow-wrap: anywhere;
+}
+
+.expert-result-recap strong {
+    color: #cbd7e6;
+    font-weight: 620;
+}
+
+.expert-result-primary {
+    margin-top: 1.5rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.expert-result-primary > span {
+    display: block;
+    color: var(--expert-color);
+    font-size: 0.72rem;
+    font-weight: 740;
+}
+
+.expert-result-primary strong {
+    display: block;
+    margin-top: 0.42rem;
+    color: #f8fafc;
+    font-size: 1.05rem;
+    font-weight: 680;
+    line-height: 1.4;
+}
+
+.expert-result-primary p {
+    margin: 0.38rem 0 0;
+    color: #aab8c9;
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.expert-result-details {
+    margin-top: 0.35rem;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.expert-result-details > summary {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) 1rem;
+    align-items: center;
+    min-height: 3.25rem;
+    color: #dfe8f3;
+    font-size: 0.94rem;
+    font-weight: 650;
+    line-height: 1.4;
+    cursor: pointer;
+    list-style: none;
+}
+
+.expert-result-details > summary::-webkit-details-marker {
+    display: none;
+}
+
+.expert-result-details > summary > span:first-child {
+    color: var(--expert-color);
+    font-size: 0.72rem;
+    font-weight: 740;
+}
+
+.expert-result-details > summary::after {
+    content: "+";
+    color: #8192aa;
+    font-size: 1.15rem;
+    font-weight: 400;
+    text-align: right;
+}
+
+.expert-result-details[open] > summary::after {
+    content: "−";
+}
+
+.expert-result-details-body {
+    padding: 0 0 1rem 2.25rem;
+}
+
+.expert-result-details-body > p {
+    margin: 0 0 0.75rem;
+    color: #91a2b8;
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.expert-result-details-body .expert-result-section,
+.expert-result-details-body .expert-table-region {
+    margin-top: 0;
+}
+
+.expert-result-details-body .expert-result-section ul {
+    margin-top: 0;
+}
+
 @media (max-width: 900px) {
     .expert-intro,
     .expert-workspace {
@@ -3666,7 +3904,7 @@ body.needs-advisor-open {
     }
 
     .expert-flow {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        display: none;
     }
 
     .expert-flow li {
@@ -3683,6 +3921,14 @@ body.needs-advisor-open {
 
     .expert-workspace {
         gap: 3rem;
+    }
+
+    .expert-workspace.has-result:not(.is-editing) .expert-form {
+        display: none;
+    }
+
+    .expert-workspace.has-result.is-editing .expert-output {
+        display: none;
     }
 }
 
@@ -3747,6 +3993,20 @@ body.needs-advisor-open {
     .text-action {
         width: 100%;
         min-height: 3rem;
+    }
+
+    .expert-progress-step {
+        padding-right: 0.4rem;
+        font-size: 0.7rem;
+    }
+
+    .expert-review-item {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.18rem;
+    }
+
+    .expert-result-details-body {
+        padding-left: 0;
     }
 }
 
@@ -9398,6 +9658,35 @@ body::before {
         });
     };
 
+    const fieldLabel = (field, language) => language === 'en' ? field.label.en : field.label.vi;
+    const displayValue = (field, value, language) => {
+        if (Array.isArray(value)) {
+            if (!value.length) return language === 'en' ? 'Not selected' : 'Chưa chọn';
+            return value.map(entry => {
+                const option = field.options?.find(item => item.value === entry);
+                return option ? (language === 'en' ? option.en : option.vi) : entry;
+            }).join(', ');
+        }
+        if (value === '' || value === null || value === undefined) return language === 'en' ? 'Not provided' : 'Chưa nhập';
+        const option = field.options?.find(item => item.value === value);
+        return option ? (language === 'en' ? option.en : option.vi) : String(value);
+    };
+
+    const validateFields = (form, fields) => {
+        for (const field of fields) {
+            if (field.type === 'multiselect') {
+                const selected = form.querySelectorAll(`input[name="${field.id}"]:checked`);
+                if (field.required && !selected.length) {
+                    return { valid: false, field, control: form.querySelector(`input[name="${field.id}"]`) };
+                }
+                continue;
+            }
+            const control = form.elements[field.id];
+            if (control && !control.checkValidity()) return { valid: false, field, control };
+        }
+        return { valid: true };
+    };
+
     const resultToText = result => {
         const lines = [result.title, result.summary, ''];
         (result.metrics || []).forEach(metric => lines.push(`${metric.label}: ${metric.value}${metric.note ? ` - ${metric.note}` : ''}`));
@@ -9409,16 +9698,20 @@ body::before {
         return lines.join('\n');
     };
 
-    const createResult = (result, config, language) => {
+    const createResult = (result, config, language, values = {}, controls = {}) => {
         const output = document.getElementById('expertOutput');
+        const workspace = output.closest('.expert-workspace');
+        workspace?.classList.add('has-result');
+        workspace?.classList.remove('is-editing');
         output.hidden = false;
         output.innerHTML = '';
+        output.tabIndex = -1;
 
         const header = document.createElement('header');
         header.className = 'expert-result-header';
         const kicker = document.createElement('span');
         kicker.className = 'expert-result-kicker';
-        kicker.textContent = result.kicker || (language === 'en' ? 'EXPERT ANALYSIS' : 'PHÂN TÍCH CHUYÊN MÔN');
+        kicker.textContent = result.kicker || (language === 'en' ? 'WORKING RESULT' : 'KẾT QUẢ THAM KHẢO');
         const title = document.createElement('h2');
         title.textContent = result.title;
         const summary = document.createElement('p');
@@ -9426,97 +9719,70 @@ body::before {
         header.append(kicker, title, summary);
         output.append(header);
 
-        if (result.metrics?.length) {
-            const metrics = document.createElement('div');
-            metrics.className = 'expert-result-metrics';
-            result.metrics.forEach(metric => {
-                const item = document.createElement('div');
-                const label = document.createElement('span');
-                const value = document.createElement('strong');
-                label.textContent = metric.label;
-                value.textContent = metric.value;
-                item.append(label, value);
-                if (metric.note) {
-                    const note = document.createElement('small');
-                    note.textContent = metric.note;
-                    item.append(note);
-                }
-                metrics.append(item);
+        const recapFields = config.fields
+            .filter(field => {
+                const value = values[field.id];
+                return Array.isArray(value) ? value.length : value !== '' && value !== null && value !== undefined;
+            })
+            .slice(0, 4);
+        if (recapFields.length) {
+            const recap = document.createElement('div');
+            recap.className = 'expert-result-recap';
+            recap.setAttribute('aria-label', language === 'en' ? 'Input summary' : 'Tóm tắt dữ liệu đầu vào');
+            recapFields.forEach(field => {
+                const item = document.createElement('span');
+                const label = document.createElement('strong');
+                label.textContent = `${fieldLabel(field, language)}: `;
+                item.append(label, document.createTextNode(displayValue(field, values[field.id], language)));
+                recap.append(item);
             });
-            output.append(metrics);
+            output.append(recap);
         }
 
-        (result.sections || []).forEach((section, index) => {
-            const block = document.createElement('section');
-            block.className = 'expert-result-section';
-            const heading = document.createElement('h3');
-            heading.innerHTML = `<span>${String(index + 1).padStart(2, '0')}</span>${escapeHtml(section.title)}`;
-            block.append(heading);
-            if (section.intro) {
-                const intro = document.createElement('p');
-                intro.textContent = section.intro;
-                block.append(intro);
+        const sections = result.sections || [];
+        const actionSectionPattern = /trinh tu|quy trinh|sequence|workflow|decision|chuan hoa|standardiz|dua vao su dung/;
+        const actionSectionIndex = sections.findIndex(section => section.items?.length && actionSectionPattern.test(normalize(section.title)));
+        const firstSectionIndex = actionSectionIndex >= 0 ? actionSectionIndex : sections.findIndex(section => section.items?.length);
+        const primaryEntry = firstSectionIndex >= 0 ? sections[firstSectionIndex].items[0] : null;
+        if (primaryEntry) {
+            const primary = document.createElement('section');
+            primary.className = 'expert-result-primary';
+            const label = document.createElement('span');
+            const strong = document.createElement('strong');
+            const text = document.createElement('p');
+            label.textContent = language === 'en' ? 'START HERE' : 'VIỆC NÊN LÀM TRƯỚC';
+            if (typeof primaryEntry === 'string') {
+                strong.textContent = primaryEntry;
+                text.hidden = true;
+            } else {
+                strong.textContent = primaryEntry.title;
+                text.textContent = primaryEntry.text;
             }
-            const list = document.createElement('ul');
-            (section.items || []).forEach(entry => {
-                const item = document.createElement('li');
-                if (typeof entry === 'string') {
-                    item.textContent = entry;
-                } else {
-                    const strong = document.createElement('strong');
-                    const text = document.createElement('span');
-                    strong.textContent = entry.title;
-                    text.textContent = entry.text;
-                    item.append(strong, text);
-                }
-                list.append(item);
-            });
-            block.append(list);
-            output.append(block);
-        });
-
-        if (result.table?.rows?.length) {
-            const region = document.createElement('div');
-            region.className = 'expert-table-region';
-            region.tabIndex = 0;
-            const table = document.createElement('table');
-            const head = document.createElement('thead');
-            const headRow = document.createElement('tr');
-            result.table.headers.forEach(value => {
-                const cell = document.createElement('th');
-                cell.scope = 'col';
-                cell.textContent = value;
-                headRow.append(cell);
-            });
-            head.append(headRow);
-            const body = document.createElement('tbody');
-            result.table.rows.forEach(row => {
-                const tableRow = document.createElement('tr');
-                row.forEach(value => {
-                    const cell = document.createElement('td');
-                    cell.textContent = value;
-                    tableRow.append(cell);
-                });
-                body.append(tableRow);
-            });
-            table.append(head, body);
-            region.append(table);
-            output.append(region);
-        }
-
-        if (result.caution) {
-            const caution = document.createElement('p');
-            caution.className = 'expert-caution';
-            caution.textContent = result.caution;
-            output.append(caution);
+            primary.append(label, strong, text);
+            output.append(primary);
         }
 
         const actions = document.createElement('div');
         actions.className = 'expert-result-actions';
+
+        const contact = document.createElement('a');
+        contact.className = 'primary-action';
+        const brief = (result.brief || resultToText(result)).slice(0, 1800);
+        contact.href = `lienhe.html?service=${encodeURIComponent(config.contactService)}&lang=${language}&brief=${encodeURIComponent(brief)}`;
+        contact.textContent = language === 'en' ? (config.contactLabel?.en || 'Discuss this result') : (config.contactLabel?.vi || 'Trao đổi về kết quả này');
+        actions.append(contact);
+
+        const edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'secondary-action';
+        edit.textContent = language === 'en' ? 'Review input' : 'Xem lại dữ liệu';
+        edit.addEventListener('click', () => controls.onEdit?.());
+        actions.append(edit);
+
         const copy = document.createElement('button');
         copy.type = 'button';
         copy.className = 'secondary-action';
-        copy.textContent = language === 'en' ? 'Copy analysis' : 'Sao chép phân tích';
+        copy.textContent = language === 'en' ? 'Copy result' : 'Sao chép kết quả';
         copy.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(resultToText(result));
@@ -9542,14 +9808,118 @@ body::before {
             });
             actions.append(download);
         }
-
-        const contact = document.createElement('a');
-        contact.className = 'primary-action';
-        const brief = (result.brief || resultToText(result)).slice(0, 1800);
-        contact.href = `lienhe.html?service=${encodeURIComponent(config.contactService)}&lang=${language}&brief=${encodeURIComponent(brief)}`;
-        contact.textContent = language === 'en' ? 'Confirm and discuss implementation' : 'Xác nhận và trao đổi triển khai';
-        actions.append(contact);
         output.append(actions);
+
+        if (result.metrics?.length) {
+            const metrics = document.createElement('div');
+            metrics.className = 'expert-result-metrics';
+            result.metrics.forEach(metric => {
+                const item = document.createElement('div');
+                const label = document.createElement('span');
+                const value = document.createElement('strong');
+                label.textContent = metric.label;
+                value.textContent = metric.value;
+                item.append(label, value);
+                if (metric.note) {
+                    const note = document.createElement('small');
+                    note.textContent = metric.note;
+                    item.append(note);
+                }
+                metrics.append(item);
+            });
+            output.append(metrics);
+        }
+
+        sections.forEach((section, index) => {
+            const entries = index === firstSectionIndex ? (section.items || []).slice(1) : (section.items || []);
+            if (!section.intro && !entries.length) return;
+            const details = document.createElement('details');
+            details.className = 'expert-result-details';
+            if (index === firstSectionIndex) details.open = true;
+            const detailsSummary = document.createElement('summary');
+            const numberLabel = document.createElement('span');
+            const titleLabel = document.createElement('span');
+            numberLabel.textContent = String(index + 1).padStart(2, '0');
+            titleLabel.textContent = section.title;
+            detailsSummary.append(numberLabel, titleLabel);
+            const detailsBody = document.createElement('div');
+            detailsBody.className = 'expert-result-details-body';
+            const block = document.createElement('section');
+            block.className = 'expert-result-section';
+            if (section.intro) {
+                const intro = document.createElement('p');
+                intro.textContent = section.intro;
+                detailsBody.append(intro);
+            }
+            const list = document.createElement('ul');
+            entries.forEach(entry => {
+                const item = document.createElement('li');
+                if (typeof entry === 'string') {
+                    item.textContent = entry;
+                } else {
+                    const strong = document.createElement('strong');
+                    const text = document.createElement('span');
+                    strong.textContent = entry.title;
+                    text.textContent = entry.text;
+                    item.append(strong, text);
+                }
+                list.append(item);
+            });
+            if (entries.length) {
+                block.append(list);
+                detailsBody.append(block);
+            }
+            details.append(detailsSummary, detailsBody);
+            output.append(details);
+        });
+
+        if (result.table?.rows?.length) {
+            const details = document.createElement('details');
+            details.className = 'expert-result-details';
+            const detailsSummary = document.createElement('summary');
+            const numberLabel = document.createElement('span');
+            const titleLabel = document.createElement('span');
+            numberLabel.textContent = String(sections.length + 1).padStart(2, '0');
+            titleLabel.textContent = language === 'en' ? 'Working table' : 'Bảng triển khai';
+            detailsSummary.append(numberLabel, titleLabel);
+            const detailsBody = document.createElement('div');
+            detailsBody.className = 'expert-result-details-body';
+            const region = document.createElement('div');
+            region.className = 'expert-table-region';
+            region.tabIndex = 0;
+            const table = document.createElement('table');
+            const head = document.createElement('thead');
+            const headRow = document.createElement('tr');
+            result.table.headers.forEach(value => {
+                const cell = document.createElement('th');
+                cell.scope = 'col';
+                cell.textContent = value;
+                headRow.append(cell);
+            });
+            head.append(headRow);
+            const body = document.createElement('tbody');
+            result.table.rows.forEach(row => {
+                const tableRow = document.createElement('tr');
+                row.forEach(value => {
+                    const cell = document.createElement('td');
+                    cell.textContent = value;
+                    tableRow.append(cell);
+                });
+                body.append(tableRow);
+            });
+            table.append(head, body);
+            region.append(table);
+            detailsBody.append(region);
+            details.append(detailsSummary, detailsBody);
+            output.append(details);
+        }
+
+        if (result.caution) {
+            const caution = document.createElement('p');
+            caution.className = 'expert-caution';
+            caution.textContent = result.caution;
+            output.append(caution);
+        }
     };
 
     const applyLanguage = config => {
@@ -9564,30 +9934,59 @@ body::before {
     };
 
     const mountExpert = config => {
+        const splitIndex = Math.ceil(config.fields.length / 2);
+        const fieldGroups = [
+            config.fields.slice(0, splitIndex),
+            config.fields.slice(splitIndex)
+        ];
         mount.style.setProperty('--expert-color', config.color);
         mount.innerHTML = `<section class="expert-intro">
             <div>
-                <span class="expert-badge">${bilingual('AI CHUYÊN GIA · BETA', 'EXPERT AI · BETA')}</span>
+                <span class="expert-badge">${bilingual('CÔNG CỤ AI', 'AI WORK TOOL')}</span>
                 <h1>${bilingual(config.title.vi, config.title.en)}</h1>
                 <p>${bilingual(config.summary.vi, config.summary.en)}</p>
             </div>
             <ol class="expert-flow" aria-label="Workflow">
-                <li><span>1</span>${bilingual('Nhập bối cảnh', 'Enter context')}</li>
-                <li><span>2</span>${bilingual('Nhận phân tích', 'Get analysis')}</li>
-                <li><span>3</span>${bilingual('Kiểm tra và dùng', 'Review and use')}</li>
+                <li><span>1</span>${bilingual('Nhập nhu cầu', 'Enter your need')}</li>
+                <li><span>2</span>${bilingual('Xác nhận dữ liệu', 'Review the input')}</li>
+                <li><span>3</span>${bilingual('Nhận việc cần làm', 'Get next actions')}</li>
             </ol>
         </section>
         <div class="expert-workspace">
             <form id="expertForm" class="expert-form">
                 <div class="expert-form-heading"><span>${bilingual('DỮ LIỆU ĐẦU VÀO', 'INPUT')}</span><h2>${bilingual(config.formTitle.vi, config.formTitle.en)}</h2><p>${bilingual(config.formSummary.vi, config.formSummary.en)}</p></div>
-                <div class="expert-field-grid">${config.fields.map(renderField).join('')}</div>
-                <p id="expertFormError" class="expert-form-error" role="alert"></p>
-                <div class="expert-form-actions">
-                    <button class="primary-action" type="submit">${bilingual(config.submit.vi, config.submit.en)}</button>
-                    <button id="expertExample" class="secondary-action" type="button">${bilingual('Điền dữ liệu mẫu', 'Use sample data')}</button>
-                    <button id="expertReset" class="text-action" type="reset">${bilingual('Làm lại', 'Reset')}</button>
+                <div class="expert-progress" aria-label="Progress">
+                    <div class="expert-progress-step is-current" data-progress-step="0"><strong>01</strong>${bilingual('Nhu cầu', 'Need')}</div>
+                    <div class="expert-progress-step" data-progress-step="1"><strong>02</strong>${bilingual('Thông tin', 'Details')}</div>
+                    <div class="expert-progress-step" data-progress-step="2"><strong>03</strong>${bilingual('Xác nhận', 'Review')}</div>
                 </div>
-                <p class="expert-local-note">${bilingual('Phân tích chạy trực tiếp trên thiết bị. Dữ liệu nhập tại đây không được gửi lên máy chủ.', 'Analysis runs directly on your device. Data entered here is not sent to a server.')}</p>
+                <section class="expert-form-step" data-form-step="0">
+                    <div class="expert-step-heading"><h3>${bilingual('Quảng cáo cần tạo ra kết quả kinh doanh nào?', 'What business result should advertising produce?')}</h3><p>${bilingual('Nhập ngân sách và giá trị một kết quả để tính trần chi phí trước khi chạy thử.', 'Enter the budget and value of one result to calculate the cost ceiling before testing.')}</p></div>
+                    <div class="expert-field-grid">${fieldGroups[0].map(renderField).join('')}</div>
+                    <div class="expert-form-actions">
+                        <button class="primary-action" type="button" data-next-step>${bilingual('Tiếp tục', 'Continue')}</button>
+                        <button id="expertExample" class="secondary-action" type="button">${bilingual('Điền dữ liệu mẫu', 'Use sample data')}</button>
+                        <button class="text-action" type="reset">${bilingual('Làm lại', 'Reset')}</button>
+                    </div>
+                </section>
+                <section class="expert-form-step" data-form-step="1" hidden>
+                    <div class="expert-step-heading"><h3>${bilingual('Bổ sung dữ liệu cần thiết', 'Add the required details')}</h3><p>${bilingual('Thông tin này giúp kết quả cụ thể hơn và giảm các giả định.', 'These details make the result more specific and reduce assumptions.')}</p></div>
+                    <div class="expert-field-grid">${fieldGroups[1].map(renderField).join('')}</div>
+                    <div class="expert-form-actions">
+                        <button class="secondary-action" type="button" data-previous-step>${bilingual('Quay lại', 'Back')}</button>
+                        <button class="primary-action" type="button" data-next-step>${bilingual('Xem lại dữ liệu', 'Review input')}</button>
+                    </div>
+                </section>
+                <section class="expert-form-step" data-form-step="2" hidden>
+                    <div class="expert-step-heading"><h3>${bilingual('Kiểm tra trước khi phân tích', 'Review before analysis')}</h3><p>${bilingual('Xác nhận dữ liệu bên dưới. Kết quả sẽ ưu tiên việc cần làm trước.', 'Confirm the input below. The result will prioritize what to do first.')}</p></div>
+                    <div id="expertReview" class="expert-review-list"></div>
+                    <div class="expert-form-actions">
+                        <button class="secondary-action" type="button" data-previous-step>${bilingual('Chỉnh dữ liệu', 'Edit input')}</button>
+                        <button class="primary-action" type="submit">${bilingual(config.submit.vi, config.submit.en)}</button>
+                    </div>
+                </section>
+                <p id="expertFormError" class="expert-form-error" role="alert"></p>
+                <p class="expert-local-note">${bilingual('Kết quả được tạo trực tiếp trên thiết bị từ dữ liệu đã nhập. Dữ liệu không được gửi lên máy chủ.', 'Results are generated on your device from the information entered here. Your data is not sent to a server.')}</p>
             </form>
             <section id="expertOutput" class="expert-output" aria-live="polite" hidden>
                 <div class="expert-empty-state"><span>AI</span><h2>${bilingual('Kết quả sẽ xuất hiện tại đây', 'Your result will appear here')}</h2></div>
@@ -9597,49 +9996,140 @@ body::before {
         const form = document.getElementById('expertForm');
         const output = document.getElementById('expertOutput');
         const error = document.getElementById('expertFormError');
+        const review = document.getElementById('expertReview');
+        const formSteps = [...form.querySelectorAll('[data-form-step]')];
+        const progressSteps = [...form.querySelectorAll('[data-progress-step]')];
+        let currentStep = 0;
         let lastValues = null;
+
+        const renderReview = () => {
+            const language = getLanguage();
+            const values = readValues(form, config.fields);
+            review.innerHTML = config.fields.map(field => `<div class="expert-review-item"><span>${escapeHtml(fieldLabel(field, language))}</span><strong>${escapeHtml(displayValue(field, values[field.id], language))}</strong></div>`).join('');
+        };
+
+        const goToStep = (step, shouldFocus = true) => {
+            currentStep = Math.max(0, Math.min(2, step));
+            formSteps.forEach((section, index) => {
+                section.hidden = index !== currentStep;
+            });
+            progressSteps.forEach((item, index) => {
+                item.classList.toggle('is-current', index === currentStep);
+                item.classList.toggle('is-complete', index < currentStep);
+                item.setAttribute('aria-current', index === currentStep ? 'step' : 'false');
+            });
+            error.textContent = '';
+            if (currentStep === 2) renderReview();
+            if (shouldFocus) {
+                const heading = formSteps[currentStep]?.querySelector('h3');
+                heading?.setAttribute('tabindex', '-1');
+                heading?.focus({ preventScroll: true });
+            }
+        };
+
+        const showValidationError = (validation, groupIndex) => {
+            const language = getLanguage();
+            error.textContent = language === 'en'
+                ? `Please complete: ${fieldLabel(validation.field, language)}.`
+                : `Vui lòng hoàn tất: ${fieldLabel(validation.field, language)}.`;
+            goToStep(groupIndex, false);
+            error.textContent = language === 'en'
+                ? `Please complete: ${fieldLabel(validation.field, language)}.`
+                : `Vui lòng hoàn tất: ${fieldLabel(validation.field, language)}.`;
+            setTimeout(() => {
+                validation.control?.focus({ preventScroll: true });
+                validation.control?.reportValidity?.();
+                validation.control?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 0);
+        };
+
+        form.querySelectorAll('[data-next-step]').forEach(button => {
+            button.addEventListener('click', () => {
+                const validation = validateFields(form, fieldGroups[currentStep] || []);
+                if (!validation.valid) {
+                    showValidationError(validation, currentStep);
+                    return;
+                }
+                goToStep(currentStep + 1);
+            });
+        });
+        form.querySelectorAll('[data-previous-step]').forEach(button => {
+            button.addEventListener('click', () => goToStep(currentStep - 1));
+        });
 
         form.addEventListener('submit', event => {
             event.preventDefault();
             error.textContent = '';
-            if (!form.checkValidity()) {
-                error.textContent = getLanguage() === 'en' ? 'Please complete the required fields.' : 'Vui lòng nhập đủ các trường bắt buộc.';
-                form.reportValidity();
-                return;
+            for (let groupIndex = 0; groupIndex < fieldGroups.length; groupIndex += 1) {
+                const validation = validateFields(form, fieldGroups[groupIndex]);
+                if (!validation.valid) {
+                    showValidationError(validation, groupIndex);
+                    return;
+                }
             }
             const values = readValues(form, config.fields);
-            const missingChoice = config.fields.find(field => field.type === 'multiselect' && field.required && !values[field.id].length);
-            if (missingChoice) {
-                error.textContent = getLanguage() === 'en' ? 'Please select at least one option.' : 'Vui lòng chọn ít nhất một lựa chọn.';
-                form.querySelector(`[data-field-id="${missingChoice.id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
-            }
             try {
                 lastValues = values;
-                createResult(config.analyze(values, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+                createResult(
+                    config.analyze(values, getLanguage(), { normalize, number, formatNumber }),
+                    config,
+                    getLanguage(),
+                    values,
+                    {
+                        onEdit: () => {
+                            output.closest('.expert-workspace')?.classList.add('is-editing');
+                            goToStep(2, false);
+                            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                );
                 output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setTimeout(() => output.focus({ preventScroll: true }), 250);
             } catch (analysisError) {
                 error.textContent = getLanguage() === 'en' ? 'The input could not be analyzed. Please review it and try again.' : 'Chưa thể phân tích dữ liệu này. Hãy kiểm tra và thử lại.';
             }
         });
 
         document.getElementById('expertExample').addEventListener('click', () => {
-            setValues(form, config.fields, config.example);
-            form.requestSubmit();
+            const example = getLanguage() === 'en' ? (config.exampleEn || config.example) : config.example;
+            setValues(form, config.fields, example);
+            goToStep(2);
         });
         form.addEventListener('reset', () => {
             setTimeout(() => {
                 output.hidden = true;
                 output.innerHTML = '';
+                output.closest('.expert-workspace')?.classList.remove('has-result');
+                output.closest('.expert-workspace')?.classList.remove('is-editing');
                 error.textContent = '';
                 lastValues = null;
+                goToStep(0, false);
             });
         });
         window.addEventListener('thuanstore:languagechange', () => {
             applyLanguage(config);
-            if (lastValues) createResult(config.analyze(lastValues, getLanguage(), { normalize, number, formatNumber }), config, getLanguage());
+            if (currentStep === 2) renderReview();
+            if (lastValues) {
+                const workspace = output.closest('.expert-workspace');
+                const wasEditing = workspace?.classList.contains('is-editing');
+                createResult(
+                    config.analyze(lastValues, getLanguage(), { normalize, number, formatNumber }),
+                    config,
+                    getLanguage(),
+                    lastValues,
+                    {
+                        onEdit: () => {
+                            output.closest('.expert-workspace')?.classList.add('is-editing');
+                            goToStep(2, false);
+                            form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }
+                );
+                if (wasEditing) workspace?.classList.add('is-editing');
+            }
         });
         applyLanguage(config);
+        goToStep(0, false);
         if (window.location.hash === '#expertApp') setTimeout(() => mount.scrollIntoView({ block: 'start' }), 100);
     };
 
@@ -9681,6 +10171,7 @@ body::before {
     window.ThuanExpert.mount({
         color: '#a78bfa',
         contactService: 'ads',
+        contactLabel: { vi: 'Trao đổi về kế hoạch quảng cáo', en: 'Discuss this advertising plan' },
         title: { vi: 'AI lập ngân sách quảng cáo', en: 'AI advertising budget planner' },
         summary: {
             vi: 'Tính điểm hòa vốn từ giá trị đơn hàng và biên lợi nhuận, sau đó xây ngân sách thử nghiệm, giới hạn chi phí, cấu trúc 30 ngày và danh sách đo lường.',
@@ -9715,6 +10206,9 @@ body::before {
         example: {
             platform: 'tiktok', goal: 'purchase', offer: 'Bộ sản phẩm thiết yếu cho mẹ và bé', budget: '15', orderValue: '600000', margin: '30', closeRate: '100', readiness: 'partial', creative: '6'
         },
+        exampleEn: {
+            platform: 'tiktok', goal: 'purchase', offer: 'Essential mother-and-baby product bundle', budget: '15', orderValue: '600000', margin: '30', closeRate: '100', readiness: 'partial', creative: '6'
+        },
         analyze(values, lang, helpers) {
             const isEn = lang === 'en';
             const budget = Math.max(0, helpers.number(values.budget)) * 1000000;
@@ -9728,11 +10222,22 @@ body::before {
             const breakEvenRoas = 1 / margin;
             const targetRoas = breakEvenRoas / 0.7;
             const daily = budget / 30;
-            const prospecting = budget * 0.7;
-            const retargeting = budget * 0.2;
-            const experiments = budget * 0.1;
+            const allocation = values.readiness === 'ready'
+                ? { prospecting: 0.7, retargeting: 0.2, experiments: 0.1 }
+                : values.readiness === 'partial'
+                    ? { prospecting: 0.75, retargeting: 0.05, experiments: 0.2 }
+                    : { prospecting: 0, retargeting: 0, experiments: 0 };
+            const prospecting = budget * allocation.prospecting;
+            const retargeting = budget * allocation.retargeting;
+            const experiments = budget * allocation.experiments;
             const targetResults = targetCost > 0 ? Math.floor(budget / targetCost) : 0;
             const platformName = platformOptions.find(option => option.value === values.platform)?.[lang] || values.platform;
+            const resultName = {
+                purchase: isEn ? 'paid order' : 'đơn hàng đã thanh toán',
+                lead: isEn ? 'qualified lead' : 'khách để lại thông tin',
+                message: isEn ? 'qualified message' : 'tin nhắn có nhu cầu',
+                booking: isEn ? 'booking or reservation' : 'lịch hẹn hoặc đặt bàn'
+            }[values.goal];
             const readiness = {
                 ready: isEn ? 'Launch can start after a final tracking and content review.' : 'Có thể bắt đầu sau khi kiểm tra lần cuối về đo lường và nội dung.',
                 partial: isEn ? 'Use the first week to fix measurement, landing continuity, and missing creative.' : 'Dùng tuần đầu để hoàn thiện đo lường, tính liên tục của trang đích và nội dung còn thiếu.',
@@ -9743,6 +10248,16 @@ body::before {
             if (daily < targetCost * 1.5) warnings.push(isEn ? 'The daily budget is small relative to the target result cost; learning may be slow and volatile.' : 'Ngân sách ngày thấp so với chi phí mục tiêu; quá trình thu thập dữ liệu có thể chậm và dao động.');
             if (margin < 0.2) warnings.push(isEn ? 'A low gross margin leaves little room for advertising, discounts, returns, and fulfillment.' : 'Biên lợi nhuận gộp thấp để lại ít khoảng cho quảng cáo, giảm giá, đổi trả và hoàn tất đơn.');
             if (values.readiness !== 'ready') warnings.push(readiness);
+            const budgetAllocation = values.readiness === 'none'
+                ? [{
+                    title: isEn ? 'Hold media spend' : 'Chưa phân bổ ngân sách media',
+                    text: isEn ? 'Complete the landing destination, conversion tracking, and response process before sending paid traffic.' : 'Hoàn thiện nơi nhận khách, đo lường chuyển đổi và quy trình phản hồi trước khi đưa lưu lượng trả phí vào.'
+                }]
+                : [
+                    { title: isEn ? `New-customer delivery · ${Math.round(allocation.prospecting * 100)}%` : `Tiếp cận khách mới · ${Math.round(allocation.prospecting * 100)}%`, text: currency(prospecting, lang) },
+                    { title: isEn ? `Retargeting · ${Math.round(allocation.retargeting * 100)}%` : `Tiếp thị lại · ${Math.round(allocation.retargeting * 100)}%`, text: currency(retargeting, lang) },
+                    { title: isEn ? `Creative experiments · ${Math.round(allocation.experiments * 100)}%` : `Thử nghiệm nội dung · ${Math.round(allocation.experiments * 100)}%`, text: currency(experiments, lang) }
+                ];
 
             const phases = isEn
                 ? [
@@ -9762,22 +10277,19 @@ body::before {
                 : ['Chuyển đổi chính chỉ ghi nhận một lần và mang đúng giá trị.', 'UTM hoặc trường nguồn tương đương được giữ đến lúc bàn giao tin nhắn/đơn hàng.', 'Bảng theo dõi ngày tách chi tiêu media, kết quả nền tảng, kết quả có chất lượng, doanh thu, hoàn trả và lợi nhuận gộp.', 'Ghi nhận thời gian phản hồi bán hàng và lý do mất khách.', 'Tách riêng ngân sách media, phí quản lý, sản xuất nội dung, khuyến mãi và phí nền tảng/sàn.'];
 
             return {
+                kicker: isEn ? 'ADVERTISING TEST SCENARIO' : 'KỊCH BẢN THỬ NGÂN SÁCH',
                 title: isEn ? `30-day ${platformName} test plan` : `Kế hoạch thử nghiệm ${platformName} trong 30 ngày`,
                 summary: isEn
-                    ? `For “${values.offer}”, the model uses contribution margin and close rate to define a result-cost ceiling before any scale decision.`
-                    : `Với “${values.offer}”, mô hình dùng lợi nhuận đóng góp và tỷ lệ tạo doanh thu để xác định trần chi phí trước khi quyết định tăng ngân sách.`,
+                    ? `For “${values.offer}”, the model uses contribution margin and close rate to define a cost ceiling for one ${resultName} before any scale decision.`
+                    : `Với “${values.offer}”, mô hình dùng lợi nhuận đóng góp và tỷ lệ tạo doanh thu để xác định trần chi phí cho một ${resultName} trước khi quyết định tăng ngân sách.`,
                 metrics: [
                     { label: isEn ? 'Break-even result cost' : 'Chi phí kết quả hòa vốn', value: currency(breakEvenCost, lang), note: isEn ? 'Before overhead and returns' : 'Chưa gồm chi phí chung và hoàn trả' },
                     { label: isEn ? 'Operating target cost' : 'Chi phí mục tiêu vận hành', value: currency(targetCost, lang), note: isEn ? '70% of break-even ceiling' : '70% trần hòa vốn' },
                     { label: isEn ? 'ROAS reference' : 'ROAS tham khảo', value: `${targetRoas.toFixed(2)}×`, note: isEn ? `Break-even: ${breakEvenRoas.toFixed(2)}×` : `Hòa vốn: ${breakEvenRoas.toFixed(2)}×` },
-                    { label: isEn ? 'Daily media budget' : 'Ngân sách media/ngày', value: currency(daily, lang), note: isEn ? `Mathematical capacity: about ${targetResults} target-cost results/month` : `Năng lực toán học: khoảng ${targetResults} kết quả/tháng ở mức mục tiêu` }
+                    { label: isEn ? 'Daily media budget' : 'Ngân sách media/ngày', value: currency(daily, lang), note: isEn ? `Reference only: about ${targetResults} results/month at the target cost, not a commitment` : `Tham chiếu: khoảng ${targetResults} kết quả/tháng ở mức chi phí mục tiêu, không phải cam kết` }
                 ],
                 sections: [
-                    { title: isEn ? 'Budget allocation' : 'Phân bổ ngân sách', items: [
-                        { title: isEn ? 'New-customer delivery · 70%' : 'Tiếp cận khách mới · 70%', text: currency(prospecting, lang) },
-                        { title: isEn ? 'Retargeting · 20%' : 'Tiếp thị lại · 20%', text: currency(retargeting, lang) },
-                        { title: isEn ? 'Creative experiments · 10%' : 'Thử nghiệm nội dung · 10%', text: currency(experiments, lang) }
-                    ] },
+                    { title: isEn ? 'Budget allocation' : 'Phân bổ ngân sách', items: budgetAllocation },
                     { title: isEn ? 'Platform-specific operating rules' : 'Nguyên tắc riêng của nền tảng', items: platformGuidance[values.platform][lang] },
                     { title: isEn ? 'Thirty-day decision sequence' : 'Trình tự quyết định trong 30 ngày', items: phases },
                     { title: isEn ? 'Measurement checklist' : 'Danh sách kiểm tra đo lường', items: measurement },
@@ -9787,8 +10299,8 @@ body::before {
                     ? 'This is scenario analysis, not a performance guarantee. Platform delivery, competition, seasonality, creative quality, sales response, returns, and tracking quality can materially change results.'
                     : 'Đây là phân tích kịch bản, không bảo đảm hiệu quả. Phân phối của nền tảng, cạnh tranh, mùa vụ, chất lượng nội dung, tốc độ bán hàng, hoàn trả và độ chính xác đo lường đều có thể làm kết quả thay đổi đáng kể.',
                 brief: isEn
-                    ? `Advertising plan\nPlatform: ${platformName}\nOffer: ${values.offer}\nMonthly media: ${currency(budget, lang)}\nAverage value: ${currency(orderValue, lang)}\nGross margin: ${percent(margin * 100)}\nTarget result cost: ${currency(targetCost, lang)}`
-                    : `Kế hoạch quảng cáo\nNền tảng: ${platformName}\nSản phẩm/dịch vụ: ${values.offer}\nMedia tháng: ${currency(budget, lang)}\nGiá trị trung bình: ${currency(orderValue, lang)}\nBiên gộp: ${percent(margin * 100)}\nChi phí kết quả mục tiêu: ${currency(targetCost, lang)}`
+                    ? `Advertising plan\nPlatform: ${platformName}\nResult tracked: ${resultName}\nOffer: ${values.offer}\nMonthly media: ${currency(budget, lang)}\nAverage value: ${currency(orderValue, lang)}\nGross margin: ${percent(margin * 100)}\nTarget result cost: ${currency(targetCost, lang)}`
+                    : `Kế hoạch quảng cáo\nNền tảng: ${platformName}\nKết quả theo dõi: ${resultName}\nSản phẩm/dịch vụ: ${values.offer}\nMedia tháng: ${currency(budget, lang)}\nGiá trị trung bình: ${currency(orderValue, lang)}\nBiên gộp: ${percent(margin * 100)}\nChi phí kết quả mục tiêu: ${currency(targetCost, lang)}`
             };
         }
     });
